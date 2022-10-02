@@ -2,7 +2,7 @@ import { CHDataError } from "../errors/CHDataError";
 import { CHDataUtils } from "./CHDataUtils";
 import { SchemaObject, SchemaConfig } from "./interfaces/schema.interface";
 import { ReturnValue } from "./interfaces/value.interface";
-import { ExportFormat } from "./interfaces/export.interface";
+import { ExportFormat, ReturnDoc } from "./interfaces/export.interface";
 
 export class CustomSchema {
   private name: string;
@@ -16,10 +16,10 @@ export class CustomSchema {
     }
   }
 
-  public generate(cantDocuments: number = 10) {
+  public generate(cantDocuments: number = 10): ReturnDoc[] {
     const cantDoc = cantDocuments < 0 ? 10 : cantDocuments;
 
-    let returnArray: { [key: string]: ReturnValue | ReturnValue[] }[] = [];
+    let returnArray: ReturnDoc[] = [];
 
     for (let i = 1; i <= cantDoc; i++) {
       let doc: { [key: string]: ReturnValue | ReturnValue[] } = {};

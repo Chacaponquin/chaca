@@ -1,3 +1,5 @@
+import { ReturnValue } from "./value.interface";
+
 export type ExportFormat =
   | "json"
   | "java"
@@ -7,4 +9,7 @@ export type ExportFormat =
 
 export interface FileConfig {
   location: string;
+  nameFile: string;
 }
+
+export type ReturnDoc = { [key: string]: ReturnValue | ReturnValue[] };

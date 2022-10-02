@@ -1,5 +1,14 @@
+import { FileConfig, ReturnDoc } from "../utils/interfaces/export.interface";
 import { Generator } from "./Generator";
+import fs from "fs";
 
 export class JsonGenerator extends Generator {
-  public async generateFile(): Promise<void> {}
+  constructor(data: ReturnDoc[], config: FileConfig) {
+    super(data, "json", config);
+  }
+
+  public async generateFile(): Promise<void> {
+    const jsonContent = JSON.stringify(this.data);
+    await fs.promises.writeFile(this.route, jsonContent, "utf-8");
+  }
 }
