@@ -1,7 +1,7 @@
 import { faker } from "@faker-js/faker";
 import { CHDataError } from "../errors/CHDataError";
 import { CHDataUtils } from "../utils/CHDataUtils";
-import { ReturnValue } from "../utils/ReturnValue";
+import { ReturnValue } from "../utils/interfaces/value.interface";
 import { SchemaField } from "../utils/SchemaField";
 
 type NumberArgs = {
