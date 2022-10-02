@@ -2,6 +2,7 @@ import { CHDataError } from "../errors/CHDataError";
 import { CHDataUtils } from "./CHDataUtils";
 import { SchemaObject, SchemaConfig } from "./interfaces/schema.interface";
 import { ReturnValue } from "./interfaces/value.interface";
+import { ExportFormat } from "./interfaces/export.interface";
 
 export class CustomSchema {
   private name: string;
@@ -66,6 +67,8 @@ export class CustomSchema {
 
       returnArray.push(doc);
     }
+
+    return returnArray;
   }
 
   public export(format: ExportFormat) {

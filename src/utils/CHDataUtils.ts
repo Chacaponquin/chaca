@@ -6,7 +6,7 @@ export class CHDataUtils {
   public static numberByLimits({ min, max }: { min: number; max: number }) {
     return faker.datatype.number({ min, max, precision: 1 });
   }
-  public static characters(type: "lower" | "upper" | undefined): string[] {
+  public static characters(type?: "lower" | "upper"): string[] {
     const allCharacters = "abcdefghijklmnopqrstuvwxyz";
 
     if (type === "lower") return allCharacters.split("");

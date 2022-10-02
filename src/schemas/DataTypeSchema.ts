@@ -28,6 +28,11 @@ type CustomArrayProps = {
   array: ReturnValue[];
 };
 
+type CharactersProps = {
+  length?: number;
+  case?: "lower" | "upper";
+};
+
 export class DataTypeSchema {
   public boolean() {
     return new SchemaField<boolean>("boolean", faker.datatype.boolean, {});
@@ -133,6 +138,35 @@ export class DataTypeSchema {
           );
       },
       args || { array: [1, 2, 3, 4] }
+    );
+  }
+
+  public characters(args?: CharactersProps) {
+    return new SchemaField<string, CharactersProps>(
+      "character",
+      (a) => {
+        const len =
+          typeof a.length === "number" && a.length && a.length > 0
+            ? a.length
+            : undefined;
+        let charactersToRet: string[] = [];
+
+        if (a.case) {
+          if (a.case === "lower")
+            charactersToRet = CHDataUtils.characters("lower");
+          else if (a.case === "upper") CHDataUtils.characters("upper");
+          else charactersToRet = CHDataUtils.characters();
+        } else charactersToRet = CHDataUtils.characters();
+
+        if (len) {
+          let ret = "";
+          for (let i = 1; i <= len; i++) {
+            ret = ret.concat(CHDataUtils.oneOfArray(charactersToRet));
+          }
+          return ret;
+        } else return CHDataUtils.oneOfArray(charactersToRet);
+      },
+      args || {}
     );
   }
 }
