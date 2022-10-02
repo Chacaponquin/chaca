@@ -4,6 +4,7 @@ import { ReturnValue } from "./utils/ReturnValue";
 import { SchemaField } from "./utils/SchemaField";
 import { CHDataError } from "./errors/CHDataError";
 import { CHDataUtils } from "./utils/CHDataUtils";
+import { DataTypeSchema } from "./schemas/DataTypeSchema";
 
 type ExportFormat = "json" | "java" | "typescript" | "csv" | "javascript";
 
@@ -231,6 +232,7 @@ abstract class CHData {
   public static readonly schemas = {
     music: new MusicSchema(),
     internet: new InternetSchema(),
+    dataType: new DataTypeSchema(),
   };
   public readonly utils = CHDataUtils;
 
