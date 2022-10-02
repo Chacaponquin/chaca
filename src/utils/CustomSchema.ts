@@ -68,7 +68,14 @@ export class CustomSchema {
     }
   }
 
-  public export() {}
+  public export(format: ExportFormat) {
+    if (typeof format === "string") {
+      switch (format) {
+        default:
+          throw new CHDataError(`Format ${format} invalid`);
+      }
+    } else throw new CHDataError(`Format ${format} invalid`);
+  }
 
   private generateValueBySchema(schema: SchemaConfig): ReturnValue {
     let retValue: ReturnValue;

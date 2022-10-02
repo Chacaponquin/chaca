@@ -9,8 +9,6 @@ import {
   MusicSchema,
 } from "./schemas";
 
-type ExportFormat = "json" | "java" | "typescript" | "csv" | "javascript";
-
 abstract class CHData {
   private static schemasCreated: CustomSchema[];
   public static readonly schemas = {

@@ -15,12 +15,6 @@ export class IdSchema {
   }
 
   public uuid() {
-    return new SchemaField<string>(
-      "uuid",
-      () => {
-        return uuid();
-      },
-      {}
-    );
+    return new SchemaField<string>("uuid", () => uuid(), {});
   }
 }
