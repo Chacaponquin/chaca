@@ -232,6 +232,7 @@ abstract class CHData {
     music: new MusicSchema(),
     internet: new InternetSchema(),
   };
+  public readonly utils = CHDataUtils;
 
   public static defineSchema(schemaName: string, schema: SchemaObject) {
     const newSchema = new CustomSchema(schemaName, schema);
@@ -242,9 +243,3 @@ abstract class CHData {
 }
 
 export default CHData;
-
-CHData.defineSchema("mySchema", {
-  id: {
-    type: CHData.schemas.internet.url(),
-  },
-});
