@@ -1,4 +1,4 @@
-import { ReturnValue } from "./interfaces/value.interface";
+import { ReturnValue } from './interfaces/value.interface';
 
 interface ISchemaField<T, K> {
   getValue(args: T): K;

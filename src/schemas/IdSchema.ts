@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker";
-import { SchemaField } from "../utils/SchemaField";
-import { v4 as uuid } from "uuid";
+import { faker } from '@faker-js/faker';
+import { SchemaField } from '../utils/SchemaField';
+import { v4 as uuid } from 'uuid';
 
 export class IdSchema {
   /**
@@ -12,18 +12,18 @@ export class IdSchema {
    * @returns string
    */
   public numberRow() {
-    return new SchemaField<number>("numberRow", () => Date.now(), {});
+    return new SchemaField<number>('numberRow', () => Date.now(), {});
   }
 
   public mongodbID() {
     return new SchemaField<string>(
-      "mongodbID",
+      'mongodbID',
       faker.database.mongodbObjectId,
-      {}
+      {},
     );
   }
 
   public uuid() {
-    return new SchemaField<string>("uuid", () => uuid(), {});
+    return new SchemaField<string>('uuid', () => uuid(), {});
   }
 }

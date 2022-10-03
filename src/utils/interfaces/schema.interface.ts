@@ -1,5 +1,5 @@
-import { SchemaField } from "../SchemaField";
-import { ReturnValue } from "./value.interface";
+import { SchemaField } from '../SchemaField';
+import { ReturnValue } from './value.interface';
 
 export type SchemaConfig = {
   type?: SchemaField;

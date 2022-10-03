@@ -1,9 +1,9 @@
-import { CHDataError } from "../errors/CHDataError";
-import { CHDataUtils } from "./CHDataUtils";
-import { SchemaObject, SchemaConfig } from "./interfaces/schema.interface";
-import { ReturnValue } from "./interfaces/value.interface";
-import { FileConfig, ReturnDoc } from "./interfaces/export.interface";
-import { Generator, JsonGenerator } from "../generators";
+import { CHDataError } from '../errors/CHDataError';
+import { CHDataUtils } from './CHDataUtils';
+import { SchemaObject, SchemaConfig } from './interfaces/schema.interface';
+import { ReturnValue } from './interfaces/value.interface';
+import { FileConfig, ReturnDoc } from './interfaces/export.interface';
+import { Generator, JsonGenerator } from '../generators';
 
 /**
  * Class for creation of a model with the configuration of each
@@ -15,7 +15,7 @@ export class CustomSchema {
   private schemaObj: SchemaObject;
 
   constructor(schemaName: string, schemaObj: SchemaObject) {
-    if (!schemaName) throw new CHDataError("Your schema must have a name");
+    if (!schemaName) throw new CHDataError('Your schema must have a name');
     else {
       this.name = schemaName;
       this.schemaObj = this.validateObjectSchema(schemaObj);
@@ -24,7 +24,7 @@ export class CustomSchema {
 
   public generate(cantDocuments: number = 10): ReturnDoc[] {
     const cantDoc =
-      typeof cantDocuments === "number" && cantDocuments < 0
+      typeof cantDocuments === 'number' && cantDocuments < 0
         ? 10
         : cantDocuments;
 
@@ -38,9 +38,9 @@ export class CustomSchema {
         if (schema.isArray) {
           retValue = [] as ReturnValue[];
           let limit: number = 10;
-          if (typeof schema.isArray === "object") {
+          if (typeof schema.isArray === 'object') {
             limit = CHDataUtils.numberByLimits(schema.isArray);
-          } else if (typeof schema.isArray === "number") {
+          } else if (typeof schema.isArray === 'number') {
             limit = schema.isArray;
           } else if (schema.isArray === true) {
             limit = 10;
@@ -53,10 +53,10 @@ export class CustomSchema {
 
         if (schema.posibleNull) {
           let porcentNull: number =
-            typeof schema.posibleNull === "number" ? schema.posibleNull : 50;
+            typeof schema.posibleNull === 'number' ? schema.posibleNull : 50;
 
           let array: (null | (ReturnValue | ReturnValue[]))[] = new Array(
-            100
+            100,
           ).fill(0);
 
           for (let i = 0; i < array.length; i++) {
@@ -94,10 +94,10 @@ export class CustomSchema {
    * Promise<void>
    */
   public async export(data: ReturnDoc[], config: FileConfig): Promise<string> {
-    if (config && typeof config.format === "string") {
+    if (config && typeof config.format === 'string') {
       let gen: Generator;
       switch (config.format) {
-        case "json": {
+        case 'json': {
           gen = new JsonGenerator(data, config);
           break;
         }
@@ -111,7 +111,7 @@ export class CustomSchema {
 
   public async generateAndExport(
     cant: number,
-    configFile: FileConfig
+    configFile: FileConfig,
   ): Promise<void> {
     const data = this.generate(cant);
     await this.export(data, configFile);
@@ -126,22 +126,22 @@ export class CustomSchema {
       retValue = schema.custom() || null;
     } else if (schema.enum) {
       retValue = CHDataUtils.oneOfArray(schema.enum);
-    } else throw new CHDataError("");
+    } else throw new CHDataError('');
 
     return retValue;
   }
 
   private validateObjectSchema(obj: SchemaObject): SchemaObject {
-    if (!obj || typeof obj !== "object" || Array.isArray(obj))
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj))
       throw new CHDataError(
-        "Your schema has to be an object with the fields descriptions"
+        'Your schema has to be an object with the fields descriptions',
       );
     else {
       let schemaToSave: SchemaObject = {};
       for (const [key, schema] of Object.entries(obj)) {
         if (!schema.type && !schema.custom && !schema.enum) {
           throw new CHDataError(
-            `The field ${key} dosen't have a resolve function`
+            `The field ${key} dosen't have a resolve function`,
           );
         } else {
           if (schema.type) {
@@ -156,27 +156,27 @@ export class CustomSchema {
                   };
                 } else
                   throw new CHDataError(
-                    `For the field ${key} you must provide some values to choce`
+                    `For the field ${key} you must provide some values to choce`,
                   );
               } else {
                 throw new CHDataError(
-                  `If the field ${key} is a enum type so this one muste be an array of values`
+                  `If the field ${key} is a enum type so this one muste be an array of values`,
                 );
               }
             } else {
-              if (typeof schema.custom === "function") {
+              if (typeof schema.custom === 'function') {
                 schemaToSave = {
                   ...schemaToSave,
                   [key]: { custom: schema.custom },
                 };
               } else {
-                throw new CHDataError("The custom field must be a function");
+                throw new CHDataError('The custom field must be a function');
               }
             }
           }
 
           if (schema.posibleNull) {
-            if (typeof schema.posibleNull === "number") {
+            if (typeof schema.posibleNull === 'number') {
               const value =
                 schema.posibleNull <= 100 || schema.posibleNull >= 0
                   ? schema.posibleNull
@@ -201,7 +201,7 @@ export class CustomSchema {
             };
 
           if (schema.isArray) {
-            if (typeof schema.isArray === "number") {
+            if (typeof schema.isArray === 'number') {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
@@ -209,7 +209,7 @@ export class CustomSchema {
                   isArray: schema.isArray >= 1 ? schema.isArray : 10,
                 },
               };
-            } else if (typeof schema.isArray === "boolean") {
+            } else if (typeof schema.isArray === 'boolean') {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
@@ -218,12 +218,12 @@ export class CustomSchema {
                 },
               };
             } else if (
-              typeof schema.isArray === "object" &&
+              typeof schema.isArray === 'object' &&
               !(schema.isArray instanceof Date) &&
               !Array.isArray(schema.isArray)
             ) {
-              let min = schema.isArray["min"] || 1;
-              let max = schema.isArray["max"] || 10;
+              let min = schema.isArray['min'] || 1;
+              let max = schema.isArray['max'] || 10;
 
               if (min > max) {
                 let temp = max;

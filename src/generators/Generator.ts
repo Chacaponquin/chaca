@@ -1,6 +1,6 @@
-import { FileConfig, ReturnDoc } from "../utils/interfaces/export.interface";
-import path from "path";
-import { CHDataError } from "../errors/CHDataError";
+import { FileConfig, ReturnDoc } from '../utils/interfaces/export.interface';
+import path from 'path';
+import { CHDataError } from '../errors/CHDataError';
 
 export abstract class Generator {
   protected ext: string;
@@ -11,22 +11,22 @@ export abstract class Generator {
 
   constructor(data: ReturnDoc[], extension: string, config: FileConfig) {
     if (
-      !(typeof config.fileName === "string") ||
+      !(typeof config.fileName === 'string') ||
       !(config.fileName.length === 0)
     )
-      throw new CHDataError("A file name is necesary to export the data");
-    else if (!(typeof config.location === "string"))
-      throw new CHDataError("The file needs a location");
+      throw new CHDataError('A file name is necesary to export the data');
+    else if (!(typeof config.location === 'string'))
+      throw new CHDataError('The file needs a location');
 
     this.ext = extension;
     this.config = config;
     this.data = data;
-    this.fileName = `${this.fileName}.${this.ext}`;
+    this.fileName = `${config.fileName}.${this.ext}`;
 
     this.route = `${path.join(
-      "./",
+      './',
       config.location,
-      `${config.fileName}.${this.ext}`
+      `${config.fileName}.${this.ext}`,
     )}`;
   }
 
