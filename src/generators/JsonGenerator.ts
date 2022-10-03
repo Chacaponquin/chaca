@@ -7,8 +7,9 @@ export class JsonGenerator extends Generator {
     super(data, "json", config);
   }
 
-  public async generateFile(): Promise<void> {
+  public async generateFile(): Promise<string> {
     const jsonContent = JSON.stringify(this.data);
     await fs.promises.writeFile(this.route, jsonContent, "utf-8");
+    return this.fileName;
   }
 }

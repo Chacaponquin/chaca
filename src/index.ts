@@ -11,12 +11,14 @@ import {
 
 abstract class CHData {
   private static schemasCreated: CustomSchema[];
+
   public static readonly schemas = {
     music: new MusicSchema(),
     internet: new InternetSchema(),
     dataType: new DataTypeSchema(),
     id: new IdSchema(),
   };
+
   public readonly utils = CHDataUtils;
 
   public static defineSchema(schemaName: string, schema: SchemaObject) {

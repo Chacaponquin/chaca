@@ -3,9 +3,18 @@ import { SchemaField } from "../utils/SchemaField";
 import { v4 as uuid } from "uuid";
 
 export class IdSchema {
+  /**
+   * Generates a unique row of numbers
+   *
+   * @example
+   * chdata.schemas.id.numberRow().getValue() //1664755445878
+   *
+   * @returns string
+   */
   public numberRow() {
     return new SchemaField<number>("numberRow", () => Date.now(), {});
   }
+
   public mongodbID() {
     return new SchemaField<string>(
       "mongodbID",

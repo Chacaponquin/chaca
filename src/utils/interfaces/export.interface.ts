@@ -9,7 +9,8 @@ export type ExportFormat =
 
 export interface FileConfig {
   location: string;
-  nameFile: string;
+  fileName: string;
+  format: ExportFormat;
 }
 
 export type ReturnDoc = { [key: string]: ReturnValue | ReturnValue[] };

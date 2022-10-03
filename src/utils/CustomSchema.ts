@@ -2,9 +2,15 @@ import { CHDataError } from "../errors/CHDataError";
 import { CHDataUtils } from "./CHDataUtils";
 import { SchemaObject, SchemaConfig } from "./interfaces/schema.interface";
 import { ReturnValue } from "./interfaces/value.interface";
-import { ExportFormat, ReturnDoc } from "./interfaces/export.interface";
+import { FileConfig, ReturnDoc } from "./interfaces/export.interface";
+import { Generator, JsonGenerator } from "../generators";
 
+/**
+ * Class for creation of a model with the configuration of each
+ * field defined by the user
+ */
 export class CustomSchema {
+  //SCHEMA NAME
   private name: string;
   private schemaObj: SchemaObject;
 
@@ -17,7 +23,10 @@ export class CustomSchema {
   }
 
   public generate(cantDocuments: number = 10): ReturnDoc[] {
-    const cantDoc = cantDocuments < 0 ? 10 : cantDocuments;
+    const cantDoc =
+      typeof cantDocuments === "number" && cantDocuments < 0
+        ? 10
+        : cantDocuments;
 
     let returnArray: ReturnDoc[] = [];
 
@@ -71,13 +80,41 @@ export class CustomSchema {
     return returnArray;
   }
 
-  public export(format: ExportFormat) {
-    if (typeof format === "string") {
-      switch (format) {
+  /**
+   *
+   * @param data Data you want to export
+   * @param config Configuration of the file you want to export (name, location, format, etc.)
+   *
+   * @example
+   * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]
+   * const config = {fileName: 'Users', format: 'json', location: '../../data'}
+   * await schema.export(data, config)
+   *
+   * @returns
+   * Promise<void>
+   */
+  public async export(data: ReturnDoc[], config: FileConfig): Promise<string> {
+    if (config && typeof config.format === "string") {
+      let gen: Generator;
+      switch (config.format) {
+        case "json": {
+          gen = new JsonGenerator(data, config);
+          break;
+        }
         default:
-          throw new CHDataError(`Format ${format} invalid`);
+          throw new CHDataError(`Format ${config.format} invalid`);
       }
-    } else throw new CHDataError(`Format ${format} invalid`);
+
+      return await gen.generateFile();
+    } else throw new CHDataError(`Format ${config.format} invalid`);
+  }
+
+  public async generateAndExport(
+    cant: number,
+    configFile: FileConfig
+  ): Promise<void> {
+    const data = this.generate(cant);
+    await this.export(data, configFile);
   }
 
   private generateValueBySchema(schema: SchemaConfig): ReturnValue {

@@ -1,3 +1,4 @@
 import { JsonGenerator } from "./JsonGenerator";
+import { Generator } from "./Generator";
 
-export { JsonGenerator };
+export { JsonGenerator, Generator };
