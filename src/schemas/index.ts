@@ -1,6 +1,15 @@
-import { DataTypeSchema } from './DataTypeSchema';
-import { IdSchema } from './IdSchema';
-import { InternetSchema } from './InternetSchema';
-import { MusicSchema } from './MusicSchema';
+import { DataTypeSchema } from './dataType/DataTypeSchema';
+import { IdSchema } from './id/IdSchema';
+import { InternetSchema } from './internet/InternetSchema';
+import { MusicSchema } from './music/MusicSchema';
+import { LoremSchema } from './lorem/LoremSchema';
+import { ImageSchema } from './image/ImageSchema';
 
-export { IdSchema, DataTypeSchema, InternetSchema, MusicSchema };
+export {
+  IdSchema,
+  DataTypeSchema,
+  InternetSchema,
+  MusicSchema,
+  LoremSchema,
+  ImageSchema,
+};

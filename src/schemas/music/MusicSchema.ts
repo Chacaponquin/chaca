@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { SchemaField } from '../utils/SchemaField';
+import { SchemaField } from '../../utils/SchemaField';
 
 export class MusicSchema {
   public songName(): SchemaField {

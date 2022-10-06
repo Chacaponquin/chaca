@@ -1,4 +1,4 @@
-import { SchemaField } from '../utils/SchemaField';
+import { SchemaField } from '../../utils/SchemaField';
 import { faker } from '@faker-js/faker';
 
 type EmailArgs = {

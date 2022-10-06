@@ -1,5 +1,5 @@
 import { faker } from '@faker-js/faker';
-import { SchemaField } from '../utils/SchemaField';
+import { SchemaField } from '../../utils/SchemaField';
 import { v4 as uuid } from 'uuid';
 
 export class IdSchema {
