@@ -9,6 +9,9 @@ import {
   MusicSchema,
   LoremSchema,
   ImageSchema,
+  FinanceSchema,
+  SystemSchema,
+  PhoneSchema,
 } from './schemas';
 
 abstract class CHData {
@@ -21,6 +24,9 @@ abstract class CHData {
     id: new IdSchema(),
     lorem: new LoremSchema(),
     image: new ImageSchema(),
+    system: new SystemSchema(),
+    finance: new FinanceSchema(),
+    phone: new PhoneSchema(),
   };
 
   public readonly utils = CHDataUtils;
