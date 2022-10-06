@@ -8,6 +8,7 @@ import {
   InternetSchema,
   MusicSchema,
   LoremSchema,
+  ImageSchema,
 } from './schemas';
 
 abstract class CHData {
@@ -19,6 +20,7 @@ abstract class CHData {
     dataType: new DataTypeSchema(),
     id: new IdSchema(),
     lorem: new LoremSchema(),
+    image: new ImageSchema(),
   };
 
   public readonly utils = CHDataUtils;
