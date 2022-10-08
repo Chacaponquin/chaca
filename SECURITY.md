@@ -2,4 +2,4 @@
 
 ## Reporting a Vulnerability
 
-Please report security issues to jasonsaayman@gmail.com
+Please report security issues to hectorangel2001@gmail.com
