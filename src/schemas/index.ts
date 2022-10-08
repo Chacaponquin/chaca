@@ -8,6 +8,7 @@ import { SystemSchema } from './system/SystemSchema';
 import { FinanceSchema } from './finnance/FinanceSchema';
 import { PhoneSchema } from './phone/PhoneSchema';
 import { AddressSchema } from './address/AddressSchema';
+import { LanguageSchema } from './word/LanguageSchema';
 
 export {
   IdSchema,
@@ -20,4 +21,5 @@ export {
   FinanceSchema,
   PhoneSchema,
   AddressSchema,
+  LanguageSchema,
 };

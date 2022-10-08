@@ -13,6 +13,7 @@ import {
   SystemSchema,
   PhoneSchema,
   AddressSchema,
+  LanguageSchema,
 } from './schemas';
 
 abstract class CHData {
@@ -29,6 +30,7 @@ abstract class CHData {
     finance: new FinanceSchema(),
     phone: new PhoneSchema(),
     address: new AddressSchema(),
+    language: new LanguageSchema(),
   };
 
   public readonly utils = CHDataUtils;
