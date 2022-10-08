@@ -7,6 +7,7 @@ import { ImageSchema } from './image/ImageSchema';
 import { SystemSchema } from './system/SystemSchema';
 import { FinanceSchema } from './finnance/FinanceSchema';
 import { PhoneSchema } from './phone/PhoneSchema';
+import { AddressSchema } from './address/AddressSchema';
 
 export {
   IdSchema,
@@ -18,4 +19,5 @@ export {
   SystemSchema,
   FinanceSchema,
   PhoneSchema,
+  AddressSchema,
 };

@@ -32,7 +32,7 @@ export class PhoneSchema {
         let max: number | undefined = undefined;
 
         if (a.max && typeof a.max === 'number' && a.max < 60 && a.max >= 0) {
-          if (min && a.max > min) {
+          if (min && a.max >= min) {
             max = a.max;
           } else if (!min) {
             max = a.max;
