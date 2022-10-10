@@ -9,6 +9,8 @@ import { FinanceSchema } from './finnance/FinanceSchema';
 import { PhoneSchema } from './phone/PhoneSchema';
 import { AddressSchema } from './address/AddressSchema';
 import { LanguageSchema } from './word/LanguageSchema';
+import { VehicleSchema } from './vehicle/VehicleSchema';
+import { DateSchema } from './date/DateSchema';
 
 export {
   IdSchema,
@@ -22,4 +24,6 @@ export {
   PhoneSchema,
   AddressSchema,
   LanguageSchema,
+  VehicleSchema,
+  DateSchema,
 };
