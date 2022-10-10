@@ -11,6 +11,7 @@ import { AddressSchema } from './address/AddressSchema';
 import { LanguageSchema } from './word/LanguageSchema';
 import { VehicleSchema } from './vehicle/VehicleSchema';
 import { DateSchema } from './date/DateSchema';
+import { PersonSchema } from './person/JobSchema';
 
 export {
   IdSchema,
@@ -26,4 +27,5 @@ export {
   LanguageSchema,
   VehicleSchema,
   DateSchema,
+  PersonSchema,
 };

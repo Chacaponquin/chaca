@@ -16,6 +16,7 @@ import {
   LanguageSchema,
   VehicleSchema,
   DateSchema,
+  PersonSchema,
 } from './schemas';
 
 abstract class CHData {
@@ -35,6 +36,7 @@ abstract class CHData {
     language: new LanguageSchema(),
     vehicle: new VehicleSchema(),
     date: new DateSchema(),
+    person: new PersonSchema(),
   };
 
   public readonly utils = CHDataUtils;
