@@ -148,4 +148,15 @@ export class ImageSchema {
       {},
     );
   }
+
+  animateAvatar() {
+    return new SchemaField<string>(
+      'animateAvatar',
+      () =>
+        `https://api.multiavatar.com/${Number(Math.random() * 1000).toFixed(
+          0,
+        )}.svg`,
+      {},
+    );
+  }
 }
