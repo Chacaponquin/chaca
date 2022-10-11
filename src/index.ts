@@ -17,6 +17,7 @@ import {
   VehicleSchema,
   DateSchema,
   PersonSchema,
+  VideoSchema,
 } from './schemas';
 
 abstract class CHData {
@@ -37,6 +38,7 @@ abstract class CHData {
     vehicle: new VehicleSchema(),
     date: new DateSchema(),
     person: new PersonSchema(),
+    video: new VideoSchema(),
   };
 
   public readonly utils = CHDataUtils;

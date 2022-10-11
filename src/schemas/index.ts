@@ -12,6 +12,7 @@ import { LanguageSchema } from './word/LanguageSchema';
 import { VehicleSchema } from './vehicle/VehicleSchema';
 import { DateSchema } from './date/DateSchema';
 import { PersonSchema } from './person/JobSchema';
+import { VideoSchema } from './video/VideoSchema';
 
 export {
   IdSchema,
@@ -28,4 +29,5 @@ export {
   VehicleSchema,
   DateSchema,
   PersonSchema,
+  VideoSchema,
 };

@@ -7,7 +7,7 @@ export class ImageSchema {
     return new SchemaField<string>(
       'food',
       () => {
-        return CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.foodDrink);
+        return CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.food);
       },
       {},
     );
@@ -16,7 +16,7 @@ export class ImageSchema {
   event() {
     return new SchemaField<string>(
       'events',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.currentEvents),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.event),
       {},
     );
   }
@@ -24,7 +24,7 @@ export class ImageSchema {
   wallpaper() {
     return new SchemaField<string>(
       'wallpaper',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.wallpapers),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.wallpaper),
       {},
     );
   }
@@ -32,7 +32,7 @@ export class ImageSchema {
   treeDimension() {
     return new SchemaField<string>(
       '3D',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS['3DRenders']),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS['3d']),
       {},
     );
   }
@@ -49,14 +49,6 @@ export class ImageSchema {
     return new SchemaField<string>(
       'nature',
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.nature),
-      {},
-    );
-  }
-
-  work() {
-    return new SchemaField<string>(
-      'work',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS['business&Work']),
       {},
     );
   }
@@ -88,7 +80,7 @@ export class ImageSchema {
   health() {
     return new SchemaField<string>(
       'health',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS['health&Wellness']),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.health),
       {},
     );
   }
@@ -96,7 +88,7 @@ export class ImageSchema {
   house() {
     return new SchemaField<string>(
       'house',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.interiors),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.architecture),
       {},
     );
   }
@@ -104,7 +96,7 @@ export class ImageSchema {
   street() {
     return new SchemaField<string>(
       'street',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.streetPhotography),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.street),
       {},
     );
   }
@@ -112,7 +104,7 @@ export class ImageSchema {
   animal() {
     return new SchemaField<string>(
       'animal',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.animals),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.animal),
       {},
     );
   }
@@ -136,7 +128,7 @@ export class ImageSchema {
   art() {
     return new SchemaField<string>(
       'art',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS['arts&Culture']),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.art),
       {},
     );
   }
@@ -152,15 +144,7 @@ export class ImageSchema {
   sport() {
     return new SchemaField<string>(
       'sport',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.athletics),
-      {},
-    );
-  }
-
-  covid() {
-    return new SchemaField<string>(
-      'covid',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.covid19),
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.sport),
       {},
     );
   }
