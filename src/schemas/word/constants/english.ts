@@ -1,7 +1,9 @@
-export const ENGLISH_WORDS = {
+import { ILanguageWord } from '.';
+
+export const ENGLISH_WORDS: ILanguageWord = {
   verbs: [],
   conjuctions: [],
-  intejections: [],
+  interjections: [],
   prepositions: [],
   adverbs: [],
   adjectives: [],

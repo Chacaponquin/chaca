@@ -1,4 +1,6 @@
-export const SPANISH_WORDS = {
+import { ILanguageWord } from '.';
+
+export const SPANISH_WORDS: ILanguageWord = {
   verbs: [
     'ser',
     'haber',

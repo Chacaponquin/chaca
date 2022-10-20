@@ -4,7 +4,7 @@ import { SchemaField } from '../../utils/SchemaField';
 import WORDS from './constants';
 
 type AdjectiveProps = {
-  language?: 'ES' | 'EN';
+  language?: 'es' | 'es';
 };
 
 export class LanguageSchema {
@@ -17,9 +17,9 @@ export class LanguageSchema {
           if (languageSelected) {
             return CHDataUtils.oneOfArray(languageSelected.adjectives);
           } else {
-            return CHDataUtils.oneOfArray(WORDS['EN'].adjectives);
+            return CHDataUtils.oneOfArray(WORDS['en'].adjectives);
           }
-        } else return CHDataUtils.oneOfArray(WORDS['EN'].adjectives);
+        } else return CHDataUtils.oneOfArray(WORDS['en'].adjectives);
       },
       args || {},
     );

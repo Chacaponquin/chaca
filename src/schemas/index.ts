@@ -11,7 +11,7 @@ import { AddressSchema } from './address/AddressSchema';
 import { LanguageSchema } from './word/LanguageSchema';
 import { VehicleSchema } from './vehicle/VehicleSchema';
 import { DateSchema } from './date/DateSchema';
-import { PersonSchema } from './person/JobSchema';
+import { PersonSchema } from './person/PersonSchema';
 import { VideoSchema } from './video/VideoSchema';
 
 export {
