@@ -43,7 +43,10 @@ abstract class CHData {
 
   public readonly utils = CHDataUtils;
 
-  public static defineSchema(schemaName: string, schema: SchemaObject) {
+  public static defineSchema(
+    schemaName: string,
+    schema: SchemaObject,
+  ): CustomSchema {
     const newSchema = new CustomSchema(schemaName, schema);
     this.schemasCreated.push(newSchema);
 
