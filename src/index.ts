@@ -21,7 +21,7 @@ import {
 } from './schemas';
 
 abstract class CHData {
-  private static schemasCreated: CustomSchema[];
+  private static schemasCreated: CustomSchema[] = [];
 
   public static readonly schemas = {
     music: new MusicSchema(),
@@ -46,6 +46,8 @@ abstract class CHData {
   public static defineSchema(schemaName: string, schema: SchemaObject) {
     const newSchema = new CustomSchema(schemaName, schema);
     this.schemasCreated.push(newSchema);
+
+    return newSchema;
   }
 
   public static async exportAll(): Promise<void> {

@@ -22,11 +22,11 @@ export class CustomSchema {
     }
   }
 
-  public generate(cantDocuments: number = 10): ReturnDoc[] {
+  public generate(cantDocuments: number): ReturnDoc[] {
     const cantDoc =
-      typeof cantDocuments === 'number' && cantDocuments < 0
-        ? 10
-        : cantDocuments;
+      typeof cantDocuments === 'number' && cantDocuments > 0
+        ? cantDocuments
+        : 10;
 
     let returnArray: ReturnDoc[] = [];
 

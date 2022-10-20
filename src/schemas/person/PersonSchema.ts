@@ -103,7 +103,9 @@ export class PersonSchema {
     );
   }
 
-  private filterNameByLanguage(language: string | undefined): ILanguageNames {
+  private filterNameByLanguage(
+    language: AllLanguages | undefined,
+  ): ILanguageNames {
     if (language && typeof language === 'string') {
       const nameSelected = NAMES[language];
       if (nameSelected) return nameSelected;
@@ -111,10 +113,7 @@ export class PersonSchema {
     } else return NAMES['en'];
   }
 
-  private filterBySex(
-    nameSel: ILanguageNames,
-    sex: string | undefined,
-  ): string[] {
+  private filterBySex(nameSel: ILanguageNames, sex: Sex | undefined): string[] {
     if (sex && typeof sex === 'string') {
       const selSex = nameSel[sex];
       if (selSex) return selSex;

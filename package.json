@@ -30,6 +30,8 @@
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
     "prepack": "npm run build",
     "test": "mocha --r ts-node/register test/**/*.ts",
+    "test:lib": "mocha --r ts-node/register test/lib/**/*.ts",
+    "test:schemas": "mocha --r ts-node/register test/schemas/**/*.ts",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write"
   },
   "repository": {

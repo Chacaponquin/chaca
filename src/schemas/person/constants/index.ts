@@ -7,4 +7,6 @@ export interface ILanguageNames {
   lastNames: string[];
 }
 
-export default { es: SPANISH_NAMES, en: ENGLISH_NAMES };
+const index = { es: SPANISH_NAMES, en: ENGLISH_NAMES };
+
+export default index;

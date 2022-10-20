@@ -10,10 +10,7 @@ export abstract class Generator {
   protected fileName: string;
 
   constructor(data: ReturnDoc[], extension: string, config: FileConfig) {
-    if (
-      !(typeof config.fileName === 'string') ||
-      !(config.fileName.length === 0)
-    )
+    if (!(typeof config.fileName === 'string') || config.fileName.length === 0)
       throw new CHDataError('A file name is necesary to export the data');
     else if (!(typeof config.location === 'string'))
       throw new CHDataError('The file needs a location');
