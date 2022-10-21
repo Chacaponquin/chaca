@@ -19,6 +19,7 @@ import {
   PersonSchema,
   VideoSchema,
   AnimalSchema,
+  CodeSchema,
 } from './schemas';
 
 abstract class CHData {
@@ -41,6 +42,7 @@ abstract class CHData {
     person: new PersonSchema(),
     video: new VideoSchema(),
     animal: new AnimalSchema(),
+    code: new CodeSchema(),
   };
 
   public readonly utils = CHDataUtils;

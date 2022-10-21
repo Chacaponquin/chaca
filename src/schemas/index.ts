@@ -14,6 +14,7 @@ import { DateSchema } from './date/DateSchema';
 import { PersonSchema } from './person/PersonSchema';
 import { VideoSchema } from './video/VideoSchema';
 import { AnimalSchema } from './animal/AnimalSchema';
+import { CodeSchema } from './code/CodeSchema';
 
 export {
   IdSchema,
@@ -32,4 +33,5 @@ export {
   PersonSchema,
   VideoSchema,
   AnimalSchema,
+  CodeSchema,
 };
