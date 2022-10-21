@@ -18,6 +18,7 @@ import {
   DateSchema,
   PersonSchema,
   VideoSchema,
+  AnimalSchema,
 } from './schemas';
 
 abstract class CHData {
@@ -39,6 +40,7 @@ abstract class CHData {
     date: new DateSchema(),
     person: new PersonSchema(),
     video: new VideoSchema(),
+    animal: new AnimalSchema(),
   };
 
   public readonly utils = CHDataUtils;
