@@ -15,6 +15,7 @@ import { PersonSchema } from './person/PersonSchema';
 import { VideoSchema } from './video/VideoSchema';
 import { AnimalSchema } from './animal/AnimalSchema';
 import { CodeSchema } from './code/CodeSchema';
+import { ScienceSchema } from './science/ScienceSchema';
 
 export {
   IdSchema,
@@ -34,4 +35,5 @@ export {
   VideoSchema,
   AnimalSchema,
   CodeSchema,
+  ScienceSchema,
 };

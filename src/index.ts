@@ -20,6 +20,7 @@ import {
   VideoSchema,
   AnimalSchema,
   CodeSchema,
+  ScienceSchema,
 } from './schemas';
 
 abstract class CHData {
@@ -43,6 +44,7 @@ abstract class CHData {
     video: new VideoSchema(),
     animal: new AnimalSchema(),
     code: new CodeSchema(),
+    science: new ScienceSchema(),
   };
 
   public readonly utils = CHDataUtils;
@@ -53,7 +55,6 @@ abstract class CHData {
   ): CustomSchema {
     const newSchema = new CustomSchema(schemaName, schema);
     this.schemasCreated.push(newSchema);
-
     return newSchema;
   }
 
