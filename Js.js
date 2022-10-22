@@ -1,1 +1,0 @@
-const js = {id: "fb8fff4ed646d8d3221cbed7",image: "https://images.unsplash.com/photo-1596731980118-1e5135e77000?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNTM2NjZ8MHwxfHNlYXJjaHwyMXx8ZmlsbXxlbnwwfHx8fDE2NjU0NTM5NTY&ixlib=rb-1.2.1&q=80",name: "Josefina",};
