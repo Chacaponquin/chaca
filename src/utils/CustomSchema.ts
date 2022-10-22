@@ -3,7 +3,7 @@ import { CHDataUtils } from './CHDataUtils';
 import { SchemaObject, SchemaConfig } from './interfaces/schema.interface';
 import { ReturnValue } from './interfaces/value.interface';
 import { FileConfig, ReturnDoc } from './interfaces/export.interface';
-import { Generator, JsonGenerator } from '../generators';
+import { Generator, JavascriptGenerator, JsonGenerator } from '../generators';
 
 /**
  * Class for creation of a model with the configuration of each
@@ -46,9 +46,8 @@ export class CustomSchema {
             limit = 10;
           }
 
-          for (let i = 1; i <= limit; i++) {
+          for (let i = 1; i <= limit; i++)
             retValue.push(this.generateValueBySchema(schema));
-          }
         } else retValue = this.generateValueBySchema(schema);
 
         if (schema.posibleNull) {
@@ -101,6 +100,9 @@ export class CustomSchema {
           gen = new JsonGenerator(data, config);
           break;
         }
+        case 'javascript':
+          gen = new JavascriptGenerator(data, config);
+          break;
         default:
           throw new CHDataError(`Format ${config.format} invalid`);
       }
