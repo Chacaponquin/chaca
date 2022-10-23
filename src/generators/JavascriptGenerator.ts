@@ -13,11 +13,9 @@ export class JavascriptGenerator extends Generator {
     let returnData = ``;
 
     if (Array.isArray(this.data)) {
-      for (const dat of this.data) {
-        returnData += `const ${CHDataUtils.capitalizeText(
-          this.config.fileName,
-        )} = ${this.generateObject(dat)};\n`;
-      }
+      returnData += `const ${CHDataUtils.capitalizeText(
+        this.config.fileName,
+      )} = ${this.generateSchemaArray(this.data)};\n`;
     } else {
       returnData += `const ${CHDataUtils.capitalizeText(
         this.config.fileName,
