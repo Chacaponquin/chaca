@@ -3,7 +3,12 @@ import { CHDataUtils } from './CHDataUtils';
 import { SchemaObject, SchemaConfig } from './interfaces/schema.interface';
 import { ReturnValue } from './interfaces/value.interface';
 import { FileConfig, ReturnDoc } from './interfaces/export.interface';
-import { Generator, JavascriptGenerator, JsonGenerator } from '../generators';
+import {
+  CSVGenerator,
+  Generator,
+  JavascriptGenerator,
+  JsonGenerator,
+} from '../generators';
 
 /**
  * Class for creation of a model with the configuration of each
@@ -102,6 +107,9 @@ export class CustomSchema {
         }
         case 'javascript':
           gen = new JavascriptGenerator(data, config);
+          break;
+        case 'csv':
+          gen = new CSVGenerator(data, config);
           break;
         default:
           throw new CHDataError(`Format ${config.format} invalid`);
