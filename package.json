@@ -64,6 +64,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^7.5.0",
+    "adm-zip": "^0.5.9",
     "json2csv": "^5.0.7",
     "uuid": "^9.0.0"
   }
