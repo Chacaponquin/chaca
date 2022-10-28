@@ -53,7 +53,10 @@ export class CustomSchema {
           retValue = [] as ReturnValue[];
           let limit: number = 10;
           if (typeof schema.isArray === "object") {
-            limit = CHDataUtils.numberByLimits(schema.isArray);
+            limit = CHDataUtils.numberByLimits({
+              min: schema.isArray.min || 1,
+              max: schema.isArray.max || 100,
+            });
           } else if (typeof schema.isArray === "number") {
             limit = schema.isArray;
           } else if (schema.isArray === true) {
@@ -269,14 +272,15 @@ export class CustomSchema {
                 !(schema.isArray instanceof Date) &&
                 !Array.isArray(schema.isArray)
               ) {
-                let min = schema.isArray["min"] || 1;
-                let max = schema.isArray["max"] || 10;
-
-                if (min > max) {
-                  let temp = max;
-                  max = min;
-                  min = temp;
-                }
+                let min =
+                  typeof schema.isArray["min"] === "number"
+                    ? schema.isArray["min"]
+                    : 1;
+                let max =
+                  typeof schema.isArray["max"] === "number" &&
+                  schema.isArray["max"] > min
+                    ? schema.isArray["max"]
+                    : min + 9;
 
                 schemaToSave = {
                   ...schemaToSave,
