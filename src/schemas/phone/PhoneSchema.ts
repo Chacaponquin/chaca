@@ -21,6 +21,15 @@ export class PhoneSchema {
     );
   }
 
+  /**
+   * Return a call duartion with minutes and seconds
+   * @param args.min Minimun minutes of the call. Default `0`
+   * @param args.max Maximun minutes of the call. Default `59`
+   *
+   * @example chData.schemas.phone.callDuration({min: 10, max: 30}).getValue() // '27:30'
+   *
+   * @returns string
+   */
   callDuration(args?: CallDurationProps) {
     return new SchemaField<string, CallDurationProps>(
       "callDuration",

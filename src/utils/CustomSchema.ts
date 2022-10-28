@@ -6,7 +6,7 @@ import {
   SchemaDefaultConfig,
 } from "./interfaces/schema.interface";
 import { ReturnValue } from "./interfaces/value.interface";
-import { FileConfig, ReturnDoc } from "./interfaces/export.interface";
+import { FileConfig } from "./interfaces/export.interface";
 import {
   CSVGenerator,
   Generator,
@@ -36,13 +36,13 @@ export class CustomSchema {
     }
   }
 
-  public generate(cantDocuments: number): ReturnDoc[] {
+  public generate(cantDocuments: number): any[] {
     const cantDoc =
       typeof cantDocuments === "number" && cantDocuments > 0
         ? cantDocuments
         : 10;
 
-    let returnArray: ReturnDoc[] = [];
+    let returnArray = [] as any[];
 
     for (let i = 1; i <= cantDoc; i++) {
       let doc: { [key: string]: ReturnValue | ReturnValue[] } = {};
@@ -111,14 +111,13 @@ export class CustomSchema {
    * @returns
    * Promise<void>
    */
-  public async export(data: ReturnDoc[], config: FileConfig): Promise<string> {
+  public async export(data: any, config: FileConfig): Promise<string> {
     if (config && typeof config.format === "string") {
       let gen: Generator;
       switch (config.format) {
-        case "json": {
+        case "json":
           gen = new JsonGenerator(data, config);
           break;
-        }
         case "javascript":
           gen = new JavascriptGenerator(data, config);
           break;
