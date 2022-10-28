@@ -1,6 +1,6 @@
-import { CHDataUtils } from './utils/CHDataUtils';
-import { CustomSchema } from './utils/CustomSchema';
-import { SchemaObject } from './utils/interfaces/schema.interface';
+import { CHDataUtils } from "./utils/CHDataUtils";
+import { CustomSchema } from "./utils/CustomSchema";
+import { SchemaObject } from "./utils/interfaces/schema.interface";
 
 import {
   DataTypeSchema,
@@ -21,7 +21,8 @@ import {
   AnimalSchema,
   CodeSchema,
   ScienceSchema,
-} from './schemas';
+} from "./schemas";
+import { CHDataError } from "./errors/CHDataError";
 
 abstract class CHData {
   private static schemasCreated: CustomSchema[] = [];
@@ -53,9 +54,14 @@ abstract class CHData {
     schemaName: string,
     schema: SchemaObject,
   ): CustomSchema {
-    const newSchema = new CustomSchema(schemaName, schema);
-    this.schemasCreated.push(newSchema);
-    return newSchema;
+    const findSchema = this.schemasCreated.find(
+      (el) => el.schemaName === schemaName,
+    );
+    if (!findSchema) {
+      const newSchema = new CustomSchema(schemaName, schema);
+      this.schemasCreated.push(newSchema);
+      return newSchema;
+    } else throw new CHDataError("Already exists a schema with that name");
   }
 
   public static async exportAll(): Promise<void> {
