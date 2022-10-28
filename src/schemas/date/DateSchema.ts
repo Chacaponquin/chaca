@@ -1,5 +1,5 @@
-import { faker } from '@faker-js/faker';
-import { SchemaField } from '../../utils/SchemaField';
+import { faker } from "@faker-js/faker";
+import { SchemaField } from "../SchemaField";
 
 type DateSoonProps = {
   days?: number;
@@ -21,7 +21,7 @@ type BirthDateProps = {
   refDate?: Date;
   min?: number;
   max?: number;
-  mode?: 'age' | 'year';
+  mode?: "age" | "year";
 };
 
 type DateBetweenProps = {
@@ -32,10 +32,10 @@ type DateBetweenProps = {
 export class DateSchema {
   soon(args?: DateSoonProps) {
     return new SchemaField<Date, DateSoonProps>(
-      'dateSoon',
+      "dateSoon",
       (a) => {
         const days =
-          a.days && typeof a.days === 'number' && a.days > 0
+          a.days && typeof a.days === "number" && a.days > 0
             ? a.days
             : undefined;
 
@@ -50,10 +50,10 @@ export class DateSchema {
 
   past(args?: DatePastProps) {
     return new SchemaField<Date, DatePastProps>(
-      'datePast',
+      "datePast",
       (a) => {
         const years =
-          a.years && typeof a.years === 'number' && a.years > 0
+          a.years && typeof a.years === "number" && a.years > 0
             ? a.years
             : undefined;
 
@@ -68,10 +68,10 @@ export class DateSchema {
 
   future(args?: DateFutureProps) {
     return new SchemaField<Date, DateFutureProps>(
-      'dateFuture',
+      "dateFuture",
       (a) => {
         const years =
-          a.years && typeof a.years === 'number' && a.years > 0
+          a.years && typeof a.years === "number" && a.years > 0
             ? a.years
             : undefined;
 
@@ -86,7 +86,7 @@ export class DateSchema {
 
   month(args?: DayProps) {
     return new SchemaField<string, DayProps>(
-      'month',
+      "month",
       (a) => {
         const abbr = Boolean(a.abbr);
 
@@ -98,7 +98,7 @@ export class DateSchema {
 
   weekDay(args?: DayProps) {
     return new SchemaField<string, DayProps>(
-      'weekDay',
+      "weekDay",
       (a) => {
         const abbr = Boolean(a.abbr);
         return faker.date.weekday({ abbr });
@@ -109,12 +109,12 @@ export class DateSchema {
 
   birthdate(args?: BirthDateProps) {
     return new SchemaField<Date, BirthDateProps>(
-      'birthdate',
+      "birthdate",
       (a) => {
-        const min = a.min && typeof a.min === 'number' ? a.min : undefined;
+        const min = a.min && typeof a.min === "number" ? a.min : undefined;
         let max: number | undefined = undefined;
 
-        if (a.max && typeof a.max === 'number') {
+        if (a.max && typeof a.max === "number") {
           if (min) {
             if (a.max >= min) max = a.max;
             else max = undefined;
@@ -125,8 +125,8 @@ export class DateSchema {
 
         const mode =
           a.mode &&
-          typeof a.mode === 'string' &&
-          (a.mode === 'age' || a.mode === 'year')
+          typeof a.mode === "string" &&
+          (a.mode === "age" || a.mode === "year")
             ? a.mode
             : undefined;
 
@@ -141,15 +141,15 @@ export class DateSchema {
 
   between(args?: DateBetweenProps) {
     return new SchemaField<Date, DateBetweenProps>(
-      'dateBetween',
+      "dateBetween",
       (a) => {
         const from =
           a.from && a.from instanceof Date
             ? a.from
-            : '2020-01-01T00:00:00.000Z';
+            : "2020-01-01T00:00:00.000Z";
 
         const to =
-          a.to && a.to instanceof Date ? a.to : '2030-01-01T00:00:00.000Z';
+          a.to && a.to instanceof Date ? a.to : "2030-01-01T00:00:00.000Z";
 
         return faker.date.between(from, to);
       },

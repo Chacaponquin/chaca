@@ -1,11 +1,11 @@
-import { CHDataUtils } from '../../utils/CHDataUtils';
-import { SchemaField } from '../../utils/SchemaField';
-import { IMAGES_DEFINITIONS } from './constants/images';
+import { CHDataUtils } from "../../utils/CHDataUtils";
+import { SchemaField } from "../SchemaField";
+import { IMAGES_DEFINITIONS } from "./constants/images";
 
 export class ImageSchema {
   food() {
     return new SchemaField<string>(
-      'food',
+      "food",
       () => {
         return CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.food);
       },
@@ -15,7 +15,7 @@ export class ImageSchema {
 
   event() {
     return new SchemaField<string>(
-      'events',
+      "events",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.event),
       {},
     );
@@ -23,7 +23,7 @@ export class ImageSchema {
 
   wallpaper() {
     return new SchemaField<string>(
-      'wallpaper',
+      "wallpaper",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.wallpaper),
       {},
     );
@@ -31,15 +31,15 @@ export class ImageSchema {
 
   treeDimension() {
     return new SchemaField<string>(
-      '3D',
-      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS['3d']),
+      "3D",
+      () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS["3d"]),
       {},
     );
   }
 
   architecture() {
     return new SchemaField<string>(
-      'archiecture',
+      "archiecture",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.architecture),
       {},
     );
@@ -47,7 +47,7 @@ export class ImageSchema {
 
   nature() {
     return new SchemaField<string>(
-      'nature',
+      "nature",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.nature),
       {},
     );
@@ -55,7 +55,7 @@ export class ImageSchema {
 
   fashion() {
     return new SchemaField<string>(
-      'fashion',
+      "fashion",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.fashion),
       {},
     );
@@ -63,7 +63,7 @@ export class ImageSchema {
 
   film() {
     return new SchemaField<string>(
-      'film',
+      "film",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.film),
       {},
     );
@@ -71,7 +71,7 @@ export class ImageSchema {
 
   people() {
     return new SchemaField<string>(
-      'people',
+      "people",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.people),
       {},
     );
@@ -79,7 +79,7 @@ export class ImageSchema {
 
   health() {
     return new SchemaField<string>(
-      'health',
+      "health",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.health),
       {},
     );
@@ -87,7 +87,7 @@ export class ImageSchema {
 
   house() {
     return new SchemaField<string>(
-      'house',
+      "house",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.architecture),
       {},
     );
@@ -95,7 +95,7 @@ export class ImageSchema {
 
   street() {
     return new SchemaField<string>(
-      'street',
+      "street",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.street),
       {},
     );
@@ -103,7 +103,7 @@ export class ImageSchema {
 
   animal() {
     return new SchemaField<string>(
-      'animal',
+      "animal",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.animal),
       {},
     );
@@ -111,7 +111,7 @@ export class ImageSchema {
 
   spiritual() {
     return new SchemaField<string>(
-      'spiritual',
+      "spiritual",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.spirituality),
       {},
     );
@@ -119,7 +119,7 @@ export class ImageSchema {
 
   travel() {
     return new SchemaField<string>(
-      'travel',
+      "travel",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.travel),
       {},
     );
@@ -127,7 +127,7 @@ export class ImageSchema {
 
   art() {
     return new SchemaField<string>(
-      'art',
+      "art",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.art),
       {},
     );
@@ -135,7 +135,7 @@ export class ImageSchema {
 
   history() {
     return new SchemaField<string>(
-      'history',
+      "history",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.history),
       {},
     );
@@ -143,7 +143,7 @@ export class ImageSchema {
 
   sport() {
     return new SchemaField<string>(
-      'sport',
+      "sport",
       () => CHDataUtils.oneOfArray(IMAGES_DEFINITIONS.sport),
       {},
     );
@@ -151,7 +151,7 @@ export class ImageSchema {
 
   animateAvatar() {
     return new SchemaField<string>(
-      'animateAvatar',
+      "animateAvatar",
       () =>
         `https://api.multiavatar.com/${Number(Math.random() * 1000).toFixed(
           0,

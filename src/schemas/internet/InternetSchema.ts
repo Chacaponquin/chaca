@@ -1,5 +1,5 @@
-import { SchemaField } from '../../utils/SchemaField';
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
+import { SchemaField } from "../SchemaField";
 
 type EmailArgs = {
   firstName?: string;
@@ -26,12 +26,12 @@ type UserNameArgs = {
 
 export class InternetSchema {
   public domainName(): SchemaField {
-    return new SchemaField<string>('domainName', faker.internet.domainName, {});
+    return new SchemaField<string>("domainName", faker.internet.domainName, {});
   }
 
   public email(args: EmailArgs) {
     return new SchemaField<string, EmailArgs>(
-      'email',
+      "email",
       () =>
         faker.internet.email(args.firstName, args.lastName, args.provider, {
           allowSpecialCharacters: args.specialCharacters,
@@ -42,7 +42,7 @@ export class InternetSchema {
 
   public password(args?: PasswordArgs) {
     return new SchemaField<string, PasswordArgs>(
-      'password',
+      "password",
       (a) => {
         return faker.internet.password(
           a.length,
@@ -57,12 +57,12 @@ export class InternetSchema {
 
   public url(args?: UrlArgs) {
     return new SchemaField<string, UrlArgs>(
-      'url',
+      "url",
       (a) => {
         if (a.secure !== undefined) {
           if (!a.secure) return faker.internet.url();
 
-          let top = a.secure ? 'https' : 'http';
+          let top = a.secure ? "https" : "http";
           let randomUrl: string = faker.internet.url();
 
           return randomUrl;
@@ -74,7 +74,7 @@ export class InternetSchema {
 
   public userName(args?: UserNameArgs) {
     return new SchemaField<string, UserNameArgs>(
-      'userName',
+      "userName",
       (a: UserNameArgs) => {
         if (a !== undefined) {
           return faker.internet.userName(a.firstName, a.lastName);
@@ -86,35 +86,35 @@ export class InternetSchema {
 
   public httpMethod() {
     return new SchemaField<string>(
-      'httoMethod',
+      "httoMethod",
       () => faker.internet.httpMethod(),
       {},
     );
   }
 
   public ip() {
-    return new SchemaField<string>('ip', () => faker.internet.ip(), {});
+    return new SchemaField<string>("ip", () => faker.internet.ip(), {});
   }
 
   public emoji() {
-    return new SchemaField<string>('emoji', () => faker.internet.emoji(), {});
+    return new SchemaField<string>("emoji", () => faker.internet.emoji(), {});
   }
 
   public mac() {
-    return new SchemaField<string>('mac', () => faker.internet.mac(), {});
+    return new SchemaField<string>("mac", () => faker.internet.mac(), {});
   }
 
   public port() {
-    return new SchemaField<number>('port', () => faker.internet.port(), {});
+    return new SchemaField<number>("port", () => faker.internet.port(), {});
   }
 
   public ipv4() {
-    return new SchemaField<string>('ipv4', () => faker.internet.ipv4(), {});
+    return new SchemaField<string>("ipv4", () => faker.internet.ipv4(), {});
   }
 
   public userAgent() {
     return new SchemaField<string>(
-      'userAgent',
+      "userAgent",
       () => faker.internet.userAgent(),
       {},
     );
@@ -122,7 +122,7 @@ export class InternetSchema {
 
   public protocol() {
     return new SchemaField<string>(
-      'protocol',
+      "protocol",
       () => faker.internet.protocol(),
       {},
     );
@@ -130,7 +130,7 @@ export class InternetSchema {
 
   public domainSuffix() {
     return new SchemaField<string>(
-      'domainSuffix',
+      "domainSuffix",
       () => faker.internet.domainSuffix(),
       {},
     );
@@ -138,7 +138,7 @@ export class InternetSchema {
 
   public domainWord() {
     return new SchemaField<string>(
-      'domainWord',
+      "domainWord",
       () => faker.internet.domainWord(),
       {},
     );
@@ -146,7 +146,7 @@ export class InternetSchema {
 
   public httpStatusCode() {
     return new SchemaField<number>(
-      'httpStatusCode',
+      "httpStatusCode",
       () => {
         return faker.internet.httpStatusCode();
       },

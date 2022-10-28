@@ -1,15 +1,15 @@
-import { faker } from '@faker-js/faker';
-import { CHDataUtils } from '../../utils/CHDataUtils';
-import { SchemaField } from '../../utils/SchemaField';
-import NAMES, { ILanguageNames } from './constants';
+import { faker } from "@faker-js/faker";
+import { CHDataUtils } from "../../utils/CHDataUtils";
+import { SchemaField } from "../SchemaField";
+import NAMES, { ILanguageNames } from "./constants";
 
-type AllLanguages = 'es' | 'en';
+type AllLanguages = "es" | "en";
 
 type LangugeProps = {
   language?: AllLanguages;
 };
 
-type Sex = 'male' | 'female';
+type Sex = "male" | "female";
 
 type NameProps = {
   language?: AllLanguages;
@@ -22,32 +22,32 @@ type SexProps = {
 
 export class PersonSchema {
   jobTitle() {
-    return new SchemaField<string>('jobTitle', faker.name.jobTitle, {});
+    return new SchemaField<string>("jobTitle", faker.name.jobTitle, {});
   }
 
   jobType() {
-    return new SchemaField<string>('jobType', faker.name.jobType, {});
+    return new SchemaField<string>("jobType", faker.name.jobType, {});
   }
 
   jobArea() {
-    return new SchemaField<string>('area', faker.name.jobArea, {});
+    return new SchemaField<string>("area", faker.name.jobArea, {});
   }
 
   gender() {
-    return new SchemaField<string>('gender', faker.name.gender, {});
+    return new SchemaField<string>("gender", faker.name.gender, {});
   }
 
   sex() {
     return new SchemaField<string>(
-      'sex',
-      () => CHDataUtils.oneOfArray(['male', 'female']),
+      "sex",
+      () => CHDataUtils.oneOfArray(["male", "female"]),
       {},
     );
   }
 
   firstName(args?: NameProps) {
     return new SchemaField<string, NameProps>(
-      'firstName',
+      "firstName",
       (a) => {
         return CHDataUtils.oneOfArray(
           this.filterBySex(this.filterNameByLanguage(a.language), a.sex),
@@ -59,7 +59,7 @@ export class PersonSchema {
 
   lastName(args?: LangugeProps) {
     return new SchemaField<string, LangugeProps>(
-      'lastName',
+      "lastName",
       (a) => {
         return CHDataUtils.oneOfArray(
           this.filterNameByLanguage(a.language).lastNames,
@@ -71,7 +71,7 @@ export class PersonSchema {
 
   fullName(args?: NameProps) {
     return new SchemaField<string, NameProps>(
-      'fullName',
+      "fullName",
       (a) => {
         const lan = this.filterNameByLanguage(a.language);
 
@@ -84,7 +84,7 @@ export class PersonSchema {
 
         const fullName = [firstName, middleName, lastNameFirst, lastNameSecond];
 
-        let retString = '';
+        let retString = "";
         for (let i = 0; i < fullName.length; i++) {
           if (fullName[i]) retString += `${fullName[i]} `;
         }
@@ -97,7 +97,7 @@ export class PersonSchema {
 
   prefix(args?: SexProps) {
     return new SchemaField<string, SexProps>(
-      'preffix',
+      "preffix",
       (a) => faker.name.prefix(a.sex),
       args || {},
     );
@@ -106,15 +106,15 @@ export class PersonSchema {
   private filterNameByLanguage(
     language: AllLanguages | undefined,
   ): ILanguageNames {
-    if (language && typeof language === 'string') {
+    if (language && typeof language === "string") {
       const nameSelected = NAMES[language];
       if (nameSelected) return nameSelected;
-      else return NAMES['en'];
-    } else return NAMES['en'];
+      else return NAMES["en"];
+    } else return NAMES["en"];
   }
 
   private filterBySex(nameSel: ILanguageNames, sex: Sex | undefined): string[] {
-    if (sex && typeof sex === 'string') {
+    if (sex && typeof sex === "string") {
       const selSex = nameSel[sex];
       if (selSex) return selSex;
       else return [...nameSel.male, ...nameSel.female];

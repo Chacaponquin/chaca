@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
-import { SchemaField } from '../../utils/SchemaField';
-import { CHDataUtils } from '../../utils/CHDataUtils';
-import { COUNTRY_LIST } from './constants/countries';
+import { faker } from "@faker-js/faker";
+import { SchemaField } from "../SchemaField";
+import { CHDataUtils } from "../../utils/CHDataUtils";
+import { COUNTRY_LIST } from "./constants/countries";
 
 type ZipCodeProps = {
   format?: string;
@@ -9,19 +9,19 @@ type ZipCodeProps = {
 
 type CountryProps = {
   continent?:
-    | 'Asia'
-    | 'Africa'
-    | 'Oseania'
-    | 'Europe'
-    | 'South America'
-    | 'North America'
-    | 'Antartica';
+    | "Asia"
+    | "Africa"
+    | "Oseania"
+    | "Europe"
+    | "South America"
+    | "North America"
+    | "Antartica";
 };
 
 export class AddressSchema {
   zipCode(args?: ZipCodeProps) {
     return new SchemaField<string, ZipCodeProps>(
-      'zipCode',
+      "zipCode",
       (a) => {
         return faker.address.zipCode(a.format);
       },
@@ -30,12 +30,12 @@ export class AddressSchema {
   }
 
   timeZonde() {
-    return new SchemaField<string>('timeZone', faker.address.timeZone, {});
+    return new SchemaField<string>("timeZone", faker.address.timeZone, {});
   }
 
   cardinalDirection() {
     return new SchemaField<string>(
-      'cardinalDirection',
+      "cardinalDirection",
       faker.address.cardinalDirection,
       {},
     );
@@ -43,9 +43,9 @@ export class AddressSchema {
 
   country(args?: CountryProps) {
     return new SchemaField<string, CountryProps>(
-      'country',
+      "country",
       (a) => {
-        if (a.continent && typeof a.continent === 'string') {
+        if (a.continent && typeof a.continent === "string") {
           const filterList = COUNTRY_LIST.filter(
             (el) => el.continent === a.continent,
           );
@@ -63,7 +63,7 @@ export class AddressSchema {
 
   countryCode() {
     return new SchemaField<string>(
-      'countryCode',
+      "countryCode",
       faker.address.countryCode,
       {},
     );

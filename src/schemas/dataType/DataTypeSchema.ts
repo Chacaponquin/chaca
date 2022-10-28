@@ -1,8 +1,8 @@
-import { faker } from '@faker-js/faker';
-import { CHDataError } from '../../errors/CHDataError';
-import { CHDataUtils } from '../../utils/CHDataUtils';
-import { ReturnValue } from '../../utils/interfaces/value.interface';
-import { SchemaField } from '../../utils/SchemaField';
+import { faker } from "@faker-js/faker";
+import { CHDataError } from "../../errors/CHDataError";
+import { CHDataUtils } from "../../utils/CHDataUtils";
+import { ReturnValue } from "../../utils/interfaces/value.interface";
+import { SchemaField } from "../SchemaField";
 
 type NumberArgs = {
   min?: number;
@@ -13,7 +13,7 @@ type NumberArgs = {
 type HexadecimalProps = {
   length?: number;
   prefix?: string;
-  case?: 'mixed' | 'lower' | 'upper';
+  case?: "mixed" | "lower" | "upper";
 };
 
 type MatrizProps = {
@@ -30,17 +30,17 @@ type CustomArrayProps = {
 
 type CharactersProps = {
   length?: number;
-  case?: 'lower' | 'upper';
+  case?: "lower" | "upper";
 };
 
 export class DataTypeSchema {
   public boolean() {
-    return new SchemaField<boolean>('boolean', faker.datatype.boolean, {});
+    return new SchemaField<boolean>("boolean", faker.datatype.boolean, {});
   }
 
   public number(args?: NumberArgs) {
     return new SchemaField<number, NumberArgs>(
-      'number',
+      "number",
       (a) => {
         const precision = a.precision && a.precision > 0 ? a.precision : 1;
         let min = a.min || undefined;
@@ -60,7 +60,7 @@ export class DataTypeSchema {
 
   public hexadecimal(args?: HexadecimalProps) {
     return new SchemaField<string, HexadecimalProps>(
-      'hexadecimal',
+      "hexadecimal",
       (a) => {
         const length = a.length && a.length > 0 ? a.length : undefined;
 
@@ -76,7 +76,7 @@ export class DataTypeSchema {
 
   public float(args?: NumberArgs) {
     return new SchemaField<number, NumberArgs>(
-      'float',
+      "float",
       (a) => {
         const precision = a.precision && a.precision > 0 ? a.precision : 0.1;
         let min = a.min || undefined;
@@ -96,7 +96,7 @@ export class DataTypeSchema {
 
   public matriz(args?: MatrizProps) {
     return new SchemaField<number[][], MatrizProps>(
-      'matriz',
+      "matriz",
       (a) => {
         const x_size =
           a.x_size || CHDataUtils.numberByLimits({ min: 1, max: 10 });
@@ -126,7 +126,7 @@ export class DataTypeSchema {
 
   public customArray(args?: CustomArrayProps) {
     return new SchemaField<ReturnValue, CustomArrayProps>(
-      'customArray',
+      "customArray",
       (a) => {
         if (Array.isArray(a.array)) {
           const array = a.array || [1, 2, 3, 4];
@@ -134,7 +134,7 @@ export class DataTypeSchema {
           return CHDataUtils.oneOfArray(array);
         } else
           throw new CHDataError(
-            'The argument of custom array must be an array of values',
+            "The argument of custom array must be an array of values",
           );
       },
       args || { array: [1, 2, 3, 4] },
@@ -143,23 +143,23 @@ export class DataTypeSchema {
 
   public characters(args?: CharactersProps) {
     return new SchemaField<string, CharactersProps>(
-      'character',
+      "character",
       (a) => {
         const len =
-          typeof a.length === 'number' && a.length && a.length > 0
+          typeof a.length === "number" && a.length && a.length > 0
             ? a.length
             : undefined;
         let charactersToRet: string[] = [];
 
         if (a.case) {
-          if (a.case === 'lower')
-            charactersToRet = CHDataUtils.characters('lower');
-          else if (a.case === 'upper') CHDataUtils.characters('upper');
+          if (a.case === "lower")
+            charactersToRet = CHDataUtils.characters("lower");
+          else if (a.case === "upper") CHDataUtils.characters("upper");
           else charactersToRet = CHDataUtils.characters();
         } else charactersToRet = CHDataUtils.characters();
 
         if (len) {
-          let ret = '';
+          let ret = "";
           for (let i = 1; i <= len; i++) {
             ret = ret.concat(CHDataUtils.oneOfArray(charactersToRet));
           }

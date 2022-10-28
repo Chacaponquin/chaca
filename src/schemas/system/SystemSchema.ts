@@ -1,10 +1,10 @@
-import { faker } from '@faker-js/faker';
-import { SchemaField } from '../../utils/SchemaField';
+import { faker } from "@faker-js/faker";
+import { SchemaField } from "../SchemaField";
 
 export class SystemSchema {
   fileName() {
     return new SchemaField<string>(
-      'fileName',
+      "fileName",
       () => faker.system.fileName(),
       {},
     );
@@ -12,7 +12,7 @@ export class SystemSchema {
 
   fileExt() {
     return new SchemaField<string>(
-      'fileExt',
+      "fileExt",
       () => faker.system.commonFileExt(),
       {},
     );
@@ -20,7 +20,7 @@ export class SystemSchema {
 
   directoryPath() {
     return new SchemaField<string>(
-      'directoryPath',
+      "directoryPath",
       () => faker.system.directoryPath(),
       {},
     );
@@ -28,7 +28,7 @@ export class SystemSchema {
 
   filePath() {
     return new SchemaField<string>(
-      'filePath',
+      "filePath",
       () => faker.system.filePath(),
       {},
     );
@@ -36,7 +36,7 @@ export class SystemSchema {
 
   semServer() {
     return new SchemaField<string>(
-      'semServer',
+      "semServer",
       () => faker.system.semver(),
       {},
     );

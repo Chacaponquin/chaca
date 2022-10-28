@@ -140,10 +140,14 @@ export class CustomSchema {
     if (schema.type) {
       retValue = schema.type.getValue();
     } else if (schema.custom) {
-      retValue =
-        schema.custom.apply(
-          this.currentObjectCreated ? { ...this.currentObjectCreated } : {},
-        ) || null;
+      try {
+        retValue =
+          schema.custom.apply(
+            this.currentObjectCreated ? { ...this.currentObjectCreated } : {},
+          ) || null;
+      } catch (error) {
+        retValue = null;
+      }
     } else if (schema.enum) {
       retValue = CHDataUtils.oneOfArray(schema.enum);
     } else throw new CHDataError("");

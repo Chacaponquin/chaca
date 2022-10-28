@@ -1,7 +1,7 @@
-import { faker } from '@faker-js/faker';
-import { SchemaField } from '../../utils/SchemaField';
-import { MONEY_SYMBOLS } from './constants/moneySymbols';
-import { CHDataUtils } from '../../utils/CHDataUtils';
+import { faker } from "@faker-js/faker";
+import { MONEY_SYMBOLS } from "./constants/moneySymbols";
+import { CHDataUtils } from "../../utils/CHDataUtils";
+import { SchemaField } from "../SchemaField";
 
 type AmountProps = {
   min?: number;
@@ -13,7 +13,7 @@ type AmountProps = {
 export class FinanceSchema {
   pin() {
     return new SchemaField<string>(
-      'pin',
+      "pin",
       () => {
         return faker.finance.pin();
       },
@@ -23,7 +23,7 @@ export class FinanceSchema {
 
   bitcoinAddress() {
     return new SchemaField<string>(
-      'bitcoinAddress',
+      "bitcoinAddress",
       () => faker.finance.bitcoinAddress(),
       {},
     );
@@ -31,7 +31,7 @@ export class FinanceSchema {
 
   creditCard() {
     return new SchemaField<string>(
-      'creditCard',
+      "creditCard",
       () => faker.finance.creditCardNumber(),
       {},
     );
@@ -39,7 +39,7 @@ export class FinanceSchema {
 
   ethereumAddress() {
     return new SchemaField(
-      'ethereumAddress',
+      "ethereumAddress",
       () => faker.finance.ethereumAddress(),
       {},
     );
@@ -47,19 +47,19 @@ export class FinanceSchema {
 
   accountName() {
     return new SchemaField<string>(
-      'accountName',
+      "accountName",
       () => faker.finance.accountName(),
       {},
     );
   }
 
   bic() {
-    return new SchemaField<string>('bic', faker.finance.bic, {});
+    return new SchemaField<string>("bic", faker.finance.bic, {});
   }
 
   routingNumber() {
     return new SchemaField<string>(
-      'routingNumber',
+      "routingNumber",
       () => faker.finance.routingNumber(),
       {},
     );
@@ -67,7 +67,7 @@ export class FinanceSchema {
 
   creditCardCVV() {
     return new SchemaField<string>(
-      'creaditCardCVV',
+      "creaditCardCVV",
       () => faker.finance.creditCardCVV(),
       {},
     );
@@ -75,7 +75,7 @@ export class FinanceSchema {
 
   moneySymbol() {
     return new SchemaField<string>(
-      'moneySymbol',
+      "moneySymbol",
       () => {
         return CHDataUtils.oneOfArray(
           Object.values(MONEY_SYMBOLS).map((el) => el.symbol),
@@ -87,7 +87,7 @@ export class FinanceSchema {
 
   amount(args?: AmountProps) {
     return new SchemaField<string | number, AmountProps>(
-      'amount',
+      "amount",
       (a) => {
         return faker.finance.amount(a.min, a.max, a.precision, a.symbol);
       },
@@ -97,7 +97,7 @@ export class FinanceSchema {
 
   currencyMoneyName() {
     return new SchemaField<string>(
-      'currencyMoneyName',
+      "currencyMoneyName",
       () =>
         CHDataUtils.oneOfArray(
           Object.values(MONEY_SYMBOLS).map((el) => el.name),

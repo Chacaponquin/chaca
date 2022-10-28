@@ -1,5 +1,5 @@
-import { SchemaField } from '../../utils/SchemaField';
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
+import { SchemaField } from "../SchemaField";
 
 type WordsProps = {
   count?: number;
@@ -31,7 +31,7 @@ type LinesProps = {
 export class LoremSchema {
   public lines(args?: LinesProps) {
     return new SchemaField<string, LinesProps>(
-      'lines',
+      "lines",
       (a) => {
         return faker.lorem.lines(a.linesCount);
       },
@@ -41,7 +41,7 @@ export class LoremSchema {
 
   public paragraphs(args?: ParagraphsProps) {
     return new SchemaField<string, ParagraphsProps>(
-      'paragraphs',
+      "paragraphs",
       (a) => {
         return faker.lorem.paragraphs(a.paragraphsCount, a.separator);
       },
@@ -51,7 +51,7 @@ export class LoremSchema {
 
   public sentences(args?: SentencesProps) {
     return new SchemaField<string, SentencesProps>(
-      'sentences',
+      "sentences",
       (a) => {
         return faker.lorem.sentences(a.sentencesCount, a.separator);
       },
@@ -61,7 +61,7 @@ export class LoremSchema {
 
   public slug(args: SlugProps) {
     return new SchemaField<string, SlugProps>(
-      'slug',
+      "slug",
       (a) => {
         return faker.lorem.slug(a.wordCount);
       },
@@ -71,7 +71,7 @@ export class LoremSchema {
 
   public words(args?: WordsProps) {
     return new SchemaField<string, WordsProps>(
-      'words',
+      "words",
       (a) => {
         return faker.lorem.words(a.count);
       },
@@ -81,17 +81,17 @@ export class LoremSchema {
 
   public text(args: TextProps) {
     return new SchemaField<string, TextProps>(
-      'text',
+      "text",
       (a) => {
         const text = faker.lorem.text();
 
         if (a.character_max || a.character_min) {
           let charMin =
-            typeof a.character_min === 'number' && a.character_min > 0
+            typeof a.character_min === "number" && a.character_min > 0
               ? a.character_min
               : 0;
           let charMax =
-            typeof a.character_max === 'number' && a.character_max > charMin
+            typeof a.character_max === "number" && a.character_max > charMin
               ? a.character_max
               : undefined;
 
