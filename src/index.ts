@@ -1,6 +1,9 @@
 import { CHDataUtils } from "./utils/CHDataUtils";
 import { CustomSchema } from "./utils/CustomSchema";
-import { SchemaObject } from "./utils/interfaces/schema.interface";
+import {
+  SchemaConfig,
+  SchemaObject,
+} from "./utils/interfaces/schema.interface";
 
 import {
   DataTypeSchema,
@@ -52,7 +55,7 @@ abstract class CHData {
 
   public static defineSchema(
     schemaName: string,
-    schema: SchemaObject,
+    schema: SchemaObject<SchemaConfig>,
   ): CustomSchema {
     const findSchema = this.schemasCreated.find(
       (el) => el.schemaName === schemaName,

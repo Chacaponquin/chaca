@@ -169,7 +169,12 @@ export class CustomSchema {
   private validateObjectSchema(
     obj: SchemaObject<SchemaConfig>,
   ): SchemaObject<SchemaDefaultConfig> {
-    if (!obj || typeof obj !== "object" || Array.isArray(obj))
+    if (
+      !obj ||
+      (typeof obj === "object" && Array.isArray(obj)) ||
+      Object.keys(obj).length === 0 ||
+      obj instanceof Date
+    )
       throw new CHDataError(
         "Your schema has to be an object with the fields descriptions",
       );
