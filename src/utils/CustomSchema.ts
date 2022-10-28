@@ -77,9 +77,11 @@ export class CustomSchema {
         }
 
         doc = { ...doc, [key]: retValue };
+        this.currentObjectCreated = doc;
       }
 
       returnArray.push(doc);
+      this.currentObjectCreated = null;
     }
 
     return returnArray;
@@ -143,7 +145,8 @@ export class CustomSchema {
       try {
         retValue =
           schema.custom.apply(
-            this.currentObjectCreated ? { ...this.currentObjectCreated } : {},
+            this,
+            this.currentObjectCreated ? [this.currentObjectCreated] : [{}],
           ) || null;
       } catch (error) {
         retValue = null;

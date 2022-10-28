@@ -1,11 +1,11 @@
-import { SchemaField } from '../SchemaField';
-import { ReturnValue } from './value.interface';
+import { SchemaField } from "../../schemas/SchemaField";
+import { ReturnValue } from "./value.interface";
 
 export type SchemaConfig = {
   type?: SchemaField;
   isArray?: boolean | number | { min: number; max: number };
   posibleNull?: boolean | number;
-  custom?: () => ReturnValue;
+  custom?: (docFields: any) => any;
   enum?: ReturnValue[];
 };
 

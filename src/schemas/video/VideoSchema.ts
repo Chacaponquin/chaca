@@ -1,11 +1,11 @@
-import { CHDataUtils } from '../../utils/CHDataUtils';
-import { SchemaField } from '../../utils/SchemaField';
-import { VIDEOS_DEFINITIONS } from './constants/videos';
+import { CHDataUtils } from "../../utils/CHDataUtils";
+import { SchemaField } from "../SchemaField";
+import { VIDEOS_DEFINITIONS } from "./constants/videos";
 
 export class VideoSchema {
   food() {
     return new SchemaField<string>(
-      'food',
+      "food",
       () => {
         return CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.food);
       },
@@ -15,7 +15,7 @@ export class VideoSchema {
 
   event() {
     return new SchemaField<string>(
-      'event',
+      "event",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.event),
       {},
     );
@@ -23,7 +23,7 @@ export class VideoSchema {
 
   wallpaper() {
     return new SchemaField<string>(
-      'wallpaper',
+      "wallpaper",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.wallpaper),
       {},
     );
@@ -31,15 +31,15 @@ export class VideoSchema {
 
   treeD() {
     return new SchemaField<string>(
-      '3D',
-      () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS['3d']),
+      "3D",
+      () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS["3d"]),
       {},
     );
   }
 
   sport() {
     return new SchemaField<string>(
-      'sport',
+      "sport",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.sport),
       {},
     );
@@ -47,7 +47,7 @@ export class VideoSchema {
 
   animal() {
     return new SchemaField<string>(
-      'animal',
+      "animal",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.animal),
       {},
     );
@@ -55,7 +55,7 @@ export class VideoSchema {
 
   experimental() {
     return new SchemaField<string>(
-      'experimental',
+      "experimental",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.experimental),
       {},
     );
@@ -63,7 +63,7 @@ export class VideoSchema {
 
   aechitecture() {
     return new SchemaField<string>(
-      'architecture',
+      "architecture",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.architecture),
       {},
     );
@@ -71,7 +71,7 @@ export class VideoSchema {
 
   nature() {
     return new SchemaField<string>(
-      'nature',
+      "nature",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.nature),
       {},
     );
@@ -79,7 +79,7 @@ export class VideoSchema {
 
   fashion() {
     return new SchemaField<string>(
-      'fashion',
+      "fashion",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.fashion),
       {},
     );
@@ -87,7 +87,7 @@ export class VideoSchema {
 
   health() {
     return new SchemaField<string>(
-      'health',
+      "health",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.health),
       {},
     );
@@ -95,7 +95,7 @@ export class VideoSchema {
 
   people() {
     return new SchemaField<string>(
-      'people',
+      "people",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.people),
       {},
     );
@@ -103,7 +103,7 @@ export class VideoSchema {
 
   street() {
     return new SchemaField<string>(
-      'street',
+      "street",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.street),
       {},
     );
@@ -111,7 +111,7 @@ export class VideoSchema {
 
   spiritual() {
     return new SchemaField<string>(
-      'spiritual',
+      "spiritual",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.spirituality),
       {},
     );
@@ -119,7 +119,7 @@ export class VideoSchema {
 
   travel() {
     return new SchemaField<string>(
-      'travel',
+      "travel",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.travel),
       {},
     );
@@ -127,7 +127,7 @@ export class VideoSchema {
 
   art() {
     return new SchemaField<string>(
-      'art',
+      "art",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.art),
       {},
     );
@@ -135,7 +135,7 @@ export class VideoSchema {
 
   history() {
     return new SchemaField<string>(
-      'history',
+      "history",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.history),
       {},
     );
