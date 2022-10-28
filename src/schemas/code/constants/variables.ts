@@ -1,1 +1,1 @@
-export const CLASS_NAMES = ['Book', 'Video', 'Image'];
+export const CLASS_NAMES = ["Book", "Video", "Image"];

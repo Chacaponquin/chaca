@@ -1,5 +1,5 @@
-import { ENGLISH_WORDS } from './english';
-import { SPANISH_WORDS } from './spanish';
+import { ENGLISH_WORDS } from "./english";
+import { SPANISH_WORDS } from "./spanish";
 
 export interface ILanguageWord {
   verbs: string[];

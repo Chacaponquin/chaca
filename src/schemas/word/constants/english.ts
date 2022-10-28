@@ -1,4 +1,4 @@
-import { ILanguageWord } from '.';
+import { ILanguageWord } from ".";
 
 export const ENGLISH_WORDS: ILanguageWord = {
   verbs: [],
