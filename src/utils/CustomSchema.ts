@@ -18,13 +18,12 @@ import {
  */
 export class CustomSchema {
   //SCHEMA NAME
-  private name: string;
   private schemaObj: SchemaObject;
+  private currentObjectCreated: { [path: string]: any } | null = null;
 
-  constructor(schemaName: string, schemaObj: SchemaObject) {
+  constructor(public readonly schemaName: string, schemaObj: SchemaObject) {
     if (!schemaName) throw new CHDataError("Your schema must have a name");
     else {
-      this.name = schemaName;
       this.schemaObj = this.validateObjectSchema(schemaObj);
     }
   }
@@ -141,7 +140,10 @@ export class CustomSchema {
     if (schema.type) {
       retValue = schema.type.getValue();
     } else if (schema.custom) {
-      retValue = schema.custom() || null;
+      retValue =
+        schema.custom.apply(
+          this.currentObjectCreated ? { ...this.currentObjectCreated } : {},
+        ) || null;
     } else if (schema.enum) {
       retValue = CHDataUtils.oneOfArray(schema.enum);
     } else throw new CHDataError("");
