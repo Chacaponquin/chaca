@@ -3,6 +3,7 @@ import { Generator } from "./Generator";
 import AdmZip from "adm-zip";
 import { CHDataUtils } from "../utils/CHDataUtils";
 import fs from "fs";
+import path from "path";
 import { CHDataError } from "../errors/CHDataError";
 
 export class JavaGenerator extends Generator {
@@ -12,15 +13,18 @@ export class JavaGenerator extends Generator {
 
   public async generateFile(): Promise<string> {
     await this.generateClass({
-      name: CHDataUtils.capitalizeText(this.config.fileName),
+      name: CHDataUtils.capitalizeMayusText(this.config.fileName),
       docExample: Array.isArray(this.data) ? this.data[0] : this.data,
     });
 
     const zp = new AdmZip();
-    const zipName = `${this.fileName}.zip`;
-    const zipPath = this.generateRoute(zipName);
+    const zipName = `${this.config.fileName}.zip`;
+    const zipPath = path.join(this.baseLocation, zipName);
 
-    await this.generateMainFile(this.config.fileName, this.data);
+    await this.generateMainFile(
+      CHDataUtils.capitalizeMayusText(this.config.fileName),
+      this.data,
+    );
 
     try {
       zp.addLocalFile(this.generateRoute(this.config.fileName));
@@ -39,10 +43,10 @@ export class JavaGenerator extends Generator {
   ): Promise<void> {
     let classString = "";
     classString += `public class Main {\n`;
-    classString += `\tpublic static void main(String[] args){\n`;
+    classString += `\tpublic static void main(String[] args){\n\t`;
 
     const arrayName: string = `${CHDataUtils.capitalizeText(className)}`;
-    classString += `\tArrayList< ${className} > ${arrayName} =  new ArrayList< ${className} >();\n`;
+    classString += `ArrayList< ${className} > ${arrayName} =  new ArrayList< ${className} >();\n\t`;
 
     for (let i = 0; i < docs.length; i++) {
       const variableName: string = `${CHDataUtils.capitalizeText(
@@ -51,9 +55,9 @@ export class JavaGenerator extends Generator {
 
       classString += `${className} ${variableName} = new ${className}(${await this.createParameters(
         docs[i],
-      )});\n`;
+      )});\n\n\t`;
 
-      classString += `${arrayName}.add(${variableName});\n`;
+      classString += `${arrayName}.add(${variableName});\n\n\t`;
     }
 
     classString += "}\n";
@@ -80,23 +84,25 @@ export class JavaGenerator extends Generator {
     name: string;
     docExample: Object;
   }): Promise<string> {
-    let classString = "public class ";
-    classString += name + "{\n";
+    let classCode = "public class ";
+    classCode += name + "{\n";
 
     for (const [key, value] of Object.entries(docExample)) {
-      classString += `\tpublic ${await this.filterParentType(value)} ${key};\n`;
+      classCode += `\tpublic ${await this.filterParentType(value)} ${key};\n`;
     }
-    classString += await this.generateConstructor(name, docExample);
-    classString += "}";
+    classCode += await this.generateConstructor(name, docExample);
+    classCode += "}";
 
-    await fs.promises.writeFile(this.generateRoute(name), classString, "utf-8");
+    await fs.promises.writeFile(this.generateRoute(name), classCode, "utf-8");
 
     return name;
   }
 
-  private createParameters = async (values: Object): Promise<string> => {
+  private createParameters = async (values: {
+    [path: string]: any;
+  }): Promise<string> => {
     let returnVal = "";
-    const keys = Object.keys(values);
+    const keys: string[] = Object.keys(values);
 
     for (let i = 0; i < keys.length; i++) {
       returnVal +=
@@ -157,9 +163,7 @@ export class JavaGenerator extends Generator {
         returnValue = `ArrayList< ${await this.filterParentType(value[0])} >`;
       else if (value === null) returnValue = "Object";
       else if (value instanceof Date) returnValue = "String";
-      else {
-        returnValue += `${this.generateClassName(value)}`;
-      }
+      else returnValue += `${this.generateClassName(value)}`;
     }
 
     return returnValue;
@@ -172,7 +176,7 @@ export class JavaGenerator extends Generator {
     const initializeVar = (): string => {
       let returnVal = "";
 
-      const keys = Object.keys(doc);
+      const keys: string[] = Object.keys(doc);
       for (let i = 0; i < keys.length; i++) {
         returnVal += `\tthis.${keys[i]} = ${keys[i]};\n`;
       }
@@ -180,15 +184,18 @@ export class JavaGenerator extends Generator {
       return returnVal;
     };
 
-    const generateConstructorParameters = async (
-      values: Object,
-    ): Promise<string> => {
+    const generateConstructorParameters = async (values: {
+      [path: string]: any;
+    }): Promise<string> => {
       let returnString = "";
-      const keys = Object.keys(values);
+      const keys: string[] = Object.keys(values);
 
       for (let i = 0; i < keys.length; i++) {
+        const key = keys[i];
+        const val = values[key];
+
         returnString +=
-          `${await this.filterParentType(values[keys[i]])} ${keys[i]}` +
+          `${await this.filterParentType(val)} ${key}` +
           (i === keys.length - 1 ? "" : ", ");
       }
 

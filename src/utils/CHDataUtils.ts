@@ -1,4 +1,4 @@
-import { faker } from '@faker-js/faker';
+import { faker } from "@faker-js/faker";
 export class CHDataUtils {
   public static oneOfArray<T = any>(list: T[]) {
     return list[Math.floor(Math.random() * list.length)];
@@ -6,15 +6,15 @@ export class CHDataUtils {
   public static numberByLimits({ min, max }: { min: number; max: number }) {
     return faker.datatype.number({ min, max, precision: 1 });
   }
-  public static characters(type?: 'lower' | 'upper'): string[] {
-    const allCharacters = 'abcdefghijklmnopqrstuvwxyz';
+  public static characters(type?: "lower" | "upper"): string[] {
+    const allCharacters = "abcdefghijklmnopqrstuvwxyz";
 
-    if (type === 'lower') return allCharacters.split('');
-    else if (type === 'upper')
-      return allCharacters.split('').map((el) => el.toUpperCase());
+    if (type === "lower") return allCharacters.split("");
+    else if (type === "upper")
+      return allCharacters.split("").map((el) => el.toUpperCase());
     else {
-      const mayus = allCharacters.split('').map((el) => el.toUpperCase());
-      const minus = allCharacters.split('');
+      const mayus = allCharacters.split("").map((el) => el.toUpperCase());
+      const minus = allCharacters.split("");
       mayus.forEach((el) => minus.push(el));
 
       return minus;
@@ -40,11 +40,11 @@ export class CHDataUtils {
           }
         }
         if (
-          value[i] === ' ' ||
-          value[i] != '_' ||
-          value[i] != '-' ||
-          value[i] != '(' ||
-          value[i] != ')'
+          value[i] === " " ||
+          value[i] != "_" ||
+          value[i] != "-" ||
+          value[i] != "(" ||
+          value[i] != ")"
         ) {
           returnValue = false;
           break;
@@ -56,16 +56,16 @@ export class CHDataUtils {
 
   public static capitalizeText(text: string): string {
     if (!this.isCapitalized(text)) {
-      let returnString = '';
+      let returnString = "";
       let mayus = false;
 
       for (let i = 0; i < text.length; i++) {
         if (
-          text[i] != ' ' &&
-          text[i] != '_' &&
-          text[i] != '-' &&
-          text[i] != '(' &&
-          text[i] != ')'
+          text[i] != " " &&
+          text[i] != "_" &&
+          text[i] != "-" &&
+          text[i] != "(" &&
+          text[i] != ")"
         ) {
           const isOnlyMayus: boolean =
             text[i].toUpperCase() === text[i] &&
@@ -88,5 +88,18 @@ export class CHDataUtils {
 
       return returnString;
     } else return text;
+  }
+
+  public static capitalizeMayusText(text: string): string {
+    let result = this.capitalizeText(text);
+    let newResult = "";
+
+    for (let i = 0; i < result.length; i++) {
+      newResult = newResult.concat(
+        i === 0 ? result[i].toUpperCase() : result[i],
+      );
+    }
+
+    return newResult;
   }
 }

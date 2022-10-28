@@ -1,12 +1,11 @@
-import { FileConfig } from '../utils/interfaces/export.interface';
-import { Generator } from './Generator';
-import fs from 'fs';
-import { CHDataUtils } from '../utils/CHDataUtils';
-import { ReturnValue } from '../utils/interfaces/value.interface';
+import { FileConfig } from "../utils/interfaces/export.interface";
+import { Generator } from "./Generator";
+import fs from "fs";
+import { CHDataUtils } from "../utils/CHDataUtils";
 
 export class JavascriptGenerator extends Generator {
   constructor(data: any, config: FileConfig) {
-    super(data, 'js', config);
+    super(data, "js", config);
   }
 
   public async generateFile(): Promise<string> {
@@ -22,19 +21,17 @@ export class JavascriptGenerator extends Generator {
       )} = ${this.generateObject(this.data)}`;
     }
 
-    await fs.promises.writeFile(this.route, returnData, 'utf-8');
+    await fs.promises.writeFile(this.route, returnData, "utf-8");
 
     return this.fileName;
   }
 
-  public generateSchemaArray(
-    schemaObjects: { [path: string]: ReturnValue | ReturnValue[] }[],
-  ): string {
+  public generateSchemaArray(schemaObjects: { [path: string]: any }[]): string {
     let returnArray = `[`;
 
     for (let i = 0; i < schemaObjects.length; i++) {
       if (
-        typeof schemaObjects[i] === 'object' &&
+        typeof schemaObjects[i] === "object" &&
         !Array.isArray(schemaObjects[i])
       ) {
         if (i !== schemaObjects.length - 1)
@@ -43,21 +40,21 @@ export class JavascriptGenerator extends Generator {
       }
     }
 
-    returnArray += ']\n';
+    returnArray += "]\n";
 
     return returnArray;
   }
 
-  private filterTypeValue(value: ReturnValue | ReturnValue[]): string {
-    let returnValue = 'undefined';
+  private filterTypeValue(value: any): string {
+    let returnValue = "undefined";
 
-    if (typeof value === 'string') returnValue = `"${value}"`;
-    else if (typeof value === 'number' || typeof value === 'boolean')
+    if (typeof value === "string") returnValue = `"${value}"`;
+    else if (typeof value === "number" || typeof value === "boolean")
       returnValue = `${value}`;
-    else if (typeof value === 'object') {
+    else if (typeof value === "object") {
       if (Array.isArray(value)) returnValue = this.generateArray(value);
       else {
-        if (value === null) returnValue = 'null';
+        if (value === null) returnValue = "null";
         else if (value instanceof Date) returnValue = `${value.toString()}`;
         else returnValue = this.generateObject(value);
       }
@@ -66,27 +63,25 @@ export class JavascriptGenerator extends Generator {
     return returnValue;
   }
 
-  public generateObject(doc: {
-    [key: string]: ReturnValue | ReturnValue[];
-  }): string {
+  public generateObject(doc: { [key: string]: any[] }): string {
     let objectData = `{`;
     for (const [key, value] of Object.entries(doc)) {
       const val = this.filterTypeValue(value);
       objectData += `${key}: ${val},`;
     }
-    objectData += '}';
+    objectData += "}";
 
     return objectData;
   }
 
-  private generateArray(array: ReturnValue[]): string {
-    let returnArray = '[';
+  private generateArray(array: any[]): string {
+    let returnArray = "[";
     for (let i = 0; i < array.length; i++) {
       if (i !== array.length - 1) {
         returnArray += `${this.filterTypeValue(array[i])}, `;
       } else returnArray += `${this.filterTypeValue(array[i])}`;
     }
-    returnArray += ']';
+    returnArray += "]";
 
     return returnArray;
   }

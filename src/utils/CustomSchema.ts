@@ -9,6 +9,7 @@ import {
   JavascriptGenerator,
   JsonGenerator,
   JavaGenerator,
+  TypescriptGenerator,
 } from "../generators";
 
 /**
@@ -114,6 +115,9 @@ export class CustomSchema {
           break;
         case "java":
           gen = new JavaGenerator(data, config);
+          break;
+        case "typescript":
+          gen = new TypescriptGenerator(data, config);
           break;
         default:
           throw new CHDataError(`Format ${config.format} invalid`);

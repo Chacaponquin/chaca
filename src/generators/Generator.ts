@@ -7,6 +7,7 @@ export abstract class Generator {
   protected config: FileConfig;
   protected route: string;
   protected fileName: string;
+  protected baseLocation: string;
 
   constructor(
     protected readonly data: any,
@@ -23,17 +24,13 @@ export abstract class Generator {
     this.ext = extension;
     this.config = config;
     this.fileName = `${config.fileName}.${this.ext}`;
-
+    this.baseLocation = path.join("./", this.config.location);
     this.route = this.generateRoute(config.fileName);
   }
 
   public abstract generateFile(): Promise<string>;
 
-  protected generateRoute(fileName: string): string {
-    return `${path.join(
-      "./",
-      this.config.location,
-      `${fileName}.${this.ext}`,
-    )}`;
+  protected generateRoute(name: string): string {
+    return `${path.join(this.baseLocation, `${name}.${this.ext}`)}`;
   }
 }
