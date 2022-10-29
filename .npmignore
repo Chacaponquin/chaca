@@ -8,5 +8,5 @@ test/
 package-lock.json
 .eslintrc
 .eslintignore
-tsconfig.cjs.json
-tsconfig.esm.json
+.tsconfig.types.json
+bundle.ts

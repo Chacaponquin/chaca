@@ -1,5 +1,5 @@
 {
-  "name": "ch-data",
+  "name": "chaca",
   "version": "0.0.1",
   "description": "A javascript library to generate data schemas with logical values",
   "main": "./lib/cjs/index.js",
