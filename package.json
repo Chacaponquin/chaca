@@ -4,18 +4,18 @@
   "description": "A javascript library to generate data schemas with logical values",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.mjs",
-  "types": "./types/index.d.ts",
+  "types": "./lib/types/index.d.ts",
   "engines": {
     "node": ">=6.0.0"
   },
   "exports": {
     ".": {
       "import": {
-        "types": "./lib/esm/types/index.d.ts",
+        "types": "./lib/types/index.d.ts",
         "default": "./lib/esm/index.mjs"
       },
       "require": {
-        "types": "./lib/cjs/types/index.d.ts",
+        "types": "./lib/types/index.d.ts",
         "default": "./lib/cjs/index.js"
       }
     }
