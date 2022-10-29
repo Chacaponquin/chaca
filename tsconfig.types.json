@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "emitDeclarationOnly": true,
+    "outDir": "./lib/types",
+    "declaration": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"],
+  "extends": "./tsconfig.base.json"
+}

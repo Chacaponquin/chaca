@@ -6,4 +6,4 @@ lib/
 package-lock.json
 
 #folder with test file creation
-testData/
+data/

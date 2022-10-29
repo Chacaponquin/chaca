@@ -1,5 +1,11 @@
 ## Instalation
 
 ```bash
-npm install --save-dev @faker-js/faker
+npm install ch-data
+```
+
+## Usage
+
+```js
+import chData from "ch-data";
 ```

@@ -1,12 +1,12 @@
 {
   "name": "ch-data",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "types": "index.d.ts",
+  "version": "0.0.1",
+  "description": "A javascript library to generate data schemas with logical values",
+  "main": "./lib/cjs/index.js",
+  "module": "./lib/esm/index.mjs",
+  "types": "./types/index.d.ts",
   "engines": {
-    "node": ">=14.0.0",
-    "npm": ">=6.0.0"
+    "node": ">=14.0.0"
   },
   "exports": {
     ".": {
@@ -25,10 +25,11 @@
   ],
   "scripts": {
     "clean": "rm -rf ./lib",
-    "build": "npm run test && npm run prettier-format && npm run clean && npm run build:esm && npm run build:cjs",
+    "build": "npm run test && npm run prettier-format && npm run build:lib",
+    "build:lib": "npm run clean && tsx ./bundle.ts && npm run build:types",
     "build:esm": "tsc -p ./tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
     "build:cjs": "tsc -p ./tsconfig.cjs.json",
-    "prepack": "npm run build",
+    "build:types": "tsc -p ./tsconfig.types.json",
     "test": "mocha --r ts-node/register test/**/*.ts",
     "test:lib": "mocha --r ts-node/register test/lib/**/*.ts",
     "test:schemas": "mocha --r ts-node/register test/schemas/**/*.ts",
@@ -36,7 +37,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Chacaponquin/ch-data.git"
+    "url": "git+https://github.com/Chacaponquin/ch-data.git"
   },
   "keywords": [
     "ch-data",
@@ -49,6 +50,7 @@
   "devDependencies": {
     "@types/adm-zip": "^0.5.0",
     "@types/chai": "^4.3.3",
+    "@types/glob": "^8.0.0",
     "@types/json2csv": "^5.0.3",
     "@types/mocha": "^10.0.0",
     "@types/node": "^18.8.0",
@@ -56,11 +58,14 @@
     "@typescript-eslint/eslint-plugin": "^5.38.1",
     "@typescript-eslint/parser": "^5.38.1",
     "chai": "^4.3.6",
+    "esbuild": "^0.15.12",
     "eslint": "^8.24.0",
     "eslint-config-prettier": "^8.5.0",
+    "glob": "^8.0.3",
     "mocha": "^10.0.0",
     "prettier": "^2.7.1",
     "ts-node": "^10.9.1",
+    "tsx": "^3.11.0",
     "typescript": "^4.8.4"
   },
   "dependencies": {
@@ -68,5 +73,13 @@
     "adm-zip": "^0.5.9",
     "json2csv": "^5.0.7",
     "uuid": "^9.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/Chacaponquin/ch-data/issues"
+  },
+  "homepage": "https://github.com/Chacaponquin/ch-data#readme",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
   }
 }

@@ -30,33 +30,9 @@ import { FileConfig } from "./utils/interfaces/export.interface";
 
 abstract class CHData {
   private static schemasCreated: CustomSchema[] = [];
-
-  public static readonly schemas = {
-    music: new MusicSchema(),
-    internet: new InternetSchema(),
-    dataType: new DataTypeSchema(),
-    id: new IdSchema(),
-    lorem: new LoremSchema(),
-    image: new ImageSchema(),
-    system: new SystemSchema(),
-    finance: new FinanceSchema(),
-    phone: new PhoneSchema(),
-    address: new AddressSchema(),
-    language: new LanguageSchema(),
-    vehicle: new VehicleSchema(),
-    date: new DateSchema(),
-    person: new PersonSchema(),
-    video: new VideoSchema(),
-    animal: new AnimalSchema(),
-    code: new CodeSchema(),
-    science: new ScienceSchema(),
-  };
-
-  public readonly utils = CHDataUtils;
-
   /**
    *
-   * @param schemaName schema name
+   * @param {string} schemaName schema name
    * @throws The name of schema can't be an empty string, or a repetive name
    *
    * @param schemaObj The object with the keys and type of each field
@@ -81,4 +57,25 @@ abstract class CHData {
   }
 }
 
-export default CHData;
+export const chData = CHData;
+export const schemas = {
+  music: new MusicSchema(),
+  internet: new InternetSchema(),
+  dataType: new DataTypeSchema(),
+  id: new IdSchema(),
+  lorem: new LoremSchema(),
+  image: new ImageSchema(),
+  system: new SystemSchema(),
+  finance: new FinanceSchema(),
+  phone: new PhoneSchema(),
+  address: new AddressSchema(),
+  language: new LanguageSchema(),
+  vehicle: new VehicleSchema(),
+  date: new DateSchema(),
+  person: new PersonSchema(),
+  video: new VideoSchema(),
+  animal: new AnimalSchema(),
+  code: new CodeSchema(),
+  science: new ScienceSchema(),
+};
+export const utils = CHDataUtils;
