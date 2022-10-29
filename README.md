@@ -1,11 +1,11 @@
 ## Instalation
 
 ```bash
-npm install ch-data
+npm install chaca
 ```
 
 ## Usage
 
 ```js
-import chData from "ch-data";
+import { chaca } from "chaca";
 ```

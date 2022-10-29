@@ -28,7 +28,7 @@ import {
 import { CHDataError } from "./errors/CHDataError";
 import { FileConfig } from "./utils/interfaces/export.interface";
 
-abstract class CHData {
+abstract class Chaca {
   private static schemasCreated: CustomSchema[] = [];
   /**
    *
@@ -57,7 +57,7 @@ abstract class CHData {
   }
 }
 
-export const chData = CHData;
+export const chaca = Chaca;
 export const schemas = {
   music: new MusicSchema(),
   internet: new InternetSchema(),
