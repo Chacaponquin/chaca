@@ -1,6 +1,6 @@
 {
   "name": "chaca",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A javascript library to generate data schemas with logical values",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.mjs",
@@ -24,29 +24,31 @@
     "lib/**/*",
     "LICENSE",
     "CONTRIBUTING.md",
-    "README.md"
+    "README.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
     "clean": "rm -rf ./lib",
     "build": "npm run test && npm run prettier-format && npm run build:lib",
     "build:lib": "npm run clean && tsx ./bundle.ts && npm run build:types",
-    "build:esm": "tsc -p ./tsconfig.esm.json && mv lib/esm/index.js lib/esm/index.mjs",
-    "build:cjs": "tsc -p ./tsconfig.cjs.json",
     "build:types": "tsc -p ./tsconfig.types.json",
     "test": "mocha --r ts-node/register test/**/*.ts",
     "test:lib": "mocha --r ts-node/register test/lib/**/*.ts",
     "test:schemas": "mocha --r ts-node/register test/schemas/**/*.ts",
-    "prettier-format": "prettier --config .prettierrc src/**/*.ts --write"
+    "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Chacaponquin/ch-data.git"
   },
   "keywords": [
-    "ch-data",
+    "chaca",
     "fake-data",
     "generate data",
-    "random data"
+    "random data",
+    "data",
+    "fake data"
   ],
   "author": "chacaponquin <hectorangel2001@gmail.com>",
   "license": "MIT",
@@ -80,9 +82,5 @@
   "bugs": {
     "url": "https://github.com/Chacaponquin/ch-data/issues"
   },
-  "homepage": "https://github.com/Chacaponquin/ch-data#readme",
-  "directories": {
-    "lib": "lib",
-    "test": "test"
-  }
+  "homepage": "https://github.com/Chacaponquin/ch-data#readme"
 }

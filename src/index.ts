@@ -30,6 +30,7 @@ import { FileConfig } from "./utils/interfaces/export.interface";
 
 abstract class Chaca {
   private static schemasCreated: CustomSchema[] = [];
+  public static utils = CHDataUtils;
   /**
    *
    * @param {string} schemaName schema name
@@ -53,7 +54,9 @@ abstract class Chaca {
   }
 
   public static async exportAll(config: FileConfig): Promise<void> {
-    return;
+    for (const s of this.schemasCreated) {
+      await s.generateAndExport(20, config);
+    }
   }
 }
 
@@ -78,4 +81,3 @@ export const schemas = {
   code: new CodeSchema(),
   science: new ScienceSchema(),
 };
-export const utils = CHDataUtils;

@@ -7,7 +7,7 @@ npm install chaca
 ## Usage
 
 ```js
-import { chaca } from "chaca";
+import { chaca, schemas } from "chaca";
 
 const postSchema = chaca.defineSchema("Post", {
   id: schemas.id.mongodbID(),
