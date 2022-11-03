@@ -86,7 +86,7 @@ export class FinanceSchema {
   }
 
   amount(args?: AmountProps) {
-    return new SchemaField<string | number, AmountProps>(
+    return new SchemaField<string, AmountProps>(
       "amount",
       (a) => {
         return faker.finance.amount(a.min, a.max, a.precision, a.symbol);
@@ -102,6 +102,18 @@ export class FinanceSchema {
         CHDataUtils.oneOfArray(
           Object.values(MONEY_SYMBOLS).map((el) => el.name),
         ),
+      {},
+    );
+  }
+
+  moneyCode() {
+    return new SchemaField<string>(
+      "moneyCode",
+      () => {
+        return CHDataUtils.oneOfArray(
+          Object.values(MONEY_SYMBOLS).map((el) => el.code),
+        );
+      },
       {},
     );
   }
