@@ -33,7 +33,7 @@
     "build:lib": "npm run clean && tsx ./bundle.ts && npm run build:types",
     "build:types": "tsc -p ./tsconfig.types.json",
     "test": "mocha --r ts-node/register test/**/*.ts",
-    "test:lib": "mocha --r ts-node/register test/lib/**/*.ts",
+    "test:lib": "mocha --r ts-node/register test/library/**/*.ts",
     "test:schemas": "mocha --r ts-node/register test/schemas/**/*.ts",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "prepublish": "npm run build"
