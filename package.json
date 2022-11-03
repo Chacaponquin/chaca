@@ -1,6 +1,6 @@
 {
   "name": "chaca",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "A javascript library to generate data schemas with logical values",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.mjs",
