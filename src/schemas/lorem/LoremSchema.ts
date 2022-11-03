@@ -33,7 +33,11 @@ export class LoremSchema {
     return new SchemaField<string, LinesProps>(
       "lines",
       (a) => {
-        return faker.lorem.lines(a.linesCount);
+        return faker.lorem.lines(
+          typeof a.linesCount === "number" && a.linesCount > 0
+            ? a.linesCount
+            : undefined,
+        );
       },
       args || {},
     );

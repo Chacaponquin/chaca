@@ -26,7 +26,7 @@ export class PhoneSchema {
    * @param args.min Minimun minutes of the call. Default `0`
    * @param args.max Maximun minutes of the call. Default `59`
    *
-   * @example chData.schemas.phone.callDuration({min: 10, max: 30}).getValue() // '27:30'
+   * @example schemas.phone.callDuration().getValue({min: 10, max: 30}) // '27:30'
    *
    * @returns string
    */

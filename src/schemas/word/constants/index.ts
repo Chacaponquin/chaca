@@ -11,4 +11,9 @@ export interface ILanguageWord {
   nouns: string[];
 }
 
-export default { es: SPANISH_WORDS, en: ENGLISH_WORDS };
+const e: { [path: string]: ILanguageWord } = {
+  es: SPANISH_WORDS,
+  en: ENGLISH_WORDS,
+};
+
+export default e;

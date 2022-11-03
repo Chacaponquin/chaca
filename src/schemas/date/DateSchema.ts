@@ -1,4 +1,5 @@
 import { faker } from "@faker-js/faker";
+import { CHDataUtils } from "../../utils/CHDataUtils";
 import { SchemaField } from "../SchemaField";
 
 type DateSoonProps = {
@@ -22,6 +23,10 @@ type BirthDateProps = {
   min?: number;
   max?: number;
   mode?: "age" | "year";
+};
+
+type TimeAgoProps = {
+  unit?: "years" | "seconds" | "minutes" | "days" | "hours";
 };
 
 type DateBetweenProps = {
@@ -152,6 +157,24 @@ export class DateSchema {
           a.to && a.to instanceof Date ? a.to : "2030-01-01T00:00:00.000Z";
 
         return faker.date.between(from, to);
+      },
+      args || {},
+    );
+  }
+
+  timeAgo(args?: TimeAgoProps) {
+    return new SchemaField<string, TimeAgoProps>(
+      "timeAgo",
+      (a) => {
+        const units = ["years", "seconds", "minutes", "days", "hours"];
+
+        const unit =
+          typeof a.unit === "string" ? a.unit : CHDataUtils.oneOfArray(units);
+
+        return `${CHDataUtils.numberByLimits({
+          min: 1,
+          max: 59,
+        })} ${unit} ago`;
       },
       args || {},
     );

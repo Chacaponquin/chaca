@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
+import { CHDataUtils } from "../../utils/CHDataUtils";
 
 type EmailArgs = {
   firstName?: string;
@@ -76,9 +77,7 @@ export class InternetSchema {
     return new SchemaField<string, UserNameArgs>(
       "userName",
       (a: UserNameArgs) => {
-        if (a !== undefined) {
-          return faker.internet.userName(a.firstName, a.lastName);
-        } else return faker.internet.userName();
+        return faker.internet.userName(a.firstName, a.lastName);
       },
       args || {},
     );
@@ -87,7 +86,15 @@ export class InternetSchema {
   public httpMethod() {
     return new SchemaField<string>(
       "httoMethod",
-      () => faker.internet.httpMethod(),
+      () => {
+        return CHDataUtils.oneOfArray([
+          "GET",
+          "PATCH",
+          "DELETE",
+          "POST",
+          "PUT",
+        ]);
+      },
       {},
     );
   }
@@ -123,7 +130,7 @@ export class InternetSchema {
   public protocol() {
     return new SchemaField<string>(
       "protocol",
-      () => faker.internet.protocol(),
+      () => CHDataUtils.oneOfArray(["http", "https"]),
       {},
     );
   }

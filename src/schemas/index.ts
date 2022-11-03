@@ -8,7 +8,6 @@ import { SystemSchema } from "./system/SystemSchema";
 import { FinanceSchema } from "./finnance/FinanceSchema";
 import { PhoneSchema } from "./phone/PhoneSchema";
 import { AddressSchema } from "./address/AddressSchema";
-import { LanguageSchema } from "./word/LanguageSchema";
 import { VehicleSchema } from "./vehicle/VehicleSchema";
 import { DateSchema } from "./date/DateSchema";
 import { PersonSchema } from "./person/PersonSchema";
@@ -16,6 +15,7 @@ import { VideoSchema } from "./video/VideoSchema";
 import { AnimalSchema } from "./animal/AnimalSchema";
 import { CodeSchema } from "./code/CodeSchema";
 import { ScienceSchema } from "./science/ScienceSchema";
+import { WordSchema } from "./word/WordSchema";
 
 export {
   IdSchema,
@@ -28,7 +28,7 @@ export {
   FinanceSchema,
   PhoneSchema,
   AddressSchema,
-  LanguageSchema,
+  WordSchema,
   VehicleSchema,
   DateSchema,
   PersonSchema,

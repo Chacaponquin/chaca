@@ -40,7 +40,7 @@ export class PersonSchema {
   sex() {
     return new SchemaField<string>(
       "sex",
-      () => CHDataUtils.oneOfArray(["male", "female"]),
+      () => CHDataUtils.oneOfArray(["Male", "Female"]),
       {},
     );
   }
@@ -98,7 +98,7 @@ export class PersonSchema {
   prefix(args?: SexProps) {
     return new SchemaField<string, SexProps>(
       "preffix",
-      (a) => faker.name.prefix(a.sex),
+      (a) => faker.name.prefix(typeof a.sex === "string" ? a.sex : undefined),
       args || {},
     );
   }
