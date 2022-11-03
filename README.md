@@ -73,6 +73,8 @@ schemas.dataType.number().getValue({ min: 0, max: 20 }); // 15;
 schemas.dataType.hexadecimal().getValue(); // '#f12a974eB1'
 schemas.dataType.float().getValue(); // 15.2;
 schemas.dataType.matriz().getValue(); // [[0, 3, 4, 1], [1, 2, 3], [0, 0, 1]]
-schemas.dataType.customArray().getValue({ array: [5, { hi: "Hello", 'Chaca the best!!' }] }); // 'Chaca the best!!'
-schemas.dataType.characters().getValue() // 'a';
+schemas.dataType
+  .customArray()
+  .getValue({ array: [5, { hi: "Hello" }, "Chaca the best!!"] }); // 'Chaca the best!!'
+schemas.dataType.characters().getValue(); // 'a';
 ```
