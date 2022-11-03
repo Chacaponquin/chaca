@@ -1,12 +1,8 @@
-import { ReturnValue } from "../utils/interfaces/value.interface";
-
 interface ISchemaField<T, K> {
   getValue(args: T): K;
 }
 
-export class SchemaField<K = ReturnValue, T = any>
-  implements ISchemaField<T, K>
-{
+export class SchemaField<K = unknown, T = any> implements ISchemaField<T, K> {
   private valueFunction: (args: T) => K;
   private args: T;
 
@@ -15,7 +11,11 @@ export class SchemaField<K = ReturnValue, T = any>
     this.args = args;
   }
 
-  public getValue(): K {
-    return this.valueFunction(this.args);
+  public getValue(a?: T): K {
+    const ar =
+      a && typeof a === "object" && !Array.isArray(a) && a !== null
+        ? a
+        : this.args;
+    return this.valueFunction(ar);
   }
 }

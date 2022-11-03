@@ -29,7 +29,7 @@ export class AddressSchema {
     );
   }
 
-  timeZonde() {
+  timeZone() {
     return new SchemaField<string>("timeZone", faker.address.timeZone, {});
   }
 

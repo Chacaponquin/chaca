@@ -1,7 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { CHDataError } from "../../errors/CHDataError";
 import { CHDataUtils } from "../../utils/CHDataUtils";
-import { ReturnValue } from "../../utils/interfaces/value.interface";
 import { SchemaField } from "../SchemaField";
 
 type NumberArgs = {
@@ -25,7 +24,7 @@ type MatrizProps = {
 };
 
 type CustomArrayProps = {
-  array: ReturnValue[];
+  array: any[];
 };
 
 type CharactersProps = {
@@ -35,22 +34,20 @@ type CharactersProps = {
 
 export class DataTypeSchema {
   public boolean() {
-    return new SchemaField<boolean>("boolean", faker.datatype.boolean, {});
+    return new SchemaField<boolean>(
+      "boolean",
+      () => CHDataUtils.oneOfArray([true, false]),
+      {},
+    );
   }
 
   public number(args?: NumberArgs) {
     return new SchemaField<number, NumberArgs>(
       "number",
       (a) => {
-        const precision = a.precision && a.precision > 0 ? a.precision : 1;
-        let min = a.min || undefined;
-        let max = a.max || undefined;
-
-        if (min && max && min > max) {
-          const temp = max;
-          max = min;
-          min = temp;
-        }
+        const precision =
+          typeof a.precision === "number" && a.precision > 0 ? a.precision : 1;
+        const { min, max } = this.validateMinMax(a.min, a.max);
 
         return faker.datatype.number({ max, min, precision });
       },
@@ -62,7 +59,10 @@ export class DataTypeSchema {
     return new SchemaField<string, HexadecimalProps>(
       "hexadecimal",
       (a) => {
-        const length = a.length && a.length > 0 ? a.length : undefined;
+        const length =
+          typeof a.length === "number" && a.length && a.length > 0
+            ? a.length
+            : undefined;
 
         return faker.datatype.hexadecimal({
           length,
@@ -78,15 +78,12 @@ export class DataTypeSchema {
     return new SchemaField<number, NumberArgs>(
       "float",
       (a) => {
-        const precision = a.precision && a.precision > 0 ? a.precision : 0.1;
-        let min = a.min || undefined;
-        let max = a.max || undefined;
+        const precision =
+          typeof a.precision === "number" && a.precision > 0
+            ? a.precision
+            : 0.1;
 
-        if (min && max && min > max) {
-          const temp = max;
-          max = min;
-          min = temp;
-        }
+        const { min, max } = this.validateMinMax(a.min, a.max);
 
         return faker.datatype.float({ min, max, precision });
       },
@@ -102,17 +99,13 @@ export class DataTypeSchema {
           a.x_size || CHDataUtils.numberByLimits({ min: 1, max: 10 });
         const y_size =
           a.y_size || CHDataUtils.numberByLimits({ min: 1, max: 10 });
-        let min = a.min || undefined;
-        let max = a.max || undefined;
 
-        if (min && max && min > max) {
-          const temp = max;
-          max = min;
-          min = temp;
-        }
+        const { min, max } = this.validateMinMax(a.min, a.max);
 
         const precision =
-          a.precision && a.precision > 0 ? a.precision : undefined;
+          typeof a.precision === "number" && a.precision > 0
+            ? a.precision
+            : undefined;
 
         return new Array(x_size).fill(0).map(() => {
           return new Array(y_size).fill(0).map(() => {
@@ -125,19 +118,17 @@ export class DataTypeSchema {
   }
 
   public customArray(args?: CustomArrayProps) {
-    return new SchemaField<ReturnValue, CustomArrayProps>(
+    return new SchemaField<any, CustomArrayProps>(
       "customArray",
       (a) => {
         if (Array.isArray(a.array)) {
-          const array = a.array || [1, 2, 3, 4];
-
-          return CHDataUtils.oneOfArray(array);
+          return CHDataUtils.oneOfArray(a.array);
         } else
           throw new CHDataError(
             "The argument of custom array must be an array of values",
           );
       },
-      args || { array: [1, 2, 3, 4] },
+      args || { array: [] },
     );
   }
 
@@ -146,9 +137,7 @@ export class DataTypeSchema {
       "character",
       (a) => {
         const len =
-          typeof a.length === "number" && a.length && a.length > 0
-            ? a.length
-            : undefined;
+          typeof a.length === "number" && a.length > 0 ? a.length : undefined;
         let charactersToRet: string[] = [];
 
         if (a.case) {
@@ -168,5 +157,16 @@ export class DataTypeSchema {
       },
       args || {},
     );
+  }
+
+  private validateMinMax(
+    min: number | undefined,
+    max: number | undefined,
+  ): { min: number | undefined; max: number | undefined } {
+    let mi = typeof min === "number" ? min : undefined;
+    let ma =
+      typeof max === "number" ? (mi && max > mi ? max : undefined) : undefined;
+
+    return { min: mi, max: ma };
   }
 }
