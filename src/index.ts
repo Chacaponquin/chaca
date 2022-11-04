@@ -30,14 +30,16 @@ import { FileConfig } from "./utils/interfaces/export.interface";
 
 abstract class Chaca {
   private static schemasCreated: CustomSchema[] = [];
+  public static Schema = CustomSchema;
   public static utils = CHDataUtils;
+
   /**
    *
    * @param {string} schemaName schema name
    * @throws The name of schema can't be an empty string, or a repetive name
    *
    * @param schemaObj The object with the keys and type of each field
-   * @example { id: chData.schemas.id.numberRow(), image: chData.schemas.image.film(), name: chData.schemas.person.firstName()}
+   * @example { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
    */
   public static defineSchema(
     schemaName: string,

@@ -3,9 +3,14 @@ import { CHDataUtils } from "./CHDataUtils";
 import {
   SchemaObject,
   SchemaConfig,
-  SchemaDefaultConfig,
+  CommonSchema,
+  CustomField,
+  IResolveSchema,
+  SchemaToResolve,
+  CustomFieldSchema,
+  SchemaResolver,
+  EnumFieldSchema,
 } from "./interfaces/schema.interface";
-import { ReturnValue } from "./interfaces/value.interface";
 import { FileConfig } from "./interfaces/export.interface";
 import {
   CSVGenerator,
@@ -21,9 +26,9 @@ import { SchemaField } from "../schemas/SchemaField";
  * Class for creation of a model with the configuration of each
  * field defined by the user
  */
-export class CustomSchema {
+export class CustomSchema implements IResolveSchema {
   //SCHEMA NAME
-  private schemaObj: SchemaObject<SchemaDefaultConfig>;
+  private schemaObj: SchemaObject<SchemaToResolve>;
   private currentObjectCreated: { [path: string]: any } | null = null;
 
   constructor(
@@ -45,35 +50,26 @@ export class CustomSchema {
     let returnArray = [] as any[];
 
     for (let i = 1; i <= cantDoc; i++) {
-      let doc: { [key: string]: ReturnValue | ReturnValue[] } = {};
+      let doc: { [key: string]: any[] } = {};
       for (const [key, schema] of Object.entries(this.schemaObj)) {
-        let retValue: ReturnValue | ReturnValue[];
+        let retValue: any;
 
         if (schema.isArray) {
-          retValue = [] as ReturnValue[];
-          let limit: number = 10;
-          if (typeof schema.isArray === "object") {
-            limit = CHDataUtils.numberByLimits({
-              min: schema.isArray.min || 1,
-              max: schema.isArray.max || 100,
-            });
-          } else if (typeof schema.isArray === "number") {
-            limit = schema.isArray;
-          } else if (schema.isArray === true) {
-            limit = 10;
-          }
+          retValue = [] as any[];
+
+          const limit = CHDataUtils.numberByLimits({
+            min: schema.isArray.min,
+            max: schema.isArray.max,
+          });
 
           for (let i = 1; i <= limit; i++)
-            retValue.push(this.generateValueBySchema(schema));
-        } else retValue = this.generateValueBySchema(schema);
+            retValue.push(schema.type.resolve(this.currentObjectCreated));
+        } else retValue = schema.type.resolve(this.currentObjectCreated);
 
         if (schema.posibleNull) {
-          let porcentNull: number =
-            typeof schema.posibleNull === "number" ? schema.posibleNull : 50;
+          let porcentNull: number = schema.posibleNull;
 
-          let array: (null | (ReturnValue | ReturnValue[]))[] = new Array(
-            100,
-          ).fill(0);
+          let array = new Array(100).fill(0);
 
           for (let i = 0; i < array.length; i++) {
             if (porcentNull > 0) {
@@ -146,31 +142,13 @@ export class CustomSchema {
     await this.export(data, configFile);
   }
 
-  private generateValueBySchema(schema: SchemaDefaultConfig): ReturnValue {
-    let retValue: ReturnValue;
-
-    if (schema.type) {
-      retValue = schema.type.getValue();
-    } else if (schema.custom) {
-      try {
-        retValue =
-          schema.custom.apply(
-            this,
-            this.currentObjectCreated ? [this.currentObjectCreated] : [{}],
-          ) || null;
-      } catch (error) {
-        retValue = null;
-      }
-    } else if (schema.enum) {
-      retValue = CHDataUtils.oneOfArray(schema.enum);
-    } else throw new CHDataError("");
-
-    return retValue;
+  public resolve(field: any): unknown {
+    return false;
   }
 
   private validateObjectSchema(
     obj: SchemaObject<SchemaConfig>,
-  ): SchemaObject<SchemaDefaultConfig> {
+  ): SchemaObject<SchemaToResolve> {
     if (
       !obj ||
       (typeof obj === "object" && Array.isArray(obj)) ||
@@ -181,130 +159,185 @@ export class CustomSchema {
         "Your schema has to be an object with the fields descriptions",
       );
     else {
-      let schemaToSave: SchemaObject<SchemaDefaultConfig> = {};
+      let schemaToSave: SchemaObject<SchemaToResolve> = {};
+
+      const defaultConfig: CommonSchema = {
+        isArray: null,
+        posibleNull: 0,
+      };
+
       for (const [key, schema] of Object.entries(obj)) {
-        if (schema instanceof SchemaField) {
-          schemaToSave = { ...schemaToSave, [key]: { type: schema } };
+        if (schema instanceof CustomSchema) {
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: { type: schema, ...defaultConfig },
+          };
         } else if (typeof schema === "function") {
-          schemaToSave = { ...schemaToSave, [key]: { custom: schema } };
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: { type: new CustomFieldSchema(schema), ...defaultConfig },
+          };
+        } else if (schema instanceof SchemaField) {
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: { type: new SchemaResolver(schema), ...defaultConfig },
+          };
         } else {
-          if (!schema.type && !schema.custom && !schema.enum) {
-            throw new CHDataError(
-              `The field ${key} dosen't have a resolve function`,
-            );
-          } else {
+          if (
+            typeof schema === "object" &&
+            schema !== null &&
+            !(schema instanceof Date)
+          ) {
             if (schema.type) {
-              schemaToSave = { ...schemaToSave, [key]: { type: schema.type } };
-            } else {
-              if (schema.enum) {
-                if (Array.isArray(schema.enum)) {
-                  if (schema.enum.length > 0) {
-                    schemaToSave = {
-                      ...schemaToSave,
-                      [key]: { enum: schema.enum },
-                    };
-                  } else
-                    throw new CHDataError(
-                      `For the field ${key} you must provide some values to choce`,
-                    );
-                } else {
-                  throw new CHDataError(
-                    `If the field ${key} is a enum type so this one muste be an array of values`,
-                  );
-                }
-              } else {
-                if (typeof schema.custom === "function") {
-                  schemaToSave = {
-                    ...schemaToSave,
-                    [key]: { custom: schema.custom },
-                  };
-                } else {
-                  throw new CHDataError("The custom field must be a function");
-                }
-              }
-            }
-
-            if (schema.posibleNull) {
-              if (typeof schema.posibleNull === "number") {
-                const value =
-                  schema.posibleNull <= 100 || schema.posibleNull >= 0
-                    ? schema.posibleNull
-                    : 50;
-                schemaToSave = {
-                  ...schemaToSave,
-                  [key]: { ...schema, posibleNull: value },
-                };
-              } else {
-                schemaToSave = {
-                  ...schemaToSave,
-                  [key]: {
-                    ...schema,
-                    posibleNull: Boolean(schema.posibleNull),
-                  },
-                };
-              }
-            } else
+              const type = this.validateType(key, schema.type);
               schemaToSave = {
                 ...schemaToSave,
-                [key]: { ...schema, posibleNull: false },
+                [key]: {
+                  type:
+                    type instanceof CustomSchema
+                      ? type
+                      : new SchemaResolver(type),
+                  ...defaultConfig,
+                },
               };
-
-            if (schema.isArray) {
-              if (typeof schema.isArray === "number") {
-                schemaToSave = {
-                  ...schemaToSave,
-                  [key]: {
-                    ...schema,
-                    isArray: schema.isArray >= 1 ? schema.isArray : 10,
-                  },
-                };
-              } else if (typeof schema.isArray === "boolean") {
-                schemaToSave = {
-                  ...schemaToSave,
-                  [key]: {
-                    ...schema,
-                    isArray: schema.isArray,
-                  },
-                };
-              } else if (
-                typeof schema.isArray === "object" &&
-                !(schema.isArray instanceof Date) &&
-                !Array.isArray(schema.isArray)
-              ) {
-                let min =
-                  typeof schema.isArray["min"] === "number"
-                    ? schema.isArray["min"]
-                    : 1;
-                let max =
-                  typeof schema.isArray["max"] === "number" &&
-                  schema.isArray["max"] > min
-                    ? schema.isArray["max"]
-                    : min + 9;
-
-                schemaToSave = {
-                  ...schemaToSave,
-                  [key]: { ...schema, isArray: { min, max } },
-                };
-              } else {
-                schemaToSave = {
-                  ...schemaToSave,
-                  [key]: {
-                    ...schema,
-                    isArray: 10,
-                  },
-                };
-              }
-            } else {
+            } else if (schema.enum) {
               schemaToSave = {
                 ...schemaToSave,
-                [key]: { ...schema, isArray: false },
+                [key]: {
+                  type: new EnumFieldSchema(
+                    this.validateEnum(key, schema.enum),
+                  ),
+                  ...defaultConfig,
+                },
               };
+            } else if (schema.custom) {
+              schemaToSave = {
+                ...schemaToSave,
+                [key]: {
+                  type: new CustomFieldSchema(
+                    this.validateCustom(key, schema.custom),
+                  ),
+                  ...defaultConfig,
+                },
+              };
+            } else {
+              throw new CHDataError(
+                `The field ${key} dosen't have a resolve function`,
+              );
             }
+          }
+
+          if (schema.posibleNull) {
+            schemaToSave = {
+              ...schemaToSave,
+              [key]: {
+                ...schemaToSave[key],
+                posibleNull: this.validatePosibleNull(key, schema.posibleNull),
+              },
+            };
+          }
+
+          if (schema.isArray) {
+            schemaToSave = {
+              ...schemaToSave,
+              [key]: {
+                ...schemaToSave[key],
+                isArray: this.validateIsArray(key, schema.isArray),
+              },
+            };
           }
         }
       }
 
       return schemaToSave;
     }
+  }
+
+  private validateType(
+    key: string,
+    type: CustomSchema | SchemaField,
+  ): CustomSchema | SchemaField {
+    if (type instanceof CustomSchema || type instanceof SchemaField) {
+      return type;
+    } else throw new CHDataError(`Invalid type for key ${key}`);
+  }
+
+  private validateEnum(key: string, array: unknown[]): unknown[] {
+    if (Array.isArray(array)) {
+      if (array.length > 0) {
+        return array;
+      } else
+        throw new CHDataError(
+          `For the field ${key} you must provide some values to choce`,
+        );
+    } else {
+      throw new CHDataError(
+        `If the field ${key} is a enum type so this one muste be an array of values`,
+      );
+    }
+  }
+
+  private validateCustom(key: string, custom: CustomField): CustomField {
+    if (typeof custom === "function") {
+      return custom;
+    } else
+      throw new CHDataError(
+        `For the field ${key}. The custom field must be a function`,
+      );
+  }
+
+  private validatePosibleNull(key: string, pos: boolean | number): number {
+    let value: number;
+
+    if (typeof pos === "number") {
+      value = pos <= 100 && pos >= 0 ? pos : 50;
+    } else {
+      value = Boolean(pos) ? 50 : 0;
+    }
+
+    return value;
+  }
+
+  private validateIsArray(
+    key: string,
+    isArray: boolean | number | { min?: number; max?: number },
+  ): { min: number; max: number } {
+    let value = {
+      min: 0,
+      max: 10,
+    };
+
+    if (typeof isArray === "number") {
+      if (isArray >= 1) {
+        value = {
+          min: isArray,
+          max: isArray,
+        };
+      } else {
+        value = {
+          min: 10,
+          max: 10,
+        };
+      }
+    } else if (typeof isArray === "boolean") {
+      value = { min: 0, max: 10 };
+    } else if (
+      typeof isArray === "object" &&
+      !(isArray instanceof Date) &&
+      !Array.isArray(isArray)
+    ) {
+      let min =
+        typeof isArray["min"] === "number" && isArray["min"] > 0
+          ? isArray["min"]
+          : 1;
+      let max =
+        typeof isArray["max"] === "number" && isArray["max"] > min
+          ? isArray["max"]
+          : min + 9;
+
+      value = { min, max };
+    }
+
+    return value;
   }
 }

@@ -310,3 +310,5 @@ schemas.word.adverb().getValue(); // 'delante';
 schemas.word.verb().getValue(); // 'ser';
 schemas.word.noun().getValue(); // 'plato';
 ```
+
+## Contributing
