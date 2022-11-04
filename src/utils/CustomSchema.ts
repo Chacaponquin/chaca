@@ -27,18 +27,11 @@ import { SchemaField } from "../schemas/SchemaField";
  * field defined by the user
  */
 export class CustomSchema implements IResolveSchema {
-  //SCHEMA NAME
   private schemaObj: SchemaObject<SchemaToResolve>;
   private currentObjectCreated: { [path: string]: any } | null = null;
 
-  constructor(
-    public readonly schemaName: string,
-    schemaObj: SchemaObject<SchemaConfig>,
-  ) {
-    if (!schemaName) throw new CHDataError("Your schema must have a name");
-    else {
-      this.schemaObj = this.validateObjectSchema(schemaObj);
-    }
+  constructor(schemaObj: SchemaObject<SchemaConfig>) {
+    this.schemaObj = this.validateObjectSchema(schemaObj);
   }
 
   public generate(cantDocuments: number): any[] {

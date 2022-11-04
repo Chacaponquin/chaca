@@ -29,7 +29,7 @@ import { CHDataError } from "./errors/CHDataError";
 import { FileConfig } from "./utils/interfaces/export.interface";
 
 abstract class Chaca {
-  private static schemasCreated: CustomSchema[] = [];
+  private static schemasCreated: { name: string; schema: CustomSchema }[] = [];
   public static Schema = CustomSchema;
   public static utils = CHDataUtils;
 
@@ -45,19 +45,17 @@ abstract class Chaca {
     schemaName: string,
     schemaObj: SchemaObject<SchemaConfig>,
   ): CustomSchema {
-    const findSchema = this.schemasCreated.find(
-      (el) => el.schemaName === schemaName,
-    );
+    const findSchema = this.schemasCreated.find((el) => el.name === schemaName);
     if (!findSchema) {
-      const newSchema = new CustomSchema(schemaName, schemaObj);
-      this.schemasCreated.push(newSchema);
+      const newSchema = new CustomSchema(schemaObj);
+      this.schemasCreated.push({ name: schemaName, schema: newSchema });
       return newSchema;
     } else throw new CHDataError("Already exists a schema with that name");
   }
 
   public static async exportAll(config: FileConfig): Promise<void> {
     for (const s of this.schemasCreated) {
-      await s.generateAndExport(20, config);
+      await s.schema.generateAndExport(20, config);
     }
   }
 }
