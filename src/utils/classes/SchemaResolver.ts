@@ -1,59 +1,56 @@
-import { CHDataError } from "../errors/CHDataError";
-import { CHDataUtils } from "./CHDataUtils";
+import { CHDataUtils } from "../CHDataUtils";
 import {
+  IResolver,
   SchemaObject,
-  SchemaConfig,
+  SchemaToResolve,
   CommonSchema,
   CustomField,
-  IResolveSchema,
-  SchemaToResolve,
-  CustomFieldSchema,
-  SchemaResolver,
-  EnumFieldSchema,
-} from "./interfaces/schema.interface";
-import { FileConfig } from "./interfaces/export.interface";
-import {
-  CSVGenerator,
-  Generator,
-  JavascriptGenerator,
-  JsonGenerator,
-  JavaGenerator,
-  TypescriptGenerator,
-} from "../generators";
-import { SchemaField } from "../schemas/SchemaField";
+  SchemaConfig,
+} from "../interfaces/schema.interface";
 
-/**
- * Class for creation of a model with the configuration of each
- * field defined by the user
- */
-export class CustomSchema implements IResolveSchema {
+import { CHDataError } from "../../errors/CHDataError";
+import { SchemaField } from "../../schemas/SchemaField";
+
+import {
+  CustomFieldResolver,
+  EnumFielResolver,
+  SchemaFieldResolver,
+} from "./Resolvers";
+
+import { ChacaSchema } from "./ChacaSchema";
+
+export class SchemaResolver extends ChacaSchema implements IResolver {
   private schemaObj: SchemaObject<SchemaToResolve>;
   private currentObjectCreated: { [path: string]: any } | null = null;
 
   constructor(schemaObj: SchemaObject<SchemaConfig>) {
+    super();
     this.schemaObj = this.validateObjectSchema(schemaObj);
   }
 
-  public resolve(field: any): unknown {
-    let doc: { [key: string]: any[] } = {};
+  public *resolve(field: any): Generator<any, unknown> {
+    let doc: { [key: string]: any } = {};
+
     for (const [key, schema] of Object.entries(this.schemaObj)) {
       let retValue: any;
 
       if (schema.isArray) {
-        retValue = [] as any[];
+        retValue = [] as unknown[];
 
         const limit = CHDataUtils.numberByLimits({
           min: schema.isArray.min,
           max: schema.isArray.max,
         });
 
-        for (let i = 1; i <= limit; i++)
-          retValue.push(schema.type.resolve(this.currentObjectCreated));
-      } else retValue = schema.type.resolve(this.currentObjectCreated);
+        for (let i = 1; i <= limit; i++) {
+          retValue.push(this.resolveSchema(doc, schema));
+        }
+      } else {
+        retValue = this.resolveSchema(doc, schema);
+      }
 
       if (schema.posibleNull) {
         let porcentNull: number = schema.posibleNull;
-
         let array = new Array(100).fill(0);
 
         for (let i = 0; i < array.length; i++) {
@@ -69,72 +66,11 @@ export class CustomSchema implements IResolveSchema {
       }
 
       doc = { ...doc, [key]: retValue };
-      this.currentObjectCreated = doc;
+
+      yield doc;
     }
 
     return doc;
-  }
-
-  public generate(cantDocuments: number): any[] {
-    const cantDoc =
-      typeof cantDocuments === "number" && cantDocuments > 0
-        ? cantDocuments
-        : 10;
-
-    let returnArray = [] as any[];
-    for (let i = 1; i <= cantDoc; i++) {
-      returnArray.push(this.resolve(this.currentObjectCreated));
-      this.currentObjectCreated = null;
-    }
-    return returnArray;
-  }
-
-  /**
-   *
-   * @param data Data you want to export
-   * @param config Configuration of the file you want to export (name, location, format, etc.)
-   *
-   * @example
-   * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]
-   * const config = {fileName: 'Users', format: 'json', location: '../../data'}
-   * await schema.export(data, config)
-   *
-   * @returns
-   * Promise<void>
-   */
-  public async export(data: any, config: FileConfig): Promise<string> {
-    if (config && typeof config.format === "string") {
-      let gen: Generator;
-      switch (config.format) {
-        case "json":
-          gen = new JsonGenerator(data, config);
-          break;
-        case "javascript":
-          gen = new JavascriptGenerator(data, config);
-          break;
-        case "csv":
-          gen = new CSVGenerator(data, config);
-          break;
-        case "java":
-          gen = new JavaGenerator(data, config);
-          break;
-        case "typescript":
-          gen = new TypescriptGenerator(data, config);
-          break;
-        default:
-          throw new CHDataError(`Format ${config.format} invalid`);
-      }
-
-      return await gen.generateFile();
-    } else throw new CHDataError(`Format ${config.format} invalid`);
-  }
-
-  public async generateAndExport(
-    cant: number,
-    configFile: FileConfig,
-  ): Promise<void> {
-    const data = this.generate(cant);
-    await this.export(data, configFile);
   }
 
   private validateObjectSchema(
@@ -158,7 +94,7 @@ export class CustomSchema implements IResolveSchema {
       };
 
       for (const [key, schema] of Object.entries(obj)) {
-        if (schema instanceof CustomSchema) {
+        if (schema instanceof SchemaResolver) {
           schemaToSave = {
             ...schemaToSave,
             [key]: { type: schema, ...defaultConfig },
@@ -166,12 +102,12 @@ export class CustomSchema implements IResolveSchema {
         } else if (typeof schema === "function") {
           schemaToSave = {
             ...schemaToSave,
-            [key]: { type: new CustomFieldSchema(schema), ...defaultConfig },
+            [key]: { type: new CustomFieldResolver(schema), ...defaultConfig },
           };
         } else if (schema instanceof SchemaField) {
           schemaToSave = {
             ...schemaToSave,
-            [key]: { type: new SchemaResolver(schema), ...defaultConfig },
+            [key]: { type: new SchemaFieldResolver(schema), ...defaultConfig },
           };
         } else {
           if (
@@ -185,9 +121,9 @@ export class CustomSchema implements IResolveSchema {
                 ...schemaToSave,
                 [key]: {
                   type:
-                    type instanceof CustomSchema
+                    type instanceof SchemaResolver
                       ? type
-                      : new SchemaResolver(type),
+                      : new SchemaFieldResolver(type),
                   ...defaultConfig,
                 },
               };
@@ -195,7 +131,7 @@ export class CustomSchema implements IResolveSchema {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
-                  type: new EnumFieldSchema(
+                  type: new EnumFielResolver(
                     this.validateEnum(key, schema.enum),
                   ),
                   ...defaultConfig,
@@ -205,7 +141,7 @@ export class CustomSchema implements IResolveSchema {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
-                  type: new CustomFieldSchema(
+                  type: new CustomFieldResolver(
                     this.validateCustom(key, schema.custom),
                   ),
                   ...defaultConfig,
@@ -223,7 +159,7 @@ export class CustomSchema implements IResolveSchema {
               ...schemaToSave,
               [key]: {
                 ...schemaToSave[key],
-                posibleNull: this.validatePosibleNull(key, schema.posibleNull),
+                posibleNull: this.validatePosibleNull(schema.posibleNull),
               },
             };
           }
@@ -233,7 +169,7 @@ export class CustomSchema implements IResolveSchema {
               ...schemaToSave,
               [key]: {
                 ...schemaToSave[key],
-                isArray: this.validateIsArray(key, schema.isArray),
+                isArray: this.validateIsArray(schema.isArray),
               },
             };
           }
@@ -246,9 +182,9 @@ export class CustomSchema implements IResolveSchema {
 
   private validateType(
     key: string,
-    type: CustomSchema | SchemaField,
-  ): CustomSchema | SchemaField {
-    if (type instanceof CustomSchema || type instanceof SchemaField) {
+    type: SchemaResolver | SchemaField,
+  ): SchemaResolver | SchemaField {
+    if (type instanceof SchemaResolver || type instanceof SchemaField) {
       return type;
     } else throw new CHDataError(`Invalid type for key ${key}`);
   }
@@ -277,7 +213,7 @@ export class CustomSchema implements IResolveSchema {
       );
   }
 
-  private validatePosibleNull(key: string, pos: boolean | number): number {
+  private validatePosibleNull(pos: boolean | number): number {
     let value: number;
 
     if (typeof pos === "number") {
@@ -290,7 +226,6 @@ export class CustomSchema implements IResolveSchema {
   }
 
   private validateIsArray(
-    key: string,
     isArray: boolean | number | { min?: number; max?: number },
   ): { min: number; max: number } {
     let value = {
@@ -330,5 +265,32 @@ export class CustomSchema implements IResolveSchema {
     }
 
     return value;
+  }
+
+  public generate(cantDocuments: number): any[] {
+    const cantDoc =
+      typeof cantDocuments === "number" && cantDocuments > 0
+        ? cantDocuments
+        : 10;
+
+    let returnArray = [] as any[];
+    for (let i = 1; i <= cantDoc; i++) {
+      let object: unknown = {};
+      const gen = this.resolve(object);
+
+      let stop = false;
+      while (!stop) {
+        let result = gen.next();
+        object = result.value;
+
+        if (result.done) {
+          stop = true;
+        }
+      }
+
+      returnArray.push(object);
+    }
+
+    return returnArray;
   }
 }

@@ -151,4 +151,25 @@ describe("#Export Test", () => {
       });
     });
   });
+
+  context("create and export an object with nested objects", () => {
+    const schema = new chaca.Schema({
+      id: schemas.id.mongodbID(),
+      image: schemas.image.people(),
+      user: new chaca.Schema({
+        userName: schemas.internet.userName(),
+        image: schemas.image.fashion(),
+      }),
+    });
+
+    context("JSON File", () => {
+      it("should return an array with objects with the key user as object with property firstName and image", async () => {
+        await schema.generateAndExport(20, {
+          fileName: "632864289",
+          location: root,
+          format: "json",
+        });
+      });
+    });
+  });
 });

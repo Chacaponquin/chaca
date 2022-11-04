@@ -1,5 +1,5 @@
 import { CHDataUtils } from "./utils/CHDataUtils";
-import { CustomSchema } from "./utils/CustomSchema";
+import { CustomSchema } from "./utils/classes/CustomSchema";
 import {
   SchemaConfig,
   SchemaObject,
@@ -27,10 +27,11 @@ import {
 } from "./schemas";
 import { CHDataError } from "./errors/CHDataError";
 import { FileConfig } from "./utils/interfaces/export.interface";
+import { SchemaResolver } from "./utils/classes/SchemaResolver";
 
 abstract class Chaca {
-  private static schemasCreated: { name: string; schema: CustomSchema }[] = [];
-  public static Schema = CustomSchema;
+  private static schemasCreated: CustomSchema[] = [];
+  public static Schema = SchemaResolver;
   public static utils = CHDataUtils;
 
   /**
@@ -45,17 +46,19 @@ abstract class Chaca {
     schemaName: string,
     schemaObj: SchemaObject<SchemaConfig>,
   ): CustomSchema {
-    const findSchema = this.schemasCreated.find((el) => el.name === schemaName);
+    const findSchema = this.schemasCreated.find(
+      (el) => el.schemaName === schemaName,
+    );
     if (!findSchema) {
-      const newSchema = new CustomSchema(schemaObj);
-      this.schemasCreated.push({ name: schemaName, schema: newSchema });
+      const newSchema = new CustomSchema(schemaName, schemaObj);
+      this.schemasCreated.push(newSchema);
       return newSchema;
     } else throw new CHDataError("Already exists a schema with that name");
   }
 
   public static async exportAll(config: FileConfig): Promise<void> {
     for (const s of this.schemasCreated) {
-      await s.schema.generateAndExport(20, config);
+      await s.generateAndExport(20, config);
     }
   }
 }
