@@ -137,6 +137,34 @@ describe("#Schema Creation Test", () => {
         expect(Boolean(array.find((el) => el === docs[0]["id"]))).true;
       });
     });
+
+    context("schema with object fields", () => {
+      it("should return an object with user field as an object", () => {
+        const schema = new chaca.Schema({
+          id: schemas.id.mongodbID(),
+          image: schemas.image.people(),
+          user: new chaca.Schema({
+            userName: schemas.internet.userName(),
+            image: schemas.image.fashion(),
+          }),
+        });
+
+        expect(schema.generate(2)[0]["user"]).to.be.keys(["userName", "image"]);
+      });
+
+      it("should return an object with a user field with the image field as array of string", () => {
+        const schema = new chaca.Schema({
+          id: schemas.id.mongodbID(),
+          image: schemas.image.people(),
+          user: new chaca.Schema({
+            userName: schemas.internet.userName(),
+            images: { type: schemas.image.fashion(), isArray: 10 },
+          }),
+        });
+
+        expect(schema.generate(5)[0]["user"].images.length === 10).to.be.true;
+      });
+    });
   });
 
   context("schema with incorrect arguments", () => {

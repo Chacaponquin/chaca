@@ -2,7 +2,11 @@ import { SchemaField } from "../../schemas/SchemaField";
 import { CHDataUtils } from "../CHDataUtils";
 import { CustomSchema } from "../CustomSchema";
 
-export type SchemaConfig = SchemaInput | SchemaField | CustomField;
+export type SchemaConfig =
+  | SchemaInput
+  | SchemaField
+  | CustomField
+  | CustomSchema;
 
 export type SchemaInput = {
   type?: SchemaField | CustomSchema;

@@ -34,6 +34,47 @@ export class CustomSchema implements IResolveSchema {
     this.schemaObj = this.validateObjectSchema(schemaObj);
   }
 
+  public resolve(field: any): unknown {
+    let doc: { [key: string]: any[] } = {};
+    for (const [key, schema] of Object.entries(this.schemaObj)) {
+      let retValue: any;
+
+      if (schema.isArray) {
+        retValue = [] as any[];
+
+        const limit = CHDataUtils.numberByLimits({
+          min: schema.isArray.min,
+          max: schema.isArray.max,
+        });
+
+        for (let i = 1; i <= limit; i++)
+          retValue.push(schema.type.resolve(this.currentObjectCreated));
+      } else retValue = schema.type.resolve(this.currentObjectCreated);
+
+      if (schema.posibleNull) {
+        let porcentNull: number = schema.posibleNull;
+
+        let array = new Array(100).fill(0);
+
+        for (let i = 0; i < array.length; i++) {
+          if (porcentNull > 0) {
+            array.push(null);
+            porcentNull--;
+          } else {
+            array.push(retValue);
+          }
+        }
+
+        retValue = CHDataUtils.oneOfArray(array);
+      }
+
+      doc = { ...doc, [key]: retValue };
+      this.currentObjectCreated = doc;
+    }
+
+    return doc;
+  }
+
   public generate(cantDocuments: number): any[] {
     const cantDoc =
       typeof cantDocuments === "number" && cantDocuments > 0
@@ -41,49 +82,10 @@ export class CustomSchema implements IResolveSchema {
         : 10;
 
     let returnArray = [] as any[];
-
     for (let i = 1; i <= cantDoc; i++) {
-      let doc: { [key: string]: any[] } = {};
-      for (const [key, schema] of Object.entries(this.schemaObj)) {
-        let retValue: any;
-
-        if (schema.isArray) {
-          retValue = [] as any[];
-
-          const limit = CHDataUtils.numberByLimits({
-            min: schema.isArray.min,
-            max: schema.isArray.max,
-          });
-
-          for (let i = 1; i <= limit; i++)
-            retValue.push(schema.type.resolve(this.currentObjectCreated));
-        } else retValue = schema.type.resolve(this.currentObjectCreated);
-
-        if (schema.posibleNull) {
-          let porcentNull: number = schema.posibleNull;
-
-          let array = new Array(100).fill(0);
-
-          for (let i = 0; i < array.length; i++) {
-            if (porcentNull > 0) {
-              array.push(null);
-              porcentNull--;
-            } else {
-              array.push(retValue);
-            }
-          }
-
-          retValue = CHDataUtils.oneOfArray(array);
-        }
-
-        doc = { ...doc, [key]: retValue };
-        this.currentObjectCreated = doc;
-      }
-
-      returnArray.push(doc);
+      returnArray.push(this.resolve(this.currentObjectCreated));
       this.currentObjectCreated = null;
     }
-
     return returnArray;
   }
 
@@ -133,10 +135,6 @@ export class CustomSchema implements IResolveSchema {
   ): Promise<void> {
     const data = this.generate(cant);
     await this.export(data, configFile);
-  }
-
-  public resolve(field: any): unknown {
-    return false;
   }
 
   private validateObjectSchema(
