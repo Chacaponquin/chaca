@@ -70,9 +70,9 @@ export abstract class ChacaSchema {
   public async generateAndExport(
     cant: number,
     configFile: FileConfig,
-  ): Promise<void> {
+  ): Promise<string> {
     const data = this.generate(cant);
-    await this.export(data, configFile);
+    return await this.export(data, configFile);
   }
 
   protected resolveSchema(field: any, schema: SchemaToResolve): unknown {

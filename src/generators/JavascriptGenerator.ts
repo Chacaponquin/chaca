@@ -23,7 +23,7 @@ export class JavascriptGenerator extends Generator {
 
     await fs.promises.writeFile(this.route, returnData, "utf-8");
 
-    return this.fileName;
+    return this.route;
   }
 
   public generateSchemaArray(schemaObjects: { [path: string]: any }[]): string {

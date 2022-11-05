@@ -6,7 +6,7 @@ import { CHDataError } from "../../src/errors/CHDataError";
 describe("#Schema Creation Test", () => {
   context("create schema documents", () => {
     context("simple schema", () => {
-      const schema = chaca.defineSchema("mySchema079042", {
+      const schema = new chaca.Schema({
         id: { type: schemas.id.mongodbID() },
         image: { type: schemas.image.film() },
         name: { type: schemas.person.firstName({ language: "es" }) },
@@ -26,7 +26,7 @@ describe("#Schema Creation Test", () => {
 
     context("schema with array field", () => {
       it("passing a number as argument. Should return an array of documents with the id property with that number as length", () => {
-        const schema = chaca.defineSchema("mySchema546jbvu", {
+        const schema = new chaca.Schema({
           id: { type: schemas.id.mongodbID(), isArray: 20 },
         });
 
@@ -36,7 +36,7 @@ describe("#Schema Creation Test", () => {
 
       context("passing a object as parameter", () => {
         it("passing an empty object. Should return an array with length between 1 and 10", () => {
-          const schema = chaca.defineSchema("mySchema546jbvu5425", {
+          const schema = new chaca.Schema({
             id: { type: schemas.id.mongodbID(), isArray: {} as any },
           });
           const docs = schema.generate(10);
@@ -46,7 +46,7 @@ describe("#Schema Creation Test", () => {
         });
 
         it("passing only max parameter. Should return an array with length <= max parameter", () => {
-          const schema = chaca.defineSchema("mySchema546jbvu542543242", {
+          const schema = new chaca.Schema({
             id: { type: schemas.id.mongodbID(), isArray: { max: 2 } },
           });
           const docs = schema.generate(10);
@@ -56,7 +56,7 @@ describe("#Schema Creation Test", () => {
         });
 
         it("passing only min parameter. Should return an array with length >= min parameter", () => {
-          const schema = chaca.defineSchema("mySchema546jbvu542543242gk", {
+          const schema = new chaca.Schema({
             id: { type: schemas.id.mongodbID(), isArray: { min: 3 } },
           });
           const docs = schema.generate(10);
@@ -66,15 +66,12 @@ describe("#Schema Creation Test", () => {
         });
 
         it("passing min and max parameters. Should return an array with length betwwen min and max parameters", () => {
-          const schema = chaca.defineSchema(
-            "mySchema546jbvu542543242gk433635",
-            {
-              id: {
-                type: schemas.id.mongodbID(),
-                isArray: { min: 3, max: 10 },
-              },
+          const schema = new chaca.Schema({
+            id: {
+              type: schemas.id.mongodbID(),
+              isArray: { min: 3, max: 10 },
             },
-          );
+          });
           const docs = schema.generate(10);
           const id = docs[0]["id"] as Array<String>;
 
@@ -85,7 +82,7 @@ describe("#Schema Creation Test", () => {
 
     context("schema with custom field", () => {
       it("custom function return a string", () => {
-        const schema = chaca.defineSchema("mySchema4324", {
+        const schema = new chaca.Schema({
           id: { type: schemas.id.numberRow() },
           custom: {
             custom: () => {
@@ -99,7 +96,7 @@ describe("#Schema Creation Test", () => {
       });
 
       it("custom function return undefined. Should return null as value", () => {
-        const schema = chaca.defineSchema("mySchemawhfirhfwo", {
+        const schema = new chaca.Schema({
           id: { type: schemas.id.numberRow() },
           custom: {
             custom: () => undefined,
@@ -111,7 +108,7 @@ describe("#Schema Creation Test", () => {
       });
 
       it("custom function access to this property", () => {
-        const schema = chaca.defineSchema("mySchema08080", {
+        const schema = new chaca.Schema({
           id: { type: schemas.id.numberRow() },
           custom: {
             custom(fields) {
@@ -128,7 +125,7 @@ describe("#Schema Creation Test", () => {
     context("schema with enum field", () => {
       it("with an array [1, 2, 3, 4, 5]. Should return one of this elements", () => {
         const array = [1, 2, 3, 4, 5];
-        const schema = chaca.defineSchema("schema23524", {
+        const schema = new chaca.Schema({
           id: { enum: array },
         });
 

@@ -1,6 +1,6 @@
 # Contributing
 
-Please feel free to file GitHub Issues or propose Pull Requests. We're always happy to discuss improvements to this library!
+The Chaca project welcomes all constructive contributions. Contributions take many forms, from code for bug fixes and enhancements, to additions and fixes to documentation, additional tests, triaging incoming pull requests and issues, and more!
 
 ## Testing
 

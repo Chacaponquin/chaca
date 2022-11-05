@@ -34,7 +34,7 @@ export class JavaGenerator extends Generator {
       throw new CHDataError("Error export zip File");
     }
 
-    return this.fileName;
+    return zipPath;
   }
 
   private async generateMainFile(

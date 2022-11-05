@@ -3,13 +3,13 @@ import mocha from "mocha";
 import { schemas, chaca } from "../../src";
 import { CHDataError } from "../../src/errors/CHDataError";
 
-const schema = chaca.defineSchema("mySchemavdava", {
+const schema = new chaca.Schema({
   id: { type: schemas.id.mongodbID() },
   image: { type: schemas.image.film() },
   name: { type: schemas.person.firstName({ language: "es" }) },
 });
 
-const schemaWithArray = chaca.defineSchema("mySchema", {
+const schemaWithArray = new chaca.Schema({
   id: { type: schemas.id.mongodbID(), isArray: 20 },
   image: { type: schemas.image.film() },
   name: { type: schemas.person.firstName({ language: "es" }) },
@@ -169,6 +169,34 @@ describe("#Export Test", () => {
           location: root,
           format: "json",
         });
+      });
+    });
+  });
+
+  context("exportAll tests", () => {
+    const schema1 = chaca.defineSchema("mySchema1", {
+      id: { type: schemas.id.mongodbID(), isArray: 20 },
+      image: { type: schemas.image.film() },
+      name: { type: schemas.person.firstName({ language: "es" }) },
+    });
+
+    const schema2 = chaca.defineSchema("mySchema2", {
+      id: { type: schemas.id.mongodbID(), isArray: 20 },
+      image: { type: schemas.image.film() },
+      name: { type: schemas.person.firstName({ language: "es" }) },
+    });
+
+    const schema3 = chaca.defineSchema("mySchema3", {
+      id: { type: schemas.id.mongodbID(), isArray: 20 },
+      image: { type: schemas.image.film() },
+      name: { type: schemas.person.firstName({ language: "es" }) },
+    });
+
+    it("export a zip, with all schemas in format json", async () => {
+      await chaca.exportAll({
+        fileName: "testExportAll",
+        location: root,
+        format: "json",
       });
     });
   });

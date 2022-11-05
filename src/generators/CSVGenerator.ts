@@ -15,6 +15,6 @@ export class CSVGenerator extends Generator {
 
     await fs.promises.writeFile(this.route, str, "utf-8");
 
-    return this.fileName;
+    return this.route;
   }
 }

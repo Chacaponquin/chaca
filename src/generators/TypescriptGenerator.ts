@@ -31,7 +31,7 @@ export class TypescriptGenerator extends Generator {
       "utf8",
     );
 
-    return this.fileName;
+    return this.route;
   }
 
   private generateDatasetInterface(): string {

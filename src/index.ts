@@ -5,29 +5,13 @@ import {
   SchemaObject,
 } from "./utils/interfaces/schema.interface";
 
-import {
-  DataTypeSchema,
-  IdSchema,
-  InternetSchema,
-  MusicSchema,
-  LoremSchema,
-  ImageSchema,
-  FinanceSchema,
-  SystemSchema,
-  PhoneSchema,
-  AddressSchema,
-  WordSchema,
-  VehicleSchema,
-  DateSchema,
-  PersonSchema,
-  VideoSchema,
-  AnimalSchema,
-  CodeSchema,
-  ScienceSchema,
-} from "./schemas";
 import { CHDataError } from "./errors/CHDataError";
 import { FileConfig } from "./utils/interfaces/export.interface";
 import { SchemaResolver } from "./utils/classes/SchemaResolver";
+import { Schemas } from "./schemas/index";
+
+import AdmZip from "adm-zip";
+import path from "path";
 
 abstract class Chaca {
   private static schemasCreated: CustomSchema[] = [];
@@ -56,31 +40,34 @@ abstract class Chaca {
     } else throw new CHDataError("Already exists a schema with that name");
   }
 
-  public static async exportAll(config: FileConfig): Promise<void> {
-    for (const s of this.schemasCreated) {
-      await s.generateAndExport(20, config);
+  public static async exportAll(config: FileConfig): Promise<string> {
+    let allRoutes: string[] = [];
+
+    for (let i = 0; i < this.schemasCreated.length; i++) {
+      allRoutes.push(
+        await this.schemasCreated[i].generateAndExport(20, {
+          ...config,
+          fileName: config.fileName + i,
+        }),
+      );
+    }
+
+    try {
+      const zp = new AdmZip();
+      const zipName = `${config.fileName}.zip`;
+      const zipPath = path.join(config.location, zipName);
+
+      for (const route of allRoutes) {
+        zp.addLocalFile(route);
+      }
+
+      zp.writeZip(zipPath);
+      return zipPath;
+    } catch (error) {
+      throw new CHDataError("Error export zip File");
     }
   }
 }
 
 export const chaca = Chaca;
-export const schemas = {
-  music: new MusicSchema(),
-  internet: new InternetSchema(),
-  dataType: new DataTypeSchema(),
-  id: new IdSchema(),
-  lorem: new LoremSchema(),
-  image: new ImageSchema(),
-  system: new SystemSchema(),
-  finance: new FinanceSchema(),
-  phone: new PhoneSchema(),
-  address: new AddressSchema(),
-  word: new WordSchema(),
-  vehicle: new VehicleSchema(),
-  date: new DateSchema(),
-  person: new PersonSchema(),
-  video: new VideoSchema(),
-  animal: new AnimalSchema(),
-  code: new CodeSchema(),
-  science: new ScienceSchema(),
-};
+export const schemas = Schemas;
