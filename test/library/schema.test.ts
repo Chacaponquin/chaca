@@ -164,6 +164,22 @@ describe("#Schema Creation Test", () => {
 
         expect(schema.generate(5)[0]["user"].images.length === 10).to.be.true;
       });
+
+      it("should return an object with a user field as an array of objects with image and userName property", () => {
+        const schema = new chaca.Schema({
+          id: schemas.id.mongodbID(),
+          image: schemas.image.people(),
+          user: {
+            type: new chaca.Schema({
+              userName: schemas.internet.userName(),
+              images: { type: schemas.image.fashion() },
+            }),
+            isArray: 20,
+          },
+        });
+
+        expect(schema.generate(5)[0]["user"].length === 20).to.be.true;
+      });
     });
   });
 
