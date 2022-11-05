@@ -192,11 +192,19 @@ describe("#Export Test", () => {
       name: { type: schemas.person.firstName({ language: "es" }) },
     });
 
-    it("export a zip, with all schemas in format json", async () => {
+    it("export a zip, with all schemas with extension json", async () => {
       await chaca.exportAll({
-        fileName: "testExportAll",
+        zipName: "testExportAllJson",
         location: root,
         format: "json",
+      });
+    });
+
+    it("export a zip, with schemas with java extension", async () => {
+      await chaca.exportAll({
+        zipName: "testExportAllJava",
+        location: root,
+        format: "java",
       });
     });
   });

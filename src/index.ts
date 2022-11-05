@@ -6,7 +6,7 @@ import {
 } from "./utils/interfaces/schema.interface";
 
 import { CHDataError } from "./errors/CHDataError";
-import { FileConfig } from "./utils/interfaces/export.interface";
+import { ExportAllConfig } from "./utils/interfaces/export.interface";
 import { SchemaResolver } from "./utils/classes/SchemaResolver";
 import { Schemas } from "./schemas/index";
 
@@ -40,21 +40,30 @@ abstract class Chaca {
     } else throw new CHDataError("Already exists a schema with that name");
   }
 
-  public static async exportAll(config: FileConfig): Promise<string> {
+  /**
+   * Generate all the schemas defined
+   * Returns the location path of the zip
+   *
+   * @param config.location Destiny folder for the zip
+   * @param config.zipName Name for the zip file
+   * @param config.format Extension of schema files (`java` | `csv` | `typescript` | `json` | `javascript`)
+   * @returns string
+   */
+  public static async exportAll(config: ExportAllConfig): Promise<string> {
     let allRoutes: string[] = [];
 
     for (let i = 0; i < this.schemasCreated.length; i++) {
       allRoutes.push(
         await this.schemasCreated[i].generateAndExport(20, {
           ...config,
-          fileName: config.fileName + i,
+          fileName: config.zipName + i,
         }),
       );
     }
 
     try {
       const zp = new AdmZip();
-      const zipName = `${config.fileName}.zip`;
+      const zipName = `${config.zipName}.zip`;
       const zipPath = path.join(config.location, zipName);
 
       for (const route of allRoutes) {
