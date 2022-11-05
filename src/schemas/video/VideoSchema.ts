@@ -3,6 +3,13 @@ import { SchemaField } from "../SchemaField";
 import { VIDEOS_DEFINITIONS } from "./constants/videos";
 
 export class VideoSchema {
+  /**
+   * Return a food video url
+   *
+   * @example
+   * schemas.video.food().getValue()
+   * @returns string
+   */
   food() {
     return new SchemaField<string>(
       "food",
@@ -13,6 +20,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a event video url
+   *
+   * @example
+   * schemas.video.event().getValue()
+   * @returns string
+   */
   event() {
     return new SchemaField<string>(
       "event",
@@ -21,6 +35,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a wallpaper video url
+   *
+   * @example
+   * schemas.video.wallpaper().getValue()
+   * @returns string
+   */
   wallpaper() {
     return new SchemaField<string>(
       "wallpaper",
@@ -29,7 +50,14 @@ export class VideoSchema {
     );
   }
 
-  treeD() {
+  /**
+   * Return a 3D video url
+   *
+   * @example
+   * schemas.video.treeDimension().getValue()
+   * @returns string
+   */
+  treeDimension() {
     return new SchemaField<string>(
       "3D",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS["3d"]),
@@ -37,6 +65,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a sport video url
+   *
+   * @example
+   * schemas.video.sport().getValue()
+   * @returns string
+   */
   sport() {
     return new SchemaField<string>(
       "sport",
@@ -45,6 +80,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a animal video url
+   *
+   * @example
+   * schemas.video.animal().getValue()
+   * @returns string
+   */
   animal() {
     return new SchemaField<string>(
       "animal",
@@ -53,6 +95,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a experimental video url
+   *
+   * @example
+   * schemas.video.experimental().getValue()
+   * @returns string
+   */
   experimental() {
     return new SchemaField<string>(
       "experimental",
@@ -61,7 +110,14 @@ export class VideoSchema {
     );
   }
 
-  aechitecture() {
+  /**
+   * Return a architecture video url
+   *
+   * @example
+   * schemas.video.architecture().getValue()
+   * @returns string
+   */
+  architecture() {
     return new SchemaField<string>(
       "architecture",
       () => CHDataUtils.oneOfArray(VIDEOS_DEFINITIONS.architecture),
@@ -69,6 +125,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a nature video url
+   *
+   * @example
+   * schemas.video.nature().getValue()
+   * @returns string
+   */
   nature() {
     return new SchemaField<string>(
       "nature",
@@ -77,6 +140,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a fashion video url
+   *
+   * @example
+   * schemas.video.fashion().getValue()
+   * @returns string
+   */
   fashion() {
     return new SchemaField<string>(
       "fashion",
@@ -85,6 +155,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a health video url
+   *
+   * @example
+   * schemas.video.health().getValue()
+   * @returns string
+   */
   health() {
     return new SchemaField<string>(
       "health",
@@ -93,6 +170,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a people video url
+   *
+   * @example
+   * schemas.video.people().getValue()
+   * @returns string
+   */
   people() {
     return new SchemaField<string>(
       "people",
@@ -101,6 +185,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a street video url
+   *
+   * @example
+   * schemas.video.street().getValue()
+   * @returns string
+   */
   street() {
     return new SchemaField<string>(
       "street",
@@ -109,6 +200,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a spiritual video url
+   *
+   * @example
+   * schemas.video.spiritual().getValue()
+   * @returns string
+   */
   spiritual() {
     return new SchemaField<string>(
       "spiritual",
@@ -117,6 +215,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a travel video url
+   *
+   * @example
+   * schemas.video.travel().getValue()
+   * @returns string
+   */
   travel() {
     return new SchemaField<string>(
       "travel",
@@ -125,6 +230,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a art video url
+   *
+   * @example
+   * schemas.video.art().getValue()
+   * @returns string
+   */
   art() {
     return new SchemaField<string>(
       "art",
@@ -133,6 +245,13 @@ export class VideoSchema {
     );
   }
 
+  /**
+   * Return a history video url
+   *
+   * @example
+   * schemas.video.history().getValue()
+   * @returns string
+   */
   history() {
     return new SchemaField<string>(
       "history",
