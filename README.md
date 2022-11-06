@@ -221,20 +221,10 @@ schemas.internet.httpStatusCode().getValue(); // 200;
 Lorem Schema
 
 ```ts
-schemas.lorem.lines().getValue({ linesCount: 2 });
 schemas.lorem.slug().getValue();
 schemas.lorem.sentences().getValue();
 schemas.lorem.words().getValue();
 schemas.lorem.text().getValue();
-```
-
-### `.music`
-
-Music Schema
-
-```ts
-schemas.music.songName().getValue(); // 'White Christmas'
-schemas.music.gender().getValue(); // 'Reggae'
 ```
 
 ### `.person`

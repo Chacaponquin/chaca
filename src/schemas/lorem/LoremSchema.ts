@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
+import { loremIpsum } from "lorem-ipsum";
 
 type WordsProps = {
   count?: number;
@@ -17,11 +18,15 @@ type SlugProps = {
 type SentencesProps = {
   sentencesCount?: number;
   separator?: string;
+  wordsMax?: number;
+  wordsMin?: number;
 };
 
 type ParagraphsProps = {
   paragraphsCount?: number;
   separator?: string;
+  minSentences?: number;
+  maxSentences?: number;
 };
 
 type LinesProps = {
@@ -29,25 +34,32 @@ type LinesProps = {
 };
 
 export class LoremSchema {
-  public lines(args?: LinesProps) {
-    return new SchemaField<string, LinesProps>(
-      "lines",
-      (a) => {
-        return faker.lorem.lines(
-          typeof a.linesCount === "number" && a.linesCount > 0
-            ? a.linesCount
-            : undefined,
-        );
-      },
-      args || {},
-    );
-  }
-
   public paragraphs(args?: ParagraphsProps) {
     return new SchemaField<string, ParagraphsProps>(
       "paragraphs",
       (a) => {
-        return faker.lorem.paragraphs(a.paragraphsCount, a.separator);
+        const separator = typeof a.separator === "string" ? a.separator : "\n";
+        const cant =
+          typeof a.paragraphsCount === "number" && a.paragraphsCount > 0
+            ? a.paragraphsCount
+            : 3;
+        const maxS =
+          typeof a.maxSentences === "number" && a.maxSentences > 0
+            ? a.maxSentences
+            : undefined;
+        const minS =
+          typeof a.minSentences === "number" && a.minSentences > 0
+            ? a.minSentences
+            : undefined;
+
+        return loremIpsum({
+          format: "plain",
+          suffix: separator,
+          count: cant,
+          paragraphUpperBound: maxS,
+          paragraphLowerBound: minS,
+          units: "paragraphs",
+        });
       },
       args || {},
     );
@@ -57,7 +69,29 @@ export class LoremSchema {
     return new SchemaField<string, SentencesProps>(
       "sentences",
       (a) => {
-        return faker.lorem.sentences(a.sentencesCount, a.separator);
+        const cant =
+          typeof a.sentencesCount === "number" && a.sentencesCount > 0
+            ? a.sentencesCount
+            : 3;
+        const separator = typeof a.separator === "string" ? a.separator : "\n";
+
+        const wordMin =
+          typeof a.wordsMin === "number" && a.wordsMin > 0
+            ? a.wordsMin
+            : undefined;
+        const wordMax =
+          typeof a.wordsMax === "number" && a.wordsMax > 0
+            ? a.wordsMax
+            : undefined;
+
+        return loremIpsum({
+          format: "plain",
+          units: "sentences",
+          count: cant,
+          suffix: separator,
+          sentenceLowerBound: wordMin,
+          sentenceUpperBound: wordMax,
+        });
       },
       args || {},
     );
@@ -67,7 +101,21 @@ export class LoremSchema {
     return new SchemaField<string, SlugProps>(
       "slug",
       (a) => {
-        return faker.lorem.slug(a.wordCount);
+        const cant =
+          typeof a.wordCount === "number" && a.wordCount > 0 ? a.wordCount : 3;
+
+        const words = loremIpsum({
+          format: "plain",
+          count: cant,
+          units: "words",
+        });
+
+        let retString = "";
+        for (let i = 0; i < words.length; i++) {
+          retString = retString.concat(words[i] === " " ? "-" : words[i]);
+        }
+
+        return retString;
       },
       args || {},
     );
@@ -77,7 +125,8 @@ export class LoremSchema {
     return new SchemaField<string, WordsProps>(
       "words",
       (a) => {
-        return faker.lorem.words(a.count);
+        const cant = typeof a.count === "number" && a.count > 0 ? a.count : 5;
+        return loremIpsum({ format: "plain", units: "words", count: cant });
       },
       args || {},
     );
@@ -87,7 +136,11 @@ export class LoremSchema {
     return new SchemaField<string, TextProps>(
       "text",
       (a) => {
-        const text = faker.lorem.text();
+        const text = loremIpsum({
+          format: "plain",
+          units: "paragraph",
+          count: 30000,
+        });
 
         if (a.character_max || a.character_min) {
           let charMin =
