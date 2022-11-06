@@ -4,6 +4,10 @@ import { CHDataUtils } from "../../utils/CHDataUtils";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
 
+type BinaryCodeProps = {
+  length?: number;
+};
+
 type FloatProps = {
   min?: number;
   max?: number;
@@ -23,7 +27,6 @@ type IntProps = {
 
 type HexadecimalProps = {
   length?: number;
-  prefix?: string;
   case?: "mixed" | "lower" | "upper";
 };
 
@@ -130,20 +133,48 @@ export class DataTypeSchema {
     );
   }
 
+  /**
+   * Returns a string with a hexadecimal code
+   * @param args.case Case of the values inside de hexadecimal code (`mixed` | `lower` | `upper`)
+   * @param args.length Lenght of the hexadecimal code
+   * @example schemas.dataType.hexadecimal().getValue() // '009df'
+   * @example schemas.dataType.hexadecimal().getValue({length: 3}) // '01D'
+   * @example schemas.dataType.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
+   * @returns
+   */
   public hexadecimal(args?: HexadecimalProps) {
     return new SchemaField<string, HexadecimalProps>(
       "hexadecimal",
       (a) => {
-        const length =
-          typeof a.length === "number" && a.length && a.length > 0
-            ? a.length
-            : undefined;
+        const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+        const characters = ["A", "B", "C", "D", "E", "F", "G"];
 
-        return faker.datatype.hexadecimal({
-          length,
-          case: a.case,
-          prefix: a.prefix,
-        });
+        const length =
+          typeof a.length === "number" && a.length > 0
+            ? a.length
+            : PrivateUtils.intNumber({ min: 5, max: 10 });
+        const c = typeof a.case === "string" ? a.case : "mixed";
+
+        let ret: string = "";
+        for (let i = 1; i <= length; i++) {
+          ret = ret.concat(
+            PrivateUtils.oneOfArray([
+              ...numbers,
+              ...characters.map((el) => {
+                if (c === "lower") return el.toLowerCase();
+                else if (c === "upper") return el;
+                else {
+                  return PrivateUtils.oneOfArray([
+                    el.toLowerCase(),
+                    el.toUpperCase(),
+                  ]);
+                }
+              }),
+            ]),
+          );
+        }
+
+        return ret;
       },
       args || {},
     );
@@ -168,11 +199,11 @@ export class DataTypeSchema {
         const x_size =
           typeof a.x_size === "number" && a.x_size > 0
             ? Number.parseInt(String(a.x_size))
-            : CHDataUtils.numberByLimits({ min: 1, max: 10 });
+            : PrivateUtils.intNumber({ min: 1, max: 10 });
         const y_size =
           typeof a.y_size === "number" && a.y_size > 0
             ? Number.parseInt(String(a.y_size))
-            : CHDataUtils.numberByLimits({ min: 1, max: 10 });
+            : PrivateUtils.intNumber({ min: 1, max: 10 });
 
         const { min, max } = this.validateMinMax(a.min, a.max);
 
@@ -232,10 +263,10 @@ export class DataTypeSchema {
 
         if (a.case) {
           if (a.case === "lower")
-            charactersToRet = CHDataUtils.characters("lower");
-          else if (a.case === "upper") CHDataUtils.characters("upper");
-          else charactersToRet = CHDataUtils.characters();
-        } else charactersToRet = CHDataUtils.characters();
+            charactersToRet = PrivateUtils.characters("lower");
+          else if (a.case === "upper") PrivateUtils.characters("upper");
+          else charactersToRet = PrivateUtils.characters();
+        } else charactersToRet = PrivateUtils.characters();
 
         if (len) {
           let ret = "";
@@ -244,6 +275,33 @@ export class DataTypeSchema {
           }
           return ret;
         } else return CHDataUtils.oneOfArray(charactersToRet);
+      },
+      args || {},
+    );
+  }
+
+  /**
+   * Returns a string with a binary code
+   * @param args.length Length of the binary code
+   * @example schemas.dataType.binaryCode().getValue() // '00101'
+   * @example schemas.dataType.binaryCode().getValue({length: 6}) // '010100'
+   * @returns
+   */
+  binaryCode(args?: BinaryCodeProps) {
+    return new SchemaField<string, BinaryCodeProps>(
+      "binaryCode",
+      (a) => {
+        const length =
+          typeof a.length === "number" && a.length > 0
+            ? a.length
+            : PrivateUtils.intNumber({ min: 4, max: 8 });
+
+        let ret: string = "";
+        for (let i = 1; i <= length; i++) {
+          ret = ret.concat(String(PrivateUtils.oneOfArray([0, 1])));
+        }
+
+        return ret;
       },
       args || {},
     );
