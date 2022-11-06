@@ -1,6 +1,22 @@
 import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
-import { CHDataUtils } from "../../utils/CHDataUtils";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
+import { EMOJIS } from "./constants/emojis";
+
+type Emojis =
+  | "food"
+  | "body"
+  | "travel"
+  | "nature"
+  | "object"
+  | "person"
+  | "smiley"
+  | "symbol"
+  | "activity";
+
+type EmojiProps = {
+  emoji?: Emojis;
+};
 
 type EmailArgs = {
   firstName?: string;
@@ -87,7 +103,7 @@ export class InternetSchema {
     return new SchemaField<string>(
       "httoMethod",
       () => {
-        return CHDataUtils.oneOfArray([
+        return PrivateUtils.oneOfArray([
           "GET",
           "PATCH",
           "DELETE",
@@ -103,8 +119,38 @@ export class InternetSchema {
     return new SchemaField<string>("ip", () => faker.internet.ip(), {});
   }
 
-  public emoji() {
-    return new SchemaField<string>("emoji", () => faker.internet.emoji(), {});
+  /**
+   * Return an emoji string
+   * @example schemas.internet.emoji().getValue() // '🔎'
+   * @returns string
+   */
+  public emoji(args?: EmojiProps) {
+    return new SchemaField<string, EmojiProps>(
+      "emoji",
+      (a) => {
+        const emoji = typeof a.emoji === "string" ? a.emoji : undefined;
+
+        if (emoji) {
+          let selEmoji = EMOJIS[emoji];
+          if (selEmoji) {
+            return PrivateUtils.oneOfArray(selEmoji);
+          } else {
+            let retEmojis: string[] = [];
+            for (const val of Object.values(EMOJIS)) {
+              retEmojis = [...retEmojis, ...val];
+            }
+            return PrivateUtils.oneOfArray(retEmojis);
+          }
+        } else {
+          let retEmojis: string[] = [];
+          for (const val of Object.values(EMOJIS)) {
+            retEmojis = [...retEmojis, ...val];
+          }
+          return PrivateUtils.oneOfArray(retEmojis);
+        }
+      },
+      args || {},
+    );
   }
 
   public mac() {
@@ -130,7 +176,7 @@ export class InternetSchema {
   public protocol() {
     return new SchemaField<string>(
       "protocol",
-      () => CHDataUtils.oneOfArray(["http", "https"]),
+      () => PrivateUtils.oneOfArray(["http", "https"]),
       {},
     );
   }

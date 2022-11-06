@@ -1,7 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
-import { CHDataUtils } from "../../utils/CHDataUtils";
-import { COUNTRY_LIST } from "./constants/countries";
+import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
+import { TIME_ZONE } from "./constants/timeZone";
 
 type ZipCodeProps = {
   format?: string;
@@ -19,28 +20,67 @@ type CountryProps = {
 };
 
 export class AddressSchema {
+  /**
+   * Returns a zip code
+   * @param args.format format of the zip code
+   * @example schemas.address.zipCode().getValue() // '62581'
+   * @example schemas.address.zipCode().getValue({format: '###'}) // '453'
+   * @returns string
+   */
   zipCode(args?: ZipCodeProps) {
     return new SchemaField<string, ZipCodeProps>(
       "zipCode",
       (a) => {
-        return faker.address.zipCode(a.format);
+        const format =
+          typeof a.format === "string" && a.format ? a.format : "#####";
+        return PrivateUtils.replaceSymbols(format);
       },
       args || {},
     );
   }
 
+  /**
+   * Returns a time zone
+   * @example schemas.address.timeZone().getValue() // "Asia/Magadan"
+   * @returns string
+   */
   timeZone() {
-    return new SchemaField<string>("timeZone", faker.address.timeZone, {});
-  }
-
-  cardinalDirection() {
     return new SchemaField<string>(
-      "cardinalDirection",
-      faker.address.cardinalDirection,
+      "timeZone",
+      () => PrivateUtils.oneOfArray(TIME_ZONE),
       {},
     );
   }
 
+  /**
+   * Returns a cardinal direction
+   * @example schemas.address.cardinalDirection().getValue() // 'North'
+   * @returns string
+   */
+  cardinalDirection() {
+    return new SchemaField<string>(
+      "cardinalDirection",
+      () =>
+        PrivateUtils.oneOfArray([
+          "North",
+          "East",
+          "South",
+          "West",
+          "Northeast",
+          "Northwest",
+          "Southeast",
+          "Southwest",
+        ]),
+      {},
+    );
+  }
+
+  /**
+   * Returns a country
+   * @param args.continent Continent of the country that you want
+   * @example schemas.address.country().getValue() // 'Spain'
+   * @returns string
+   */
   country(args?: CountryProps) {
     return new SchemaField<string, CountryProps>(
       "country",
@@ -51,20 +91,27 @@ export class AddressSchema {
           );
 
           if (filterList.length > 0) {
-            return CHDataUtils.oneOfArray(filterList.map((el) => el.country));
+            return PrivateUtils.oneOfArray(filterList.map((el) => el.country));
           } else
-            return CHDataUtils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
+            return PrivateUtils.oneOfArray(
+              COUNTRY_LIST.map((el) => el.country),
+            );
         } else
-          return CHDataUtils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
+          return PrivateUtils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
       },
       args || {},
     );
   }
 
+  /**
+   * Returns a country name code
+   * @example schemas.address.countryCode().getValue() // 'CU'
+   * @returns string
+   */
   countryCode() {
     return new SchemaField<string>(
       "countryCode",
-      faker.address.countryCode,
+      () => PrivateUtils.oneOfArray(COUNTRY_CODE),
       {},
     );
   }

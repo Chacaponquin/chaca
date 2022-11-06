@@ -1,5 +1,7 @@
+import { CHDataError } from "../../errors/CHDataError";
+
 export class PrivateUtils {
-  public static oneOfArray<T = any>(list: T[]) {
+  public static oneOfArray<T = unknown>(list: T[]) {
     return list[Math.floor(Math.random() * list.length)];
   }
 
@@ -33,5 +35,25 @@ export class PrivateUtils {
 
     console.log(val);
     return val;
+  }
+
+  static replaceSymbols(symbols: string): string {
+    if (typeof symbols !== "string") {
+      throw new CHDataError("");
+    } else {
+      let ret: string = "";
+
+      for (let i = 0; i < symbols.length; i++) {
+        let val: string;
+
+        if (symbols[i] === "#")
+          val = String(this.intNumber({ min: 0, max: 9 }));
+        else val = symbols[i];
+
+        ret = ret.concat(val);
+      }
+
+      return ret;
+    }
   }
 }

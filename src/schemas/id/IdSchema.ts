@@ -7,7 +7,7 @@ export class IdSchema {
    * Generates a unique row of numbers
    *
    * @example
-   * chdata.schemas.id.numberRow().getValue() //1664755445878
+   * schemas.id.numberRow().getValue() //1664755445878
    *
    * @returns string
    */
