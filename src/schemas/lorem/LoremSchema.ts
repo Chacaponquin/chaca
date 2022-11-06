@@ -1,6 +1,6 @@
-import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
 import { loremIpsum } from "lorem-ipsum";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 
 type WordsProps = {
   count?: number;
@@ -29,11 +29,15 @@ type ParagraphsProps = {
   maxSentences?: number;
 };
 
-type LinesProps = {
-  linesCount?: number;
-};
-
 export class LoremSchema {
+  /**
+   * @param args.paragraphsCount Number of paragraphs. Default `3`
+   * @param args.separator Separator between paragraphs. Default `\n`
+   * @param args.maxSentences Maximun of sentences of each paragraphs
+   * @param args.minSentences Min of sentences of each paragraphs
+   * @example schemas.lorem.paragraphs().getValue()
+   * @returns string
+   */
   public paragraphs(args?: ParagraphsProps) {
     return new SchemaField<string, ParagraphsProps>(
       "paragraphs",
@@ -43,13 +47,13 @@ export class LoremSchema {
           typeof a.paragraphsCount === "number" && a.paragraphsCount > 0
             ? a.paragraphsCount
             : 3;
-        const maxS =
-          typeof a.maxSentences === "number" && a.maxSentences > 0
-            ? a.maxSentences
-            : undefined;
         const minS =
           typeof a.minSentences === "number" && a.minSentences > 0
             ? a.minSentences
+            : undefined;
+        const maxS =
+          typeof a.maxSentences === "number" && a.maxSentences > 0
+            ? a.maxSentences
             : undefined;
 
         return loremIpsum({
@@ -65,6 +69,14 @@ export class LoremSchema {
     );
   }
 
+  /**
+   * @param args.sentencesCount Number of sentences. Default in `3`
+   * @param args.separator Separator between sentences. Default `\n`
+   * @param args.wordsMin Minimun of words in each sentence
+   * @param args.wordsMax Maximun of words in each sentence
+   * @example schemas.lorem.sentences().getValue()
+   * @returns
+   */
   public sentences(args?: SentencesProps) {
     return new SchemaField<string, SentencesProps>(
       "sentences",
@@ -74,7 +86,6 @@ export class LoremSchema {
             ? a.sentencesCount
             : 3;
         const separator = typeof a.separator === "string" ? a.separator : "\n";
-
         const wordMin =
           typeof a.wordsMin === "number" && a.wordsMin > 0
             ? a.wordsMin
@@ -97,6 +108,11 @@ export class LoremSchema {
     );
   }
 
+  /**
+   * @param args.wordCount Number of words in the slug
+   * @example schemas.lorem.slug().getValue() // 'lorem-ipsum-ad'
+   * @returns string
+   */
   public slug(args: SlugProps) {
     return new SchemaField<string, SlugProps>(
       "slug",
@@ -121,6 +137,12 @@ export class LoremSchema {
     );
   }
 
+  /**
+   *
+   * @param args.count Number or words. Default `5`
+   * @example schemas.lorem.words().getValue() // 'lorem ipsum in'
+   * @returns string
+   */
   public words(args?: WordsProps) {
     return new SchemaField<string, WordsProps>(
       "words",
@@ -132,6 +154,12 @@ export class LoremSchema {
     );
   }
 
+  /**
+   * @param args.character_min Minimun of characters in the text
+   * @param args.character_max Maximun of characters in the text
+   * @example schemas.lorem.text().getValue()
+   * @returns string
+   */
   public text(args: TextProps) {
     return new SchemaField<string, TextProps>(
       "text",
@@ -139,7 +167,7 @@ export class LoremSchema {
         const text = loremIpsum({
           format: "plain",
           units: "paragraph",
-          count: 30000,
+          count: PrivateUtils.intNumber({ min: 100, max: 3000 }),
         });
 
         if (a.character_max || a.character_min) {
