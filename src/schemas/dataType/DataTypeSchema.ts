@@ -1,12 +1,24 @@
 import { faker } from "@faker-js/faker";
 import { CHDataError } from "../../errors/CHDataError";
 import { CHDataUtils } from "../../utils/CHDataUtils";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
 
-type NumberArgs = {
+type FloatProps = {
   min?: number;
   max?: number;
   precision?: number;
+};
+
+type NumberProps = {
+  min?: number;
+  max?: number;
+  precision?: number;
+};
+
+type IntProps = {
+  min?: number;
+  max?: number;
 };
 
 type HexadecimalProps = {
@@ -33,6 +45,11 @@ type CharactersProps = {
 };
 
 export class DataTypeSchema {
+  /**
+   * Returns a boolean
+   * @example schemas.dataType.boolean().getValue() // true
+   * @returns boolean
+   */
   public boolean() {
     return new SchemaField<boolean>(
       "boolean",
@@ -41,15 +58,73 @@ export class DataTypeSchema {
     );
   }
 
-  public number(args?: NumberArgs) {
-    return new SchemaField<number, NumberArgs>(
+  /**
+   * Returns a integer number
+   * @param args.min Minimun posible value
+   * @param args.max Maximun posible value
+   * @example schemas.dataType.int().getValue() // 462
+   * @example schemas.dataType.int().getValue({min: 10, max: 30}) // 28
+   * @returns number
+   */
+  int(args?: IntProps) {
+    return new SchemaField<number, IntProps>(
+      "int",
+      (a) => {
+        return PrivateUtils.intNumber(a);
+      },
+      args || {},
+    );
+  }
+
+  /**
+   * Returns a float number
+   * @param args.min Minimun posible value
+   * @param args.max Maximun posible value
+   * @param args.precision Precision of the float. Must be a value between `1` and `20`. Default `2`
+   * @example schemas.dataType.float().getValue() // 462.12
+   * @example schemas.dataType.float().getValue({min: 10, max: 30}) // 10.23
+   * @example schemas.dataType.number().getValue({precision: 4}) // 90.5362
+   * @returns number
+   */
+  float(args?: FloatProps) {
+    return new SchemaField<number, FloatProps>(
+      "float",
+      (a) => PrivateUtils.floatNumber(a),
+      args || {},
+    );
+  }
+
+  /**
+   * Returns a number
+   * @param args.min Minimun posible value
+   * @param args.max Maximun posible value
+   * @param args.precision Precision of the number. Must be a value between `1` and `20`.
+   * @example schemas.dataType.number().getValue() // 301
+   * @example schemas.dataType.number().getValue({min: 10, max: 30}) // 10.2327
+   * @returns number
+   */
+  number(args?: NumberProps) {
+    return new SchemaField<number, NumberProps>(
       "number",
       (a) => {
-        const precision =
-          typeof a.precision === "number" && a.precision > 0 ? a.precision : 1;
-        const { min, max } = this.validateMinMax(a.min, a.max);
+        let minimun: number = typeof a.min === "number" ? a.min : -999999;
+        let maximun: number;
+        let pres: number =
+          typeof a.precision === "number" &&
+          a.precision > 0 &&
+          a.precision <= 20
+            ? a.precision
+            : PrivateUtils.intNumber({ min: 0, max: 5 });
 
-        return faker.datatype.number({ max, min, precision });
+        if (typeof a.max === "number") {
+          if (minimun) {
+            if (a.max > minimun) maximun = a.max;
+            else maximun = 999999;
+          } else maximun = a.max;
+        } else maximun = 999999;
+
+        const val = Math.random() * (maximun - minimun + 1) + minimun;
+        return Number(String(val.toFixed(pres)));
       },
       args || {},
     );
@@ -69,23 +144,6 @@ export class DataTypeSchema {
           case: a.case,
           prefix: a.prefix,
         });
-      },
-      args || {},
-    );
-  }
-
-  public float(args?: NumberArgs) {
-    return new SchemaField<number, NumberArgs>(
-      "float",
-      (a) => {
-        const precision =
-          typeof a.precision === "number" && a.precision > 0
-            ? a.precision
-            : 0.1;
-
-        const { min, max } = this.validateMinMax(a.min, a.max);
-
-        return faker.datatype.float({ min, max, precision });
       },
       args || {},
     );

@@ -67,7 +67,7 @@ DataType Schema
 
 ```ts
 schemas.dataType.boolean().getValue(); // true;
-schemas.dataType.number().getValue({ min: 0, max: 20 }); // 15;
+schemas.dataType.int().getValue({ min: 0, max: 20 }); // 15;
 schemas.dataType.hexadecimal().getValue(); // '#f12a974eB1'
 schemas.dataType.float().getValue(); // 15.2;
 schemas.dataType.matriz({ x_size: 4, y_size: 3 }).getValue(); // [[0, 3, 4, 1], [1, 2, 3], [0, 0, 1]]

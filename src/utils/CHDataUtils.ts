@@ -1,8 +1,14 @@
 import { faker } from "@faker-js/faker";
+import { PrivateUtils } from "./helpers/PrivateUtils";
 export class CHDataUtils {
-  public static oneOfArray<T = any>(list: T[]) {
-    return list[Math.floor(Math.random() * list.length)];
-  }
+  /**
+   * Returns one element from an array
+   * @param list Array of values to return
+   * @example chaca.utils.oneOfArray([1, 2, 3, 5, 4]) // 3
+   * @example chaca.utils.oneOfArray(['Buenas', 'Chaca the best!!!', 10]) // 'Chaca the best!!!'
+   */
+  public static oneOfArray = PrivateUtils.oneOfArray;
+  public static replaceSymbols = PrivateUtils.replaceSymbols;
   public static numberByLimits({
     min,
     max,

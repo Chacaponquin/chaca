@@ -5,36 +5,47 @@ export class PrivateUtils {
     return list[Math.floor(Math.random() * list.length)];
   }
 
-  static intNumber({ min, max }: { min?: number; max?: number }): number {
-    let minimun: number | undefined = typeof min === "number" ? min : undefined;
-    let maximun: number | undefined;
+  static floatNumber({
+    min,
+    max,
+    precision,
+  }: {
+    min?: number;
+    max?: number;
+    precision?: number;
+  }): number {
+    let minimun: number = typeof min === "number" ? min : -999999;
+    let maximun: number;
+    let pres: number =
+      typeof precision === "number" && precision > 0 && precision <= 20
+        ? precision
+        : 2;
 
     if (typeof max === "number") {
       if (minimun) {
         if (max > minimun) maximun = max;
-        else maximun = undefined;
+        else maximun = 999999;
       } else maximun = max;
-    } else maximun = undefined;
+    } else maximun = 999999;
 
-    let val: number;
-    if (!maximun && !minimun) {
-      maximun = Math.random() * 999999;
-      val = Math.floor(Math.random() * maximun) * this.oneOfArray([-1, 1]);
-    } else if (maximun && !minimun) {
-      val =
-        Math.floor(Math.random() * maximun) -
-        Math.floor(Math.random() * 999999);
-    } else if (minimun && !maximun) {
-      maximun = Math.random() * 999999;
-      val = Math.floor(Math.random() * maximun) + minimun;
-    } else {
-      console.log(maximun, "buenas");
-      console.log(minimun, "buenas");
-      val = Math.floor(Math.random() * maximun!) + minimun!;
-    }
+    const val = Math.random() * (maximun - minimun + 1) + minimun;
 
-    console.log(val);
-    return val;
+    return Number(String(val.toFixed(pres)));
+  }
+
+  static intNumber({ min, max }: { min?: number; max?: number }): number {
+    let minimun: number = typeof min === "number" ? min : -999999;
+    let maximun: number;
+
+    if (typeof max === "number") {
+      if (minimun) {
+        if (max > minimun) maximun = max;
+        else maximun = 999999;
+      } else maximun = max;
+    } else maximun = 999999;
+
+    const val = Math.random() * (maximun - minimun + 1) + minimun;
+    return Number.parseInt(String(val));
   }
 
   static replaceSymbols(symbols: string): string {
