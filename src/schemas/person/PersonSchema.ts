@@ -1,7 +1,8 @@
 import { faker } from "@faker-js/faker";
 import { CHDataUtils } from "../../utils/CHDataUtils";
 import { SchemaField } from "../SchemaField";
-import NAMES, { ILanguageNames } from "./constants";
+import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 
 type AllLanguages = "es" | "en";
 
@@ -21,22 +22,50 @@ type SexProps = {
 };
 
 export class PersonSchema {
-  jobTitle() {
-    return new SchemaField<string>("jobTitle", faker.name.jobTitle, {});
+  /**
+   * Returns a Job Level
+   * @example schemas.person.jobLevel().getValue() // 'Investor'
+   * @returns string
+   */
+  jobLevel() {
+    return new SchemaField<string>(
+      "jobLevel",
+      () => PrivateUtils.oneOfArray(JOBS.JOB_LEVELS),
+      {},
+    );
   }
 
-  jobType() {
-    return new SchemaField<string>("jobType", faker.name.jobType, {});
-  }
-
+  /**
+   * Returns a Job Area
+   * @example schemas.person.jobLevel().getValue() // 'Supervisor'
+   * @returns string
+   */
   jobArea() {
-    return new SchemaField<string>("area", faker.name.jobArea, {});
+    return new SchemaField<string>(
+      "jobArea",
+      () => PrivateUtils.oneOfArray(JOBS.JOBS_AREAS),
+      {},
+    );
   }
 
+  /**
+   * Returns a person gender
+   * @example schemas.person.gender().getValue() // 'Bigender'
+   * @returns string
+   */
   gender() {
-    return new SchemaField<string>("gender", faker.name.gender, {});
+    return new SchemaField<string>(
+      "gender",
+      () => PrivateUtils.oneOfArray(GENDERS),
+      {},
+    );
   }
 
+  /**
+   * Returns a person sex
+   * @example schemas.person.sex().getValue() // 'Male'
+   * @returns `Male` | `Female`
+   */
   sex() {
     return new SchemaField<string>(
       "sex",
@@ -45,6 +74,13 @@ export class PersonSchema {
     );
   }
 
+  /**
+   * Returns a first name from a selected lenguage
+   * @param args.language (`en` | `es`). Default `en`
+   * @param args.sex (`male` | `female`)
+   * @example schemas.person.firstName().getValue() // 'Juan'
+   * @returns string
+   */
   firstName(args?: NameProps) {
     return new SchemaField<string, NameProps>(
       "firstName",
@@ -57,6 +93,12 @@ export class PersonSchema {
     );
   }
 
+  /**
+   * Returns a last name from a selected lenguage
+   * @param args.language (`en` | `es`). Default `en`
+   * @example schemas.person.lastName().getValue() // 'Scott'
+   * @returns string
+   */
   lastName(args?: LangugeProps) {
     return new SchemaField<string, LangugeProps>(
       "lastName",
@@ -69,6 +111,13 @@ export class PersonSchema {
     );
   }
 
+  /**
+   * Returns a full name from a selected lenguage
+   * @param args.language (`en` | `es`). Default `en`
+   * @param args.sex (`male` | `female`)
+   * @example schemas.person.fullName().getValue() // 'Juan Rodriguez Perez'
+   * @returns string
+   */
   fullName(args?: NameProps) {
     return new SchemaField<string, NameProps>(
       "fullName",
@@ -95,10 +144,27 @@ export class PersonSchema {
     );
   }
 
+  /**
+   * Returns a random name prefix
+   * @param args.sex Sex of the person. (`male` | `female`)
+   * @example schemas.person.prefix().getValue() // 'Ms.'
+   * @returns string
+   */
   prefix(args?: SexProps) {
     return new SchemaField<string, SexProps>(
       "preffix",
-      (a) => faker.name.prefix(typeof a.sex === "string" ? a.sex : undefined),
+      (a) => {
+        const sex = typeof a.sex === "string" ? a.sex : undefined;
+
+        const male = ["Mr.", "Mrs.", "Dr."];
+        const female = ["Ms.", "Miss"];
+
+        if (sex) {
+          if (sex === "male") return PrivateUtils.oneOfArray(male);
+          else if (sex === "female") return PrivateUtils.oneOfArray(female);
+          else return PrivateUtils.oneOfArray([...male, ...female]);
+        } else return PrivateUtils.oneOfArray([...male, ...female]);
+      },
       args || {},
     );
   }
@@ -118,8 +184,6 @@ export class PersonSchema {
       const selSex = nameSel[sex];
       if (selSex) return selSex;
       else return [...nameSel.male, ...nameSel.female];
-    }
-
-    return [...nameSel.male, ...nameSel.female];
+    } else return [...nameSel.male, ...nameSel.female];
   }
 }
