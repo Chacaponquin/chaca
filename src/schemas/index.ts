@@ -1,7 +1,6 @@
 import { DataTypeSchema } from "./dataType/DataTypeSchema";
 import { IdSchema } from "./id/IdSchema";
 import { InternetSchema } from "./internet/InternetSchema";
-import { MusicSchema } from "./music/MusicSchema";
 import { LoremSchema } from "./lorem/LoremSchema";
 import { ImageSchema } from "./image/ImageSchema";
 import { SystemSchema } from "./system/SystemSchema";
@@ -18,7 +17,6 @@ import { ScienceSchema } from "./science/ScienceSchema";
 import { WordSchema } from "./word/WordSchema";
 
 export const Schemas = {
-  music: new MusicSchema(),
   internet: new InternetSchema(),
   dataType: new DataTypeSchema(),
   id: new IdSchema(),
