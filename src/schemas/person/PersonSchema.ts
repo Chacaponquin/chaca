@@ -24,6 +24,7 @@ type SexProps = {
 export class PersonSchema {
   /**
    * Returns a Job Level
+   * @example schemas.person.jobLevel() // Schema
    * @example schemas.person.jobLevel().getValue() // 'Investor'
    * @returns string
    */
@@ -37,6 +38,7 @@ export class PersonSchema {
 
   /**
    * Returns a Job Area
+   * @example schemas.person.jobArea() // Schema
    * @example schemas.person.jobLevel().getValue() // 'Supervisor'
    * @returns string
    */
@@ -50,6 +52,7 @@ export class PersonSchema {
 
   /**
    * Returns a person gender
+   * @example schemas.person.gender() // Schema
    * @example schemas.person.gender().getValue() // 'Bigender'
    * @returns string
    */
@@ -63,6 +66,7 @@ export class PersonSchema {
 
   /**
    * Returns a person sex
+   * @example schemas.person.sex() // Schema
    * @example schemas.person.sex().getValue() // 'Male'
    * @returns `Male` | `Female`
    */
@@ -77,7 +81,8 @@ export class PersonSchema {
   /**
    * Returns a first name from a selected lenguage
    * @param args.language (`en` | `es`). Default `en`
-   * @param args.sex (`male` | `female`)
+   * @param args.sex Person name sex (`male` | `female`)
+   * @example schemas.person.firstName() // Schema
    * @example schemas.person.firstName().getValue() // 'Juan'
    * @returns string
    */
@@ -96,6 +101,7 @@ export class PersonSchema {
   /**
    * Returns a last name from a selected lenguage
    * @param args.language (`en` | `es`). Default `en`
+   * @example schemas.person.lastName() // Schema
    * @example schemas.person.lastName().getValue() // 'Scott'
    * @returns string
    */
@@ -115,6 +121,7 @@ export class PersonSchema {
    * Returns a full name from a selected lenguage
    * @param args.language (`en` | `es`). Default `en`
    * @param args.sex (`male` | `female`)
+   * @example schemas.person.fullName() // Schema
    * @example schemas.person.fullName().getValue() // 'Juan Rodriguez Perez'
    * @returns string
    */
@@ -147,6 +154,7 @@ export class PersonSchema {
   /**
    * Returns a random name prefix
    * @param args.sex Sex of the person. (`male` | `female`)
+   * @example schemas.person.prefix() // Schema
    * @example schemas.person.prefix().getValue() // 'Ms.'
    * @returns string
    */
