@@ -12,7 +12,6 @@ import { DateSchema } from "./date/DateSchema";
 import { PersonSchema } from "./person/PersonSchema";
 import { VideoSchema } from "./video/VideoSchema";
 import { AnimalSchema } from "./animal/AnimalSchema";
-import { CodeSchema } from "./code/CodeSchema";
 import { ScienceSchema } from "./science/ScienceSchema";
 import { WordSchema } from "./word/WordSchema";
 
@@ -32,6 +31,5 @@ export const Schemas = {
   person: new PersonSchema(),
   video: new VideoSchema(),
   animal: new AnimalSchema(),
-  code: new CodeSchema(),
   science: new ScienceSchema(),
 };
