@@ -1,5 +1,6 @@
 import { faker } from "@faker-js/faker";
 import { CHDataUtils } from "../../utils/CHDataUtils";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
 import { PHONE_PREFIX } from "./constants/phonePrefix";
 
@@ -8,11 +9,41 @@ type CallDurationProps = {
   max?: number;
 };
 
+type NumberProps = {
+  format?: string;
+};
+
 export class PhoneSchema {
-  number() {
-    return new SchemaField<string>("number", () => faker.phone.number(), {});
+  /**
+   * Returns a phone number
+   * @param args.format Format of the phone number
+   * @example schemas.phone.number() // Schema
+   * @example
+   * schemas.phone.number().getValue({format: '+53 #### ## ##'}) // '+53 5417 35 91'
+   * @returns string
+   */
+  number(args?: NumberProps) {
+    return new SchemaField<string, NumberProps>(
+      "number",
+      (a) => {
+        const format: string =
+          typeof a.format === "string"
+            ? a.format
+            : `${this.prefix().getValue()} ### ### ##`;
+
+        const number: string = PrivateUtils.replaceSymbols(format);
+        return number;
+      },
+      args || {},
+    );
   }
 
+  /**
+   * Returns a string with a country number prefix
+   * @example schemas.phone.prefix() // Schema
+   * @example schemas.phone.prefix().getValue() // '+53'
+   * @returns string
+   */
   prefix() {
     return new SchemaField<string>(
       "prefix",
@@ -26,8 +57,10 @@ export class PhoneSchema {
    * @param args.min Minimun minutes of the call. Default `0`
    * @param args.max Maximun minutes of the call. Default `59`
    *
-   * @example schemas.phone.callDuration().getValue({min: 10, max: 30}) // '27:30'
-   *
+   * @example schemas.phone.callDuration() // Schema
+   * @example
+   * schemas.phone.callDuration().getValue({min: 10, max: 30}) // '27:30'
+   * schemas.phone.callDuration().getValue() // '20:52'
    * @returns string
    */
   callDuration(args?: CallDurationProps) {
@@ -48,11 +81,11 @@ export class PhoneSchema {
           }
         }
 
-        const minutes = CHDataUtils.numberByLimits({
+        const minutes = PrivateUtils.intNumber({
           min: min || 0,
           max: max || 59,
         });
-        const seconds = CHDataUtils.numberByLimits({ min: 0, max: 59 });
+        const seconds = PrivateUtils.intNumber({ min: 0, max: 59 });
 
         const stringMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
         const stringSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
