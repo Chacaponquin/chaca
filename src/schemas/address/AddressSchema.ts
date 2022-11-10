@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
 import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";

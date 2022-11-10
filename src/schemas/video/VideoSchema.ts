@@ -6,6 +6,7 @@ export class VideoSchema {
   /**
    * Return a food video url
    *
+   * @example schemas.video.food() // Schema
    * @example
    * schemas.video.food().getValue()
    * @returns string
@@ -23,6 +24,7 @@ export class VideoSchema {
   /**
    * Return a event video url
    *
+   * @example schemas.video.event() // Schema
    * @example
    * schemas.video.event().getValue()
    * @returns string
@@ -38,6 +40,7 @@ export class VideoSchema {
   /**
    * Return a wallpaper video url
    *
+   * @example schemas.video.wallpaper() // Schema
    * @example
    * schemas.video.wallpaper().getValue()
    * @returns string
@@ -53,6 +56,7 @@ export class VideoSchema {
   /**
    * Return a 3D video url
    *
+   * @example schemas.video.treeDimension() // Schema
    * @example
    * schemas.video.treeDimension().getValue()
    * @returns string
@@ -68,6 +72,7 @@ export class VideoSchema {
   /**
    * Return a sport video url
    *
+   * @example schemas.video.sport() // Schema
    * @example
    * schemas.video.sport().getValue()
    * @returns string
@@ -83,6 +88,7 @@ export class VideoSchema {
   /**
    * Return a animal video url
    *
+   * @example schemas.video.animal() // Schema
    * @example
    * schemas.video.animal().getValue()
    * @returns string
@@ -97,7 +103,7 @@ export class VideoSchema {
 
   /**
    * Return a experimental video url
-   *
+   * @example schemas.video.experimental() // Schema
    * @example
    * schemas.video.experimental().getValue()
    * @returns string
@@ -112,7 +118,7 @@ export class VideoSchema {
 
   /**
    * Return a architecture video url
-   *
+   * @example schemas.video.architecture() // Schema
    * @example
    * schemas.video.architecture().getValue()
    * @returns string
@@ -127,7 +133,7 @@ export class VideoSchema {
 
   /**
    * Return a nature video url
-   *
+   * @example schemas.video.nature() // Schema
    * @example
    * schemas.video.nature().getValue()
    * @returns string
@@ -142,7 +148,7 @@ export class VideoSchema {
 
   /**
    * Return a fashion video url
-   *
+   * @example schemas.video.fashion() // Schema
    * @example
    * schemas.video.fashion().getValue()
    * @returns string
@@ -157,7 +163,7 @@ export class VideoSchema {
 
   /**
    * Return a health video url
-   *
+   * @example schemas.video.health() // Schema
    * @example
    * schemas.video.health().getValue()
    * @returns string
@@ -172,7 +178,7 @@ export class VideoSchema {
 
   /**
    * Return a people video url
-   *
+   * @example schemas.video.people() // Schema
    * @example
    * schemas.video.people().getValue()
    * @returns string
@@ -187,7 +193,7 @@ export class VideoSchema {
 
   /**
    * Return a street video url
-   *
+   * @example schemas.video.street() // Schema
    * @example
    * schemas.video.street().getValue()
    * @returns string
@@ -202,7 +208,7 @@ export class VideoSchema {
 
   /**
    * Return a spiritual video url
-   *
+   * @example schemas.video.spiritual() // Schema
    * @example
    * schemas.video.spiritual().getValue()
    * @returns string
@@ -217,7 +223,7 @@ export class VideoSchema {
 
   /**
    * Return a travel video url
-   *
+   * @example schemas.video.travel() // Schema
    * @example
    * schemas.video.travel().getValue()
    * @returns string
@@ -232,7 +238,7 @@ export class VideoSchema {
 
   /**
    * Return a art video url
-   *
+   * @example schemas.video.art() // Schema
    * @example
    * schemas.video.art().getValue()
    * @returns string
@@ -247,7 +253,7 @@ export class VideoSchema {
 
   /**
    * Return a history video url
-   *
+   * @example schemas.video.history() // Schema
    * @example
    * schemas.video.history().getValue()
    * @returns string

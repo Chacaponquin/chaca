@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { CHDataError } from "../../errors/CHDataError";
 import { CHDataUtils } from "../../utils/CHDataUtils";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
@@ -226,7 +225,7 @@ export class DataTypeSchema {
 
         return new Array(x_size).fill(0).map(() => {
           return new Array(y_size).fill(0).map(() => {
-            return faker.datatype.number({ min, max, precision });
+            return this.number().getValue({ min, max, precision });
           });
         });
       },

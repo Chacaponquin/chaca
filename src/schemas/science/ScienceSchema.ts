@@ -15,11 +15,20 @@ type UnitProps = {
 };
 
 export class ScienceSchema {
+  /**
+   * Returns periodic table element
+   * @param args.type element format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
+   * @example schemas.science.periodicTableElement() // Schema
+   * @example
+   * schemas.science.periodicTableElement().getValue() // 'Curium'
+   * schemas.science.periodicTableElement().getValue({type: 'symbol'}) // 'Zn'
+   * @returns string
+   */
   periodicTableElement(args?: PeriodicTableProps) {
     return new SchemaField<string, PeriodicTableProps>(
       "periodicTableElement",
       (a) => {
-        if (a.type && typeof a.type === "string") {
+        if (typeof a.type === "string") {
           if (a.type === "name") {
             return CHDataUtils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
           } else return CHDataUtils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
@@ -29,6 +38,17 @@ export class ScienceSchema {
     );
   }
 
+  /**
+   * Returns a unit of measurement
+   *
+   * @param args.type unit format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
+   *
+   * @example schemas.science.unit() // Schema
+   * @example
+   * schemas.science.unit() // 'hertz (Hz)'
+   * schemas.science.unit({type: 'symbol'}) // 'N'
+   * @returns string
+   */
   unit(args?: UnitProps) {
     return new SchemaField<string, UnitProps>(
       "unit",
@@ -36,8 +56,8 @@ export class ScienceSchema {
         if (a.type && typeof a.type === "string") {
           if (a.type === "symbol") {
             return CHDataUtils.oneOfArray(UNITS.map((el) => el.symbol));
-          } else return CHDataUtils.oneOfArray(UNITS.map((el) => el.key));
-        } else return CHDataUtils.oneOfArray(UNITS.map((el) => el.key));
+          } else return CHDataUtils.oneOfArray(UNITS.map((el) => el.val));
+        } else return CHDataUtils.oneOfArray(UNITS.map((el) => el.val));
       },
       args || {},
     );

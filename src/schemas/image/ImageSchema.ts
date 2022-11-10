@@ -6,6 +6,7 @@ export class ImageSchema {
   /**
    * Return a food image url
    *
+   * @example schemas.image.food() // Schema
    * @example
    * schemas.image.food().getValue()
    * @returns string
@@ -23,6 +24,7 @@ export class ImageSchema {
   /**
    * Return a event image url
    *
+   * @example schemas.image.event() // Schema
    * @example
    * schemas.image.event().getValue()
    * @returns string
@@ -38,6 +40,7 @@ export class ImageSchema {
   /**
    * Return a wallpaper image url
    *
+   * @example schemas.image.wallpaper() // Schema
    * @example
    * schemas.image.wallpaper().getValue()
    * @returns string
@@ -53,6 +56,7 @@ export class ImageSchema {
   /**
    * Return a 3D image url
    *
+   * @example schemas.image.treeDimension() // Schema
    * @example
    * schemas.image.treeDimension().getValue()
    * @returns string
@@ -68,6 +72,7 @@ export class ImageSchema {
   /**
    * Return a architecture image url
    *
+   * @example schemas.image.architecture() // Schema
    * @example
    * schemas.image.architecture().getValue()
    * @returns string
@@ -83,6 +88,7 @@ export class ImageSchema {
   /**
    * Return a nature image url
    *
+   * @example schemas.image.nature() // Schema
    * @example
    * schemas.image.nature().getValue()
    * @returns string
@@ -98,6 +104,7 @@ export class ImageSchema {
   /**
    * Return a fashion image url
    *
+   * @example schemas.image.fashion() // Schema
    * @example
    * schemas.image.fashion().getValue()
    * @returns string
@@ -113,6 +120,7 @@ export class ImageSchema {
   /**
    * Return a film image url
    *
+   * @example schemas.image.film() // Schema
    * @example
    * schemas.image.film().getValue()
    * @returns string
@@ -128,6 +136,7 @@ export class ImageSchema {
   /**
    * Return a people image url
    *
+   * @example schemas.image.people() // Schema
    * @example
    * schemas.image.people().getValue()
    * @returns string
@@ -143,6 +152,7 @@ export class ImageSchema {
   /**
    * Return a health image url
    *
+   * @example schemas.image.health() // Schema
    * @example
    * schemas.image.health().getValue()
    * @returns string
@@ -158,6 +168,7 @@ export class ImageSchema {
   /**
    * Return a house image url
    *
+   * @example schemas.image.house() // Schema
    * @example
    * schemas.image.house().getValue()
    * @returns string
@@ -173,6 +184,7 @@ export class ImageSchema {
   /**
    * Return a street image url
    *
+   * @example schemas.image.street() // Schema
    * @example
    * schemas.image.street().getValue()
    * @returns string
@@ -188,6 +200,7 @@ export class ImageSchema {
   /**
    * Return a animal image url
    *
+   * @example schemas.image.animal() // Schema
    * @example
    * schemas.image.animal().getValue()
    * @returns string
@@ -203,6 +216,7 @@ export class ImageSchema {
   /**
    * Return a spiritual image url
    *
+   * @example schemas.image.spiritual() // Schema
    * @example
    * schemas.image.spiritual().getValue()
    * @returns string
@@ -218,6 +232,7 @@ export class ImageSchema {
   /**
    * Return a travel image url
    *
+   * @example schemas.image.travel() // Schema
    * @example
    * schemas.image.travel().getValue()
    * @returns string
@@ -233,6 +248,7 @@ export class ImageSchema {
   /**
    * Return a art image url
    *
+   * @example schemas.image.art() // Schema
    * @example
    * schemas.image.art().getValue()
    * @returns string
@@ -248,6 +264,7 @@ export class ImageSchema {
   /**
    * Return a history image url
    *
+   * @example schemas.image.history() // Schema
    * @example
    * schemas.image.history().getValue()
    * @returns string
@@ -263,6 +280,7 @@ export class ImageSchema {
   /**
    * Return a sport image url
    *
+   * @example schemas.image.sport() // Schema
    * @example
    * schemas.image.sport().getValue()
    * @returns string
@@ -278,6 +296,7 @@ export class ImageSchema {
   /**
    * Return a animate avatar image url
    *
+   * @example schemas.image.animateAvatar() // Schema
    * @example
    * schemas.image.animateAvatar().getValue()
    *
