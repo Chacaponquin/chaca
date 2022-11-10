@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { PrivateUtils } from "./helpers/PrivateUtils";
 export class CHDataUtils {
   /**
@@ -10,6 +9,7 @@ export class CHDataUtils {
   public static oneOfArray = PrivateUtils.oneOfArray;
   public static replaceSymbols = PrivateUtils.replaceSymbols;
   public static capitalizeText = PrivateUtils.capitalizeText;
+  public static joinWords = PrivateUtils.joinWords;
 
   public static capitalizeMayusText(text: string): string {
     let result = this.capitalizeText(text);

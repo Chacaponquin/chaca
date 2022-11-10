@@ -5,6 +5,29 @@ export class PrivateUtils {
     return this.oneOfArray([true, false]);
   }
 
+  static joinWords(words: string[] | string, sep?: string): string {
+    const separator = typeof sep === "string" ? sep : "_";
+    if (typeof words === "string") {
+      let retString = "";
+
+      for (let i = 0; i < words.length; i++) {
+        retString = retString.concat(words[i] === " " ? separator : words[i]);
+      }
+
+      return retString;
+    } else if (Array.isArray(words)) {
+      let retString = "";
+
+      for (const w of words) {
+        if (typeof w === "string") {
+        } else throw new CHDataError(`${w} is not a string`);
+      }
+
+      return retString;
+    } else
+      throw new CHDataError(`${words} is not a string or an array of strings`);
+  }
+
   static specialCharacters(): string[] {
     const special = ".!#$%&'*+-/=?^_`{|}~";
     return special.split("");
