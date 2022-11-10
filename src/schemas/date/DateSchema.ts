@@ -1,25 +1,24 @@
-import { faker } from "@faker-js/faker";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
+import { MONTHS } from "./constants/month";
+import { WEEKDAYS } from "./constants/weekday";
+
+type ArgDate = Date | string;
 
 type DateSoonProps = {
   days?: number;
-  refDate?: Date;
+  refDate?: ArgDate;
 };
 
 type DatePastProps = {
   years?: number;
-  refDate?: Date;
+  refDate?: ArgDate;
 };
 
-type DateFutureProps = { years?: number; refDate?: Date };
-
-type DayProps = {
-  abbr?: boolean;
-};
+type DateFutureProps = { years?: number; refDate?: ArgDate };
 
 type BirthDateProps = {
-  refDate?: Date;
+  refDate?: ArgDate;
   min?: number;
   max?: number;
   mode?: "age" | "year";
@@ -32,133 +31,245 @@ type TimeAgoProps = {
 };
 
 type DateBetweenProps = {
-  from?: Date;
-  to?: Date;
+  from?: ArgDate;
+  to?: ArgDate;
 };
 
 export class DateSchema {
+  /**
+   * Returns a date in the near future.
+   *
+   * @param args.days The range of days the date may be in the future.
+   * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
+   *
+   * @example schemas.date.soon() // Schema
+   *
+   * @example
+   * schemas.date.soon().getValue() // '2022-02-05T09:55:39.216Z'
+   * schemas.date.soon().getValue({days: 10}) // '2022-02-11T05:14:39.138Z'
+   */
   soon(args?: DateSoonProps) {
     return new SchemaField<Date, DateSoonProps>(
       "dateSoon",
       (a) => {
         const days =
-          a.days && typeof a.days === "number" && a.days > 0
+          typeof a.days === "number" && a.days > 0
             ? a.days
-            : undefined;
+            : PrivateUtils.intNumber({ min: 1, max: 200 });
 
-        const refDate =
-          a.refDate && a.refDate instanceof Date ? a.refDate : undefined;
+        const refDate = this.argToDate(a.refDate);
 
-        return faker.date.soon(days, refDate);
+        const range = {
+          min: 1000,
+          max: (days || 1) * 24 * 3600 * 1000,
+        };
+
+        let future = refDate.getTime();
+        future += PrivateUtils.intNumber(range);
+        refDate.setTime(future);
+
+        return refDate;
       },
       args || {},
     );
   }
 
+  /**
+   * Returns a Date in the past.
+   *
+   * @param args.years The range of years the date may be in the past.
+   * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
+   *
+   * @example schemas.date.past() // Schema
+   *
+   * @example
+   * schemas.date.past().getValue() // '2021-12-03T05:40:44.408Z'
+   * schemas.date.past().getValue({years: 10, refDate: '2020-01-01T00:00:00.000Z'}) // '2017-08-18T02:59:12.350Z'
+   *
+   * @returns Date
+   * */
   past(args?: DatePastProps) {
     return new SchemaField<Date, DatePastProps>(
       "datePast",
       (a) => {
         const years =
-          a.years && typeof a.years === "number" && a.years > 0
+          typeof a.years === "number" && a.years > 0
             ? a.years
-            : undefined;
+            : PrivateUtils.intNumber({ min: 1, max: 10 });
 
-        const refDate =
-          a.refDate && a.refDate instanceof Date ? a.refDate : undefined;
+        const refDate = this.argToDate(a.refDate);
 
-        return faker.date.past(years, refDate);
+        const range = {
+          min: 1000,
+          max: (years || 1) * 365 * 24 * 3600 * 1000,
+        };
+
+        let past = refDate.getTime();
+        past -= PrivateUtils.intNumber(range); // some time from now to N years ago, in milliseconds
+        refDate.setTime(past);
+
+        return refDate;
       },
       args || {},
     );
   }
 
+  /**
+   * Returns a date in the future.
+   *
+   * @param args.years The range of years the date may be in the future.
+   * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
+   *
+   * @example schemas.date.future() // Schema
+   *
+   * @example
+   * schemas.date.future().getValue() // '2022-11-19T05:52:49.100Z'
+   * schemas.date.future().getValue({years: 10, refDate: '2020-01-01T00:00:00.000Z'}) // '2020-12-13T22:45:10.252Z'
+   *
+   * @returns Date
+   */
   future(args?: DateFutureProps) {
     return new SchemaField<Date, DateFutureProps>(
       "dateFuture",
       (a) => {
         const years =
-          a.years && typeof a.years === "number" && a.years > 0
-            ? a.years
-            : undefined;
+          typeof a.years === "number" && a.years > 0 ? a.years : undefined;
 
-        const refDate =
-          a.refDate && a.refDate instanceof Date ? a.refDate : undefined;
+        const refDate = this.argToDate(a.refDate);
 
-        return faker.date.future(years, refDate);
+        const range = {
+          min: 1000,
+          max: (years || 1) * 365 * 24 * 3600 * 1000,
+        };
+
+        let future = refDate.getTime();
+        future += PrivateUtils.intNumber(range);
+        refDate.setTime(future);
+
+        return refDate;
       },
       args || {},
     );
   }
 
-  month(args?: DayProps) {
-    return new SchemaField<string, DayProps>(
+  /**
+   * Returns a month name
+   * @example schemas.date.month() // Schema
+   * @example schemas.date.month().getValue() // 'February'
+   * @returns string
+   */
+  month() {
+    return new SchemaField<string>(
       "month",
       (a) => {
-        const abbr = Boolean(a.abbr);
-
-        return faker.date.month({ abbr });
+        return PrivateUtils.oneOfArray(MONTHS);
       },
-      args || {},
+      {},
     );
   }
 
-  weekDay(args?: DayProps) {
-    return new SchemaField<string, DayProps>(
+  /**
+   * Returns a weekday name
+   * @example schemas.date.weekDay() // Schema
+   * @example schemas.date.weekDay().getValue() // 'Monday'
+   * @returns string
+   */
+  weekDay() {
+    return new SchemaField<string>(
       "weekDay",
       (a) => {
-        const abbr = Boolean(a.abbr);
-        return faker.date.weekday({ abbr });
+        return PrivateUtils.oneOfArray(WEEKDAYS);
       },
-      args || {},
+      {},
     );
   }
 
+  /**
+   * Returns a random birthdate.
+   *
+   * @param args.min The minimum age or year to generate a birthdate.
+   * @param args.max The maximum age or year to generate a birthdate.
+   * @param args.refDate The date to use as reference point for the newly generated date. Defaults to `now`.
+   * @param args.mode The mode to generate the birthdate. Supported modes are `'age'` and `'year'` .
+   *
+   * There are two modes available `'age'` and `'year'`:
+   * - `'age'`: The min and max options define the age of the person (e.g. `18` - `42`).
+   * - `'year'`: The min and max options define the range the birthdate may be in (e.g. `1900` - `2000`).
+   *
+   * Defaults to `year`.
+   *
+   * @example schemas.date.birthdate() // Schema
+   *
+   * @example
+   * schemas.date.birthdate().getValue() // 1977-07-10T01:37:30.719Z
+   * schemas.date.birthdate().getValue({ min: 18, max: 65, mode: 'age' }) // 2003-11-02T20:03:20.116Z
+   * schemas.date.birthdate().getValue({ min: 1900, max: 2000, mode: 'year' }) // 1940-08-20T08:53:07.538Z
+   *
+   * @returns Date
+   */
   birthdate(args?: BirthDateProps) {
     return new SchemaField<Date, BirthDateProps>(
       "birthdate",
       (a) => {
-        const min = a.min && typeof a.min === "number" ? a.min : undefined;
-        let max: number | undefined = undefined;
-
-        if (a.max && typeof a.max === "number") {
-          if (min) {
-            if (a.max >= min) max = a.max;
-            else max = undefined;
-          } else {
-            max = undefined;
-          }
-        } else max = undefined;
+        const refDate = this.argToDate(a.refDate);
 
         const mode =
-          a.mode &&
-          typeof a.mode === "string" &&
-          (a.mode === "age" || a.mode === "year")
+          typeof a.mode === "string" && (a.mode === "age" || a.mode === "year")
             ? a.mode
-            : undefined;
+            : "age";
 
-        const refDate =
-          a.refDate && a.refDate instanceof Date ? a.refDate : undefined;
+        const refYear = refDate.getUTCFullYear();
 
-        return faker.date.birthdate({ max, min, mode, refDate });
+        let min: number =
+          typeof a.min === "number" && a.min > 0 ? a.min : refYear - 18;
+        let max: number = typeof a.max === "number" ? a.max : refYear - 80;
+        if (mode === "age") {
+          min = new Date(refDate).setUTCFullYear(refYear - max - 1);
+          max = new Date(refDate).setUTCFullYear(refYear - min);
+        } else {
+          min = new Date(Date.UTC(0, 0, 2)).setUTCFullYear(min);
+          max = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);
+        }
+
+        return new Date(PrivateUtils.intNumber({ min, max }));
       },
       args || {},
     );
   }
 
+  /**
+   * Returns a date between the given boundaries.
+   *
+   * @param args.from The early date boundary.
+   * @param args.to The late date boundary.
+   *
+   * @example schemas.date.between() // Schema
+   *
+   * @example
+   * schemas.date.between().getValue({from: '2020-01-01T00:00:00.000Z', to: '2030-01-01T00:00:00.000Z'}) // '2026-05-16T02:22:53.002Z'
+   *
+   * @returns Date
+   */
   between(args?: DateBetweenProps) {
     return new SchemaField<Date, DateBetweenProps>(
       "dateBetween",
       (a) => {
-        const from =
-          a.from && a.from instanceof Date
-            ? a.from
-            : "2020-01-01T00:00:00.000Z";
+        const from = !a.from
+          ? new Date("2030-01-01T00:00:00.000Z")
+          : this.argToDate(a.from);
 
-        const to =
-          a.to && a.to instanceof Date ? a.to : "2030-01-01T00:00:00.000Z";
+        const to = !a.to
+          ? new Date("2030-01-01T00:00:00.000Z")
+          : this.argToDate(a.to);
 
-        return faker.date.between(from, to);
+        const fromMs = from.getTime();
+        const toMs = to.getTime();
+        const dateOffset = PrivateUtils.intNumber({
+          min: 0,
+          max: toMs - fromMs,
+        });
+
+        return new Date(fromMs + dateOffset);
       },
       args || {},
     );
@@ -225,5 +336,11 @@ export class DateSchema {
       },
       args || {},
     );
+  }
+
+  private argToDate(date: ArgDate | undefined): Date {
+    if (date instanceof Date) return date;
+    else if (typeof date === "string") return new Date(date);
+    else return new Date();
   }
 }
