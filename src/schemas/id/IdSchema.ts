@@ -1,11 +1,12 @@
-import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
+import { Schemas } from "../";
 
 export class IdSchema {
   /**
-   * Generates a unique row of numbers
+   * Generates a unique number
    *
+   * @example schemas.id.numberRow() // Schema
    * @example
    * schemas.id.numberRow().getValue() //1664755445878
    *
@@ -15,14 +16,36 @@ export class IdSchema {
     return new SchemaField<number>("numberRow", () => Date.now(), {});
   }
 
+  /**
+   * Returns a MongoDB [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/) string.
+   *
+   * @example schemas.id.mongodbId() // Schema
+   * @example
+   * schemas.id.mongodbObjectId().getValue() // 'e175cac316a79afdd0ad3afb'
+   *
+   * @returns string
+   */
   public mongodbID() {
     return new SchemaField<string>(
       "mongodbID",
-      faker.database.mongodbObjectId,
+      () => {
+        return Schemas.dataType
+          .hexadecimal()
+          .getValue({ case: "lower", length: 24 });
+      },
       {},
     );
   }
 
+  /**
+   * Returns a UUID v4 ([Universally Unique Identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier)).
+   *
+   * @example schemas.id.uuid() // Schema
+   * @example
+   * schemas.id.uuid().getValue() // '4136cd0b-d90b-4af7-b485-5d1ded8db252'
+   *
+   * @returns string
+   */
   public uuid() {
     return new SchemaField<string>(
       "uuid",
