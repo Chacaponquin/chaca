@@ -4,7 +4,7 @@ interface ISchemaField<T, K> {
   getValue(args: T): K;
 }
 
-export class SchemaField<K = unknown, T = any> implements ISchemaField<T, K> {
+export class SchemaField<K = unknown, T = {}> implements ISchemaField<T, K> {
   private valueFunction: (args: T) => K;
   private args: T;
 

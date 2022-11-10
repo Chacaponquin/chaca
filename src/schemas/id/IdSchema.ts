@@ -1,6 +1,6 @@
 import { faker } from "@faker-js/faker";
-import { v4 as uuid } from "uuid";
 import { SchemaField } from "../SchemaField";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 
 export class IdSchema {
   /**
@@ -24,6 +24,18 @@ export class IdSchema {
   }
 
   public uuid() {
-    return new SchemaField<string>("uuid", () => uuid(), {});
+    return new SchemaField<string>(
+      "uuid",
+      () => {
+        const RFC4122_TEMPLATE = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
+        const replacePlaceholders = (placeholder) => {
+          const random = PrivateUtils.intNumber({ min: 0, max: 15 });
+          const value = placeholder === "x" ? random : (random & 0x3) | 0x8;
+          return value.toString(16);
+        };
+        return RFC4122_TEMPLATE.replace(/[xy]/g, replacePlaceholders);
+      },
+      {},
+    );
   }
 }
