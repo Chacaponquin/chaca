@@ -1,5 +1,5 @@
 import { faker } from "@faker-js/faker";
-import { CHDataUtils } from "../../utils/CHDataUtils";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
 
 type DateSoonProps = {
@@ -25,8 +25,10 @@ type BirthDateProps = {
   mode?: "age" | "year";
 };
 
+type TimeUnits = "years" | "seconds" | "minutes" | "days" | "hours" | "months";
+
 type TimeAgoProps = {
-  unit?: "years" | "seconds" | "minutes" | "days" | "hours";
+  unit?: TimeUnits;
 };
 
 type DateBetweenProps = {
@@ -162,6 +164,13 @@ export class DateSchema {
     );
   }
 
+  /**
+   * Returns a string with a time ago information
+   * @param args.unit time unit. Can be (`"years"` | `"seconds"` | `"minutes"` | `"days"` | `"hours"` | `"months"`)
+   * @example schemas.date.timeAgo() // Schema
+   * @example schemas.date.timeAgo().getValue({unit: 'days'}) // '20 days ago'
+   * @returns string
+   */
   timeAgo(args?: TimeAgoProps) {
     return new SchemaField<string, TimeAgoProps>(
       "timeAgo",
@@ -169,12 +178,50 @@ export class DateSchema {
         const units = ["years", "seconds", "minutes", "days", "hours"];
 
         const unit =
-          typeof a.unit === "string" ? a.unit : CHDataUtils.oneOfArray(units);
+          typeof a.unit === "string" ? a.unit : PrivateUtils.oneOfArray(units);
 
-        return `${CHDataUtils.numberByLimits({
-          min: 1,
-          max: 59,
-        })} ${unit} ago`;
+        let filterUnit = units.find((el) => el === unit) as TimeUnits;
+        if (!filterUnit) {
+          filterUnit = PrivateUtils.oneOfArray(units) as TimeUnits;
+        }
+
+        switch (filterUnit) {
+          case "days":
+            return `${PrivateUtils.intNumber({
+              min: 1,
+              max: 30,
+            })} ${unit} ago`;
+          case "hours":
+            return `${PrivateUtils.intNumber({
+              min: 1,
+              max: 23,
+            })} ${unit} ago`;
+          case "minutes":
+            return `${PrivateUtils.intNumber({
+              min: 1,
+              max: 59,
+            })} ${unit} ago`;
+          case "seconds":
+            return `${PrivateUtils.intNumber({
+              min: 1,
+              max: 59,
+            })} ${unit} ago`;
+          case "years":
+            return `${PrivateUtils.intNumber({
+              min: 1,
+              max: 40,
+            })} ${unit} ago`;
+          case "months":
+            return `${PrivateUtils.intNumber({
+              min: 1,
+              max: 11,
+            })} ${unit} ago`;
+          default:
+            return `${PrivateUtils.intNumber({
+              min: 1,
+              max: 60,
+            })} ${unit} ago`;
+        }
       },
       args || {},
     );

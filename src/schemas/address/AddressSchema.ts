@@ -23,8 +23,10 @@ export class AddressSchema {
   /**
    * Returns a zip code
    * @param args.format format of the zip code
-   * @example schemas.address.zipCode().getValue() // '62581'
-   * @example schemas.address.zipCode().getValue({format: '###'}) // '453'
+   * @example schemas.address.zipCode() // Schema
+   * @example
+   * schemas.address.zipCode().getValue() // '62581'
+   * schemas.address.zipCode().getValue({format: '###'}) // '453'
    * @returns string
    */
   zipCode(args?: ZipCodeProps) {
@@ -41,6 +43,7 @@ export class AddressSchema {
 
   /**
    * Returns a time zone
+   * @example schemas.address.timeZone() // Schema
    * @example schemas.address.timeZone().getValue() // "Asia/Magadan"
    * @returns string
    */
@@ -54,6 +57,7 @@ export class AddressSchema {
 
   /**
    * Returns a cardinal direction
+   * @example schemas.address.cardinalDirection() // Schema
    * @example schemas.address.cardinalDirection().getValue() // 'North'
    * @returns string
    */
@@ -78,6 +82,7 @@ export class AddressSchema {
   /**
    * Returns a country
    * @param args.continent Continent of the country that you want
+   * @example schemas.address.country() // Schema
    * @example schemas.address.country().getValue() // 'Spain'
    * @returns string
    */
@@ -105,6 +110,7 @@ export class AddressSchema {
 
   /**
    * Returns a country name code
+   * @example schemas.address.countryCode() // Schema
    * @example schemas.address.countryCode().getValue() // 'CU'
    * @returns string
    */
