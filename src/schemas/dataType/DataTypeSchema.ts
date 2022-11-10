@@ -50,6 +50,7 @@ type CharactersProps = {
 export class DataTypeSchema {
   /**
    * Returns a boolean
+   * @example schemas.dataType.boolean() /// Schema
    * @example schemas.dataType.boolean().getValue() // true
    * @returns boolean
    */
@@ -65,8 +66,10 @@ export class DataTypeSchema {
    * Returns a integer number
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
-   * @example schemas.dataType.int().getValue() // 462
-   * @example schemas.dataType.int().getValue({min: 10, max: 30}) // 28
+   * @example schemas.dataType.int() // Schema
+   * @example
+   * schemas.dataType.int().getValue() // 462
+   * schemas.dataType.int().getValue({min: 10, max: 30}) // 28
    * @returns number
    */
   int(args?: IntProps) {
@@ -84,9 +87,11 @@ export class DataTypeSchema {
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
    * @param args.precision Precision of the float. Must be a value between `1` and `20`. Default `2`
-   * @example schemas.dataType.float().getValue() // 462.12
-   * @example schemas.dataType.float().getValue({min: 10, max: 30}) // 10.23
-   * @example schemas.dataType.number().getValue({precision: 4}) // 90.5362
+   * @example schemas.dataType.float() // Schema
+   * @example
+   * schemas.dataType.float().getValue() // 462.12
+   * schemas.dataType.float().getValue({min: 10, max: 30}) // 10.23
+   * schemas.dataType.number().getValue({precision: 4}) // 90.5362
    * @returns number
    */
   float(args?: FloatProps) {
@@ -102,8 +107,10 @@ export class DataTypeSchema {
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
    * @param args.precision Precision of the number. Must be a value between `1` and `20`.
-   * @example schemas.dataType.number().getValue() // 301
-   * @example schemas.dataType.number().getValue({min: 10, max: 30}) // 10.2327
+   * @example schemas.dataType.number() // Schema
+   * @example
+   * schemas.dataType.number().getValue() // 301
+   * schemas.dataType.number().getValue({min: 10, max: 30}) // 10.2327
    * @returns number
    */
   number(args?: NumberProps) {
@@ -137,9 +144,11 @@ export class DataTypeSchema {
    * Returns a string with a hexadecimal code
    * @param args.case Case of the values inside de hexadecimal code (`mixed` | `lower` | `upper`)
    * @param args.length Lenght of the hexadecimal code
-   * @example schemas.dataType.hexadecimal().getValue() // '009df'
-   * @example schemas.dataType.hexadecimal().getValue({length: 3}) // '01D'
-   * @example schemas.dataType.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
+   * @example schemas.dataType.hexadecimal() // Schema
+   * @example
+   * schemas.dataType.hexadecimal().getValue() // '009df'
+   * schemas.dataType.hexadecimal().getValue({length: 3}) // '01D'
+   * schemas.dataType.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
    * @returns
    */
   public hexadecimal(args?: HexadecimalProps) {
@@ -228,6 +237,7 @@ export class DataTypeSchema {
   /**
    * Return one of an array of elements
    * @param args.array Array of elements
+   * @example schemas.dataType.customArray() // Schema
    * @example schemas.dataType.customArray({array: [5, {hello: "world"}, "Chaca"]}) // 5
    */
   public customArray(args?: CustomArrayProps) {
@@ -250,9 +260,11 @@ export class DataTypeSchema {
    * @param args.length Length of characters. Default `1`
    * @param args.case Case of the characters (`lower` or `upper`)
    *
-   * @example schemas.dataType.characters().getValue() // 'v'
-   * @example schemas.dataType.characters().getValue({length: 5}) // 'bhtlw'
-   * @example schemas.dataType.characters().getValue({length: 5, case: 'upper'}) // 'HQRSD'
+   * @example schemas.dataType.character() // Schema
+   * @example
+   * schemas.dataType.characters().getValue() // 'v'
+   * schemas.dataType.characters().getValue({length: 5}) // 'bhtlw'
+   * schemas.dataType.characters().getValue({length: 5, case: 'upper'}) // 'HQRSD'
    *
    * @returns string
    */
@@ -286,8 +298,10 @@ export class DataTypeSchema {
   /**
    * Returns a string with a binary code
    * @param args.length Length of the binary code
-   * @example schemas.dataType.binaryCode().getValue() // '00101'
-   * @example schemas.dataType.binaryCode().getValue({length: 6}) // '010100'
+   * @example schemas.dataType.binaryCode() // Schema
+   * @example
+   * schemas.dataType.binaryCode().getValue() // '00101'
+   * schemas.dataType.binaryCode().getValue({length: 6}) // '010100'
    * @returns
    */
   binaryCode(args?: BinaryCodeProps) {
