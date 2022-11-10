@@ -1,6 +1,15 @@
 import { CHDataError } from "../../errors/CHDataError";
 
 export class PrivateUtils {
+  static boolean(): boolean {
+    return this.oneOfArray([true, false]);
+  }
+
+  static specialCharacters(): string[] {
+    const special = ".!#$%&'*+-/=?^_`{|}~";
+    return special.split("");
+  }
+
   public static oneOfArray<T = unknown>(list: T[]) {
     return list[Math.floor(Math.random() * list.length)];
   }

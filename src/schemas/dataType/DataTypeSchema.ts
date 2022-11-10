@@ -189,8 +189,11 @@ export class DataTypeSchema {
    * @param args.max Max value for the numbers of the matriz
    * @param args.precision Number precision of the matriz
    *
-   * @example schemas.dataType.matriz().getValue() // [[1, 0, 5], [5, 10, 9]]
-   * @example schemas.dataType.matriz().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
+   * @example schemas.dataType.matriz() // Schema
+   *
+   * @example
+   * schemas.dataType.matriz().getValue() // [[1, 0, 5], [5, 10, 9]]
+   * schemas.dataType.matriz().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
   public matriz(args?: MatrizProps) {
     return new SchemaField<number[][], MatrizProps>(
@@ -304,6 +307,22 @@ export class DataTypeSchema {
         return ret;
       },
       args || {},
+    );
+  }
+
+  /**
+   * Returns a keyboard special character
+   * @example schemas.dataType.specialCharacter() // Schema
+   * @example schemas.dataType.specialCharacter().getValue() // '_'
+   * @returns string
+   */
+  public specialCharacter() {
+    return new SchemaField<string>(
+      "specialCharacter",
+      () => {
+        return PrivateUtils.oneOfArray(PrivateUtils.specialCharacters());
+      },
+      {},
     );
   }
 

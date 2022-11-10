@@ -2,27 +2,31 @@ import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { EMOJIS } from "./constants/emojis";
+import { DOMAIN_SUFFIX } from "./constants/domainSuffix";
+import { HTTP_STATUS } from "./constants/httpStatus";
+import { GenerateUserAgent } from "./helpers/userAgent";
+import { Schemas } from "../index";
 
-type Emojis =
-  | "food"
-  | "body"
-  | "travel"
-  | "nature"
-  | "object"
-  | "person"
-  | "smiley"
-  | "symbol"
-  | "activity";
+export type Emojis = {
+  smiley: string[];
+  body: string[];
+  person: string[];
+  nature: string[];
+  food: string[];
+  travel: string[];
+  activity: string[];
+  object: string[];
+  symbol: string[];
+};
 
 type EmojiProps = {
-  emoji?: Emojis;
+  emoji?: keyof Emojis;
 };
 
 type EmailArgs = {
   firstName?: string;
   lastName?: string;
   provider?: string;
-  specialCharacters?: boolean;
 };
 
 type PasswordArgs = {
@@ -42,17 +46,35 @@ type UserNameArgs = {
 };
 
 export class InternetSchema {
-  public domainName(): SchemaField {
-    return new SchemaField<string>("domainName", faker.internet.domainName, {});
-  }
-
+  /**
+   * Returns a user email
+   * @param args.firstName owner first name
+   * @param args.lastName owner last name
+   * @param args.provider email provider
+   * @example schemas.internet.email() // Schema
+   * @example
+   * schemas.internet.email().getValue() // 'juan527120@gmail.com'
+   * schemas.internet.email.getValue({firstName: 'pedro', lastName: 'Scott', provider: 'yahoo.com'}) // "pedro_scott@yahoo.com"
+   * @returns string
+   */
   public email(args: EmailArgs) {
     return new SchemaField<string, EmailArgs>(
       "email",
-      () =>
-        faker.internet.email(args.firstName, args.lastName, args.provider, {
-          allowSpecialCharacters: args.specialCharacters,
-        }),
+      (a) => {
+        const provider =
+          typeof a.provider === "string"
+            ? a.provider
+            : PrivateUtils.oneOfArray([
+                "gmail.com",
+                "yahoo.com",
+                "hotmail.com",
+              ]);
+
+        return `${this.userName({
+          firstName: a.firstName,
+          lastName: a.lastName,
+        })}@${provider}`;
+      },
       args,
     );
   }
@@ -72,33 +94,98 @@ export class InternetSchema {
     );
   }
 
+  /**
+   * Returns a string with a web url
+   * @example schemas.internet.url() // Schema
+   * @example
+   * schemas.internet.url().getValue() // 'http://words.info.net'
+   * @param args
+   * @returns
+   */
   public url(args?: UrlArgs) {
     return new SchemaField<string, UrlArgs>(
       "url",
       (a) => {
-        if (a.secure !== undefined) {
-          if (!a.secure) return faker.internet.url();
+        if (typeof a.secure === "boolean") {
+          const sec = a.secure ? "https" : "http";
 
-          let top = a.secure ? "https" : "http";
-          let randomUrl: string = faker.internet.url();
-
-          return randomUrl;
-        } else return faker.internet.url();
+          return `${sec}://${this.domainName().getValue()}.${this.domainSuffix().getValue()}`;
+        } else
+          return `${this.protocol().getValue()}://${this.domainName().getValue()}.${this.domainSuffix().getValue()}`;
       },
       args || {},
     );
   }
 
+  /**
+   * Returns a profile user name
+   * @param args.firstName owner first name
+   * @param args.lastName owner last name
+   * @example schemas.internet.userName() // Schema
+   * @example
+   * schemas.internet.userName().getValue() // 'juan527134'
+   * schemas.internet.userName().getValue({firstName: 'pedro', lastName: 'Scott'}) // 'pedro_scott'
+   * @returns string
+   */
   public userName(args?: UserNameArgs) {
     return new SchemaField<string, UserNameArgs>(
       "userName",
-      (a: UserNameArgs) => {
-        return faker.internet.userName(a.firstName, a.lastName);
+      (a) => {
+        const firstName =
+          typeof a.firstName === "string"
+            ? PrivateUtils.capitalizeText(a.firstName)
+            : Schemas.person.firstName({ language: "en" }).getValue();
+        const lastName =
+          typeof a.lastName === "string"
+            ? PrivateUtils.capitalizeText(a.lastName)
+            : undefined;
+
+        if (firstName && !lastName) {
+          return `${firstName}${PrivateUtils.replaceSymbols("######")}`;
+        } else {
+          let ran = PrivateUtils.intNumber({ min: 0, max: 2 });
+          let result: string;
+          switch (ran) {
+            case 0:
+              result = `${firstName}${lastName}${PrivateUtils.replaceSymbols(
+                "###",
+              )}`;
+              break;
+            case 1:
+              result = `${firstName}${PrivateUtils.oneOfArray([
+                ".",
+                "_",
+              ])}${lastName}`;
+              break;
+            case 2:
+              result = result = `${firstName}${PrivateUtils.oneOfArray([
+                ".",
+                "_",
+              ])}${lastName}${PrivateUtils.replaceSymbols("###")}`;
+              break;
+            default:
+              result =
+                result = `${firstName}${lastName}${PrivateUtils.replaceSymbols(
+                  "###",
+                )}`;
+              break;
+          }
+
+          return result;
+        }
       },
       args || {},
     );
   }
 
+  /**
+   * Returns a http method
+   * @example
+   * schemas.internet.httpMethod() // Schema
+   * @example
+   * schemas.internet.httpMethod().getValue() // 'GET'
+   * @returns `GET` | `PATCH` | `DELETE` | `POST` | `PUT`
+   */
   public httpMethod() {
     return new SchemaField<string>(
       "httoMethod",
@@ -115,8 +202,73 @@ export class InternetSchema {
     );
   }
 
-  public ip() {
-    return new SchemaField<string>("ip", () => faker.internet.ip(), {});
+  /**
+   * Returns a IPv6 address
+   * @example schemas.internet.ipv6() // Schema
+   * @example schemas.internet.ipv6().getValue() // '269f:1230:73e3:318d:842b:daab:326d:897b'
+   * @returns string
+   */
+  public ipv6() {
+    return new SchemaField<string>(
+      "ipv6",
+      () => {
+        const randHash = () => {
+          let result = "";
+          for (let i = 0; i < 4; i++) {
+            result += PrivateUtils.oneOfArray([
+              "0",
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "a",
+              "b",
+              "c",
+              "d",
+              "e",
+              "f",
+            ]);
+          }
+          return result;
+        };
+
+        const result: string[] = [];
+        for (let i = 0; i < 8; i++) {
+          result[i] = randHash();
+        }
+        return result.join(":");
+      },
+      {},
+    );
+  }
+
+  /**
+   * Returns a IPv4 address.
+   * @example schemas.internet.ipv4() // Schema
+   * @example schemas.internet.ipv4().getValue() // '245.108.222.0'
+   * @returns string
+   */
+  public ipv4() {
+    return new SchemaField<string>(
+      "ipv4",
+      () => {
+        let retString = "";
+
+        for (let i = 1; i <= 4; i++) {
+          let val = PrivateUtils.intNumber({ max: 255, min: 0 });
+          if (i === 4) retString += `${val}`;
+          else retString += `${val}.`;
+        }
+
+        return retString;
+      },
+      {},
+    );
   }
 
   /**
@@ -153,26 +305,68 @@ export class InternetSchema {
     );
   }
 
+  /**
+   * Returns a mac address
+   * @example schemas.internet.mac() // Schema
+   * @example schemas.internet.mac().getValue() // '32:8e:2e:09:c6:05'
+   * @returns string
+   */
   public mac() {
-    return new SchemaField<string>("mac", () => faker.internet.mac(), {});
-  }
-
-  public port() {
-    return new SchemaField<number>("port", () => faker.internet.port(), {});
-  }
-
-  public ipv4() {
-    return new SchemaField<string>("ipv4", () => faker.internet.ipv4(), {});
-  }
-
-  public userAgent() {
     return new SchemaField<string>(
-      "userAgent",
-      () => faker.internet.userAgent(),
+      "mac",
+      () => {
+        let retString = "";
+
+        const lowerCharacters = PrivateUtils.characters("lower");
+        const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+
+        for (let i = 1; i <= 6; i++) {
+          for (let j = 1; j <= 2; j++) {
+            retString += `${String(
+              PrivateUtils.oneOfArray([...numbers, ...lowerCharacters]),
+            )}`;
+          }
+
+          if (i !== 6) retString += `:`;
+        }
+
+        return retString;
+      },
       {},
     );
   }
 
+  /**
+   * Returns a port number
+   * @example schemas.internet.port() // Schema
+   * @example
+   * schemas.internet.port().getValue() // 8001
+   * @returns string
+   */
+  public port() {
+    return new SchemaField<number>(
+      "port",
+      () => PrivateUtils.intNumber({ min: 0, max: 65535 }),
+      {},
+    );
+  }
+
+  /**
+   * Returns a string with a browser user agent
+   * @example schemas.internet.userAgent() // Schema
+   * @example schemas.internet.userAgent().getValue() // 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_8_8)  AppleWebKit/536.0.2 (KHTML, like Gecko) Chrome/27.0.849.0 Safari/536.0.2'
+   * @returns string
+   */
+  public userAgent() {
+    return new SchemaField<string>("userAgent", () => GenerateUserAgent(), {});
+  }
+
+  /**
+   * Returns a web protocol
+   * @example schemas.internet.protocol() // Schema
+   * @example schemas.internet.protocol().getValue() // 'https'
+   * @returns string
+   */
   public protocol() {
     return new SchemaField<string>(
       "protocol",
@@ -181,27 +375,59 @@ export class InternetSchema {
     );
   }
 
+  /**
+   * Returns a domain suffix
+   * @example schemas.internet.domainSuffix() // Schema
+   * @example schemas.internet.domainSuffix().getValue() // '.com'
+   * @returns string
+   */
   public domainSuffix() {
     return new SchemaField<string>(
       "domainSuffix",
-      () => faker.internet.domainSuffix(),
+      () => PrivateUtils.oneOfArray(DOMAIN_SUFFIX),
       {},
     );
   }
 
-  public domainWord() {
+  /**
+   * Returns a domain word
+   * @example schemas.internet.domainName() // Schema
+   * @example schemas.internet.domainName().getValue() // 'words.info'
+   * @returns string
+   */
+  public domainName() {
     return new SchemaField<string>(
-      "domainWord",
-      () => faker.internet.domainWord(),
+      "domainName",
+      () => {
+        const name: string = Schemas.word.noun().getValue({ language: "en" });
+        let tale = PrivateUtils.boolean();
+
+        if (tale) {
+          const t = PrivateUtils.oneOfArray([
+            "info",
+            Schemas.word.adjective().getValue({ language: "en" }),
+          ]);
+          const sep = PrivateUtils.oneOfArray([".", "-"]);
+
+          return `${name}${sep}${t}`;
+        } else return name;
+      },
       {},
     );
   }
 
+  /**
+   * Returns a web http status code
+   * @example schemas.internet.httpStatusCode() // Schema
+   * @example schemas.internet.httpStatusCode().getValue // 201
+   * @returns string
+   */
   public httpStatusCode() {
     return new SchemaField<number>(
       "httpStatusCode",
       () => {
-        return faker.internet.httpStatusCode();
+        let sel = PrivateUtils.oneOfArray(Object.keys(HTTP_STATUS));
+        return PrivateUtils.oneOfArray(HTTP_STATUS[sel]);
       },
       {},
     );

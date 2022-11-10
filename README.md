@@ -204,7 +204,6 @@ schemas.internet.password().getValue(); // 'lawetimufozujosodedi'
 schemas.internet.url().getValue(); // 'https://remarkable-hackwork.info'
 schemas.internet.userName().getValue(); //'Nettie_Zboncak40'
 schemas.internet.httpMethod().getValue(); // 'GET';
-schemas.internet.ip().getValue(); // '245.108.222.0'
 schemas.internet.emoji().getValue(); // '🥰';
 schemas.internet.mac().getValue(); // '32:8e:2e:09:c6:05'
 schemas.internet.port().getValue(); // '9414'

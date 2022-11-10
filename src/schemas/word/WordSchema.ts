@@ -2,7 +2,7 @@ import { CHDataUtils } from "../../utils/CHDataUtils";
 import { SchemaField } from "../SchemaField";
 import WORDS, { ILanguageWord } from "./constants";
 
-type Languages = "es" | "es";
+type Languages = "es" | "en";
 
 type WordProps = {
   language?: Languages;
@@ -12,6 +12,7 @@ export class WordSchema {
   /**
    * Returns a adjective from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
+   * @example schemas.word.adjective() // Schema
    * @example schemas.word.adjective().getValue() // 'clever'
    * @returns string
    */
@@ -26,6 +27,7 @@ export class WordSchema {
   /**
    * Returns a conjuction from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
+   * @example schemas.word.conjuction() // Schema
    * @example schemas.word.conjuction().getValue() // 'but'
    * @returns string
    */
@@ -40,6 +42,7 @@ export class WordSchema {
   /**
    * Returns a interjection from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
+   * @example schemas.word.interjection() // Schema
    * @example schemas.word.interjection().getValue() // 'hey!'
    * @returns string
    */
@@ -54,6 +57,7 @@ export class WordSchema {
   /**
    * Returns a preposition from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
+   * @example schemas.word.preposition() // Schema
    * @example schemas.word.preposition().getValue() // 'at'
    * @returns string
    */
@@ -68,6 +72,7 @@ export class WordSchema {
   /**
    * Returns a adverb from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
+   * @example schemas.word.adverb() // Schema
    * @example schemas.word.adverb().getValue() // 'here'
    * @returns string
    */
@@ -82,6 +87,7 @@ export class WordSchema {
   /**
    * Returns a verb from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
+   * @example schemas.word.verb() // Schema
    * @example schemas.word.verb().getValue() // 'had'
    * @returns string
    */
@@ -96,6 +102,7 @@ export class WordSchema {
   /**
    * Returns a noun from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
+   * @example schemas.word.noun() // Schema
    * @example schemas.word.noun().getValue() // 'car'
    * @returns string
    */

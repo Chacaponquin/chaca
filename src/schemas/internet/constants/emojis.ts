@@ -1,4 +1,6 @@
-export const EMOJIS = {
+import { Emojis } from "../InternetSchema";
+
+export const EMOJIS: Emojis = {
   smiley: [
     "😀",
     "😃",
