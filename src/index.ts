@@ -9,6 +9,7 @@ import { CHDataError } from "./errors/CHDataError";
 import { ExportAllConfig } from "./utils/interfaces/export.interface";
 import { SchemaResolver } from "./utils/classes/SchemaResolver";
 import { Schemas } from "./schemas/index";
+import { SchemaField } from "./schemas/SchemaField";
 
 import AdmZip from "adm-zip";
 import path from "path";
@@ -40,13 +41,15 @@ abstract class Chaca {
     } else throw new CHDataError("Already exists a schema with that name");
   }
 
+  public defineSchemaField(): SchemaField {}
+
   /**
    * Generate all the schemas defined
    * Returns the location path of the zip
    *
    * @param config.location Destiny folder for the zip
    * @param config.zipName Name for the zip file
-   * @param config.format Extension of schema files (`java` | `csv` | `typescript` | `json` | `javascript`)
+   * @param config.format Extension of schema files (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'`)
    * @returns string
    */
   public static async exportAll(config: ExportAllConfig): Promise<string> {
