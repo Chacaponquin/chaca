@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { CHDataUtils } from "../../utils/CHDataUtils";
 import { SchemaField } from "../SchemaField";
 import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants";

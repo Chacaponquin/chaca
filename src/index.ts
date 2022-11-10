@@ -1,4 +1,4 @@
-import { CHDataUtils } from "./utils/CHDataUtils";
+import { ChacaUtils } from "./utils/helpers/ChacaUtils";
 import { CustomSchema } from "./utils/classes/CustomSchema";
 import {
   SchemaConfig,
@@ -17,7 +17,7 @@ import path from "path";
 abstract class Chaca {
   private static schemasCreated: CustomSchema[] = [];
   public static Schema = SchemaResolver;
-  public static utils = CHDataUtils;
+  public static utils = ChacaUtils;
 
   /**
    *
@@ -41,7 +41,18 @@ abstract class Chaca {
     } else throw new CHDataError("Already exists a schema with that name");
   }
 
-  public defineSchemaField(): SchemaField {}
+  /**
+   * Define your ouwn type schema for create your data
+   * @param name Name
+   * @param valueFunction
+   * @returns
+   */
+  public defineSchemaField<K, T>(
+    name: string,
+    valueFunction: (args: T) => K,
+  ): SchemaField<K, T> {
+    return new SchemaField<K, T>(name, valueFunction, {} as T);
+  }
 
   /**
    * Generate all the schemas defined
@@ -50,6 +61,7 @@ abstract class Chaca {
    * @param config.location Destiny folder for the zip
    * @param config.zipName Name for the zip file
    * @param config.format Extension of schema files (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'`)
+   *
    * @returns string
    */
   public static async exportAll(config: ExportAllConfig): Promise<string> {

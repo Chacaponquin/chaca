@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { MONEY_SYMBOLS } from "./constants/moneySymbols";
 import { CHDataUtils } from "../../utils/CHDataUtils";
 import { SchemaField } from "../SchemaField";
