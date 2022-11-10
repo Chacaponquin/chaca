@@ -280,10 +280,10 @@ Vehicle Schema
 ```ts
 schemas.vehicle.bicycle().getValue(); // 'Adventure Road Bicycle'
 schemas.vehicle.manufacturer().getValue(); // 'Ford'
-schemas.vehicle.model().getValue(); // 'Explorer';
-schemas.vehicle.type().getValue(); // 'Coupe'
+schemas.vehicle.vehicleModel().getValue(); // 'Explorer';
+schemas.vehicle.vehicleType().getValue(); // 'Coupe'
 schemas.vehicle.vehicle().getValue(); // 'BMW Explorer'
-schemas.vehicle.vehicleIdentification().getValue(); // 'YV1MH682762184654'
+schemas.vehicle.fuel().getValue(); // 'Diesel'
 ```
 
 ### `.word`

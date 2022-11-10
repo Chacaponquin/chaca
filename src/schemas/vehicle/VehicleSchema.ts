@@ -1,35 +1,89 @@
-import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
+import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants";
 
 export class VehicleSchema {
+  /**
+   * Returns a bicycle type
+   * @example schemas.vehicle.bicycle() // Schema
+   * @example schemas.vehicle.bicycle().getValue() // 'BMX Bicycle'
+   * @returns string
+   */
   bicycle() {
-    return new SchemaField<string>("bicycle", faker.vehicle.bicycle, {});
-  }
-
-  manufacturer() {
     return new SchemaField<string>(
-      "manufacturer",
-      faker.vehicle.manufacturer,
+      "bicycle",
+      () => PrivateUtils.oneOfArray(BICYCLE),
       {},
     );
   }
 
-  model() {
-    return new SchemaField<string>("model", faker.vehicle.model, {});
-  }
-
-  type() {
-    return new SchemaField<string>("type", faker.vehicle.type, {});
-  }
-
-  vehicle() {
-    return new SchemaField<string>("vehicle", faker.vehicle.vehicle, {});
-  }
-
-  vehicleIdentification() {
+  /**
+   * Returns a manufacturer name
+   * @example schemas.vehicle.manufacturer() // Schema
+   * @example schemas.vehicle.manufacturer().getValue() // 'BMW'
+   * @returns string
+   */
+  manufacturer() {
     return new SchemaField<string>(
-      "vehicleIdentification",
-      faker.vehicle.vin,
+      "manufacturer",
+      () => PrivateUtils.oneOfArray(MANUFACTURER),
+      {},
+    );
+  }
+
+  /**
+   * Returns a vehicle model name
+   * @example schemas.vehicle.vehicleModel() // Schema
+   * @example schemas.vehicle.vehicleModel().getValue() // 'Model S'
+   * @returns string
+   */
+  vehicleModel() {
+    return new SchemaField<string>(
+      "vehicleModel",
+      () => PrivateUtils.oneOfArray(MODEL),
+      {},
+    );
+  }
+
+  /**
+   * Returns a vehicle type
+   * @example schemas.vehicle.vehicleType() // Schema
+   * @example schemas.vehicle.vehicleType().getValue() // 'Coupe'
+   * @returns string
+   */
+  vehicleType() {
+    return new SchemaField<string>(
+      "vehicleType",
+      () => PrivateUtils.oneOfArray(TYPE),
+      {},
+    );
+  }
+
+  /**
+   * Returns a vehicle name
+   * @example schemas.vehicle.vehicle() // Schema
+   * @example schemas.vehicle.vehicle().getValue() // 'BMW Explorer'
+   * @returns string
+   */
+  vehicle() {
+    return new SchemaField<string>(
+      "vehicle",
+      () =>
+        `${this.manufacturer().getValue()} ${this.vehicleModel().getValue()}`,
+      {},
+    );
+  }
+
+  /**
+   * Returns a fuel type
+   * @example schemas.vehicle.fuel() // Schema
+   * @example schemas.vehicle.fuel().getValue() // 'Diesel'
+   * @returns string
+   */
+  fuel() {
+    return new SchemaField<string>(
+      "fuel",
+      () => PrivateUtils.oneOfArray(FUEL),
       {},
     );
   }
