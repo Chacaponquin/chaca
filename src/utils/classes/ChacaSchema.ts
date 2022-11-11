@@ -1,4 +1,4 @@
-import { CHDataError } from "../../errors/CHDataError";
+import { ChacaError } from "../../errors/ChacaError";
 import {
   CSVGenerator,
   Generator,
@@ -60,11 +60,11 @@ export abstract class ChacaSchema {
           gen = new TypescriptGenerator(data, config);
           break;
         default:
-          throw new CHDataError(`Format ${config.format} invalid`);
+          throw new ChacaError(`Format ${config.format} invalid`);
       }
 
       return await gen.generateFile();
-    } else throw new CHDataError(`Format ${config.format} invalid`);
+    } else throw new ChacaError(`Format ${config.format} invalid`);
   }
 
   public async generateAndExport(
@@ -100,7 +100,7 @@ export abstract class ChacaSchema {
       Object.keys(obj).length === 0 ||
       obj instanceof Date
     )
-      throw new CHDataError(
+      throw new ChacaError(
         "Your schema has to be an object with the fields descriptions",
       );
     else {
@@ -166,7 +166,7 @@ export abstract class ChacaSchema {
                 },
               };
             } else {
-              throw new CHDataError(
+              throw new ChacaError(
                 `The field ${key} dosen't have a resolve function`,
               );
             }
@@ -204,7 +204,7 @@ export abstract class ChacaSchema {
   ): SchemaResolver | SchemaField {
     if (type instanceof SchemaResolver || type instanceof SchemaField) {
       return type;
-    } else throw new CHDataError(`Invalid type for key ${key}`);
+    } else throw new ChacaError(`Invalid type for key ${key}`);
   }
 
   private validateEnum(key: string, array: unknown[]): unknown[] {
@@ -212,11 +212,11 @@ export abstract class ChacaSchema {
       if (array.length > 0) {
         return array;
       } else
-        throw new CHDataError(
+        throw new ChacaError(
           `For the field ${key} you must provide some values to choce`,
         );
     } else {
-      throw new CHDataError(
+      throw new ChacaError(
         `If the field ${key} is a enum type so this one muste be an array of values`,
       );
     }
@@ -226,7 +226,7 @@ export abstract class ChacaSchema {
     if (typeof custom === "function") {
       return custom;
     } else
-      throw new CHDataError(
+      throw new ChacaError(
         `For the field ${key}. The custom field must be a function`,
       );
   }

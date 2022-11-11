@@ -1,6 +1,6 @@
 import { SchemaObject, SchemaConfig } from "../interfaces/schema.interface";
 import { SchemaResolver } from "./SchemaResolver";
-import { CHDataError } from "../../errors/CHDataError";
+import { ChacaError } from "../../errors/ChacaError";
 import { ChacaSchema } from "./ChacaSchema";
 
 /**
@@ -16,7 +16,7 @@ export class CustomSchema extends ChacaSchema {
   ) {
     super();
     if (!schemaName || !(typeof schemaName === "string")) {
-      throw new CHDataError("Your Schema must have a name");
+      throw new ChacaError("Your Schema must have a name");
     }
     this.rootSchema = new SchemaResolver(schemaObj);
   }

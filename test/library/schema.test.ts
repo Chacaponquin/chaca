@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import mocha from "mocha";
 import { chaca, schemas } from "../../src";
-import { CHDataError } from "../../src/errors/CHDataError";
+import { ChacaError } from "../../src/errors/ChacaError";
 
 describe("#Schema Creation Test", () => {
   context("create own schema fields", () => {
@@ -11,7 +11,7 @@ describe("#Schema Creation Test", () => {
           return "a";
         });
       } catch (e) {
-        expect(e).to.be.instanceOf(CHDataError);
+        expect(e).to.be.instanceOf(ChacaError);
       }
     });
 
@@ -22,7 +22,7 @@ describe("#Schema Creation Test", () => {
 
       const dataSchema = new chaca.Schema({
         id: schemas.id.numberRow(),
-        test: schema,
+        test: schema(),
       });
 
       expect(dataSchema.generate(10)[5]["test"] === "a").to.be.true;
@@ -212,7 +212,7 @@ describe("#Schema Creation Test", () => {
           id: { type: schemas.id.mongodbID() },
         });
       } catch (error) {
-        expect(error).to.be.instanceOf(CHDataError);
+        expect(error).to.be.instanceOf(ChacaError);
       }
     });
 
@@ -220,7 +220,7 @@ describe("#Schema Creation Test", () => {
       try {
         chaca.defineSchema("buenas", {});
       } catch (error) {
-        expect(error).to.be.instanceOf(CHDataError);
+        expect(error).to.be.instanceOf(ChacaError);
       }
     });
 
@@ -235,7 +235,7 @@ describe("#Schema Creation Test", () => {
           },
         });
       } catch (error) {
-        expect(error).to.be.instanceOf(CHDataError);
+        expect(error).to.be.instanceOf(ChacaError);
       }
     });
 
@@ -243,7 +243,7 @@ describe("#Schema Creation Test", () => {
       try {
         chaca.defineSchema("schema", { id: { enum: [] } });
       } catch (error) {
-        expect(error).to.be.instanceOf(CHDataError);
+        expect(error).to.be.instanceOf(ChacaError);
       }
     });
   });

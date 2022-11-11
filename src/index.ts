@@ -5,7 +5,7 @@ import {
   SchemaObject,
 } from "./utils/interfaces/schema.interface";
 
-import { CHDataError } from "./errors/CHDataError";
+import { ChacaError } from "./errors/ChacaError";
 import { ExportAllConfig } from "./utils/interfaces/export.interface";
 import { SchemaResolver } from "./utils/classes/SchemaResolver";
 import { Schemas } from "./schemas/index";
@@ -15,6 +15,9 @@ import AdmZip from "adm-zip";
 import path from "path";
 
 abstract class Chaca {
+  /**
+   * All schemas created
+   */
   private static schemasCreated: CustomSchema[] = [];
   public static Schema = SchemaResolver;
   public static utils = ChacaUtils;
@@ -38,7 +41,7 @@ abstract class Chaca {
       const newSchema = new CustomSchema(schemaName, schemaObj);
       this.schemasCreated.push(newSchema);
       return newSchema;
-    } else throw new CHDataError("Already exists a schema with that name");
+    } else throw new ChacaError("Already exists a schema with that name");
   }
 
   /**
@@ -49,8 +52,9 @@ abstract class Chaca {
   public static defineSchemaField<T = any, K = unknown>(
     name: string,
     valueFunction: (args: T) => K,
-  ): (args: T) => SchemaField<K, T> {
-    return (args) => new SchemaField<K, T>(name, valueFunction, args);
+  ): (args?: T) => SchemaField<K, T> {
+    return (args) =>
+      new SchemaField<K, T>(name, valueFunction, args || ({} as T));
   }
 
   /**
@@ -87,7 +91,7 @@ abstract class Chaca {
       zp.writeZip(zipPath);
       return zipPath;
     } catch (error) {
-      throw new CHDataError("Error export zip File");
+      throw new ChacaError("Error export zip File");
     }
   }
 }

@@ -1,6 +1,6 @@
 import { FileConfig } from "../utils/interfaces/export.interface";
 import path from "path";
-import { CHDataError } from "../errors/CHDataError";
+import { ChacaError } from "../errors/ChacaError";
 
 export abstract class Generator {
   protected ext: string;
@@ -15,11 +15,11 @@ export abstract class Generator {
     config: FileConfig,
   ) {
     if (!(typeof config.fileName === "string") || config.fileName.length === 0)
-      throw new CHDataError("A file name is necesary to export the data");
+      throw new ChacaError("A file name is necesary to export the data");
     else if (!(typeof config.location === "string"))
-      throw new CHDataError("The file needs a location");
+      throw new ChacaError("The file needs a location");
     else if (!(typeof data === "object") || data === null)
-      throw new CHDataError("The data must be an array or an object");
+      throw new ChacaError("The data must be an array or an object");
 
     this.ext = extension;
     this.config = config;

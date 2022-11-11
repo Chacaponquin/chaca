@@ -1,4 +1,4 @@
-import { CHDataError } from "../../errors/CHDataError";
+import { ChacaError } from "../../errors/ChacaError";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
 
@@ -273,7 +273,7 @@ export class DataTypeSchema {
         if (Array.isArray(a.array) && a.array.length > 0) {
           return PrivateUtils.oneOfArray(a.array);
         } else
-          throw new CHDataError(
+          throw new ChacaError(
             "The argument of custom array must be an array of values",
           );
       },

@@ -1,7 +1,7 @@
 import { expect } from "chai";
 import mocha from "mocha";
 import { schemas, chaca } from "../../src";
-import { CHDataError } from "../../src/errors/CHDataError";
+import { ChacaError } from "../../src/errors/ChacaError";
 
 const schema = new chaca.Schema({
   id: { type: schemas.id.mongodbID() },
@@ -28,7 +28,7 @@ describe("#Export Test", () => {
             location: root,
           });
         } catch (error) {
-          expect(error).to.be.instanceOf(CHDataError);
+          expect(error).to.be.instanceOf(ChacaError);
         }
       });
 
@@ -40,7 +40,7 @@ describe("#Export Test", () => {
             location: root,
           });
         } catch (error) {
-          expect(error).to.be.instanceOf(CHDataError);
+          expect(error).to.be.instanceOf(ChacaError);
         }
       });
     });

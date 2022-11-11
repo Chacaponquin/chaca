@@ -3,7 +3,7 @@ import { Generator } from "./Generator";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
-import { CHDataError } from "../errors/CHDataError";
+import { ChacaError } from "../errors/ChacaError";
 import { PrivateUtils } from "../utils/helpers/PrivateUtils";
 
 export class JavaGenerator extends Generator {
@@ -31,7 +31,7 @@ export class JavaGenerator extends Generator {
       zp.addLocalFile(this.generateRoute("Main"));
       zp.writeZip(zipPath);
     } catch (error) {
-      throw new CHDataError("Error export zip File");
+      throw new ChacaError("Error export zip File");
     }
 
     return zipPath;

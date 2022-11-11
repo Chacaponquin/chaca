@@ -1,4 +1,4 @@
-import { CHDataError } from "../../errors/CHDataError";
+import { ChacaError } from "../../errors/ChacaError";
 
 export class PrivateUtils {
   static boolean(): boolean {
@@ -20,12 +20,12 @@ export class PrivateUtils {
 
       for (const w of words) {
         if (typeof w === "string") {
-        } else throw new CHDataError(`${w} is not a string`);
+        } else throw new ChacaError(`${w} is not a string`);
       }
 
       return retString;
     } else
-      throw new CHDataError(`${words} is not a string or an array of strings`);
+      throw new ChacaError(`${words} is not a string or an array of strings`);
   }
 
   static specialCharacters(): string[] {
@@ -120,7 +120,7 @@ export class PrivateUtils {
 
         return returnString;
       } else return text;
-    } else throw new CHDataError("The text to capitalize is not a string");
+    } else throw new ChacaError("The text to capitalize is not a string");
   }
 
   public static isCapitalized(value: string): boolean {
