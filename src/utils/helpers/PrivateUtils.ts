@@ -37,34 +37,6 @@ export class PrivateUtils {
     return list[Math.floor(Math.random() * list.length)];
   }
 
-  static floatNumber({
-    min,
-    max,
-    precision,
-  }: {
-    min?: number;
-    max?: number;
-    precision?: number;
-  }): number {
-    let minimun: number = typeof min === "number" ? min : -999999;
-    let maximun: number;
-    let pres: number =
-      typeof precision === "number" && precision > 0 && precision <= 20
-        ? precision
-        : 2;
-
-    if (typeof max === "number") {
-      if (minimun) {
-        if (max > minimun) maximun = max;
-        else maximun = 999999;
-      } else maximun = max;
-    } else maximun = 999999;
-
-    const val = Math.random() * (maximun - minimun + 1) + minimun;
-
-    return Number(String(val.toFixed(pres)));
-  }
-
   static intNumber({ min, max }: { min?: number; max?: number }): number {
     let minimun: number = typeof min === "number" ? min : -999999;
     let maximun: number;
@@ -80,18 +52,31 @@ export class PrivateUtils {
     return Number.parseInt(String(val));
   }
 
-  static replaceSymbols(symbols: string): string {
-    if (typeof symbols !== "string") {
-      throw new CHDataError("");
+  static numbersArray(): string[] {
+    return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  }
+
+  static replaceSymbols(text: string): string {
+    if (typeof text !== "string") {
+      return "";
     } else {
       let ret: string = "";
 
-      for (let i = 0; i < symbols.length; i++) {
+      for (let i = 0; i < text.length; i++) {
         let val: string;
 
-        if (symbols[i] === "#")
-          val = String(this.intNumber({ min: 0, max: 9 }));
-        else val = symbols[i];
+        if (text[i] === "#") {
+          val = String(PrivateUtils.intNumber({ min: 0, max: 9 }));
+        } else if (text[i] === "?") {
+          val = PrivateUtils.oneOfArray(PrivateUtils.characters("upper"));
+        } else if (text[i] === "$") {
+          val = PrivateUtils.oneOfArray(PrivateUtils.characters("lower"));
+        } else if (text[i] === "*") {
+          val = PrivateUtils.oneOfArray([
+            ...PrivateUtils.numbersArray(),
+            ...PrivateUtils.characters("mixed"),
+          ]);
+        } else val = text[i];
 
         ret = ret.concat(val);
       }

@@ -103,7 +103,27 @@ export class DataTypeSchema {
   float(args?: FloatProps) {
     return new SchemaField<number, FloatProps>(
       "float",
-      (a) => PrivateUtils.floatNumber(a),
+      (a) => {
+        let minimun: number = typeof a.min === "number" ? a.min : -999999;
+        let maximun: number;
+        let pres: number =
+          typeof a.precision === "number" &&
+          a.precision > 0 &&
+          a.precision <= 20
+            ? a.precision
+            : 2;
+
+        if (typeof a.max === "number") {
+          if (minimun) {
+            if (a.max > minimun) maximun = a.max;
+            else maximun = 999999;
+          } else maximun = a.max;
+        } else maximun = 999999;
+
+        const val = Math.random() * (maximun - minimun + 1) + minimun;
+
+        return Number(String(val.toFixed(pres)));
+      },
       args || {},
     );
   }
