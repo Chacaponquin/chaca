@@ -1,10 +1,10 @@
 import { FileConfig } from "../utils/interfaces/export.interface";
 import { Generator } from "./Generator";
 import AdmZip from "adm-zip";
-import { CHDataUtils } from "../utils/CHDataUtils";
 import fs from "fs";
 import path from "path";
 import { CHDataError } from "../errors/CHDataError";
+import { PrivateUtils } from "../utils/helpers/PrivateUtils";
 
 export class JavaGenerator extends Generator {
   constructor(data: any, config: FileConfig) {
@@ -13,7 +13,7 @@ export class JavaGenerator extends Generator {
 
   public async generateFile(): Promise<string> {
     await this.generateClass({
-      name: CHDataUtils.capitalizeMayusText(this.config.fileName),
+      name: PrivateUtils.capitalizeTextUpper(this.config.fileName),
       docExample: Array.isArray(this.data) ? this.data[0] : this.data,
     });
 
@@ -22,7 +22,7 @@ export class JavaGenerator extends Generator {
     const zipPath = path.join(this.baseLocation, zipName);
 
     await this.generateMainFile(
-      CHDataUtils.capitalizeMayusText(this.config.fileName),
+      PrivateUtils.capitalizeTextUpper(this.config.fileName),
       this.data,
     );
 
@@ -45,11 +45,11 @@ export class JavaGenerator extends Generator {
     classString += `public class Main {\n`;
     classString += `\tpublic static void main(String[] args){\n\t`;
 
-    const arrayName: string = `${CHDataUtils.capitalizeText(className)}`;
+    const arrayName: string = `${PrivateUtils.capitalizeText(className)}`;
     classString += `ArrayList< ${className} > ${arrayName} =  new ArrayList< ${className} >();\n\t`;
 
     for (let i = 0; i < docs.length; i++) {
-      const variableName: string = `${CHDataUtils.capitalizeText(
+      const variableName: string = `${PrivateUtils.capitalizeText(
         className,
       )}${i}`;
 

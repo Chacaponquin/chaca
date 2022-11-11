@@ -1,4 +1,3 @@
-import { CHDataUtils } from "../CHDataUtils";
 import {
   IResolver,
   SchemaObject,
@@ -8,16 +7,8 @@ import {
   SchemaConfig,
 } from "../interfaces/schema.interface";
 
-import { CHDataError } from "../../errors/CHDataError";
-import { SchemaField } from "../../schemas/SchemaField";
-
-import {
-  CustomFieldResolver,
-  EnumFielResolver,
-  SchemaFieldResolver,
-} from "./Resolvers";
-
 import { ChacaSchema } from "./ChacaSchema";
+import { PrivateUtils } from "../helpers/PrivateUtils";
 
 export class SchemaResolver extends ChacaSchema implements IResolver {
   private schemaObj: SchemaObject<SchemaToResolve>;
@@ -36,7 +27,7 @@ export class SchemaResolver extends ChacaSchema implements IResolver {
       if (schema.isArray) {
         retValue = [] as unknown[];
 
-        const limit = CHDataUtils.numberByLimits({
+        const limit = PrivateUtils.intNumber({
           min: schema.isArray.min,
           max: schema.isArray.max,
         });
@@ -61,7 +52,7 @@ export class SchemaResolver extends ChacaSchema implements IResolver {
           }
         }
 
-        retValue = CHDataUtils.oneOfArray(array);
+        retValue = PrivateUtils.oneOfArray(array);
       }
 
       doc = { ...doc, [key]: retValue };

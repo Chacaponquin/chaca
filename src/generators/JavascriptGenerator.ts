@@ -1,7 +1,7 @@
 import { FileConfig } from "../utils/interfaces/export.interface";
 import { Generator } from "./Generator";
 import fs from "fs";
-import { CHDataUtils } from "../utils/CHDataUtils";
+import { PrivateUtils } from "../utils/helpers/PrivateUtils";
 
 export class JavascriptGenerator extends Generator {
   constructor(data: any, config: FileConfig) {
@@ -12,11 +12,11 @@ export class JavascriptGenerator extends Generator {
     let returnData = ``;
 
     if (Array.isArray(this.data)) {
-      returnData += `const ${CHDataUtils.capitalizeText(
+      returnData += `const ${PrivateUtils.capitalizeText(
         this.config.fileName,
       )} = ${this.generateSchemaArray(this.data)};\n`;
     } else {
-      returnData += `const ${CHDataUtils.capitalizeText(
+      returnData += `const ${PrivateUtils.capitalizeText(
         this.config.fileName,
       )} = ${this.generateObject(this.data)}`;
     }

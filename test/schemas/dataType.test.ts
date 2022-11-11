@@ -19,4 +19,21 @@ describe("#DataType Tests", () => {
       expect(value <= -1 && value >= -10 && Number.isInteger(value)).to.be.true;
     });
   });
+
+  context("alphaNumeric test", () => {
+    const validate = (string: string, banned: string[]): boolean => {
+      let val = true;
+      for (let i = 0; i < string.length && val; i++) {
+        for (const v of banned) {
+          if (v === string[i]) val = false;
+        }
+      }
+      return val;
+    };
+
+    it("no arguments pass. Sould return an string with the alphanumeric", () => {
+      const val = schemas.dataType.alphaNumeric().getValue();
+      expect(typeof val === "string").to.be.true;
+    });
+  });
 });

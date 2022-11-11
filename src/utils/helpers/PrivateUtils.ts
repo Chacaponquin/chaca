@@ -172,7 +172,7 @@ export class PrivateUtils {
     return returnValue;
   }
 
-  public static characters(type?: "lower" | "upper"): string[] {
+  public static characters(type?: "lower" | "upper" | "mixed"): string[] {
     const allCharacters = "abcdefghijklmnopqrstuvwxyz";
 
     if (type === "lower") return allCharacters.split("");
@@ -185,5 +185,18 @@ export class PrivateUtils {
 
       return minus;
     }
+  }
+
+  static capitalizeTextUpper(text: string): string {
+    let result = PrivateUtils.capitalizeText(text);
+    let newResult = "";
+
+    for (let i = 0; i < result.length; i++) {
+      newResult = newResult.concat(
+        i === 0 ? result[i].toUpperCase() : result[i],
+      );
+    }
+
+    return newResult;
   }
 }

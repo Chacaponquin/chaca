@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { SchemaField } from "../SchemaField";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { EMOJIS } from "./constants/emojis";
@@ -83,12 +82,7 @@ export class InternetSchema {
     return new SchemaField<string, PasswordArgs>(
       "password",
       (a) => {
-        return faker.internet.password(
-          a.length,
-          a.memorable,
-          a.pattern,
-          a.prefix,
-        );
+        return "";
       },
       args || {},
     );

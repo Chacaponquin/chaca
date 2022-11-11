@@ -1,12 +1,12 @@
 import { SchemaField } from "../../schemas/SchemaField";
-import { CHDataUtils } from "../CHDataUtils";
+import { PrivateUtils } from "../helpers/PrivateUtils";
 import { IResolver, CustomField } from "../interfaces/schema.interface";
 
 export class EnumFielResolver implements IResolver {
   constructor(public readonly array: unknown[]) {}
 
   public *resolve(field: any): Generator<unknown> {
-    return CHDataUtils.oneOfArray(this.array);
+    return PrivateUtils.oneOfArray(this.array);
   }
 }
 

@@ -1,7 +1,14 @@
 import { CHDataError } from "../../errors/CHDataError";
-import { CHDataUtils } from "../../utils/CHDataUtils";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
+
+type Case = "lower" | "upper" | "mixed";
+
+type AlphaNumericProps = {
+  length?: number;
+  case?: Case;
+  banned?: Array<string> | string;
+};
 
 type BinaryCodeProps = {
   length?: number;
@@ -56,7 +63,7 @@ export class DataTypeSchema {
   public boolean() {
     return new SchemaField<boolean>(
       "boolean",
-      () => CHDataUtils.oneOfArray([true, false]),
+      () => PrivateUtils.oneOfArray([true, false]),
       {},
     );
   }
@@ -244,7 +251,7 @@ export class DataTypeSchema {
       "customArray",
       (a) => {
         if (Array.isArray(a.array) && a.array.length > 0) {
-          return CHDataUtils.oneOfArray(a.array);
+          return PrivateUtils.oneOfArray(a.array);
         } else
           throw new CHDataError(
             "The argument of custom array must be an array of values",
@@ -285,10 +292,10 @@ export class DataTypeSchema {
         if (len) {
           let ret = "";
           for (let i = 1; i <= len; i++) {
-            ret = ret.concat(CHDataUtils.oneOfArray(charactersToRet));
+            ret = ret.concat(PrivateUtils.oneOfArray(charactersToRet));
           }
           return ret;
-        } else return CHDataUtils.oneOfArray(charactersToRet);
+        } else return PrivateUtils.oneOfArray(charactersToRet);
       },
       args || {},
     );
@@ -336,6 +343,68 @@ export class DataTypeSchema {
         return PrivateUtils.oneOfArray(PrivateUtils.specialCharacters());
       },
       {},
+    );
+  }
+
+  alphaNumeric(args?: AlphaNumericProps) {
+    return new SchemaField<string, AlphaNumericProps>(
+      "alphaNumeric",
+      (a) => {
+        const length =
+          typeof a.length === "number" && a.length > 0
+            ? a.length
+            : PrivateUtils.intNumber({ min: 1, max: 20 });
+        let banned: string[] = [];
+
+        const cass = typeof a.case === "string" ? a.case : undefined;
+
+        if (a.banned) {
+          if (typeof a.banned === "string") {
+            for (let i = 0; i < a.banned.length; i++) {
+              banned.push(a.banned[i]);
+            }
+          } else if (Array.isArray(banned)) {
+            for (const c of a.banned) {
+              if (typeof c === "string") banned.push(c);
+            }
+          }
+        }
+
+        const selectNumbers = [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+        ].filter((el) => {
+          let is: boolean = true;
+          banned.forEach((b) => {
+            if (b === el) is = false;
+          });
+          return is;
+        });
+        const characters = PrivateUtils.characters(cass);
+        const selectCharacters = characters.filter((el) => {
+          let is: boolean = true;
+          banned.forEach((b) => {
+            if (b === el) is = false;
+          });
+          return is;
+        });
+        const selectValues = [...selectCharacters, ...selectNumbers];
+
+        let retString = "";
+        for (let i = 1; i <= length; i++) {
+          retString = retString.concat(PrivateUtils.oneOfArray(selectValues));
+        }
+
+        return retString;
+      },
+      args || {},
     );
   }
 

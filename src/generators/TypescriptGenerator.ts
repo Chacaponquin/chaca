@@ -1,8 +1,8 @@
-import { CHDataUtils } from "../utils/CHDataUtils";
 import { FileConfig } from "../utils/interfaces/export.interface";
 import { Generator } from "./Generator";
 import { JavascriptGenerator } from "./JavascriptGenerator";
 import fs from "fs";
+import { PrivateUtils } from "../utils/helpers/PrivateUtils";
 
 export class TypescriptGenerator extends Generator {
   private interfacesCode: string = "";
@@ -20,7 +20,7 @@ export class TypescriptGenerator extends Generator {
       this.config,
     ).generateSchemaArray(this.data);
 
-    const nameCapitalizaed = CHDataUtils.capitalizeText(this.config.fileName);
+    const nameCapitalizaed = PrivateUtils.capitalizeText(this.config.fileName);
     const code = `const ${nameCapitalizaed} :  ${this.generateDatasetInterface()}[] = ${javascriptCode};\n`;
 
     allCode += code;
@@ -35,7 +35,7 @@ export class TypescriptGenerator extends Generator {
   }
 
   private generateDatasetInterface(): string {
-    let interfaceName = `I${CHDataUtils.capitalizeMayusText(
+    let interfaceName = `I${PrivateUtils.capitalizeTextUpper(
       this.config.fileName,
     )}`;
     let interfaceCode = `interface ${interfaceName}{\n`;

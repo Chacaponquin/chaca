@@ -1,4 +1,4 @@
-export const MONEY_SYMBOLS = {
+export const MONEY_INFO = {
   CUP: {
     symbol: "$",
     name: "Cuban Peso",

@@ -86,7 +86,7 @@ schemas.finance.pin().getValue(); // '5076'
 schemas.finance.bitcoinAddress().getValue(); //  '3ySdvCkTLVy7gKD4j6JfSaf5d'
 schemas.finance.creditCard().getValue(); // '4427163488662'
 schemas.finance.ethereumAddress().getValue(); // '0xf03dfeecbafc5147241cc4c4ca20b3c9dfd04c4a';
-schemas.finance.accountName().getValue(); // 'Personal Loan Account';
+schemas.finance.accountType().getValue(); // 'Personal Loan Account';
 schemas.finance.bic().getValue(); // 'WYAUPGX1432';
 schemas.finance.routingNumber().getValue(); // '522814402'
 schemas.finance.creditCardCVV().getValue(); // '506';
