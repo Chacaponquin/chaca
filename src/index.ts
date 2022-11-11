@@ -1,9 +1,6 @@
 import { ChacaUtils } from "./utils/helpers/ChacaUtils";
 import { CustomSchema } from "./utils/classes/CustomSchema";
-import {
-  SchemaConfig,
-  SchemaObject,
-} from "./utils/interfaces/schema.interface";
+import { SchemaInput } from "./utils/interfaces/schema.interface";
 
 import { ChacaError } from "./errors/ChacaError";
 import { ExportAllConfig } from "./utils/interfaces/export.interface";
@@ -18,7 +15,7 @@ abstract class Chaca {
   /**
    * All schemas created
    */
-  private static schemasCreated: CustomSchema[] = [];
+  private static schemasCreated: CustomSchema<any>[] = [];
   public static Schema = SchemaResolver;
   public static utils = ChacaUtils;
 
@@ -30,15 +27,15 @@ abstract class Chaca {
    * @param schemaObj The object with the keys and type of each field
    * @example { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
    */
-  public static defineSchema(
+  public static defineSchema<T = any>(
     schemaName: string,
-    schemaObj: SchemaObject<SchemaConfig>,
-  ): CustomSchema {
+    inputObj: SchemaInput<T>,
+  ): CustomSchema<T> {
     const findSchema = this.schemasCreated.find(
       (el) => el.schemaName === schemaName,
     );
     if (!findSchema) {
-      const newSchema = new CustomSchema(schemaName, schemaObj);
+      const newSchema = new CustomSchema<T>(schemaName, inputObj);
       this.schemasCreated.push(newSchema);
       return newSchema;
     } else throw new ChacaError("Already exists a schema with that name");

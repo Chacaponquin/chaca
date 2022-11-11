@@ -13,8 +13,9 @@ import { FileConfig } from "../interfaces/export.interface";
 import {
   CommonSchema,
   CustomField,
-  SchemaConfig,
-  SchemaObject,
+  FieldSchemaConfig,
+  ResolverObject,
+  SchemaInput,
   SchemaToResolve,
 } from "../interfaces/schema.interface";
 import {
@@ -24,8 +25,12 @@ import {
 } from "./Resolvers";
 import { SchemaResolver } from "./SchemaResolver";
 
-export abstract class ChacaSchema {
-  public abstract generate(cantDocuments: number): any[];
+export abstract class ChacaSchema<T> {
+  /**
+   * Generate an array of schema documents
+   * @param cantDocuments number of documents that you want to create
+   */
+  public abstract generate(cantDocuments: number): T[];
 
   /**
    *
@@ -38,7 +43,7 @@ export abstract class ChacaSchema {
    * await schema.export(data, config)
    *
    * @returns
-   * Promise<void>
+   * Promise<string>
    */
   public async export(data: any, config: FileConfig): Promise<string> {
     if (config && typeof config.format === "string") {
@@ -75,7 +80,7 @@ export abstract class ChacaSchema {
     return await this.export(data, configFile);
   }
 
-  protected resolveSchema(field: any, schema: SchemaToResolve): unknown {
+  protected resolveSchema(field: T, schema: ResolverObject<T>): unknown {
     let retValue: unknown = null;
     const gen = schema.type.resolve(field);
 
@@ -91,9 +96,7 @@ export abstract class ChacaSchema {
     return retValue;
   }
 
-  protected validateObjectSchema(
-    obj: SchemaObject<SchemaConfig>,
-  ): SchemaObject<SchemaToResolve> {
+  protected validateObjectSchema(obj: SchemaInput<T>): SchemaToResolve<T> {
     if (
       !obj ||
       (typeof obj === "object" && Array.isArray(obj)) ||
@@ -104,14 +107,16 @@ export abstract class ChacaSchema {
         "Your schema has to be an object with the fields descriptions",
       );
     else {
-      let schemaToSave: SchemaObject<SchemaToResolve> = {};
+      let schemaToSave: SchemaToResolve<T> = {} as SchemaToResolve<T>;
 
       const defaultConfig: CommonSchema = {
         isArray: null,
         posibleNull: 0,
       };
 
-      for (const [key, schema] of Object.entries(obj)) {
+      for (const k of Object.keys(obj)) {
+        const key = k as keyof T;
+        const schema = obj[key] as FieldSchemaConfig<T, T[keyof T]>;
         if (schema instanceof SchemaResolver) {
           schemaToSave = {
             ...schemaToSave,
@@ -159,7 +164,7 @@ export abstract class ChacaSchema {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
-                  type: new CustomFieldResolver(
+                  type: new CustomFieldResolver<T, T[keyof T]>(
                     this.validateCustom(key, schema.custom),
                   ),
                   ...defaultConfig,
@@ -167,7 +172,7 @@ export abstract class ChacaSchema {
               };
             } else {
               throw new ChacaError(
-                `The field ${key} dosen't have a resolve function`,
+                `The field ${String(key)} dosen't have a resolve function`,
               );
             }
           }
@@ -199,35 +204,40 @@ export abstract class ChacaSchema {
   }
 
   private validateType(
-    key: string,
+    key: keyof T,
     type: SchemaResolver | SchemaField,
   ): SchemaResolver | SchemaField {
     if (type instanceof SchemaResolver || type instanceof SchemaField) {
       return type;
-    } else throw new ChacaError(`Invalid type for key ${key}`);
+    } else throw new ChacaError(`Invalid type for key ${String(key)}`);
   }
 
-  private validateEnum(key: string, array: unknown[]): unknown[] {
+  private validateEnum(key: keyof T, array: unknown[]): unknown[] {
     if (Array.isArray(array)) {
       if (array.length > 0) {
         return array;
       } else
         throw new ChacaError(
-          `For the field ${key} you must provide some values to choce`,
+          `For the field ${String(key)} you must provide some values to choce`,
         );
     } else {
       throw new ChacaError(
-        `If the field ${key} is a enum type so this one muste be an array of values`,
+        `If the field ${String(
+          key,
+        )} is a enum type so this one muste be an array of values`,
       );
     }
   }
 
-  private validateCustom(key: string, custom: CustomField): CustomField {
+  private validateCustom<T>(
+    key: keyof T,
+    custom: CustomField<T, T[keyof T]>,
+  ): CustomField<T, T[keyof T]> {
     if (typeof custom === "function") {
       return custom;
     } else
       throw new ChacaError(
-        `For the field ${key}. The custom field must be a function`,
+        `For the field ${String(key)}. The custom field must be a function`,
       );
   }
 

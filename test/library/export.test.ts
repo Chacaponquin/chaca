@@ -9,7 +9,11 @@ const schema = new chaca.Schema({
   name: { type: schemas.person.firstName({ language: "es" }) },
 });
 
-const schemaWithArray = new chaca.Schema({
+const schemaWithArray = new chaca.Schema<{
+  id: string;
+  image: string;
+  name: string;
+}>({
   id: { type: schemas.id.mongodbID(), isArray: 20 },
   image: { type: schemas.image.film() },
   name: { type: schemas.person.firstName({ language: "es" }) },
@@ -153,10 +157,19 @@ describe("#Export Test", () => {
   });
 
   context("create and export an object with nested objects", () => {
-    const schema = new chaca.Schema({
+    type Schema = {
+      id: string;
+      image: string;
+      user: {
+        userName: string;
+        image: string;
+      };
+    };
+
+    const schema = new chaca.Schema<Schema>({
       id: schemas.id.mongodbID(),
       image: schemas.image.people(),
-      user: new chaca.Schema({
+      user: new chaca.Schema<{ userName: string; image: string }>({
         userName: schemas.internet.userName(),
         image: schemas.image.fashion(),
       }),

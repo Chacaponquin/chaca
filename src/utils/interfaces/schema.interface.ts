@@ -1,35 +1,39 @@
 import { SchemaField } from "../../schemas/SchemaField";
 import { SchemaResolver } from "../classes/SchemaResolver";
 
-export type SchemaConfig =
-  | SchemaInput
-  | SchemaField
-  | CustomField
-  | SchemaResolver;
+export type FieldSchemaConfig<T, V> =
+  | {
+      type?: SchemaField<V, any> | SchemaResolver<V>;
+      isArray?: boolean | number | { min?: number; max?: number };
+      posibleNull?: boolean | number;
+      custom?: CustomField<T, V>;
+      enum?: unknown[];
+    }
+  | CustomField<T, V>
+  | SchemaField<V, any>
+  | SchemaResolver<V>;
 
-export type SchemaInput = {
-  type?: SchemaField | SchemaResolver;
-  isArray?: boolean | number | { min?: number; max?: number };
-  posibleNull?: boolean | number;
-  custom?: CustomField;
-  enum?: unknown[];
+export type SchemaInput<T> = {
+  [key in keyof T]: FieldSchemaConfig<T, T[key]>;
 };
 
-export interface SchemaToResolve extends CommonSchema {
-  type: IResolver;
-}
+export type ResolverObject<T> = {
+  type: IResolver<T>;
+  isArray: { min: number; max: number } | null;
+  posibleNull: number;
+};
 
-export type CustomField<T = any> = (docFields: T) => any;
+export type SchemaToResolve<T> = {
+  [key in keyof T]: ResolverObject<T>;
+};
+
+export type CustomField<A, V> = (docFields: A) => V;
 
 export interface CommonSchema {
   isArray: { min: number; max: number } | null;
   posibleNull: number;
 }
 
-export interface IResolver {
-  resolve(field: any): Generator<any, unknown>;
-}
-
-export interface SchemaObject<T> {
-  [path: string]: T;
+export interface IResolver<T> {
+  resolve(field: T): Generator<any, unknown>;
 }

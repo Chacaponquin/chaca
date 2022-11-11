@@ -2,26 +2,26 @@ import { SchemaField } from "../../schemas/SchemaField";
 import { PrivateUtils } from "../helpers/PrivateUtils";
 import { IResolver, CustomField } from "../interfaces/schema.interface";
 
-export class EnumFielResolver implements IResolver {
+export class EnumFielResolver<T> implements IResolver<T> {
   constructor(public readonly array: unknown[]) {}
 
-  public *resolve(field: any): Generator<unknown> {
+  public *resolve(field: T): Generator<unknown> {
     return PrivateUtils.oneOfArray(this.array);
   }
 }
 
-export class SchemaFieldResolver implements IResolver {
+export class SchemaFieldResolver<T> implements IResolver<T> {
   constructor(readonly schema: SchemaField) {}
 
-  public *resolve(field: any): Generator<unknown> {
+  public *resolve(field: T): Generator<unknown> {
     return this.schema.getValue();
   }
 }
 
-export class CustomFieldResolver implements IResolver {
-  constructor(public readonly fun: CustomField) {}
+export class CustomFieldResolver<T, K> implements IResolver<T> {
+  constructor(public readonly fun: CustomField<T, K>) {}
 
-  public *resolve(field: any): Generator<unknown> {
+  public *resolve(field: T): Generator<unknown> {
     let retValue = null;
 
     try {

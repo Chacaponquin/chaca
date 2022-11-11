@@ -1,44 +1,32 @@
 import {
   IResolver,
-  SchemaObject,
   SchemaToResolve,
-  SchemaConfig,
+  SchemaInput,
+  ResolverObject,
 } from "../interfaces/schema.interface";
 
 import { ChacaSchema } from "./ChacaSchema";
 import { PrivateUtils } from "../helpers/PrivateUtils";
 import { CustomFieldResolver } from "./Resolvers";
 
-type OrderSchema = {
+type OrderSchema<T> = {
   key: string;
-  schema: SchemaToResolve;
+  schema: ResolverObject<T>;
 };
 
-export class SchemaResolver extends ChacaSchema implements IResolver {
-  private schemaObj: SchemaObject<SchemaToResolve>;
+export class SchemaResolver<T = any>
+  extends ChacaSchema<T>
+  implements IResolver<T>
+{
+  private schemaObj: SchemaToResolve<T>;
 
-  constructor(schemaObj: SchemaObject<SchemaConfig>) {
+  constructor(inputObj: SchemaInput<T>) {
     super();
-    this.schemaObj = this.validateObjectSchema(schemaObj);
+    this.schemaObj = this.validateObjectSchema(inputObj);
   }
 
-  private orderSchemasByPriority(): Array<OrderSchema> {
-    let headSchemas: Array<OrderSchema> = [];
-    let finalSchemas: Array<OrderSchema> = [];
-
-    for (const [key, schema] of Object.entries(this.schemaObj)) {
-      if (schema.type instanceof CustomFieldResolver) {
-        finalSchemas.push({ key, schema });
-      } else {
-        headSchemas.push({ key, schema });
-      }
-    }
-
-    return [...headSchemas, ...finalSchemas];
-  }
-
-  public *resolve(field: any): Generator<any, unknown> {
-    let doc: { [key: string]: any } = {};
+  public *resolve(field: T): Generator<any, unknown> {
+    let doc = {} as T;
 
     for (const o of this.orderSchemasByPriority()) {
       let retValue: any;
@@ -82,7 +70,7 @@ export class SchemaResolver extends ChacaSchema implements IResolver {
     return doc;
   }
 
-  public generate(cantDocuments: number): any[] {
+  public generate(cantDocuments: number): T[] {
     const cantDoc =
       typeof cantDocuments === "number" && cantDocuments > 0
         ? cantDocuments
@@ -90,7 +78,7 @@ export class SchemaResolver extends ChacaSchema implements IResolver {
 
     let returnArray = [] as any[];
     for (let i = 1; i <= cantDoc; i++) {
-      let object: unknown = {};
+      let object = {} as T;
       const gen = this.resolve(object);
 
       let stop = false;
@@ -107,5 +95,21 @@ export class SchemaResolver extends ChacaSchema implements IResolver {
     }
 
     return returnArray;
+  }
+
+  private orderSchemasByPriority(): Array<OrderSchema<T>> {
+    let headSchemas: Array<OrderSchema<T>> = [];
+    let finalSchemas: Array<OrderSchema<T>> = [];
+
+    for (const key of Object.keys(this.schemaObj)) {
+      const schema = this.schemaObj[key as keyof T] as ResolverObject<T>;
+      if (schema.type instanceof CustomFieldResolver) {
+        finalSchemas.push({ key, schema });
+      } else {
+        headSchemas.push({ key, schema });
+      }
+    }
+
+    return [...headSchemas, ...finalSchemas];
   }
 }

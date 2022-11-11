@@ -31,7 +31,11 @@ describe("#Schema Creation Test", () => {
 
   context("create schema documents", () => {
     context("simple schema", () => {
-      const schema = new chaca.Schema({
+      const schema = new chaca.Schema<{
+        id: string;
+        image: string;
+        name: string;
+      }>({
         id: { type: schemas.id.mongodbID() },
         image: { type: schemas.image.film() },
         name: { type: schemas.person.firstName({ language: "es" }) },
@@ -183,6 +187,8 @@ describe("#Schema Creation Test", () => {
             images: { type: schemas.image.fashion(), isArray: 10 },
           }),
         });
+
+        const doc = schema.generate(5)[0]["user"];
 
         expect(schema.generate(5)[0]["user"].images.length === 10).to.be.true;
       });
