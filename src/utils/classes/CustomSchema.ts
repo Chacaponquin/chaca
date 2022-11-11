@@ -1,6 +1,5 @@
 import { SchemaObject, SchemaConfig } from "../interfaces/schema.interface";
 import { SchemaResolver } from "./SchemaResolver";
-import { FileConfig } from "../interfaces/export.interface";
 import { CHDataError } from "../../errors/CHDataError";
 import { ChacaSchema } from "./ChacaSchema";
 

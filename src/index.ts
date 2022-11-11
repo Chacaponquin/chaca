@@ -45,7 +45,6 @@ abstract class Chaca {
    * Define your ouwn type schema for create your data
    * @param name Name
    * @param valueFunction
-   * @returns
    */
   public static defineSchemaField<T = any, K = unknown>(
     name: string,

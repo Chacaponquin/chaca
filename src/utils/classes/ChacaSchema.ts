@@ -245,11 +245,8 @@ export abstract class ChacaSchema {
 
   private validateIsArray(
     isArray: boolean | number | { min?: number; max?: number },
-  ): { min: number; max: number } {
-    let value = {
-      min: 0,
-      max: 10,
-    };
+  ): { min: number; max: number } | null {
+    let value: { min: number; max: number } | null = null;
 
     if (typeof isArray === "number") {
       if (isArray >= 1) {
@@ -264,11 +261,13 @@ export abstract class ChacaSchema {
         };
       }
     } else if (typeof isArray === "boolean") {
-      value = { min: 0, max: 10 };
+      if (isArray) value = { min: 0, max: 10 };
+      else value = null;
     } else if (
       typeof isArray === "object" &&
       !(isArray instanceof Date) &&
-      !Array.isArray(isArray)
+      !Array.isArray(isArray) &&
+      isArray !== null
     ) {
       let min =
         typeof isArray["min"] === "number" && isArray["min"] > 0

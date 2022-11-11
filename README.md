@@ -41,7 +41,28 @@ postSchema.generateAndExport(20, {
 }); //Generate 20 objects and export them in a json file
 ```
 
-## Export Api
+## Config API
+
+### `isArray`
+
+Indicates if the field is an array of values of the the selected schema
+
+```ts
+isArray: true; // The field would be an array with length between 0 and 10
+isArray: { min: 5, max: 10 } // the field would be an array with length between 5 and 10
+isArray: 20 // The field would be an array with length 20
+```
+
+### `posibleNull`
+
+Indicates the possibility that the field returns `null`
+
+```ts
+posibleNull: true; // the field has a 50% chance of being null
+posibleNull: 60; // the field has a 60% chance of being null
+```
+
+## Export API
 
 ```js
 {
@@ -341,8 +362,13 @@ const mySchema = new chaca.Schema({
 ```ts
 import { chaca } from "chaca";
 
-// Define Field Schema
-const mySchemaField = chaca.defineSchemaField<{ a: number; b: number }>(
+type SchemaArguments = {
+  a: number;
+  b: number;
+};
+
+// Define Schema Field
+const mySchemaField = chaca.defineSchemaField<SchemaArguments>(
   "mySchemaField",
   (args) => {
     return args.a + args.b;
