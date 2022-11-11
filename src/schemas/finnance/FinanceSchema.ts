@@ -1,4 +1,3 @@
-import { CHDataUtils } from "../../utils/CHDataUtils";
 import { SchemaField } from "../SchemaField";
 import { Schemas } from "../";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
@@ -214,7 +213,7 @@ export class FinanceSchema {
     return new SchemaField<string>(
       "moneySymbol",
       () => {
-        return CHDataUtils.oneOfArray(
+        return PrivateUtils.oneOfArray(
           Object.values(MONEY_INFO).map((el) => el.symbol),
         );
       },
@@ -264,7 +263,7 @@ export class FinanceSchema {
     return new SchemaField<string>(
       "currencyMoneyName",
       () =>
-        CHDataUtils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name)),
+        PrivateUtils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name)),
       {},
     );
   }
@@ -279,7 +278,7 @@ export class FinanceSchema {
     return new SchemaField<string>(
       "moneyCode",
       () => {
-        return CHDataUtils.oneOfArray(
+        return PrivateUtils.oneOfArray(
           Object.values(MONEY_INFO).map((el) => el.code),
         );
       },

@@ -1,4 +1,3 @@
-import { faker } from "@faker-js/faker";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
 import {
@@ -69,7 +68,11 @@ export class AnimalSchema {
    * @returns string
    */
   cat() {
-    return new SchemaField<string>("cat", faker.animal.cat, {});
+    return new SchemaField<string>(
+      "cat",
+      () => PrivateUtils.oneOfArray(CAT),
+      {},
+    );
   }
 
   /**
@@ -79,7 +82,11 @@ export class AnimalSchema {
    * @returns string
    */
   cetacean() {
-    return new SchemaField<string>("cetacean", faker.animal.cetacean, {});
+    return new SchemaField<string>(
+      "cetacean",
+      () => PrivateUtils.oneOfArray(CETACEAN),
+      {},
+    );
   }
 
   /**

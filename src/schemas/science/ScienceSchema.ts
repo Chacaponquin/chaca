@@ -1,4 +1,4 @@
-import { CHDataUtils } from "../../utils/CHDataUtils";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
 import {
   PERIODIC_TABLE_ELEMETNS,
@@ -30,9 +30,9 @@ export class ScienceSchema {
       (a) => {
         if (typeof a.type === "string") {
           if (a.type === "name") {
-            return CHDataUtils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
-          } else return CHDataUtils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
-        } else return CHDataUtils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
+            return PrivateUtils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
+          } else return PrivateUtils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
+        } else return PrivateUtils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
       },
       args || {},
     );
@@ -53,11 +53,11 @@ export class ScienceSchema {
     return new SchemaField<string, UnitProps>(
       "unit",
       (a) => {
-        if (a.type && typeof a.type === "string") {
+        if (typeof a.type === "string") {
           if (a.type === "symbol") {
-            return CHDataUtils.oneOfArray(UNITS.map((el) => el.symbol));
-          } else return CHDataUtils.oneOfArray(UNITS.map((el) => el.val));
-        } else return CHDataUtils.oneOfArray(UNITS.map((el) => el.val));
+            return PrivateUtils.oneOfArray(UNITS.map((el) => el.symbol));
+          } else return PrivateUtils.oneOfArray(UNITS.map((el) => el.val));
+        } else return PrivateUtils.oneOfArray(UNITS.map((el) => el.val));
       },
       args || {},
     );

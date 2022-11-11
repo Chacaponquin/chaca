@@ -1,4 +1,3 @@
-import { CHDataUtils } from "../../utils/CHDataUtils";
 import { SchemaField } from "../SchemaField";
 import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
@@ -72,15 +71,15 @@ export class PersonSchema {
   sex() {
     return new SchemaField<string>(
       "sex",
-      () => CHDataUtils.oneOfArray(["Male", "Female"]),
+      () => PrivateUtils.oneOfArray(["Male", "Female"]),
       {},
     );
   }
 
   /**
    * Returns a first name from a selected lenguage
-   * @param args.language (`en` | `es`). Default `en`
-   * @param args.sex Person name sex (`male` | `female`)
+   * @param args.language (`'en'` | `'es'`). Default `'en'`
+   * @param args.sex Person name sex (`'male'` | `'female'`)
    * @example schemas.person.firstName() // Schema
    * @example schemas.person.firstName().getValue() // 'Juan'
    * @returns string
@@ -89,7 +88,7 @@ export class PersonSchema {
     return new SchemaField<string, NameProps>(
       "firstName",
       (a) => {
-        return CHDataUtils.oneOfArray(
+        return PrivateUtils.oneOfArray(
           this.filterBySex(this.filterNameByLanguage(a.language), a.sex),
         );
       },
@@ -108,7 +107,7 @@ export class PersonSchema {
     return new SchemaField<string, LangugeProps>(
       "lastName",
       (a) => {
-        return CHDataUtils.oneOfArray(
+        return PrivateUtils.oneOfArray(
           this.filterNameByLanguage(a.language).lastNames,
         );
       },
@@ -130,12 +129,12 @@ export class PersonSchema {
       (a) => {
         const lan = this.filterNameByLanguage(a.language);
 
-        const firstName = CHDataUtils.oneOfArray(this.filterBySex(lan, a.sex));
-        const middleName = CHDataUtils.oneOfArray([true, false])
-          ? CHDataUtils.oneOfArray(this.filterBySex(lan, a.sex))
+        const firstName = PrivateUtils.oneOfArray(this.filterBySex(lan, a.sex));
+        const middleName = PrivateUtils.oneOfArray([true, false])
+          ? PrivateUtils.oneOfArray(this.filterBySex(lan, a.sex))
           : undefined;
-        const lastNameFirst = CHDataUtils.oneOfArray(lan.lastNames);
-        const lastNameSecond = CHDataUtils.oneOfArray(lan.lastNames);
+        const lastNameFirst = PrivateUtils.oneOfArray(lan.lastNames);
+        const lastNameSecond = PrivateUtils.oneOfArray(lan.lastNames);
 
         const fullName = [firstName, middleName, lastNameFirst, lastNameSecond];
 

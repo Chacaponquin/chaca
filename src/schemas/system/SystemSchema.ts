@@ -4,6 +4,14 @@ import { Schemas } from "../";
 import { MIME_TYPES } from "./constants/mimeTypes";
 import { FILE_EXTENSIONS } from "./constants/fileExtensions";
 
+export type FileExtensions = {
+  audio: string[];
+  code: string[];
+  data: string[];
+  video: string[];
+  photo: string[];
+};
+
 type FileNameProps = {
   ext?: string;
 };
@@ -63,7 +71,9 @@ export class SystemSchema {
     return new SchemaField<string>(
       "fileExtension",
       () => {
-        const selTem = PrivateUtils.oneOfArray(Object.keys(FILE_EXTENSIONS));
+        const selTem = PrivateUtils.oneOfArray(
+          Object.keys(FILE_EXTENSIONS),
+        ) as keyof FileExtensions;
         return PrivateUtils.oneOfArray(FILE_EXTENSIONS[selTem]);
       },
       {},

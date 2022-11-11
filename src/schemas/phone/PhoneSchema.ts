@@ -1,4 +1,3 @@
-import { CHDataUtils } from "../../utils/CHDataUtils";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
 import { SchemaField } from "../SchemaField";
 import { PHONE_PREFIX } from "./constants/phonePrefix";
@@ -46,7 +45,7 @@ export class PhoneSchema {
   prefix() {
     return new SchemaField<string>(
       "prefix",
-      () => CHDataUtils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
+      () => PrivateUtils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
       {},
     );
   }
@@ -66,23 +65,16 @@ export class PhoneSchema {
     return new SchemaField<string, CallDurationProps>(
       "callDuration",
       (a) => {
-        const min =
-          a.min && typeof a.min === "number" && a.min >= 0 && a.min < 60
-            ? a.min
-            : undefined;
-        let max: number | undefined = undefined;
-
-        if (a.max && typeof a.max === "number" && a.max < 60 && a.max >= 0) {
-          if (min && a.max >= min) {
-            max = a.max;
-          } else if (!min) {
-            max = a.max;
-          }
-        }
+        const min: number =
+          typeof a.min === "number" && a.min >= 0 && a.min < 60 ? a.min : 0;
+        let max: number =
+          typeof a.max === "number" && a.max < 60 && a.max >= 0 && a.max >= min
+            ? a.max
+            : 59;
 
         const minutes = PrivateUtils.intNumber({
-          min: min || 0,
-          max: max || 59,
+          min,
+          max,
         });
         const seconds = PrivateUtils.intNumber({ min: 0, max: 59 });
 
@@ -91,7 +83,6 @@ export class PhoneSchema {
 
         return `${stringMinutes}:${stringSeconds}`;
       },
-
       args || {},
     );
   }

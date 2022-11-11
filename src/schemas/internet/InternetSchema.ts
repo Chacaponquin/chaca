@@ -6,6 +6,14 @@ import { HTTP_STATUS } from "./constants/httpStatus";
 import { GenerateUserAgent } from "./helpers/userAgent";
 import { Schemas } from "../index";
 
+export type HttpStatus = {
+  informational: number[];
+  success: number[];
+  redirection: number[];
+  clientError: number[];
+  serverError: number[];
+};
+
 export type Emojis = {
   smiley: string[];
   body: string[];
@@ -93,7 +101,7 @@ export class InternetSchema {
    * @example schemas.internet.url() // Schema
    * @example
    * schemas.internet.url().getValue() // 'http://words.info.net'
-   * @param args
+   * @param args.secure Boolean that indicates if the url has a secure protocol or not
    * @returns
    */
   public url(args?: UrlArgs) {
@@ -420,7 +428,9 @@ export class InternetSchema {
     return new SchemaField<number>(
       "httpStatusCode",
       () => {
-        let sel = PrivateUtils.oneOfArray(Object.keys(HTTP_STATUS));
+        let sel = PrivateUtils.oneOfArray(
+          Object.keys(HTTP_STATUS),
+        ) as keyof HttpStatus;
         return PrivateUtils.oneOfArray(HTTP_STATUS[sel]);
       },
       {},

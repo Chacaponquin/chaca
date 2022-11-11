@@ -71,7 +71,7 @@ export class PrivateUtils {
 
     if (typeof max === "number") {
       if (minimun) {
-        if (max > minimun) maximun = max;
+        if (max >= minimun) maximun = max;
         else maximun = 999999;
       } else maximun = max;
     } else maximun = 999999;

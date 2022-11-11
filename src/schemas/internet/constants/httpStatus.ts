@@ -1,4 +1,6 @@
-export const HTTP_STATUS = {
+import { HttpStatus } from "../InternetSchema";
+
+export const HTTP_STATUS: HttpStatus = {
   informational: [100, 101, 102, 103],
   success: [200, 201, 202, 203, 204, 205, 206, 207, 208, 226],
   redirection: [300, 301, 302, 303, 304, 305, 306, 307, 308],

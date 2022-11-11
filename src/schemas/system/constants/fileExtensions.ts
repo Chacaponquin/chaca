@@ -1,4 +1,6 @@
-export const FILE_EXTENSIONS = {
+import { FileExtensions } from "../SystemSchema";
+
+export const FILE_EXTENSIONS: FileExtensions = {
   audio: ["mp3", "wav"],
   code: ["py", "js", "html", "java", "ts", "c"],
   data: ["csv", "json", "xml"],
