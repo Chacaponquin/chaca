@@ -66,7 +66,7 @@ export class PrivateUtils {
         let val: string;
 
         if (text[i] === "#") {
-          val = String(PrivateUtils.intNumber({ min: 0, max: 9 }));
+          val = PrivateUtils.oneOfArray(PrivateUtils.numbersArray());
         } else if (text[i] === "?") {
           val = PrivateUtils.oneOfArray(PrivateUtils.characters("upper"));
         } else if (text[i] === "$") {

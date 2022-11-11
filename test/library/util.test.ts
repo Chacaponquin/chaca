@@ -24,5 +24,16 @@ describe("#Util Tests", () => {
       const val = PrivateUtils.replaceSymbols(undefined!);
       expect(val === "").to.be.true;
     });
+
+    it("pass only #. Should return a string with only numbers", () => {
+      const val = PrivateUtils.replaceSymbols("#####");
+
+      let is = true;
+      for (let i = 0; i < val.length && is; i++) {
+        if (isNaN(Number(val[i]))) is = false;
+      }
+
+      expect(is).to.be.true;
+    });
   });
 });

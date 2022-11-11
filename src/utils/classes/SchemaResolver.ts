@@ -2,13 +2,17 @@ import {
   IResolver,
   SchemaObject,
   SchemaToResolve,
-  CommonSchema,
-  CustomField,
   SchemaConfig,
 } from "../interfaces/schema.interface";
 
 import { ChacaSchema } from "./ChacaSchema";
 import { PrivateUtils } from "../helpers/PrivateUtils";
+import { CustomFieldResolver } from "./Resolvers";
+
+type OrderSchema = {
+  key: string;
+  schema: SchemaToResolve;
+};
 
 export class SchemaResolver extends ChacaSchema implements IResolver {
   private schemaObj: SchemaObject<SchemaToResolve>;
@@ -18,29 +22,44 @@ export class SchemaResolver extends ChacaSchema implements IResolver {
     this.schemaObj = this.validateObjectSchema(schemaObj);
   }
 
+  private orderSchemasByPriority(): Array<OrderSchema> {
+    let headSchemas: Array<OrderSchema> = [];
+    let finalSchemas: Array<OrderSchema> = [];
+
+    for (const [key, schema] of Object.entries(this.schemaObj)) {
+      if (schema.type instanceof CustomFieldResolver) {
+        finalSchemas.push({ key, schema });
+      } else {
+        headSchemas.push({ key, schema });
+      }
+    }
+
+    return [...headSchemas, ...finalSchemas];
+  }
+
   public *resolve(field: any): Generator<any, unknown> {
     let doc: { [key: string]: any } = {};
 
-    for (const [key, schema] of Object.entries(this.schemaObj)) {
+    for (const o of this.orderSchemasByPriority()) {
       let retValue: any;
 
-      if (schema.isArray) {
+      if (o.schema.isArray) {
         retValue = [] as unknown[];
 
         const limit = PrivateUtils.intNumber({
-          min: schema.isArray.min,
-          max: schema.isArray.max,
+          min: o.schema.isArray.min,
+          max: o.schema.isArray.max,
         });
 
         for (let i = 1; i <= limit; i++) {
-          retValue.push(this.resolveSchema(doc, schema));
+          retValue.push(this.resolveSchema(doc, o.schema));
         }
       } else {
-        retValue = this.resolveSchema(doc, schema);
+        retValue = this.resolveSchema(doc, o.schema);
       }
 
-      if (schema.posibleNull) {
-        let porcentNull: number = schema.posibleNull;
+      if (o.schema.posibleNull) {
+        let porcentNull: number = o.schema.posibleNull;
         let array = new Array(100).fill(0);
 
         for (let i = 0; i < array.length; i++) {
@@ -55,7 +74,7 @@ export class SchemaResolver extends ChacaSchema implements IResolver {
         retValue = PrivateUtils.oneOfArray(array);
       }
 
-      doc = { ...doc, [key]: retValue };
+      doc = { ...doc, [o.key]: retValue };
 
       yield doc;
     }
