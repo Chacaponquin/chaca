@@ -43,6 +43,41 @@ postSchema.generateAndExport(20, {
 
 ## Config API
 
+### `type`
+
+Indicates the `Schema Field` or the Schema that would be the field
+
+```ts
+// With a defined Schema Field
+type: schemas.image.film();
+
+//With a custom field schema
+const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
+  return args.a + args.b;
+});
+type: mySchemaField({ a: 10, b: 20 });
+
+// You can also make field an object of information using an nested schema
+type: new chaca.Schema({
+  firstName: schemas.person.firstName(),
+  favoriteCats: {
+    type: schemas.animal.cat(),
+    isArray: { min: 1, max: 10 },
+  },
+  description: schemas.lorem.text(),
+});
+```
+
+### `enum`
+
+Array of values that the field can take
+
+```ts
+enum: ['Hello World', 'Hi Friend', 'My Name is Hector'] // Returns on of this values
+```
+
+> **Note** If you pass an empty array `[]` an error will be sent
+
 ### `isArray`
 
 Indicates if the field is an array of values of the the selected schema
@@ -59,6 +94,8 @@ Indicates the possibility that the field returns `null`
 
 ```ts
 posibleNull: true; // the field has a 50% chance of being null
+
+//The number indicates de chance porcent
 posibleNull: 60; // the field has a 60% chance of being null
 ```
 
