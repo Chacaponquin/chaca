@@ -10,15 +10,29 @@
 import { chaca, schemas } from "chaca";
 
 const postSchema = chaca.defineSchema("Post", {
-  id: schemas.id.mongodbID(),
-  images: {
-    type: schemas.image.film(),
-    isArray: 20,
+  id: schemas.id.uuid(),
+  authors: {
+    type: schemas.person.fullName({ language: "es" }),
+    isArray: 5,
   },
-  author: schemas.person.firstName({ language: "es" }),
+  image: schemas.image.film(),
 });
 
-const docs = postSchema.generate(20); //Generate 20 objects
+const docs = postSchema.generate(20);
+//Generate 20 objects with the defined schema
+//Example:
+//[{
+//  id: "4136cd0b-d90b-4af7-b485-5d1ded8db252",
+//  authors: [
+//    "Olivia Gonzalez Gomez",
+//    "Santiago Torres Gil",
+//    "Amelia Ruiz Muñoz",
+//    "Camila Santiago Garcia",
+//    "Javier Moreno, Romero",
+//  ],
+//  image:
+//    "https://images.unsplash.com/photo-1534684686641-05569203ecca?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNTM2NjZ8MHwxfHNlYXJjaHw1fHxmaWxtfGVufDB8fHx8MTY2Njk3MDgyMQ&ixlib=rb-4.0.3&q=80",
+//}, ...rest];
 
 postSchema.generateAndExport(20, {
   fileName: "data",
@@ -44,6 +58,8 @@ postSchema.generateAndExport(20, {
 ```
 
 ## Schemas
+
+We have several defined schemas that can be used for data creation. You can use them by importing the `schema` module
 
 ```ts
 import { schemas } from "chaca";
@@ -140,7 +156,7 @@ ID Schema
 ```ts
 schemas.id.numberRow().getValue(); // 1664755445878
 schemas.id.mongodbID().getValue(); // 'e175cac316a79afdd0ad3afb'
-schemas.id.uuid().getValue(); // 1664755445878
+schemas.id.uuid().getValue(); // '4136cd0b-d90b-4af7-b485-5d1ded8db252'
 ```
 
 ### `.image`
@@ -298,6 +314,26 @@ schemas.word.preposition().getValue(); // 'hasta';
 schemas.word.adverb().getValue(); // 'delante';
 schemas.word.verb().getValue(); // 'ser';
 schemas.word.noun().getValue(); // 'plato';
+```
+
+## Schema Fields
+
+If none of the defined schemas are useful you can create your own schemas with the `defineSchemaField` method.
+
+### Javasecript
+
+```js
+import { chaca } from "chaca";
+
+// Define Field Schema
+const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
+  return args.a + args.b;
+});
+
+// Usage
+const mySchema = new chaca.Schema({
+  sum: mySchemaField({ a: 5, b: 10 }), // In all the generated objects the sum field is 15
+});
 ```
 
 ## Contributing

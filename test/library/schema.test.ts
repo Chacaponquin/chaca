@@ -4,6 +4,31 @@ import { chaca, schemas } from "../../src";
 import { CHDataError } from "../../src/errors/CHDataError";
 
 describe("#Schema Creation Test", () => {
+  context("create own schema fields", () => {
+    it("pass empty string as schema name. Should throw an error", () => {
+      try {
+        const schema = chaca.defineSchemaField<{ lenght: number }>("", (a) => {
+          return "a";
+        });
+      } catch (e) {
+        expect(e).to.be.instanceOf(CHDataError);
+      }
+    });
+
+    it("create an schema and use it in creation of data. Should return always 'a'", () => {
+      const schema = chaca.defineSchemaField("buenas", (a) => {
+        return "a";
+      });
+
+      const dataSchema = new chaca.Schema({
+        id: schemas.id.numberRow(),
+        test: schema,
+      });
+
+      expect(dataSchema.generate(10)[5]["test"] === "a").to.be.true;
+    });
+  });
+
   context("create schema documents", () => {
     context("simple schema", () => {
       const schema = new chaca.Schema({

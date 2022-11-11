@@ -47,11 +47,11 @@ abstract class Chaca {
    * @param valueFunction
    * @returns
    */
-  public defineSchemaField<K, T>(
+  public static defineSchemaField<T = any, K = unknown>(
     name: string,
     valueFunction: (args: T) => K,
-  ): SchemaField<K, T> {
-    return new SchemaField<K, T>(name, valueFunction, {} as T);
+  ): (args: T) => SchemaField<K, T> {
+    return (args) => new SchemaField<K, T>(name, valueFunction, args);
   }
 
   /**
