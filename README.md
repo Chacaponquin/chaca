@@ -59,7 +59,7 @@ postSchema.generateAndExport(20, {
 
 ## Schemas
 
-We have several defined schemas that can be used for data creation. You can use them by importing the `schema` module
+We have several defined schemas that can be used for data creation. You can use them by importing the `schemas` module
 
 ```ts
 import { schemas } from "chaca";
@@ -320,7 +320,7 @@ schemas.word.noun().getValue(); // 'plato';
 
 If none of the defined schemas are useful you can create your own schemas with the `defineSchemaField` method.
 
-### Javasecript
+### Javascript
 
 ```js
 import { chaca } from "chaca";
@@ -329,6 +329,25 @@ import { chaca } from "chaca";
 const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
   return args.a + args.b;
 });
+
+// Usage
+const mySchema = new chaca.Schema({
+  sum: mySchemaField({ a: 5, b: 10 }), // In all the generated objects the sum field is 15
+});
+```
+
+### Typescript
+
+```ts
+import { chaca } from "chaca";
+
+// Define Field Schema
+const mySchemaField = chaca.defineSchemaField<{ a: number; b: number }>(
+  "mySchemaField",
+  (args) => {
+    return args.a + args.b;
+  },
+);
 
 // Usage
 const mySchema = new chaca.Schema({
