@@ -78,6 +78,48 @@ enum: ['Hello World', 'Hi Friend', 'My Name is Hector'] // Returns on of this va
 
 > **Note** If you pass an empty array `[]` an error will be sent
 
+### `custom`
+
+A custom function that has access to values of the fields of the document in which it is located
+
+```ts
+// Simple Function
+{
+  id: () => {
+    return "Hi!!!";
+  }; // The field `id` always be 'Hi!!!'
+}
+
+// You can access to own object properties
+{
+  name: schemas.person.firstName(),
+  age: schemas.dataType.int({min: 18, max: 80}),
+  sex: schemas.person.sex(),
+  isOlder: {
+    custom: (doc) => {
+      if(doc.age < 60) return false
+      else return true
+    }
+  }
+}
+
+// Example return documents
+{
+  name: 'Juan',
+  age: 23,
+  sex: 'Male',
+  isOlder: false
+}
+
+//or
+{
+  name: 'Camila',
+  age: 67,
+  sex: 'Female',
+  isOlder: true
+}
+```
+
 ### `isArray`
 
 Indicates if the field is an array of values of the the selected schema
