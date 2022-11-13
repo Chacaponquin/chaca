@@ -561,6 +561,8 @@ const fileLocation = await chaca.export(data, {
 
 Export all the defined schemas
 
+> See [Schema Definition](#schema-definition) to understand about diferences between schemas
+
 ```ts
 // Export all the defined schemas in a zip (With diferent csv files)
 await chaca.exportAll({
