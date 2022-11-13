@@ -100,10 +100,18 @@ await postSchema.generateAndExport(20, {
 
 When creating schemas you have two options: use a defined schema with the method `defineSchema` or a simple schema by instantiating the class `Schema`
 
-> Differences between both schemas
+> Differences between both schemas:
 >
 > - The simple schema can be used to nest schemas inside other schemas as you can see in the [example at the beginning](#usage)
 > - The defined schema is stored and can be exported with the other defined schemas with the [exportAll method](#chacaexportall)
+
+```ts
+// Defined Schema
+const definedSchema = chaca.defineSchema("mySchema", { ...fields });
+
+// Nested Schema
+const nestedSchema = new chaca.Schema({ ...fields });
+```
 
 ## Config API
 
