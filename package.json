@@ -1,7 +1,7 @@
 {
   "name": "chaca",
   "version": "1.0.0",
-  "description": "A javascript library to generate data schemas with logical values. Create your data with tour rules!!!",
+  "description": "A Node JS library to create and export data schemas with your rules",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.mjs",
   "types": "./lib/types/index.d.ts",

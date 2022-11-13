@@ -1,5 +1,5 @@
 <h1 align='center' style="color: blue">CHACA</h1>
-<p align="center">A Node JS library to create data schemas with your rules</p>
+<p align="center">A Node JS library to create and export data schemas with your rules</p>
 
 > **Note:** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!
 
@@ -116,9 +116,11 @@ const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
   type: mySchemaField({ a: 10, b: 20 });
 }
 
-// You can also make field an object of information using an nested schema
+// You can also make the field an object of information using an nested schema
 {
-  type: new chaca.Schema({
+  name: schemas.person.firstName(),
+  age: schemas.dataType.int({ min: 18, max:90}),
+  userInf: new chaca.Schema({
     firstName: schemas.person.firstName(),
     favoriteCats: {
       type: schemas.animal.cat(),
@@ -200,22 +202,6 @@ posibleNull: true; // the field has a 50% chance of being null
 
 //The number indicates de chance porcent
 posibleNull: 60; // the field has a 60% chance of being null
-```
-
-## Export API
-
-```js
-{
-  //Name of the file that will be export
-  fileName: "data",
-
-  //Extension of the file data
-  // You can export in `json`, `csv`, `java`, `javascript`, `typescript`
-  format: "json",
-
-  //Location of the folder that will be our data
-  location: "./folder"
-}
 ```
 
 ## Schemas
@@ -526,6 +512,76 @@ const mySchemaField = chaca.defineSchemaField<SchemaArguments>(
 const mySchema = new chaca.Schema({
   sum: mySchemaField({ a: 5, b: 10 }), // In all the generated objects the sum field is 15
 });
+```
+
+## Export
+
+You can export your data in different file formats with the following methods
+
+### `chaca.export`
+
+```ts
+const data = [
+  {
+    id: "7b35fg960g8g1b589b0d8a4d",
+    image: "https://images.pexels.com/photos/157543/pexels-photo-157543.jpeg",
+    name: "Jose",
+  },
+  ...rest,
+];
+
+// Export the data in a json file inside the `dataFolder` folder
+const fileLocation = await chaca.export(data, {
+  fileName: "myData",
+  location: "./dataFolder",
+  format: "json",
+});
+```
+
+### `chaca.exportAll`
+
+Export all the defined schemas
+
+```ts
+// Export all the defined schemas in a zip (With diferent csv files)
+await chaca.exportAll({
+  zipName: "myData",
+  location: "./dataFolder",
+  format: "csv",
+});
+```
+
+### `schema.generateAndExport`
+
+```ts
+const schema = new chaca.Schema({
+  id: { type: schemas.id.mongodbID() },
+  image: { type: schemas.image.film() },
+  name: { type: schemas.person.firstName({ language: "es" }) },
+});
+
+// Generates and export in a json file 30 documents of the schema
+await schema.generateAndExport(30, {
+  fileName: "myData",
+  location: "./folder",
+  format: "json",
+});
+```
+
+## Export API
+
+```js
+{
+  //Name of the file that will be export
+  fileName: "data",
+
+  //Extension of the file data
+  // You can export in `json`, `csv`, `java`, `javascript`, `typescript`
+  format: "json",
+
+  //Location of the folder that will be our data
+  location: "./folder"
+}
 ```
 
 ## Contributing
