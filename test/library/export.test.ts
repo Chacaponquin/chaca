@@ -22,6 +22,96 @@ const schemaWithArray = new chaca.Schema<{
 const root = "./data";
 
 describe("#Export Test", () => {
+  context("export a complete schema in all formats", () => {
+    type MoviePost = {
+      id: string;
+      authors: string[];
+      image: string;
+      likes: number;
+      category: string;
+      adultMovie: boolean;
+      directorInf: {
+        name: string;
+        age: number;
+      };
+    };
+
+    const postSchema = chaca.defineSchema<MoviePost>("MoviePost", {
+      id: schemas.id.uuid(),
+      authors: {
+        type: schemas.person.fullName({ language: "es" }),
+        isArray: 5,
+      },
+      image: schemas.image.film(),
+      likes: schemas.dataType.int({ min: 0, max: 500000 }),
+      category: {
+        enum: [
+          "Horror",
+          "War",
+          "History",
+          "Comedy",
+          "Mystery",
+          "Action",
+          "Animation",
+          "Musical",
+        ],
+      },
+      adultMovie: (docFields) => {
+        if (
+          docFields.category === "Horror" ||
+          docFields.category === "War" ||
+          docFields.category === "Action"
+        ) {
+          return true;
+        } else return false;
+      },
+      directorInf: new chaca.Schema({
+        name: schemas.person.fullName(),
+        age: schemas.dataType.int({ min: 18, max: 85 }),
+      }),
+    });
+
+    it("JSON File", async () => {
+      await postSchema.generateAndExport(50, {
+        fileName: "completeSchema",
+        location: root,
+        format: "json",
+      });
+    });
+
+    it("Javascript File", async () => {
+      await postSchema.generateAndExport(50, {
+        fileName: "completeSchema",
+        location: root,
+        format: "javascript",
+      });
+    });
+
+    it("Typescript File", async () => {
+      await postSchema.generateAndExport(50, {
+        fileName: "completeSchema",
+        location: root,
+        format: "typescript",
+      });
+    });
+
+    it("CSV File", async () => {
+      await postSchema.generateAndExport(50, {
+        fileName: "completeSchema",
+        location: root,
+        format: "csv",
+      });
+    });
+
+    it("Java File", async () => {
+      await postSchema.generateAndExport(50, {
+        fileName: "completeSchema",
+        location: root,
+        format: "java",
+      });
+    });
+  });
+
   context("create and export one object", () => {
     context("current export file", async () => {
       it("no file name. Should throw an error", async () => {

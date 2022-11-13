@@ -28,6 +28,6 @@ export class CustomFieldResolver<C, R> implements IResolver<R> {
       retValue = this.fun.apply(this, field ? [field] : [{} as C]);
     } catch (error) {}
 
-    return retValue || null;
+    return retValue !== undefined ? retValue : null;
   }
 }

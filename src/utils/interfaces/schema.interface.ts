@@ -2,7 +2,7 @@ import { SchemaField } from "../../schemas/SchemaField";
 import { SchemaResolver } from "../classes/SchemaResolver";
 
 export type SchemaInput<C, T> = {
-  [key in keyof T]: FieldSchemaConfig<Omit<C, key>, T[key]>;
+  [key in keyof T]: FieldSchemaConfig<C, T[key]>;
 };
 
 export type SchemaToResolve<T> = {

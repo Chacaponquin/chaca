@@ -28,7 +28,7 @@ abstract class Chaca {
    * @param inputObj The object with the keys and type of each field
    * @example { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
    */
-  public static defineSchema<K, T>(
+  public static defineSchema<K = any, T = any>(
     schemaName: string,
     inputObj: SchemaInput<K, T>,
   ): CustomSchema<K, T> {

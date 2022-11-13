@@ -1,4 +1,4 @@
-<h1 align='center'>CHACA</h1>
+<h1 align='center' style="color: blue">CHACA</h1>
 <p align="center">A Node JS library to create data schemas with your rules</p>
 
 > **Note:** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!
@@ -11,39 +11,89 @@
 
 ## Usage
 
-```js
+```ts
 import { chaca, schemas } from "chaca";
 
-const postSchema = chaca.defineSchema("Post", {
+type MoviePost = {
+  id: string;
+  authors: string[];
+  image: string;
+  likes: number;
+  category: string;
+  adultMovie: boolean;
+  directorInf: {
+    name: string;
+    age: number;
+  };
+};
+
+const postSchema = chaca.defineSchema<MoviePost>("MoviePost", {
   id: schemas.id.uuid(),
   authors: {
     type: schemas.person.fullName({ language: "es" }),
     isArray: 5,
   },
   image: schemas.image.film(),
+  likes: schemas.dataType.int({ min: 0, max: 500000 }),
+  category: {
+    enum: [
+      "Horror",
+      "War",
+      "History",
+      "Comedy",
+      "Mystery",
+      "Action",
+      "Animation",
+      "Musical",
+    ],
+  },
+  adultMovie: (docFields) => {
+    if (
+      docFields.category === "Horror" ||
+      docFields.category === "War" ||
+      docFields.category === "Action"
+    ) {
+      return true;
+    } else return false;
+  },
+  directorInf: new chaca.Schema({
+    name: schemas.person.fullName(),
+    age: schemas.dataType.int({ min: 18, max: 85 }),
+  }),
 });
 
 const docs = postSchema.generate(20);
 //Generate 20 objects with the defined schema
 //Example:
-//[{
-//  id: "4136cd0b-d90b-4af7-b485-5d1ded8db252",
-//  authors: [
-//    "Olivia Gonzalez Gomez",
-//    "Santiago Torres Gil",
-//    "Amelia Ruiz Muñoz",
-//    "Camila Santiago Garcia",
-//    "Javier Moreno, Romero",
-//  ],
-//  image:
-//    "https://images.unsplash.com/photo-1534684686641-05569203ecca?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNTM2NjZ8MHwxfHNlYXJjaHw1fHxmaWxtfGVufDB8fHx8MTY2Njk3MDgyMQ&ixlib=rb-4.0.3&q=80",
-//}, ...rest];
+[
+  {
+    id: "4136cd0b-d90b-4af7-b485-5d1ded8db252",
+    authors: [
+      "Olivia Gonzalez Gomez",
+      "Santiago Torres Gil",
+      "Amelia Ruiz Muñoz",
+      "Camila Santiago Garcia",
+      "Javier Moreno Romero",
+    ],
+    image:
+      "https://images.unsplash.com/photo-1534684686641-05569203ecca?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNTM2NjZ8MHwxfHNlYXJjaHw1fHxmaWxtfGVufDB8fHx8MTY2Njk3MDgyMQ&ixlib=rb-4.0.3&q=80",
+    likes: 21456,
+    category: "Horror",
+    adultMovie: true,
+    directorInf: {
+      name: "Alice Adams Barker",
+      age: 29,
+    },
+  },
+  ...rest, // 19 more documents
+];
 
+//Generate 20 objects and export them in a json file
 postSchema.generateAndExport(20, {
   fileName: "data",
   format: "json",
   location: "./folder",
-}); //Generate 20 objects and export them in a json file
+});
 ```
 
 ## Config API
@@ -54,23 +104,29 @@ Indicates the `Schema Field` or the Schema that would be the field
 
 ```ts
 // With a defined Schema Field
-type: schemas.image.film();
+{
+  type: schemas.image.film();
+}
 
 //With a custom field schema
 const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
   return args.a + args.b;
 });
-type: mySchemaField({ a: 10, b: 20 });
+{
+  type: mySchemaField({ a: 10, b: 20 });
+}
 
 // You can also make field an object of information using an nested schema
-type: new chaca.Schema({
-  firstName: schemas.person.firstName(),
-  favoriteCats: {
-    type: schemas.animal.cat(),
-    isArray: { min: 1, max: 10 },
-  },
-  description: schemas.lorem.text(),
-});
+{
+  type: new chaca.Schema({
+    firstName: schemas.person.firstName(),
+    favoriteCats: {
+      type: schemas.animal.cat(),
+      isArray: { min: 1, max: 10 },
+    },
+    description: schemas.lorem.text(),
+  });
+}
 ```
 
 ### `enum`
@@ -168,6 +224,13 @@ We have several defined schemas that can be used for data creation. You can use 
 
 ```ts
 import { schemas } from "chaca";
+
+// Get the Schema
+schemas.person.firstName();
+
+// Get a value from the schema
+schemas.person.firstName().getValue(); // 'Juan'
+schemas.person.firstName().getValue({ sex: "female" }); // 'Camila'
 ```
 
 ### `.address`

@@ -118,7 +118,7 @@ export class JavaGenerator extends Generator {
 
     if (typeof value === "number") returnString = `${value}`;
     else if (typeof value === "string") returnString = `"${value}"`;
-    else if (typeof value === "boolean") returnString = `"${value}"`;
+    else if (typeof value === "boolean") returnString = `${value}`;
     else if (typeof value === "object") {
       if (Array.isArray(value)) {
         const type = await this.filterParentType(value[0]);
