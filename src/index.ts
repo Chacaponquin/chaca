@@ -22,7 +22,7 @@ abstract class Chaca {
 
   /**
    *
-   * @param {string} schemaName schema name
+   * @param schemaName schema name
    * @throws The name of schema can't be an empty string, or a repetive name
    *
    * @param inputObj The object with the keys and type of each field

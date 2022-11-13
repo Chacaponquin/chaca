@@ -27,6 +27,22 @@ describe("#Schema Creation Test", () => {
 
       expect(dataSchema.generate(10)[5]["test"] === "a").to.be.true;
     });
+
+    it("create an schema with arguments and the function sum the both", () => {
+      const schema = chaca.defineSchemaField<{ a: number; b: number }>(
+        "buenas",
+        (a) => {
+          return a.a + a.b;
+        },
+      );
+
+      const dataSchema = new chaca.Schema({
+        id: schemas.id.numberRow(),
+        test: schema({ a: 5, b: 5 }),
+      });
+
+      expect(dataSchema.generate(10)[5]["test"] === 10).to.be.true;
+    });
   });
 
   context("create schema documents", () => {
