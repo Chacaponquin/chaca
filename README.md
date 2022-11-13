@@ -1,7 +1,7 @@
 <h1 align='center' style="color: blue">CHACA</h1>
 <p align="center">A Node JS library to create and export data schemas with your rules</p>
 
-> **Note:** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!
+> **Note** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!
 
 ## Instalation
 
@@ -89,7 +89,7 @@ const docs = postSchema.generate(20);
 ];
 
 //Generate 20 objects and export them in a json file
-postSchema.generateAndExport(20, {
+await postSchema.generateAndExport(20, {
   fileName: "data",
   format: "json",
   location: "./folder",
@@ -136,7 +136,9 @@ const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
 Array of values that the field can take
 
 ```ts
-enum: ['Hello World', 'Hi Friend', 'My Name is Hector'] // Returns on of this values
+// Returns one of this values
+enum: ['Hello World', 'Hi Friend', 'My Name is Hector'] // 'Hi Friend'
+enum: [1, 5, 3, 20, 2] // 2
 ```
 
 > **Note** If you pass an empty array `[]` an error will be sent
