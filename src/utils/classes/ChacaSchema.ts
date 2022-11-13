@@ -93,7 +93,7 @@ export abstract class ChacaSchema<K, T> {
           schemaToSave = {
             ...schemaToSave,
             [key]: {
-              type: new SchemaFieldResolver<T[keyof T]>(schema),
+              type: new SchemaFieldResolver<K, T[keyof T]>(schema),
               ...defaultConfig,
             },
           };
@@ -111,7 +111,7 @@ export abstract class ChacaSchema<K, T> {
                   type:
                     type instanceof SchemaResolver
                       ? type
-                      : new SchemaFieldResolver<T[keyof T]>(type),
+                      : new SchemaFieldResolver<K, T[keyof T]>(type),
                   ...defaultConfig,
                 },
               };
@@ -119,7 +119,7 @@ export abstract class ChacaSchema<K, T> {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
-                  type: new EnumFielResolver<T[keyof T]>(
+                  type: new EnumFielResolver<K, T[keyof T]>(
                     this.validateEnum(key, schema.enum),
                   ),
                   ...defaultConfig,
