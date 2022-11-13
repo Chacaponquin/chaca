@@ -10,23 +10,23 @@ import { PrivateUtils } from "../helpers/PrivateUtils";
 import { CustomFieldResolver } from "./Resolvers";
 
 type OrderSchema<T> = {
-  key: string;
-  schema: ResolverObject<T>;
+  key: keyof T;
+  schema: ResolverObject<T[keyof T]>;
 };
 
-export class SchemaResolver<T = any>
-  extends ChacaSchema<T>
-  implements IResolver<T>
+export class SchemaResolver<K = any, T = any>
+  extends ChacaSchema<K, T>
+  implements IResolver<K>
 {
   private schemaObj: SchemaToResolve<T>;
 
-  constructor(inputObj: SchemaInput<T>) {
+  constructor(inputObj: SchemaInput<K, T>) {
     super();
     this.schemaObj = this.validateObjectSchema(inputObj);
   }
 
-  public *resolve(field: T): Generator<any, unknown> {
-    let doc = {} as T;
+  public *resolve(field: K): Generator<K> {
+    let doc = {} as any;
 
     for (const o of this.orderSchemasByPriority()) {
       let retValue: any;
@@ -70,15 +70,15 @@ export class SchemaResolver<T = any>
     return doc;
   }
 
-  public generate(cantDocuments: number): T[] {
+  public generate(cantDocuments: number): K[] {
     const cantDoc =
       typeof cantDocuments === "number" && cantDocuments > 0
         ? cantDocuments
         : 10;
 
-    let returnArray = [] as any[];
+    let returnArray = [] as K[];
     for (let i = 1; i <= cantDoc; i++) {
-      let object = {} as T;
+      let object = {} as K;
       const gen = this.resolve(object);
 
       let stop = false;
@@ -101,8 +101,9 @@ export class SchemaResolver<T = any>
     let headSchemas: Array<OrderSchema<T>> = [];
     let finalSchemas: Array<OrderSchema<T>> = [];
 
-    for (const key of Object.keys(this.schemaObj)) {
-      const schema = this.schemaObj[key as keyof T] as ResolverObject<T>;
+    for (const k of Object.keys(this.schemaObj)) {
+      const key = k as keyof T;
+      const schema = this.schemaObj[key] as ResolverObject<T[keyof T]>;
       if (schema.type instanceof CustomFieldResolver) {
         finalSchemas.push({ key, schema });
       } else {

@@ -7,27 +7,27 @@ export type ExportFormat =
 
 interface FileConfigCommon {
   /**
-   * Loaction of the file
+   * Location of the file
    * @example
    * { location: './data' }
    */
   location: string;
   /**
-   * Extension file (`java` | `csv` | `typescript` | `json` | `javascript`)
+   * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'`)
    *
-   * `java`
+   * - `'java'`
    * Export a zip file with the classes files and the main java file with the initialization of data
    *
-   * `csv`
+   * - `'csv'`
    * Export a csv file with the data created
    *
-   * `typescript`
+   * - `'typescript'`
    * Export a ts file with the data created
    *
-   * `javascript`
+   * - `'javascript'`
    * Export a js file with the data created
    *
-   * `json`
+   * - `'json'`
    * Export a json file with the data created
    *
    * @example { format: 'csv' }

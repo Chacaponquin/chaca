@@ -7,10 +7,13 @@ import { ChacaSchema } from "./ChacaSchema";
  * Class for creation of a model with the configuration of each
  * field defined by the user
  */
-export class CustomSchema<T> extends ChacaSchema<T> {
-  private rootSchema: SchemaResolver;
+export class CustomSchema<K, T> extends ChacaSchema<K, T> {
+  private rootSchema: SchemaResolver<K, T>;
 
-  constructor(public readonly schemaName: string, schemaObj: SchemaInput<T>) {
+  constructor(
+    public readonly schemaName: string,
+    schemaObj: SchemaInput<K, T>,
+  ) {
     super();
     if (!schemaName || !(typeof schemaName === "string")) {
       throw new ChacaError("Your Schema must have a name");
@@ -18,15 +21,15 @@ export class CustomSchema<T> extends ChacaSchema<T> {
     this.rootSchema = new SchemaResolver(schemaObj);
   }
 
-  public generate(cantDocuments: number): T[] {
+  public generate(cantDocuments: number): K[] {
     const cantDoc =
       typeof cantDocuments === "number" && cantDocuments > 0
         ? cantDocuments
         : 10;
 
-    let returnArray = [] as T[];
+    let returnArray = [] as K[];
     for (let i = 1; i <= cantDoc; i++) {
-      let object: T = {} as T;
+      let object = {} as K;
       const gen = this.rootSchema.resolve(object);
 
       let stop = false;

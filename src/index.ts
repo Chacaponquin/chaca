@@ -10,12 +10,13 @@ import { SchemaField } from "./schemas/SchemaField";
 
 import AdmZip from "adm-zip";
 import path from "path";
+import { Export } from "./utils/helpers/Export";
 
 abstract class Chaca {
   /**
    * All schemas created
    */
-  private static schemasCreated: CustomSchema<any>[] = [];
+  private static schemasCreated: CustomSchema<any, any>[] = [];
   public static Schema = SchemaResolver;
   public static utils = ChacaUtils;
 
@@ -24,18 +25,18 @@ abstract class Chaca {
    * @param {string} schemaName schema name
    * @throws The name of schema can't be an empty string, or a repetive name
    *
-   * @param schemaObj The object with the keys and type of each field
+   * @param inputObj The object with the keys and type of each field
    * @example { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
    */
-  public static defineSchema<T = any>(
+  public static defineSchema<K, T>(
     schemaName: string,
-    inputObj: SchemaInput<T>,
-  ): CustomSchema<T> {
+    inputObj: SchemaInput<K, T>,
+  ): CustomSchema<K, T> {
     const findSchema = this.schemasCreated.find(
       (el) => el.schemaName === schemaName,
     );
     if (!findSchema) {
-      const newSchema = new CustomSchema<T>(schemaName, inputObj);
+      const newSchema = new CustomSchema<K, T>(schemaName, inputObj);
       this.schemasCreated.push(newSchema);
       return newSchema;
     } else throw new ChacaError("Already exists a schema with that name");
@@ -53,6 +54,38 @@ abstract class Chaca {
     return (args) =>
       new SchemaField<K, T>(name, valueFunction, args || ({} as T));
   }
+
+  /**
+   * Export the data to a selected code format
+   * @param data Data you want to export
+   * @param config Configuration of the file you want to export (name, location, format, etc.)
+   * @param config.location location of the file
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'`)
+   *
+   *  - `'java'`
+   * Export a zip file with the classes files and the main java file with the initialization of data
+   *
+   * - `'csv'`
+   * Export a csv file with the data created
+   *
+   * - `'typescript'`
+   * Export a ts file with the data created
+   *
+   * - `'javascript'`
+   * Export a js file with the data created
+   *
+   * - `'json'`
+   * Export a json file with the data created
+   *
+   * @example
+   * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]
+   * const config = {fileName: 'Users', format: 'json', location: '../../data'}
+   * await schema.export(data, config)
+   *
+   * @returns
+   * Promise<string>
+   */
+  public static export = Export;
 
   /**
    * Generate all the schemas defined

@@ -2,34 +2,32 @@ import { SchemaField } from "../../schemas/SchemaField";
 import { PrivateUtils } from "../helpers/PrivateUtils";
 import { IResolver, CustomField } from "../interfaces/schema.interface";
 
-export class EnumFielResolver<T> implements IResolver<T> {
-  constructor(public readonly array: unknown[]) {}
+export class EnumFielResolver<R> implements IResolver<R> {
+  constructor(public readonly array: R[]) {}
 
-  public *resolve(field: T): Generator<unknown> {
+  public *resolve(field: R): Generator<R> {
     return PrivateUtils.oneOfArray(this.array);
   }
 }
 
-export class SchemaFieldResolver<T> implements IResolver<T> {
-  constructor(readonly schema: SchemaField) {}
+export class SchemaFieldResolver<R> implements IResolver<R> {
+  constructor(readonly schema: SchemaField<R, any>) {}
 
-  public *resolve(field: T): Generator<unknown> {
+  public *resolve(field: R): Generator<R> {
     return this.schema.getValue();
   }
 }
 
-export class CustomFieldResolver<T, K> implements IResolver<T> {
-  constructor(public readonly fun: CustomField<T, K>) {}
+export class CustomFieldResolver<C, R> implements IResolver<R> {
+  constructor(public readonly fun: CustomField<C, R>) {}
 
-  public *resolve(field: T): Generator<unknown> {
-    let retValue = null;
+  public *resolve(field: R): Generator<R> {
+    let retValue = undefined as R;
 
     try {
-      retValue = this.fun.apply(this, field ? [field] : [{}]) || null;
-    } catch (error) {
-      retValue = null;
-    }
+      retValue = this.fun.apply(this, field ? [field] : [{}]);
+    } catch (error) {}
 
-    return retValue;
+    return retValue || null;
   }
 }

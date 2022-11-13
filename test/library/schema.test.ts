@@ -31,11 +31,7 @@ describe("#Schema Creation Test", () => {
 
   context("create schema documents", () => {
     context("simple schema", () => {
-      const schema = new chaca.Schema<{
-        id: string;
-        image: string;
-        name: string;
-      }>({
+      const schema = new chaca.Schema({
         id: { type: schemas.id.mongodbID() },
         image: { type: schemas.image.film() },
         name: { type: schemas.person.firstName({ language: "es" }) },
@@ -69,7 +65,7 @@ describe("#Schema Creation Test", () => {
             id: { type: schemas.id.mongodbID(), isArray: {} as any },
           });
           const docs = schema.generate(10);
-          const id = docs[0]["id"] as Array<String>;
+          const id = docs[0]["id"] as Array<string>;
 
           expect(id.length >= 1 && id.length <= 10).to.be.true;
         });
@@ -175,14 +171,16 @@ describe("#Schema Creation Test", () => {
           }),
         });
 
-        expect(schema.generate(2)[0]["user"]).to.be.keys(["userName", "image"]);
+        const doc = schema.generate(2)[0];
+
+        expect(doc["user"]).to.be.keys(["userName", "image"]);
       });
 
       it("should return an object with a user field with the image field as array of string", () => {
         const schema = new chaca.Schema({
           id: schemas.id.mongodbID(),
           image: schemas.image.people(),
-          user: new chaca.Schema({
+          user: new chaca.Schema<{ userName: string; images: string }>({
             userName: schemas.internet.userName(),
             images: { type: schemas.image.fashion(), isArray: 10 },
           }),
@@ -194,19 +192,26 @@ describe("#Schema Creation Test", () => {
       });
 
       it("should return an object with a user field as an array of objects with image and userName property", () => {
-        const schema = new chaca.Schema({
-          id: schemas.id.mongodbID(),
-          image: schemas.image.people(),
+        const schema = new chaca.Schema<{
+          user: { userName: string; image: string }[];
+          custom: string;
+        }>({
           user: {
             type: new chaca.Schema({
-              userName: schemas.internet.userName(),
-              images: { type: schemas.image.fashion() },
+              userName: schemas.person.firstName(),
+              image: schemas.image.food(),
             }),
             isArray: 20,
           },
+          buenas: schemas.address.country(),
+          custom: (a) => {
+            return "Hola";
+          },
         });
 
-        expect(schema.generate(5)[0]["user"].length === 20).to.be.true;
+        const doc = schema.generate(5)[0];
+
+        expect(doc["user"].length === 20).to.be.true;
       });
     });
   });

@@ -1,13 +1,6 @@
 import { ChacaError } from "../../errors/ChacaError";
-import {
-  CSVGenerator,
-  Generator,
-  JavascriptGenerator,
-  JsonGenerator,
-  JavaGenerator,
-  TypescriptGenerator,
-} from "../../generators";
 import { SchemaField } from "../../schemas/SchemaField";
+import { Export } from "../helpers/Export";
 
 import { FileConfig } from "../interfaces/export.interface";
 import {
@@ -25,69 +18,35 @@ import {
 } from "./Resolvers";
 import { SchemaResolver } from "./SchemaResolver";
 
-export abstract class ChacaSchema<T> {
+export abstract class ChacaSchema<K, T> {
   /**
    * Generate an array of schema documents
    * @param cantDocuments number of documents that you want to create
    */
-  public abstract generate(cantDocuments: number): T[];
+  public abstract generate(cantDocuments: number): K[];
 
   /**
-   *
-   * @param data Data you want to export
-   * @param config Configuration of the file you want to export (name, location, format, etc.)
-   *
-   * @example
-   * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]
-   * const config = {fileName: 'Users', format: 'json', location: '../../data'}
-   * await schema.export(data, config)
-   *
-   * @returns
-   * Promise<string>
+   * Generate and export the schema documents
+   * @param cantDocuments number of documents that you want to create
+   * @param configFile Configuration of the file you want to export (name, location, format, etc.)
+   * @returns Promise<string>
    */
-  public async export(data: any, config: FileConfig): Promise<string> {
-    if (config && typeof config.format === "string") {
-      let gen: Generator;
-      switch (config.format) {
-        case "json":
-          gen = new JsonGenerator(data, config);
-          break;
-        case "javascript":
-          gen = new JavascriptGenerator(data, config);
-          break;
-        case "csv":
-          gen = new CSVGenerator(data, config);
-          break;
-        case "java":
-          gen = new JavaGenerator(data, config);
-          break;
-        case "typescript":
-          gen = new TypescriptGenerator(data, config);
-          break;
-        default:
-          throw new ChacaError(`Format ${config.format} invalid`);
-      }
-
-      return await gen.generateFile();
-    } else throw new ChacaError(`Format ${config.format} invalid`);
-  }
-
   public async generateAndExport(
-    cant: number,
+    cantDocuments: number,
     configFile: FileConfig,
   ): Promise<string> {
-    const data = this.generate(cant);
-    return await this.export(data, configFile);
+    const data = this.generate(cantDocuments);
+    return await Export(data, configFile);
   }
 
-  protected resolveSchema(field: T, schema: ResolverObject<T>): unknown {
-    let retValue: unknown = null;
+  protected resolveSchema<T, R>(field: T, schema: ResolverObject<R>): R {
+    let retValue: R = null as R;
     const gen = schema.type.resolve(field);
 
     let stop = false;
     while (!stop) {
       let result = gen.next();
-      retValue = result.value;
+      retValue = result.value as any;
       if (result.done) {
         stop = true;
       }
@@ -96,7 +55,7 @@ export abstract class ChacaSchema<T> {
     return retValue;
   }
 
-  protected validateObjectSchema(obj: SchemaInput<T>): SchemaToResolve<T> {
+  protected validateObjectSchema(obj: SchemaInput<K, T>): SchemaToResolve<T> {
     if (
       !obj ||
       (typeof obj === "object" && Array.isArray(obj)) ||
@@ -116,7 +75,7 @@ export abstract class ChacaSchema<T> {
 
       for (const k of Object.keys(obj)) {
         const key = k as keyof T;
-        const schema = obj[key] as FieldSchemaConfig<T, T[keyof T]>;
+        const schema = obj[key] as FieldSchemaConfig<K, T[keyof T]>;
         if (schema instanceof SchemaResolver) {
           schemaToSave = {
             ...schemaToSave,
@@ -125,12 +84,18 @@ export abstract class ChacaSchema<T> {
         } else if (typeof schema === "function") {
           schemaToSave = {
             ...schemaToSave,
-            [key]: { type: new CustomFieldResolver(schema), ...defaultConfig },
+            [key]: {
+              type: new CustomFieldResolver<K, T[keyof T]>(schema),
+              ...defaultConfig,
+            },
           };
         } else if (schema instanceof SchemaField) {
           schemaToSave = {
             ...schemaToSave,
-            [key]: { type: new SchemaFieldResolver(schema), ...defaultConfig },
+            [key]: {
+              type: new SchemaFieldResolver<T[keyof T]>(schema),
+              ...defaultConfig,
+            },
           };
         } else {
           if (
@@ -146,7 +111,7 @@ export abstract class ChacaSchema<T> {
                   type:
                     type instanceof SchemaResolver
                       ? type
-                      : new SchemaFieldResolver(type),
+                      : new SchemaFieldResolver<T[keyof T]>(type),
                   ...defaultConfig,
                 },
               };
@@ -154,7 +119,7 @@ export abstract class ChacaSchema<T> {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
-                  type: new EnumFielResolver(
+                  type: new EnumFielResolver<T[keyof T]>(
                     this.validateEnum(key, schema.enum),
                   ),
                   ...defaultConfig,
@@ -164,7 +129,7 @@ export abstract class ChacaSchema<T> {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
-                  type: new CustomFieldResolver<T, T[keyof T]>(
+                  type: new CustomFieldResolver<K, T[keyof T]>(
                     this.validateCustom(key, schema.custom),
                   ),
                   ...defaultConfig,
@@ -205,14 +170,14 @@ export abstract class ChacaSchema<T> {
 
   private validateType(
     key: keyof T,
-    type: SchemaResolver | SchemaField,
-  ): SchemaResolver | SchemaField {
+    type: SchemaResolver<T[keyof T]> | SchemaField<T[keyof T], any>,
+  ): SchemaResolver<T[keyof T]> | SchemaField<T[keyof T], any> {
     if (type instanceof SchemaResolver || type instanceof SchemaField) {
       return type;
     } else throw new ChacaError(`Invalid type for key ${String(key)}`);
   }
 
-  private validateEnum(key: keyof T, array: unknown[]): unknown[] {
+  private validateEnum(key: keyof T, array: T[keyof T][]): T[keyof T][] {
     if (Array.isArray(array)) {
       if (array.length > 0) {
         return array;
@@ -229,10 +194,10 @@ export abstract class ChacaSchema<T> {
     }
   }
 
-  private validateCustom<T>(
+  private validateCustom(
     key: keyof T,
-    custom: CustomField<T, T[keyof T]>,
-  ): CustomField<T, T[keyof T]> {
+    custom: CustomField<K, T[keyof T]>,
+  ): CustomField<K, T[keyof T]> {
     if (typeof custom === "function") {
       return custom;
     } else
