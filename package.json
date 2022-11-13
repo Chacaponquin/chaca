@@ -8,6 +8,7 @@
   "engines": {
     "node": ">=6.0.0"
   },
+  "type": "module",
   "exports": {
     ".": {
       "import": {
@@ -15,6 +16,10 @@
         "default": "./lib/esm/index.mjs"
       },
       "require": {
+        "types": "./lib/types/index.d.ts",
+        "default": "./lib/cjs/index.js"
+      },
+      "default": {
         "types": "./lib/types/index.d.ts",
         "default": "./lib/cjs/index.js"
       }
