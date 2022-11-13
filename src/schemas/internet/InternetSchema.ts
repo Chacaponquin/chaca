@@ -86,11 +86,65 @@ export class InternetSchema {
     );
   }
 
+  /**
+   * Returns a password.
+   *
+   * @param args.len The length of the password to generate. Defaults to `15`.
+   * @param args.memorable Whether the generated password should be memorable. Defaults to `false`.
+   * @param args.pattern The pattern that all chars should match should match.
+   * This option will be ignored, if `memorable` is `true`. Defaults to `/\w/`.
+   * @param args.prefix The prefix to use. Defaults to `''`.
+   *
+   * @example
+   * schemas.internet.password().getValue() // '89G1wJuBLbGziIs'
+   * schemas.internet.password().getValue({length: 20}) // 'aF55c_8O9kZaPOrysFB_'
+   * schemas.internet.password().getValue({length: 20, memorable: true}) // 'lawetimufozujosodedi'
+   * schemas.internet.password().getValue({length: 20, memorable: true, pattern: /[A-Z]/}) // 'HMAQDFFYLDDUTBKVNFVS'
+   * schemas.internet.password().getValue({length: 20, memorable: true, pattern: /[A-Z]/, prefix: 'Hello '}) // 'Hello IREOXTDWPERQSB'
+   *
+   * @returns string
+   */
   public password(args?: PasswordArgs) {
     return new SchemaField<string, PasswordArgs>(
       "password",
       (a) => {
-        return "";
+        const vowel = /[aeiouAEIOU]$/;
+        const consonant = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]$/;
+
+        const len =
+          typeof a.length === "number" && a.length > 0 ? a.length : 15;
+        const memorable =
+          typeof a.memorable === "boolean" ? a.memorable : false;
+        const pattern = a.pattern instanceof RegExp ? a.pattern : /w/;
+        const prefix = typeof a.prefix === "string" ? a.prefix : "";
+
+        const _password = (
+          length: number,
+          memorable: boolean,
+          pattern: RegExp,
+          prefix: string,
+        ): string => {
+          if (prefix.length >= length) {
+            return prefix;
+          }
+          if (memorable) {
+            if (prefix.match(consonant)) {
+              pattern = vowel;
+            } else {
+              pattern = consonant;
+            }
+          }
+          const n = PrivateUtils.intNumber({ max: 94 }) + 33;
+          let char = String.fromCharCode(n);
+          if (memorable) {
+            char = char.toLowerCase();
+          }
+          if (!char.match(pattern)) {
+            return _password(length, memorable, pattern, prefix);
+          }
+          return _password(length, memorable, pattern, prefix + char);
+        };
+        return _password(len, memorable, pattern, prefix);
       },
       args || {},
     );
