@@ -96,6 +96,15 @@ await postSchema.generateAndExport(20, {
 });
 ```
 
+## Schema Definition
+
+When creating schemas you have two options: use a defined schema with the method `defineSchema` or a simple schema by instantiating the class `Schema`
+
+> Differences between both schemas
+>
+> - The simple schema can be used to nest schemas inside other schemas as you can see in the [example at the beginning](#usage)
+> - The defined schema is stored and can be exported with the other defined schemas with the [exportAll method](#chacaexportall)
+
 ## Config API
 
 ### `type`
