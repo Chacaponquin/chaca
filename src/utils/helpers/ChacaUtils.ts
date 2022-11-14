@@ -27,7 +27,7 @@ export const ChacaUtils = {
    */
   replaceSymbols: PrivateUtils.replaceSymbols,
   /**
-   * Returns a text capitalized from a string argument
+   * Returns a camel case notation text from a string argument
    * @param text string to capitalize
    *
    * @example

@@ -1,6 +1,4 @@
-import { expect } from "chai";
-import mocha from "mocha";
-import { schemas, chaca } from "../../src";
+import { schemas, chaca } from "../../lib/cjs/index.js";
 import { ChacaError } from "../../src/errors/ChacaError";
 
 const schema = new chaca.Schema({
@@ -22,7 +20,7 @@ const schemaWithArray = new chaca.Schema<{
 const root = "./data";
 
 describe("#Export Test", () => {
-  context("export a complete schema in all formats", () => {
+  describe("export a complete schema in all formats", () => {
     type MoviePost = {
       id: string;
       authors: string[];
@@ -112,8 +110,8 @@ describe("#Export Test", () => {
     });
   });
 
-  context("create and export one object", () => {
-    context("current export file", async () => {
+  describe("create and export one object", () => {
+    describe("current export file", async () => {
       it("no file name. Should throw an error", async () => {
         try {
           await schema.generateAndExport(1, {
@@ -122,7 +120,7 @@ describe("#Export Test", () => {
             location: root,
           });
         } catch (error) {
-          expect(error).to.be.instanceOf(ChacaError);
+          expect(error instanceof ChacaError).toBe(true);
         }
       });
 
@@ -134,12 +132,12 @@ describe("#Export Test", () => {
             location: root,
           });
         } catch (error) {
-          expect(error).to.be.instanceOf(ChacaError);
+          expect(error instanceof ChacaError).toBe(true);
         }
       });
     });
 
-    context("Export in a JSON File", async () => {
+    describe("Export in a JSON File", async () => {
       it("export in a JSON File (correct)", async () => {
         await schema.generateAndExport(1, {
           fileName: "WASAAA",
@@ -149,7 +147,7 @@ describe("#Export Test", () => {
       });
     });
 
-    context("Export in a Javascript File", async () => {
+    describe("Export in a Javascript File", async () => {
       it("export a single object", async () => {
         await schema.generateAndExport(1, {
           fileName: "Js",
@@ -175,7 +173,7 @@ describe("#Export Test", () => {
       });
     });
 
-    context("Export in a CSV File", async () => {
+    describe("Export in a CSV File", async () => {
       it("export a single object in a CSV File", async () => {
         await schema.generateAndExport(1, {
           fileName: "CSV",
@@ -193,7 +191,7 @@ describe("#Export Test", () => {
       });
     });
 
-    context("Export in a Java File", async () => {
+    describe("Export in a Java File", async () => {
       it("export a single object", async () => {
         await schema.generateAndExport(1, {
           location: root,
@@ -219,7 +217,7 @@ describe("#Export Test", () => {
       });
     });
 
-    context("Export in Typescript File", async () => {
+    describe("Export in Typescript File", async () => {
       it("export a single object", async () => {
         await schema.generateAndExport(1, {
           fileName: "type29479",
@@ -246,7 +244,7 @@ describe("#Export Test", () => {
     });
   });
 
-  context("create and export an object with nested objects", () => {
+  describe("create and export an object with nested objects", () => {
     type Schema = {
       id: string;
       image: string;
@@ -265,7 +263,7 @@ describe("#Export Test", () => {
       }),
     });
 
-    context("JSON File", () => {
+    describe("JSON File", () => {
       it("should return an array with objects with the key user as object with property firstName and image", async () => {
         await schema.generateAndExport(20, {
           fileName: "632864289",
@@ -276,7 +274,7 @@ describe("#Export Test", () => {
     });
   });
 
-  context("exportAll tests", () => {
+  describe("exportAll tests", () => {
     const schema1 = chaca.defineSchema("mySchema1", {
       id: { type: schemas.id.mongodbID(), isArray: 20 },
       image: { type: schemas.image.film() },

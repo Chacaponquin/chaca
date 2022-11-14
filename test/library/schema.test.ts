@@ -1,17 +1,15 @@
-import { expect } from "chai";
-import mocha from "mocha";
 import { chaca, schemas } from "../../src";
 import { ChacaError } from "../../src/errors/ChacaError";
 
 describe("#Schema Creation Test", () => {
-  context("create own schema fields", () => {
+  describe("create own schema fields", () => {
     it("pass empty string as schema name. Should throw an error", () => {
       try {
         const schema = chaca.defineSchemaField<{ lenght: number }>("", (a) => {
           return "a";
         });
       } catch (e) {
-        expect(e).to.be.instanceOf(ChacaError);
+        expect(e instanceof ChacaError).toBe(true);
       }
     });
 
@@ -25,7 +23,7 @@ describe("#Schema Creation Test", () => {
         test: schema(),
       });
 
-      expect(dataSchema.generate(10)[5]["test"] === "a").to.be.true;
+      expect(dataSchema.generate(10)[5]["test"] === "a").toBe(true);
     });
 
     it("create an schema with arguments and the function sum the both", () => {
@@ -41,12 +39,12 @@ describe("#Schema Creation Test", () => {
         test: schema({ a: 5, b: 5 }),
       });
 
-      expect(dataSchema.generate(10)[5]["test"] === 10).to.be.true;
+      expect(dataSchema.generate(10)[5]["test"] === 10).toBe(true);
     });
   });
 
-  context("create schema documents", () => {
-    context("simple schema", () => {
+  describe("create schema documents", () => {
+    describe("simple schema", () => {
       const schema = new chaca.Schema({
         id: { type: schemas.id.mongodbID() },
         image: { type: schemas.image.film() },
@@ -56,26 +54,28 @@ describe("#Schema Creation Test", () => {
       const doc = schema.generate(1)[0];
 
       it("should return a define schema object with image, id and name fields", async () => {
-        expect(doc).to.have.keys(["id", "image", "name"]);
+        expect(doc).toHaveProperty("id");
+        expect(doc).toHaveProperty("image");
+        expect(doc).toHaveProperty("name");
       });
 
       it("generate negative number documents. Should generate 10 documents by default", () => {
         const docs = schema.generate(-10);
-        expect(docs).length(10);
+        expect(docs.length === 10).toBe(true);
       });
     });
 
-    context("schema with array field", () => {
+    describe("schema with array field", () => {
       it("passing a number as argument. Should return an array of documents with the id property with that number as length", () => {
         const schema = new chaca.Schema({
           id: { type: schemas.id.mongodbID(), isArray: 20 },
         });
 
         const docs = schema.generate(10);
-        expect(docs[0]["id"]).length(20);
+        expect(docs[0]["id"].length === 20).toBe(20);
       });
 
-      context("passing a object as parameter", () => {
+      describe("passing a object as parameter", () => {
         it("passing an empty object. Should return an array with length between 1 and 10", () => {
           const schema = new chaca.Schema({
             id: { type: schemas.id.mongodbID(), isArray: {} as any },
@@ -83,7 +83,7 @@ describe("#Schema Creation Test", () => {
           const docs = schema.generate(10);
           const id = docs[0]["id"] as Array<string>;
 
-          expect(id.length >= 1 && id.length <= 10).to.be.true;
+          expect(id.length >= 1 && id.length <= 10).toBe(true);
         });
 
         it("passing only max parameter. Should return an array with length <= max parameter", () => {
@@ -93,7 +93,7 @@ describe("#Schema Creation Test", () => {
           const docs = schema.generate(10);
           const id = docs[0]["id"] as Array<String>;
 
-          expect(id.length <= 2).to.be.true;
+          expect(id.length <= 2).toBe(true);
         });
 
         it("passing only min parameter. Should return an array with length >= min parameter", () => {
@@ -103,7 +103,7 @@ describe("#Schema Creation Test", () => {
           const docs = schema.generate(10);
           const id = docs[0]["id"] as Array<String>;
 
-          expect(id.length >= 3).to.be.true;
+          expect(id.length >= 3).toBe(true);
         });
 
         it("passing min and max parameters. Should return an array with length betwwen min and max parameters", () => {
@@ -116,12 +116,12 @@ describe("#Schema Creation Test", () => {
           const docs = schema.generate(10);
           const id = docs[0]["id"] as Array<String>;
 
-          expect(id.length >= 3 && id.length <= 10).to.be.true;
+          expect(id.length >= 3 && id.length <= 10).toBe(true);
         });
       });
     });
 
-    context("schema with custom field", () => {
+    describe("schema with custom field", () => {
       it("custom function return a string", () => {
         const schema = new chaca.Schema({
           id: { type: schemas.id.numberRow() },
@@ -133,7 +133,7 @@ describe("#Schema Creation Test", () => {
         });
 
         const docs = schema.generate(10);
-        expect(docs[0]["custom"]).to.be.string("Buenas");
+        expect(docs[0]["custom"]).toBe("Buenas");
       });
 
       it("custom function return undefined. Should return null as value", () => {
@@ -145,7 +145,7 @@ describe("#Schema Creation Test", () => {
         });
 
         const docs = schema.generate(10);
-        expect(docs[0]["custom"]).be.null;
+        expect(docs[0]["custom"] === null).toBe(true);
       });
 
       it("custom function access to this property", () => {
@@ -159,11 +159,11 @@ describe("#Schema Creation Test", () => {
         });
 
         const docs = schema.generate(10);
-        expect(docs[0]["custom"]).equal(docs[0]["id"]);
+        expect(docs[0]["custom"] === docs[0]["id"]).toBe(true);
       });
     });
 
-    context("schema with enum field", () => {
+    describe("schema with enum field", () => {
       it("with an array [1, 2, 3, 4, 5]. Should return one of this elements", () => {
         const array = [1, 2, 3, 4, 5];
         const schema = new chaca.Schema({
@@ -172,11 +172,11 @@ describe("#Schema Creation Test", () => {
 
         const docs = schema.generate(50);
 
-        expect(Boolean(array.find((el) => el === docs[0]["id"]))).true;
+        expect(Boolean(array.find((el) => el === docs[0]["id"]))).toBe(true);
       });
     });
 
-    context("schema with object fields", () => {
+    describe("schema with object fields", () => {
       it("should return an object with user field as an object", () => {
         const schema = new chaca.Schema({
           id: schemas.id.mongodbID(),
@@ -189,7 +189,7 @@ describe("#Schema Creation Test", () => {
 
         const doc = schema.generate(2)[0];
 
-        expect(doc["user"]).to.be.keys(["userName", "image"]);
+        expect(doc["user"]).toHaveProperty("userName", "image");
       });
 
       it("should return an object with a user field with the image field as array of string", () => {
@@ -204,7 +204,7 @@ describe("#Schema Creation Test", () => {
 
         const doc = schema.generate(5)[0]["user"];
 
-        expect(schema.generate(5)[0]["user"].images.length === 10).to.be.true;
+        expect(schema.generate(5)[0]["user"].images.length === 10).toBe(true);
       });
 
       it("should return an object with a user field as an array of objects with image and userName property", () => {
@@ -227,19 +227,19 @@ describe("#Schema Creation Test", () => {
 
         const doc = schema.generate(5)[0];
 
-        expect(doc["user"].length === 20).to.be.true;
+        expect(doc["user"].length === 20).toBe(true);
       });
     });
   });
 
-  context("schema with incorrect arguments", () => {
+  describe("schema with incorrect arguments", () => {
     it("without schema name. Should throw an error", () => {
       try {
         chaca.defineSchema("", {
           id: { type: schemas.id.mongodbID() },
         });
       } catch (error) {
-        expect(error).to.be.instanceOf(ChacaError);
+        expect(error instanceof ChacaError).toBe(true);
       }
     });
 
@@ -247,7 +247,7 @@ describe("#Schema Creation Test", () => {
       try {
         chaca.defineSchema("buenas", {});
       } catch (error) {
-        expect(error).to.be.instanceOf(ChacaError);
+        expect(error instanceof ChacaError).toBe(true);
       }
     });
 
@@ -262,7 +262,7 @@ describe("#Schema Creation Test", () => {
           },
         });
       } catch (error) {
-        expect(error).to.be.instanceOf(ChacaError);
+        expect(error instanceof ChacaError).toBe(true);
       }
     });
 
@@ -270,7 +270,7 @@ describe("#Schema Creation Test", () => {
       try {
         chaca.defineSchema("schema", { id: { enum: [] } });
       } catch (error) {
-        expect(error).to.be.instanceOf(ChacaError);
+        expect(error instanceof ChacaError).toBe(true);
       }
     });
   });
