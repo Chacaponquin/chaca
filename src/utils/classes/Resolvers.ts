@@ -4,7 +4,7 @@ import { SchemaField } from "../../schemas/SchemaField.js";
 import { PrivateUtils } from "../helpers/PrivateUtils.js";
 import { IResolver, CustomField } from "../interfaces/schema.interface.js";
 
-export class EnumFielResolver<C, R> implements IResolver<R> {
+export class EnumFielResolver<C, R> implements IResolver<C, R> {
   constructor(public readonly array: R[]) {}
 
   public *resolve(field: C): Generator<R> {
@@ -12,7 +12,7 @@ export class EnumFielResolver<C, R> implements IResolver<R> {
   }
 }
 
-export class SchemaFieldResolver<C, R> implements IResolver<R> {
+export class SchemaFieldResolver<C, R> implements IResolver<C, R> {
   constructor(readonly schema: SchemaField<R, any>) {}
 
   public *resolve(field: C): Generator<R> {
@@ -20,7 +20,7 @@ export class SchemaFieldResolver<C, R> implements IResolver<R> {
   }
 }
 
-export class CustomFieldResolver<C, R> implements IResolver<R> {
+export class CustomFieldResolver<C, R> implements IResolver<C, R> {
   constructor(public readonly fun: CustomField<C, R>) {}
 
   public *resolve(field: C): Generator<R> {

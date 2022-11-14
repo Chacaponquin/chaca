@@ -11,16 +11,16 @@ import { ChacaSchema } from "./ChacaSchema.js";
 import { PrivateUtils } from "../helpers/PrivateUtils.js";
 import { CustomFieldResolver } from "./Resolvers.js";
 
-type OrderSchema<T> = {
+type OrderSchema<C, T> = {
   key: keyof T;
-  schema: ResolverObject<T[keyof T]>;
+  schema: ResolverObject<C, T[keyof T]>;
 };
 
 export class SchemaResolver<K = any, T = any>
   extends ChacaSchema<K, T>
-  implements IResolver<K>
+  implements IResolver<K, K>
 {
-  private schemaObj: SchemaToResolve<T>;
+  private schemaObj: SchemaToResolve<K, T>;
 
   constructor(inputObj: SchemaInput<K, T>) {
     super();
@@ -99,13 +99,13 @@ export class SchemaResolver<K = any, T = any>
     return returnArray;
   }
 
-  private orderSchemasByPriority(): Array<OrderSchema<T>> {
-    const headSchemas: Array<OrderSchema<T>> = [];
-    const finalSchemas: Array<OrderSchema<T>> = [];
+  private orderSchemasByPriority(): Array<OrderSchema<K, T>> {
+    const headSchemas: Array<OrderSchema<K, T>> = [];
+    const finalSchemas: Array<OrderSchema<K, T>> = [];
 
     for (const k of Object.keys(this.schemaObj)) {
       const key = k as keyof T;
-      const schema = this.schemaObj[key] as ResolverObject<T[keyof T]>;
+      const schema = this.schemaObj[key] as ResolverObject<K, T[keyof T]>;
       if (schema.type instanceof CustomFieldResolver) {
         finalSchemas.push({ key, schema });
       } else {

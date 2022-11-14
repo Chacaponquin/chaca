@@ -39,8 +39,8 @@ export abstract class ChacaSchema<K, T> {
     return await Export(data, configFile);
   }
 
-  protected resolveSchema<T, R>(field: T, schema: ResolverObject<R>): R {
-    let retValue: R = null as R;
+  protected resolveSchema(field: K, schema: ResolverObject<K, T[keyof T]>): T {
+    let retValue: T = null as T;
     const gen = schema.type.resolve(field);
 
     let stop = false;
@@ -55,7 +55,9 @@ export abstract class ChacaSchema<K, T> {
     return retValue;
   }
 
-  protected validateObjectSchema(obj: SchemaInput<K, T>): SchemaToResolve<T> {
+  protected validateObjectSchema(
+    obj: SchemaInput<K, T>,
+  ): SchemaToResolve<K, T> {
     if (
       !obj ||
       (typeof obj === "object" && Array.isArray(obj)) ||
@@ -66,7 +68,7 @@ export abstract class ChacaSchema<K, T> {
         "Your schema has to be an object with the fields descriptions",
       );
     else {
-      let schemaToSave: SchemaToResolve<T> = {} as SchemaToResolve<T>;
+      let schemaToSave: SchemaToResolve<K, T> = {} as SchemaToResolve<K, T>;
 
       const defaultConfig: CommonSchema = {
         isArray: null,

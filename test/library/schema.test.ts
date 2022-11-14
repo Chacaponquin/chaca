@@ -178,12 +178,19 @@ describe("#Schema Creation Test", () => {
 
     describe("schema with object fields", () => {
       it("should return an object with user field as an object", () => {
-        const schema = new chaca.Schema({
+        type Schema = {
+          id: string;
+          image: string;
+          user: { userName: string; image: string; custom: string };
+        };
+
+        const schema = new chaca.Schema<Schema>({
           id: schemas.id.mongodbID(),
           image: schemas.image.people(),
           user: new chaca.Schema({
             userName: schemas.internet.userName(),
             image: schemas.image.fashion(),
+            custom: (a) => {},
           }),
         });
 

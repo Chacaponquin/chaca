@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "clean": "rm -rf ./lib",
-    "build": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:types",
+    "build": "npm run fix && npm run prettier-format && npm run build:lib",
     "build:lib": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:types",
     "build:types": "tsc -p ./tsconfig.types.json",
     "build:esm": "tsc --p tsconfig.esm.json",
