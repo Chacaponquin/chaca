@@ -1,11 +1,11 @@
-import { FileConfig } from "../utils/interfaces/export.interface";
-import { Generator } from "./Generator";
-import { JavascriptGenerator } from "./JavascriptGenerator";
+import { FileConfig } from "../utils/interfaces/export.interface.js";
+import { Generator } from "./Generator.js";
+import { JavascriptGenerator } from "./JavascriptGenerator.js";
 import fs from "fs";
-import { PrivateUtils } from "../utils/helpers/PrivateUtils";
+import { PrivateUtils } from "../utils/helpers/PrivateUtils.js";
 
 export class TypescriptGenerator extends Generator {
-  private interfacesCode: string = "";
+  private interfacesCode = "";
   private interfacesCreated: string[] = [];
 
   constructor(data: any, config: FileConfig) {
@@ -13,7 +13,7 @@ export class TypescriptGenerator extends Generator {
   }
 
   public async generateFile(): Promise<string> {
-    let allCode: string = ``;
+    let allCode = ``;
 
     const javascriptCode = new JavascriptGenerator(
       this.data,
@@ -35,7 +35,7 @@ export class TypescriptGenerator extends Generator {
   }
 
   private generateDatasetInterface(): string {
-    let interfaceName = `I${PrivateUtils.capitalizeTextUpper(
+    const interfaceName = `I${PrivateUtils.capitalizeTextUpper(
       this.config.fileName,
     )}`;
     let interfaceCode = `interface ${interfaceName}{\n`;
@@ -43,13 +43,13 @@ export class TypescriptGenerator extends Generator {
     for (const key of Object.keys(this.data[0])) {
       const allValues = this.data.map((el: any) => el[key]);
 
-      let retInt: string[] = [];
+      const retInt: string[] = [];
       for (const val of allValues) {
         if (Array.isArray(val)) retInt.push(this.generateArrayInterface(val));
         else retInt.push(this.generateInterfaceByValue(val));
       }
 
-      let uniqueInt = new Set(retInt);
+      const uniqueInt = new Set(retInt);
       const uniqueValues: string[] = [];
       uniqueInt.forEach((el) => uniqueValues.push(el));
 

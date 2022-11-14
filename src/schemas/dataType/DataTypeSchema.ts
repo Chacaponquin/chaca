@@ -1,6 +1,6 @@
-import { ChacaError } from "../../errors/ChacaError";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
+import { ChacaError } from "../../errors/ChacaError.js";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
 
 type Case = "lower" | "upper" | "mixed";
 
@@ -104,9 +104,9 @@ export class DataTypeSchema {
     return new SchemaField<number, FloatProps>(
       "float",
       (a) => {
-        let minimun: number = typeof a.min === "number" ? a.min : -999999;
+        const minimun: number = typeof a.min === "number" ? a.min : -999999;
         let maximun: number;
-        let pres: number =
+        const pres: number =
           typeof a.precision === "number" &&
           a.precision > 0 &&
           a.precision <= 20
@@ -143,9 +143,9 @@ export class DataTypeSchema {
     return new SchemaField<number, NumberProps>(
       "number",
       (a) => {
-        let minimun: number = typeof a.min === "number" ? a.min : -999999;
+        const minimun: number = typeof a.min === "number" ? a.min : -999999;
         let maximun: number;
-        let pres: number =
+        const pres: number =
           typeof a.precision === "number" &&
           a.precision > 0 &&
           a.precision <= 20
@@ -190,7 +190,7 @@ export class DataTypeSchema {
             : PrivateUtils.intNumber({ min: 5, max: 10 });
         const c = typeof a.case === "string" ? a.case : "mixed";
 
-        let ret: string = "";
+        let ret = "";
         for (let i = 1; i <= length; i++) {
           ret = ret.concat(
             PrivateUtils.oneOfArray([
@@ -339,7 +339,7 @@ export class DataTypeSchema {
             ? a.length
             : PrivateUtils.intNumber({ min: 4, max: 8 });
 
-        let ret: string = "";
+        let ret = "";
         for (let i = 1; i <= length; i++) {
           ret = ret.concat(String(PrivateUtils.oneOfArray([0, 1])));
         }
@@ -374,7 +374,7 @@ export class DataTypeSchema {
           typeof a.length === "number" && a.length > 0
             ? a.length
             : PrivateUtils.intNumber({ min: 1, max: 20 });
-        let banned: string[] = [];
+        const banned: string[] = [];
 
         const cass = typeof a.case === "string" ? a.case : undefined;
 
@@ -401,7 +401,7 @@ export class DataTypeSchema {
           "8",
           "9",
         ].filter((el) => {
-          let is: boolean = true;
+          let is = true;
           banned.forEach((b) => {
             if (b === el) is = false;
           });
@@ -409,7 +409,7 @@ export class DataTypeSchema {
         });
         const characters = PrivateUtils.characters(cass);
         const selectCharacters = characters.filter((el) => {
-          let is: boolean = true;
+          let is = true;
           banned.forEach((b) => {
             if (b === el) is = false;
           });
@@ -432,8 +432,8 @@ export class DataTypeSchema {
     min: number | undefined,
     max: number | undefined,
   ): { min: number | undefined; max: number | undefined } {
-    let mi = typeof min === "number" ? min : undefined;
-    let ma =
+    const mi = typeof min === "number" ? min : undefined;
+    const ma =
       typeof max === "number" ? (mi && max > mi ? max : undefined) : undefined;
 
     return { min: mi, max: ma };

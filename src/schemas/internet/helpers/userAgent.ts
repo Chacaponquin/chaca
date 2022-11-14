@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../../utils/helpers/PrivateUtils";
+import { PrivateUtils } from "../../../utils/helpers/PrivateUtils.js";
 
 type OS = "lin" | "mac" | "win";
 
@@ -111,7 +111,7 @@ export function GenerateUserAgent(): string {
     const rand = PrivateUtils.intNumber({ min: 0, max: 100 }) / 100;
     let min = 0;
     let max = 0;
-    let return_val: string = "";
+    let return_val = "";
 
     for (const key in obj) {
       if (Object.prototype.hasOwnProperty.call(obj, key)) {

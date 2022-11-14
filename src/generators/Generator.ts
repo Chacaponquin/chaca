@@ -1,6 +1,6 @@
-import { FileConfig } from "../utils/interfaces/export.interface";
+import { FileConfig } from "../utils/interfaces/export.interface.js";
 import path from "path";
-import { ChacaError } from "../errors/ChacaError";
+import { ChacaError } from "../errors/ChacaError.js";
 
 export abstract class Generator {
   protected ext: string;

@@ -1,4 +1,4 @@
-import { HttpStatus } from "../InternetSchema";
+import { HttpStatus } from "../InternetSchema.js";
 
 export const HTTP_STATUS: HttpStatus = {
   informational: [100, 101, 102, 103],

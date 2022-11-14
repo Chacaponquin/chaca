@@ -1,6 +1,6 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
-import { VIDEOS_DEFINITIONS } from "./constants/videos";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
+import { VIDEOS_DEFINITIONS } from "./constants/videos.js";
 
 export class VideoSchema {
   /**

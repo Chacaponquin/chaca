@@ -1,4 +1,4 @@
-import { ChacaError } from "../../errors/ChacaError";
+import { ChacaError } from "../../errors/ChacaError.js";
 import {
   CSVGenerator,
   JavaGenerator,
@@ -6,8 +6,8 @@ import {
   JsonGenerator,
   TypescriptGenerator,
   Generator,
-} from "../../generators";
-import { FileConfig } from "../interfaces/export.interface";
+} from "../../generators/index.js";
+import { FileConfig } from "../interfaces/export.interface.js";
 
 /**
  * Export the data to a selected code format

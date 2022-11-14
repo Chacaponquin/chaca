@@ -1,6 +1,6 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
-import WORDS, { ILanguageWord } from "./constants";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
+import WORDS, { ILanguageWord } from "./constants/index.js";
 
 type Languages = "es" | "en";
 

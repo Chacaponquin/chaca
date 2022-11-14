@@ -1,16 +1,16 @@
-import { ChacaUtils } from "./utils/helpers/ChacaUtils";
-import { CustomSchema } from "./utils/classes/CustomSchema";
-import { SchemaInput } from "./utils/interfaces/schema.interface";
+import { ChacaUtils } from "./utils/helpers/ChacaUtils.js";
+import { CustomSchema } from "./utils/classes/CustomSchema.js";
+import { SchemaInput } from "./utils/interfaces/schema.interface.js";
 
-import { ChacaError } from "./errors/ChacaError";
-import { ExportAllConfig } from "./utils/interfaces/export.interface";
-import { SchemaResolver } from "./utils/classes/SchemaResolver";
-import { Schemas } from "./schemas/index";
-import { SchemaField } from "./schemas/SchemaField";
+import { ChacaError } from "./errors/ChacaError.js";
+import { ExportAllConfig } from "./utils/interfaces/export.interface.js";
+import { SchemaResolver } from "./utils/classes/SchemaResolver.js";
+import { Schemas } from "./schemas/index.js";
+import { SchemaField } from "./schemas/SchemaField.js";
 
 import AdmZip from "adm-zip";
 import path from "path";
-import { Export } from "./utils/helpers/Export";
+import { Export } from "./utils/helpers/Export.js";
 
 abstract class Chaca {
   /**
@@ -98,7 +98,7 @@ abstract class Chaca {
    * @returns string
    */
   public static async exportAll(config: ExportAllConfig): Promise<string> {
-    let allRoutes: string[] = [];
+    const allRoutes: string[] = [];
 
     for (let i = 0; i < this.schemasCreated.length; i++) {
       allRoutes.push(

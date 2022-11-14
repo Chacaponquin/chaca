@@ -1,6 +1,6 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
-import { IMAGES_DEFINITIONS } from "./constants/images";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
+import { IMAGES_DEFINITIONS } from "./constants/images.js";
 
 export class ImageSchema {
   /**

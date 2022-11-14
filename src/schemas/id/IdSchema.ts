@@ -1,6 +1,6 @@
-import { SchemaField } from "../SchemaField";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { Schemas } from "../";
+import { SchemaField } from "../SchemaField.js";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { Schemas } from "../index.js";
 
 export class IdSchema {
   /**

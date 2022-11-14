@@ -1,4 +1,4 @@
-import { Emojis } from "../InternetSchema";
+import { Emojis } from "../InternetSchema.js";
 
 export const EMOJIS: Emojis = {
   smiley: [

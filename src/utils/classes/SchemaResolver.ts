@@ -1,13 +1,15 @@
+/* eslint @typescript-eslint/no-unused-vars: off */
+
 import {
   IResolver,
   SchemaToResolve,
   SchemaInput,
   ResolverObject,
-} from "../interfaces/schema.interface";
+} from "../interfaces/schema.interface.js";
 
-import { ChacaSchema } from "./ChacaSchema";
-import { PrivateUtils } from "../helpers/PrivateUtils";
-import { CustomFieldResolver } from "./Resolvers";
+import { ChacaSchema } from "./ChacaSchema.js";
+import { PrivateUtils } from "../helpers/PrivateUtils.js";
+import { CustomFieldResolver } from "./Resolvers.js";
 
 type OrderSchema<T> = {
   key: keyof T;
@@ -26,7 +28,7 @@ export class SchemaResolver<K = any, T = any>
   }
 
   public *resolve(field: K): Generator<K> {
-    let doc = {} as any;
+    let doc = {} as K;
 
     for (const o of this.orderSchemasByPriority()) {
       let retValue: any;
@@ -48,7 +50,7 @@ export class SchemaResolver<K = any, T = any>
 
       if (o.schema.posibleNull) {
         let porcentNull: number = o.schema.posibleNull;
-        let array = new Array(100).fill(0);
+        const array = new Array(100).fill(0);
 
         for (let i = 0; i < array.length; i++) {
           if (porcentNull > 0) {
@@ -76,14 +78,14 @@ export class SchemaResolver<K = any, T = any>
         ? cantDocuments
         : 10;
 
-    let returnArray = [] as K[];
+    const returnArray = [] as K[];
     for (let i = 1; i <= cantDoc; i++) {
       let object = {} as K;
       const gen = this.resolve(object);
 
       let stop = false;
       while (!stop) {
-        let result = gen.next();
+        const result = gen.next();
         object = result.value;
 
         if (result.done) {
@@ -98,8 +100,8 @@ export class SchemaResolver<K = any, T = any>
   }
 
   private orderSchemasByPriority(): Array<OrderSchema<T>> {
-    let headSchemas: Array<OrderSchema<T>> = [];
-    let finalSchemas: Array<OrderSchema<T>> = [];
+    const headSchemas: Array<OrderSchema<T>> = [];
+    const finalSchemas: Array<OrderSchema<T>> = [];
 
     for (const k of Object.keys(this.schemaObj)) {
       const key = k as keyof T;

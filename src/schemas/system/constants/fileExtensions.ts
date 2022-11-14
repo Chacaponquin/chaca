@@ -1,4 +1,4 @@
-import { FileExtensions } from "../SystemSchema";
+import { FileExtensions } from "../SystemSchema.js";
 
 export const FILE_EXTENSIONS: FileExtensions = {
   audio: ["mp3", "wav"],

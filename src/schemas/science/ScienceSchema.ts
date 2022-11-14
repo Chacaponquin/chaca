@@ -1,10 +1,10 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
 import {
   PERIODIC_TABLE_ELEMETNS,
   PERIODIC_TABLE_SYMBOLS,
-} from "./constants/periodicTable";
-import { UNITS } from "./constants/units";
+} from "./constants/periodicTable.js";
+import { UNITS } from "./constants/units.js";
 
 type PeriodicTableProps = {
   type?: "symbol" | "name";

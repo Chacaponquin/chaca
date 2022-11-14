@@ -1,7 +1,7 @@
-import { SchemaField } from "../SchemaField";
-import { Schemas } from "../";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { ACCOUNT_TYPES, IBAN, MONEY_INFO } from "./constants";
+import { SchemaField } from "../SchemaField.js";
+import { Schemas } from "../index.js";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { ACCOUNT_TYPES, IBAN, MONEY_INFO } from "./constants/index.js";
 
 type AmountProps = {
   min?: number;
@@ -34,7 +34,7 @@ export class FinanceSchema {
         const len = typeof a.length === "number" ? a.length : 4;
 
         return Array({ length: len })
-          .map((el) => String(PrivateUtils.intNumber({ min: 0, max: 9 })))
+          .map(() => String(PrivateUtils.intNumber({ min: 0, max: 9 })))
           .join("");
       },
       args || {},

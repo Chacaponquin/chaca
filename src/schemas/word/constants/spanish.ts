@@ -1,4 +1,4 @@
-import { ILanguageWord } from ".";
+import { ILanguageWord } from "./index.js";
 
 export const SPANISH_WORDS: ILanguageWord = {
   verbs: [

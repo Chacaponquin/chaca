@@ -1,7 +1,7 @@
-import { SPANISH_NAMES } from "./spanish";
-import { ENGLISH_NAMES } from "./english";
-import { GENDERS as G } from "./genders";
-import { JOBS_AREAS, JOB_LEVELS } from "./jobs";
+import { SPANISH_NAMES } from "./spanish.js";
+import { ENGLISH_NAMES } from "./english.js";
+import { GENDERS as G } from "./genders.js";
+import { JOBS_AREAS, JOB_LEVELS } from "./jobs.js";
 
 export interface ILanguageNames {
   male: string[];

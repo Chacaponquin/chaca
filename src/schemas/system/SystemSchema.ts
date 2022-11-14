@@ -1,8 +1,8 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
-import { Schemas } from "../";
-import { MIME_TYPES } from "./constants/mimeTypes";
-import { FILE_EXTENSIONS } from "./constants/fileExtensions";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
+import { Schemas } from "../index.js";
+import { MIME_TYPES } from "./constants/mimeTypes.js";
+import { FILE_EXTENSIONS } from "./constants/fileExtensions.js";
 
 export type FileExtensions = {
   audio: string[];
@@ -37,7 +37,7 @@ export class SystemSchema {
 
         const arrayNames: string[] = new Array({
           length: PrivateUtils.intNumber({ min: 1, max: 5 }),
-        }).map((el) => Schemas.word.noun().getValue({ language: "en" }));
+        }).map(() => Schemas.word.noun().getValue({ language: "en" }));
 
         return `${PrivateUtils.joinWords(arrayNames)}.${ext}`;
       },

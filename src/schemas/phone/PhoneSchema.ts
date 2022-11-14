@@ -1,6 +1,6 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
-import { PHONE_PREFIX } from "./constants/phonePrefix";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
+import { PHONE_PREFIX } from "./constants/phonePrefix.js";
 
 type CallDurationProps = {
   min?: number;
@@ -67,7 +67,7 @@ export class PhoneSchema {
       (a) => {
         const min: number =
           typeof a.min === "number" && a.min >= 0 && a.min < 60 ? a.min : 0;
-        let max: number =
+        const max: number =
           typeof a.max === "number" && a.max < 60 && a.max >= 0 && a.max >= min
             ? a.max
             : 59;

@@ -1,10 +1,10 @@
-import { SchemaField } from "../SchemaField";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { EMOJIS } from "./constants/emojis";
-import { DOMAIN_SUFFIX } from "./constants/domainSuffix";
-import { HTTP_STATUS } from "./constants/httpStatus";
-import { GenerateUserAgent } from "./helpers/userAgent";
-import { Schemas } from "../index";
+import { SchemaField } from "../SchemaField.js";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { EMOJIS } from "./constants/emojis.js";
+import { DOMAIN_SUFFIX } from "./constants/domainSuffix.js";
+import { HTTP_STATUS } from "./constants/httpStatus.js";
+import { GenerateUserAgent } from "./helpers/userAgent.js";
+import { Schemas } from "../index.js";
 
 export type HttpStatus = {
   informational: number[];
@@ -144,6 +144,7 @@ export class InternetSchema {
           }
           return _password(length, memorable, pattern, prefix + char);
         };
+
         return _password(len, memorable, pattern, prefix);
       },
       args || {},
@@ -199,7 +200,7 @@ export class InternetSchema {
         if (firstName && !lastName) {
           return `${firstName}${PrivateUtils.replaceSymbols("######")}`;
         } else {
-          let ran = PrivateUtils.intNumber({ min: 0, max: 2 });
+          const ran = PrivateUtils.intNumber({ min: 0, max: 2 });
           let result: string;
           switch (ran) {
             case 0:
@@ -316,7 +317,7 @@ export class InternetSchema {
         let retString = "";
 
         for (let i = 1; i <= 4; i++) {
-          let val = PrivateUtils.intNumber({ max: 255, min: 0 });
+          const val = PrivateUtils.intNumber({ max: 255, min: 0 });
           if (i === 4) retString += `${val}`;
           else retString += `${val}.`;
         }
@@ -339,7 +340,7 @@ export class InternetSchema {
         const emoji = typeof a.emoji === "string" ? a.emoji : undefined;
 
         if (emoji) {
-          let selEmoji = EMOJIS[emoji];
+          const selEmoji = EMOJIS[emoji];
           if (selEmoji) {
             return PrivateUtils.oneOfArray(selEmoji);
           } else {
@@ -456,7 +457,7 @@ export class InternetSchema {
       "domainName",
       () => {
         const name: string = Schemas.word.noun().getValue({ language: "en" });
-        let tale = PrivateUtils.boolean();
+        const tale = PrivateUtils.boolean();
 
         if (tale) {
           const t = PrivateUtils.oneOfArray([
@@ -482,7 +483,7 @@ export class InternetSchema {
     return new SchemaField<number>(
       "httpStatusCode",
       () => {
-        let sel = PrivateUtils.oneOfArray(
+        const sel = PrivateUtils.oneOfArray(
           Object.keys(HTTP_STATUS),
         ) as keyof HttpStatus;
         return PrivateUtils.oneOfArray(HTTP_STATUS[sel]);

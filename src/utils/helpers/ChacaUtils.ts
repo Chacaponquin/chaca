@@ -1,4 +1,4 @@
-import { PrivateUtils } from "./PrivateUtils";
+import { PrivateUtils } from "./PrivateUtils.js";
 export const ChacaUtils = {
   /**
    * Returns one element from an array

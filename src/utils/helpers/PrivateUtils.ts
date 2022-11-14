@@ -1,4 +1,4 @@
-import { ChacaError } from "../../errors/ChacaError";
+import { ChacaError } from "../../errors/ChacaError.js";
 
 export class PrivateUtils {
   static boolean(): boolean {
@@ -16,14 +16,15 @@ export class PrivateUtils {
 
       return retString;
     } else if (Array.isArray(words)) {
-      let retString = "";
+      const words: string[] = [];
 
       for (const w of words) {
         if (typeof w === "string") {
+          words.push(w);
         } else throw new ChacaError(`${w} is not a string`);
       }
 
-      return retString;
+      return words.join(sep);
     } else
       throw new ChacaError(`${words} is not a string or an array of strings`);
   }
@@ -38,7 +39,7 @@ export class PrivateUtils {
   }
 
   static intNumber({ min, max }: { min?: number; max?: number }): number {
-    let minimun: number = typeof min === "number" ? min : -999999;
+    const minimun: number = typeof min === "number" ? min : -999999;
     let maximun: number;
 
     if (typeof max === "number") {
@@ -60,7 +61,7 @@ export class PrivateUtils {
     if (typeof text !== "string") {
       return "";
     } else {
-      let ret: string = "";
+      let ret = "";
 
       for (let i = 0; i < text.length; i++) {
         let val: string;
@@ -173,7 +174,7 @@ export class PrivateUtils {
   }
 
   static capitalizeTextUpper(text: string): string {
-    let result = PrivateUtils.capitalizeText(text);
+    const result = PrivateUtils.capitalizeText(text);
     let newResult = "";
 
     for (let i = 0; i < result.length; i++) {

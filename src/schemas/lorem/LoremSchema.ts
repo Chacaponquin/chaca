@@ -1,6 +1,6 @@
-import { SchemaField } from "../SchemaField";
+import { SchemaField } from "../SchemaField.js";
 import { loremIpsum } from "lorem-ipsum";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
 
 type WordsProps = {
   count?: number;
@@ -176,11 +176,11 @@ export class LoremSchema {
         });
 
         if (a.character_max || a.character_min) {
-          let charMin =
+          const charMin =
             typeof a.character_min === "number" && a.character_min > 0
               ? a.character_min
               : 0;
-          let charMax =
+          const charMax =
             typeof a.character_max === "number" && a.character_max > charMin
               ? a.character_max
               : undefined;

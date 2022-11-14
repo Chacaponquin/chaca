@@ -1,19 +1,19 @@
-import { DataTypeSchema } from "./dataType/DataTypeSchema";
-import { IdSchema } from "./id/IdSchema";
-import { InternetSchema } from "./internet/InternetSchema";
-import { LoremSchema } from "./lorem/LoremSchema";
-import { ImageSchema } from "./image/ImageSchema";
-import { SystemSchema } from "./system/SystemSchema";
-import { FinanceSchema } from "./finnance/FinanceSchema";
-import { PhoneSchema } from "./phone/PhoneSchema";
-import { AddressSchema } from "./address/AddressSchema";
-import { VehicleSchema } from "./vehicle/VehicleSchema";
-import { DateSchema } from "./date/DateSchema";
-import { PersonSchema } from "./person/PersonSchema";
-import { VideoSchema } from "./video/VideoSchema";
-import { AnimalSchema } from "./animal/AnimalSchema";
-import { ScienceSchema } from "./science/ScienceSchema";
-import { WordSchema } from "./word/WordSchema";
+import { DataTypeSchema } from "./dataType/DataTypeSchema.js";
+import { IdSchema } from "./id/IdSchema.js";
+import { InternetSchema } from "./internet/InternetSchema.js";
+import { LoremSchema } from "./lorem/LoremSchema.js";
+import { ImageSchema } from "./image/ImageSchema.js";
+import { SystemSchema } from "./system/SystemSchema.js";
+import { FinanceSchema } from "./finnance/FinanceSchema.js";
+import { PhoneSchema } from "./phone/PhoneSchema.js";
+import { AddressSchema } from "./address/AddressSchema.js";
+import { VehicleSchema } from "./vehicle/VehicleSchema.js";
+import { DateSchema } from "./date/DateSchema.js";
+import { PersonSchema } from "./person/PersonSchema.js";
+import { VideoSchema } from "./video/VideoSchema.js";
+import { AnimalSchema } from "./animal/AnimalSchema.js";
+import { ScienceSchema } from "./science/ScienceSchema.js";
+import { WordSchema } from "./word/WordSchema.js";
 
 export const Schemas = {
   internet: new InternetSchema(),

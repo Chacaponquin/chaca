@@ -1,6 +1,6 @@
-import { SchemaField } from "../SchemaField";
-import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
+import { SchemaField } from "../SchemaField.js";
+import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants/index.js";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
 
 type AllLanguages = "es" | "en";
 

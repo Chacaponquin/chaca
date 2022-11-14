@@ -1,12 +1,32 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint", "prettier"],
+  "plugins": [
+    "@typescript-eslint",
+    "prettier",
+    "import",
+    "file-extension-in-import-ts"
+  ],
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
     "prettier"
   ],
-  "rules": {}
+  "rules": {
+    "no-duplicate-imports": "error",
+    "import/no-unresolved": "off",
+    "import/extensions": ["error", "ignorePackages"],
+    "file-extension-in-import-ts/file-extension-in-import-ts": "error",
+    "@typescript-eslint/no-explicit-any": "off",
+    "require-yield": "off"
+  },
+  "settings": {
+    "import/extensions": [".js", "ts"],
+    "extensionAlias": {
+      "ts": ["js"]
+    }
+  }
 }

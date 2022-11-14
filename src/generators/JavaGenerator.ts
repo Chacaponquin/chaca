@@ -1,10 +1,10 @@
-import { FileConfig } from "../utils/interfaces/export.interface";
-import { Generator } from "./Generator";
+import { FileConfig } from "../utils/interfaces/export.interface.js";
+import { Generator } from "./Generator.js";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
-import { ChacaError } from "../errors/ChacaError";
-import { PrivateUtils } from "../utils/helpers/PrivateUtils";
+import { ChacaError } from "../errors/ChacaError.js";
+import { PrivateUtils } from "../utils/helpers/PrivateUtils.js";
 
 export class JavaGenerator extends Generator {
   constructor(data: any, config: FileConfig) {
@@ -39,19 +39,17 @@ export class JavaGenerator extends Generator {
 
   private async generateMainFile(
     className: string,
-    docs: Object[],
+    docs: any[],
   ): Promise<void> {
     let classString = "";
     classString += `public class Main {\n`;
     classString += `\tpublic static void main(String[] args){\n\t`;
 
-    const arrayName: string = `${PrivateUtils.capitalizeText(className)}`;
+    const arrayName = `${PrivateUtils.capitalizeText(className)}`;
     classString += `ArrayList< ${className} > ${arrayName} =  new ArrayList< ${className} >();\n\t`;
 
     for (let i = 0; i < docs.length; i++) {
-      const variableName: string = `${PrivateUtils.capitalizeText(
-        className,
-      )}${i}`;
+      const variableName = `${PrivateUtils.capitalizeText(className)}${i}`;
 
       classString += `${className} ${variableName} = new ${className}(${await this.createParameters(
         docs[i],
@@ -70,7 +68,7 @@ export class JavaGenerator extends Generator {
     );
   }
 
-  private generateClassName(docEx: Object): string {
+  private generateClassName(docEx: any): string {
     let name = `Object`;
     const keys = Object.keys(docEx);
     for (const key of keys) name += key;
@@ -82,7 +80,7 @@ export class JavaGenerator extends Generator {
     docExample,
   }: {
     name: string;
-    docExample: Object;
+    docExample: any;
   }): Promise<string> {
     let classCode = "public class ";
     classCode += name + "{\n";
@@ -114,7 +112,7 @@ export class JavaGenerator extends Generator {
   };
 
   private async filterTypeValue(value: any): Promise<string> {
-    let returnString: string = "null";
+    let returnString = "null";
 
     if (typeof value === "number") returnString = `${value}`;
     else if (typeof value === "string") returnString = `"${value}"`;
@@ -171,7 +169,7 @@ export class JavaGenerator extends Generator {
 
   private async generateConstructor(
     className: string,
-    doc: Object,
+    doc: any,
   ): Promise<string> {
     const initializeVar = (): string => {
       let returnVal = "";

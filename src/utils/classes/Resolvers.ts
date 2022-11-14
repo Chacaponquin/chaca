@@ -1,6 +1,8 @@
-import { SchemaField } from "../../schemas/SchemaField";
-import { PrivateUtils } from "../helpers/PrivateUtils";
-import { IResolver, CustomField } from "../interfaces/schema.interface";
+/* eslint @typescript-eslint/no-unused-vars: off */
+
+import { SchemaField } from "../../schemas/SchemaField.js";
+import { PrivateUtils } from "../helpers/PrivateUtils.js";
+import { IResolver, CustomField } from "../interfaces/schema.interface.js";
 
 export class EnumFielResolver<C, R> implements IResolver<R> {
   constructor(public readonly array: R[]) {}
@@ -23,10 +25,9 @@ export class CustomFieldResolver<C, R> implements IResolver<R> {
 
   public *resolve(field: C): Generator<R> {
     let retValue = undefined as R;
+    const f = field;
 
-    try {
-      retValue = this.fun.apply(this, field ? [field] : [{} as C]);
-    } catch (error) {}
+    retValue = this.fun(f);
 
     return retValue !== undefined ? retValue : null;
   }

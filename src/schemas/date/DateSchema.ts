@@ -1,7 +1,7 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
-import { MONTHS } from "./constants/month";
-import { WEEKDAYS } from "./constants/weekday";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
+import { MONTHS } from "./constants/month.js";
+import { WEEKDAYS } from "./constants/weekday.js";
 
 type ArgDate = Date | string;
 
@@ -161,7 +161,7 @@ export class DateSchema {
   month() {
     return new SchemaField<string>(
       "month",
-      (a) => {
+      () => {
         return PrivateUtils.oneOfArray(MONTHS);
       },
       {},
@@ -177,7 +177,7 @@ export class DateSchema {
   weekDay() {
     return new SchemaField<string>(
       "weekDay",
-      (a) => {
+      () => {
         return PrivateUtils.oneOfArray(WEEKDAYS);
       },
       {},

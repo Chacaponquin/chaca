@@ -1,5 +1,5 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils";
-import { SchemaField } from "../SchemaField";
+import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { SchemaField } from "../SchemaField.js";
 import {
   ANIMAL_TYPE,
   BEAR,
@@ -16,7 +16,7 @@ import {
   RODENT,
   SNAKE,
   FISH,
-} from "./constants";
+} from "./constants/index.js";
 
 export class AnimalSchema {
   /**

@@ -1,7 +1,7 @@
-import { SchemaInput } from "../interfaces/schema.interface";
-import { SchemaResolver } from "./SchemaResolver";
-import { ChacaError } from "../../errors/ChacaError";
-import { ChacaSchema } from "./ChacaSchema";
+import { SchemaInput } from "../interfaces/schema.interface.js";
+import { SchemaResolver } from "./SchemaResolver.js";
+import { ChacaError } from "../../errors/ChacaError.js";
+import { ChacaSchema } from "./ChacaSchema.js";
 
 /**
  * Class for creation of a model with the configuration of each
@@ -27,14 +27,14 @@ export class CustomSchema<K, T> extends ChacaSchema<K, T> {
         ? cantDocuments
         : 10;
 
-    let returnArray = [] as K[];
+    const returnArray = [] as K[];
     for (let i = 1; i <= cantDoc; i++) {
       let object = {} as K;
       const gen = this.rootSchema.resolve(object);
 
       let stop = false;
       while (!stop) {
-        let result = gen.next();
+        const result = gen.next();
         object = result.value;
         if (result.done) {
           stop = true;

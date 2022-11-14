@@ -1,8 +1,8 @@
-import { ChacaError } from "../../errors/ChacaError";
-import { SchemaField } from "../../schemas/SchemaField";
-import { Export } from "../helpers/Export";
+import { ChacaError } from "../../errors/ChacaError.js";
+import { SchemaField } from "../../schemas/SchemaField.js";
+import { Export } from "../helpers/Export.js";
 
-import { FileConfig } from "../interfaces/export.interface";
+import { FileConfig } from "../interfaces/export.interface.js";
 import {
   CommonSchema,
   CustomField,
@@ -10,13 +10,13 @@ import {
   ResolverObject,
   SchemaInput,
   SchemaToResolve,
-} from "../interfaces/schema.interface";
+} from "../interfaces/schema.interface.js";
 import {
   CustomFieldResolver,
   EnumFielResolver,
   SchemaFieldResolver,
-} from "./Resolvers";
-import { SchemaResolver } from "./SchemaResolver";
+} from "./Resolvers.js";
+import { SchemaResolver } from "./SchemaResolver.js";
 
 export abstract class ChacaSchema<K, T> {
   /**
@@ -45,7 +45,7 @@ export abstract class ChacaSchema<K, T> {
 
     let stop = false;
     while (!stop) {
-      let result = gen.next();
+      const result = gen.next();
       retValue = result.value as any;
       if (result.done) {
         stop = true;
@@ -212,7 +212,7 @@ export abstract class ChacaSchema<K, T> {
     if (typeof pos === "number") {
       value = pos <= 100 && pos >= 0 ? pos : 50;
     } else {
-      value = Boolean(pos) ? 50 : 0;
+      value = pos ? 50 : 0;
     }
 
     return value;
@@ -244,11 +244,11 @@ export abstract class ChacaSchema<K, T> {
       !Array.isArray(isArray) &&
       isArray !== null
     ) {
-      let min =
+      const min =
         typeof isArray["min"] === "number" && isArray["min"] > 0
           ? isArray["min"]
           : 1;
-      let max =
+      const max =
         typeof isArray["max"] === "number" && isArray["max"] > min
           ? isArray["max"]
           : min + 9;
