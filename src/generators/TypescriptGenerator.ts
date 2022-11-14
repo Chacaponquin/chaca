@@ -20,7 +20,7 @@ export class TypescriptGenerator extends Generator {
       this.config,
     ).generateSchemaArray(this.data);
 
-    const nameCapitalizaed = PrivateUtils.capitalizeText(this.config.fileName);
+    const nameCapitalizaed = PrivateUtils.camelCaseText(this.config.fileName);
     const code = `const ${nameCapitalizaed} :  ${this.generateDatasetInterface()}[] = ${javascriptCode};\n`;
 
     allCode += code;
@@ -35,7 +35,7 @@ export class TypescriptGenerator extends Generator {
   }
 
   private generateDatasetInterface(): string {
-    const interfaceName = `I${PrivateUtils.capitalizeTextUpper(
+    const interfaceName = `I${PrivateUtils.camelCaseTextUpper(
       this.config.fileName,
     )}`;
     let interfaceCode = `interface ${interfaceName}{\n`;

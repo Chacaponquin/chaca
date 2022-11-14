@@ -13,7 +13,7 @@ export class JavaGenerator extends Generator {
 
   public async generateFile(): Promise<string> {
     await this.generateClass({
-      name: PrivateUtils.capitalizeTextUpper(this.config.fileName),
+      name: PrivateUtils.camelCaseTextUpper(this.config.fileName),
       docExample: Array.isArray(this.data) ? this.data[0] : this.data,
     });
 
@@ -22,7 +22,7 @@ export class JavaGenerator extends Generator {
     const zipPath = path.join(this.baseLocation, zipName);
 
     await this.generateMainFile(
-      PrivateUtils.capitalizeTextUpper(this.config.fileName),
+      PrivateUtils.camelCaseTextUpper(this.config.fileName),
       this.data,
     );
 
@@ -45,11 +45,11 @@ export class JavaGenerator extends Generator {
     classString += `public class Main {\n`;
     classString += `\tpublic static void main(String[] args){\n\t`;
 
-    const arrayName = `${PrivateUtils.capitalizeText(className)}`;
+    const arrayName = `${PrivateUtils.camelCaseText(className)}`;
     classString += `ArrayList< ${className} > ${arrayName} =  new ArrayList< ${className} >();\n\t`;
 
     for (let i = 0; i < docs.length; i++) {
-      const variableName = `${PrivateUtils.capitalizeText(className)}${i}`;
+      const variableName = `${PrivateUtils.camelCaseText(className)}${i}`;
 
       classString += `${className} ${variableName} = new ${className}(${await this.createParameters(
         docs[i],

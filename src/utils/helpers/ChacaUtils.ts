@@ -31,10 +31,10 @@ export const ChacaUtils = {
    * @param text string to capitalize
    *
    * @example
-   * chaca.utils.capitalizeText('Hello World') // 'helloWorld'
-   * chaca.utils.capitalizeText('hiFriend') // 'hiFriend'
+   * chaca.utils.camelCaseText('Hello World') // 'helloWorld'
+   * chaca.utils.camelCaseText('hiFriend') // 'hiFriend'
    */
-  capitalizeText: PrivateUtils.capitalizeText,
+  camelCaseText: PrivateUtils.camelCaseText,
   /**
    * Concat words with a separator
    * @param words string or array of strings with thw words that you want concat

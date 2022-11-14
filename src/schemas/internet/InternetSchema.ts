@@ -190,11 +190,11 @@ export class InternetSchema {
       (a) => {
         const firstName =
           typeof a.firstName === "string"
-            ? PrivateUtils.capitalizeText(a.firstName)
+            ? PrivateUtils.camelCaseText(a.firstName)
             : Schemas.person.firstName({ language: "en" }).getValue();
         const lastName =
           typeof a.lastName === "string"
-            ? PrivateUtils.capitalizeText(a.lastName)
+            ? PrivateUtils.camelCaseText(a.lastName)
             : undefined;
 
         if (firstName && !lastName) {

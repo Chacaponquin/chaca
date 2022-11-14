@@ -86,7 +86,7 @@ export class PrivateUtils {
     }
   }
 
-  public static capitalizeText(text: string): string {
+  public static camelCaseText(text: string): string {
     if (typeof text === "string") {
       if (!PrivateUtils.isCapitalized(text)) {
         let returnString = "";
@@ -173,8 +173,8 @@ export class PrivateUtils {
     }
   }
 
-  static capitalizeTextUpper(text: string): string {
-    const result = PrivateUtils.capitalizeText(text);
+  static camelCaseTextUpper(text: string): string {
+    const result = PrivateUtils.camelCaseText(text);
     let newResult = "";
 
     for (let i = 0; i < result.length; i++) {

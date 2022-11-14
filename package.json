@@ -31,7 +31,7 @@
     "build:esm": "tsc --p tsconfig.esm.json",
     "build:cjs": "tsc --p tsconfig.cjs.json",
     "test": "mocha --r ts-node/register test/**/*.test.ts",
-    "test:lib": "mocha --r ts-node/register ./test/library/**/*.ts",
+    "test:lib": "mocha",
     "test:schemas": "mocha --r ts-node/register test/schemas/**/*.ts",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "fix": "eslint --fix src/**/*.ts"
@@ -68,8 +68,9 @@
     "eslint-plugin-file-extension-in-import-ts": "^1.0.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "mocha": "^10.0.0",
+    "mocha": "^10.1.0",
     "prettier": "^2.7.1",
+    "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
     "tsx": "^3.11.0",
     "typescript": "^4.8.4"

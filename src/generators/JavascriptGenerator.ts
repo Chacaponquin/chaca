@@ -12,11 +12,11 @@ export class JavascriptGenerator extends Generator {
     let returnData = ``;
 
     if (Array.isArray(this.data)) {
-      returnData += `const ${PrivateUtils.capitalizeText(
+      returnData += `const ${PrivateUtils.camelCaseText(
         this.config.fileName,
       )} = ${this.generateSchemaArray(this.data)};\n`;
     } else {
-      returnData += `const ${PrivateUtils.capitalizeText(
+      returnData += `const ${PrivateUtils.camelCaseText(
         this.config.fileName,
       )} = ${this.generateObject(this.data)}`;
     }

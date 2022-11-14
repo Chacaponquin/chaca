@@ -7,14 +7,14 @@ describe("#Util Tests", () => {
   context("capitalizaText test", () => {
     it("passing undefined as argument. Should return an error", () => {
       try {
-        const value = PrivateUtils.capitalizeText(undefined!);
+        const value = PrivateUtils.camelCaseText(undefined!);
       } catch (error) {
         expect(error).to.be.instanceOf(ChacaError);
       }
     });
 
     it("passing 'Hello World' as argument. Should return 'helloWorld'", () => {
-      const value = PrivateUtils.capitalizeText("Hello World");
+      const value = PrivateUtils.camelCaseText("Hello World");
       expect(value).to.be.equal("helloWorld");
     });
   });
