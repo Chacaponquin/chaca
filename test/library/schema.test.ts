@@ -72,7 +72,7 @@ describe("#Schema Creation Test", () => {
         });
 
         const docs = schema.generate(10);
-        expect(docs[0]["id"].length === 20).toBe(20);
+        expect(docs[0]["id"].length === 20).toBe(true);
       });
 
       describe("passing a object as parameter", () => {
@@ -189,7 +189,8 @@ describe("#Schema Creation Test", () => {
 
         const doc = schema.generate(2)[0];
 
-        expect(doc["user"]).toHaveProperty("userName", "image");
+        expect(doc["user"]).toHaveProperty("userName");
+        expect(doc["user"]).toHaveProperty("image");
       });
 
       it("should return an object with a user field with the image field as array of string", () => {

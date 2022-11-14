@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../lib/esm/index.js";
+import { chaca, schemas } from "../../src";
 
 const validateTime = (
   text: string,
