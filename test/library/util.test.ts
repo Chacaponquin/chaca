@@ -41,4 +41,28 @@ describe("#Util Tests", () => {
       expect(val === "HelloWorld").toBe(true);
     });
   });
+
+  describe("capitalizeWord test", () => {
+    it("With 'hi there' as argument. Should return 'Hi there'", () => {
+      const val = chaca.utils.capitalizeWord("hi there");
+      expect(val === "Hi there").toBe(true);
+    });
+
+    it("With 'hello' as argument. Should return 'Hello'", () => {
+      const val = chaca.utils.capitalizeWord("hello");
+      expect(val === "Hello").toBe(true);
+    });
+  });
+
+  describe("capitalizeWord test", () => {
+    it("With 'hi there friend' as argument. Should return 'Hi There Friend'", () => {
+      const val = chaca.utils.capitalizeText("hi there friend");
+      expect(val === "Hi There Friend").toBe(true);
+    });
+
+    it("With ' helloWorld' as argument. Should return ' HelloWorld'", () => {
+      const val = chaca.utils.capitalizeText(" helloWorld");
+      expect(val === " HelloWorld").toBe(true);
+    });
+  });
 });

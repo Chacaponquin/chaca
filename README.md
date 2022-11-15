@@ -1,4 +1,4 @@
-<h1 align='center' style="color: blue">CHACA</h1>
+<h1 align='center'>CHACA</h1>
 <p align="center">A Node JS library to create and export data schemas with your rules</p>
 
 > **Note** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!
