@@ -173,7 +173,7 @@ export class PrivateUtils {
     }
   }
 
-  static camelCaseTextUpper(text: string): string {
+  static capitalizeCamelCase(text: string): string {
     const result = PrivateUtils.camelCaseText(text);
     let newResult = "";
 
@@ -181,6 +181,32 @@ export class PrivateUtils {
       newResult = newResult.concat(
         i === 0 ? result[i].toUpperCase() : result[i],
       );
+    }
+
+    return newResult;
+  }
+
+  static capitalizeWord(word: string): string {
+    let newResult = "";
+
+    for (let i = 0; i < word.length; i++) {
+      newResult = newResult.concat(i === 0 ? word[i].toUpperCase() : word[i]);
+    }
+
+    return newResult;
+  }
+
+  static capitalizeText(text: string): string {
+    let newResult = "";
+
+    for (let i = 0; i < text.length; i++) {
+      if (i === 0 && text[i] !== " ") {
+        newResult = newResult.concat(text[i].toUpperCase());
+      } else if (text[i - 1] && text[i - 1] === " ") {
+        newResult = newResult.concat(text[i].toUpperCase());
+      } else {
+        newResult = newResult.concat(text[i]);
+      }
     }
 
     return newResult;

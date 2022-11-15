@@ -16,7 +16,7 @@ abstract class Chaca {
   /**
    * All schemas created
    */
-  private static schemasCreated: CustomSchema<any, any>[] = [];
+  private static schemasCreated: CustomSchema[] = [];
   public static Schema = SchemaResolver;
   public static utils = ChacaUtils;
 

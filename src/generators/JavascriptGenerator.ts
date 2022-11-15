@@ -55,7 +55,8 @@ export class JavascriptGenerator extends Generator {
       if (Array.isArray(value)) returnValue = this.generateArray(value);
       else {
         if (value === null) returnValue = "null";
-        else if (value instanceof Date) returnValue = `${value.toString()}`;
+        else if (value instanceof Date)
+          returnValue = `new Date("${value.toISOString()}")`;
         else returnValue = this.generateObject(value);
       }
     }
@@ -63,7 +64,7 @@ export class JavascriptGenerator extends Generator {
     return returnValue;
   }
 
-  public generateObject(doc: { [key: string]: any[] }): string {
+  public generateObject(doc: { [key: string]: any }): string {
     let objectData = `{`;
     for (const [key, value] of Object.entries(doc)) {
       const val = this.filterTypeValue(value);

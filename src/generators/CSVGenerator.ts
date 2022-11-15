@@ -10,11 +10,9 @@ export class CSVGenerator extends Generator {
 
   public async generateFile(): Promise<string> {
     const parser = new Parser();
-
-    const str = parser.parse(this.data);
-
+    const parserData = Array.isArray(this.data) ? this.data : [this.data];
+    const str = parser.parse(parserData);
     await fs.promises.writeFile(this.route, str, "utf-8");
-
     return this.route;
   }
 }

@@ -116,7 +116,7 @@ export class LoremSchema {
    * @example schemas.lorem.slug().getValue() // 'lorem-ipsum-ad'
    * @returns string
    */
-  public slug(args: SlugProps) {
+  public slug(args?: SlugProps) {
     return new SchemaField<string, SlugProps>(
       "slug",
       (a) => {
@@ -165,7 +165,7 @@ export class LoremSchema {
    * @example schemas.lorem.text().getValue()
    * @returns string
    */
-  public text(args: TextProps) {
+  public text(args?: TextProps) {
     return new SchemaField<string, TextProps>(
       "text",
       (a) => {
@@ -183,9 +183,12 @@ export class LoremSchema {
           const charMax =
             typeof a.character_max === "number" && a.character_max > charMin
               ? a.character_max
-              : undefined;
+              : PrivateUtils.intNumber({ min: 300, max: 1000 });
 
-          return text.slice(charMin, charMax);
+          return text.slice(
+            0,
+            PrivateUtils.intNumber({ min: charMin, max: charMax }),
+          );
         } else return text;
       },
       args || {},

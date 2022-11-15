@@ -18,7 +18,11 @@ export abstract class Generator {
       throw new ChacaError("A file name is necesary to export the data");
     else if (!(typeof config.location === "string"))
       throw new ChacaError("The file needs a location");
-    else if (!(typeof data === "object") || data === null)
+    else if (
+      !(typeof data === "object") ||
+      data === null ||
+      data instanceof Date
+    )
       throw new ChacaError("The data must be an array or an object");
 
     this.ext = extension;

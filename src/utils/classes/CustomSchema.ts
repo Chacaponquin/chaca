@@ -7,7 +7,7 @@ import { ChacaSchema } from "./ChacaSchema.js";
  * Class for creation of a model with the configuration of each
  * field defined by the user
  */
-export class CustomSchema<K, T> extends ChacaSchema<K, T> {
+export class CustomSchema<K = any, T = any> extends ChacaSchema<K, T> {
   private rootSchema: SchemaResolver<K, T>;
 
   constructor(

@@ -13,7 +13,7 @@ export class JavaGenerator extends Generator {
 
   public async generateFile(): Promise<string> {
     await this.generateClass({
-      name: PrivateUtils.camelCaseTextUpper(this.config.fileName),
+      name: PrivateUtils.capitalizeCamelCase(this.config.fileName),
       docExample: Array.isArray(this.data) ? this.data[0] : this.data,
     });
 
@@ -22,7 +22,7 @@ export class JavaGenerator extends Generator {
     const zipPath = path.join(this.baseLocation, zipName);
 
     await this.generateMainFile(
-      PrivateUtils.camelCaseTextUpper(this.config.fileName),
+      PrivateUtils.capitalizeCamelCase(this.config.fileName),
       this.data,
     );
 

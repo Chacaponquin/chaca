@@ -13,15 +13,28 @@ export class TypescriptGenerator extends Generator {
   }
 
   public async generateFile(): Promise<string> {
-    let allCode = ``;
-
-    const javascriptCode = new JavascriptGenerator(
-      this.data,
-      this.config,
-    ).generateSchemaArray(this.data);
+    let allCode = "";
+    let javascriptCode = "";
+    let code = "";
 
     const nameCapitalizaed = PrivateUtils.camelCaseText(this.config.fileName);
-    const code = `const ${nameCapitalizaed} :  ${this.generateDatasetInterface()}[] = ${javascriptCode};\n`;
+
+    if (Array.isArray(this.data)) {
+      javascriptCode = new JavascriptGenerator(
+        this.data,
+        this.config,
+      ).generateSchemaArray(this.data);
+      code = `const ${nameCapitalizaed} :  ${this.generateSchemaInterface()}[] = ${javascriptCode};\n`;
+    } else {
+      javascriptCode = javascriptCode = new JavascriptGenerator(
+        this.data,
+        this.config,
+      ).generateObject(this.data);
+      code = `const ${nameCapitalizaed} :  ${this.generateObjectInterface(
+        PrivateUtils.capitalizeCamelCase(this.config.fileName),
+        this.data,
+      )} = ${javascriptCode};\n`;
+    }
 
     allCode += code;
 
@@ -34,8 +47,8 @@ export class TypescriptGenerator extends Generator {
     return this.route;
   }
 
-  private generateDatasetInterface(): string {
-    const interfaceName = `I${PrivateUtils.camelCaseTextUpper(
+  private generateSchemaInterface(): string {
+    const interfaceName = `I${PrivateUtils.capitalizeCamelCase(
       this.config.fileName,
     )}`;
     let interfaceCode = `interface ${interfaceName}{\n`;
@@ -102,9 +115,8 @@ export class TypescriptGenerator extends Generator {
   private generateInterfaceByValue(value: any): string {
     let returnValue = "undefined";
 
-    if (typeof value == "string") {
-      returnValue = "string";
-    } else if (typeof value === "number") returnValue = "number";
+    if (typeof value == "string") returnValue = "string";
+    else if (typeof value === "number") returnValue = "number";
     else if (typeof value === "boolean") returnValue = "boolean";
     else if (value === null) returnValue = "null";
     else if (typeof value == "object") {
@@ -112,14 +124,10 @@ export class TypescriptGenerator extends Generator {
         returnValue = this.generateArrayInterface(value);
       } else if (value instanceof Date) returnValue = "Date";
       else {
-        let objectName = "";
-        Object.keys(value).forEach((el) => {
-          objectName += el;
-        });
-        returnValue = this.generateObjectInterface(
-          `Object${objectName}`,
-          value,
-        );
+        let name = `Object`;
+        const keys = Object.keys(value);
+        for (const key of keys) name += key;
+        returnValue = this.generateObjectInterface(name, value);
       }
     }
 

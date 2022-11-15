@@ -34,4 +34,11 @@ describe("#Util Tests", () => {
       expect(is).toBe(true);
     });
   });
+
+  describe("capitalizeCamelCase test", () => {
+    it("Pass 'Hello World'. Should return 'HelloWorld'", () => {
+      const val = chaca.utils.capitalizeCamelCase("Hello World");
+      expect(val === "HelloWorld").toBe(true);
+    });
+  });
 });

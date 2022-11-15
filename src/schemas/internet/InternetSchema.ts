@@ -64,7 +64,7 @@ export class InternetSchema {
    * schemas.internet.email.getValue({firstName: 'pedro', lastName: 'Scott', provider: 'yahoo.com'}) // "pedro_scott@yahoo.com"
    * @returns string
    */
-  public email(args: EmailArgs) {
+  public email(args?: EmailArgs) {
     return new SchemaField<string, EmailArgs>(
       "email",
       (a) => {
@@ -82,7 +82,7 @@ export class InternetSchema {
           lastName: a.lastName,
         })}@${provider}`;
       },
-      args,
+      args || {},
     );
   }
 
@@ -134,7 +134,7 @@ export class InternetSchema {
               pattern = consonant;
             }
           }
-          const n = PrivateUtils.intNumber({ max: 94 }) + 33;
+          const n = PrivateUtils.intNumber({ min: 0, max: 94 }) + 33;
           let char = String.fromCharCode(n);
           if (memorable) {
             char = char.toLowerCase();

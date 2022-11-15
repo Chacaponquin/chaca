@@ -33,6 +33,8 @@ export const ChacaUtils = {
    * @example
    * chaca.utils.camelCaseText('Hello World') // 'helloWorld'
    * chaca.utils.camelCaseText('hiFriend') // 'hiFriend'
+   *
+   * @returns string
    */
   camelCaseText: PrivateUtils.camelCaseText,
   /**
@@ -46,4 +48,36 @@ export const ChacaUtils = {
    * @returns string
    */
   joinWords: PrivateUtils.joinWords,
+  /**
+   * Returns a camel case text in capitalize notation from a string argument
+   * @param text string to capitalize
+   *
+   * @example
+   * chaca.utils.camelCaseText('Hello World') // 'HelloWorld'
+   * chaca.utils.camelCaseText('hiFriend') // 'HiFriend'
+   *
+   * @returns string
+   */
+  capitalizeCamelCase: PrivateUtils.capitalizeCamelCase,
+  /**
+   * @param word The string to capitalize
+   *
+   * @example
+   * chaca.utils.capitalizeWord('hello') // 'Hello'
+   * chaca.utils.capitalizeWord('hi there') // 'Hi there'
+   *
+   * @returns string
+   */
+  capitalizeWord: PrivateUtils.capitalizeWord,
+  /**
+   * Returns a string with all the words capitalized
+   * @param text string with the texto to capitalize
+   *
+   * @example
+   * chaca.utils.capitalizeText('hi there friend') // 'Hi There Friend'
+   * chaca.utils.capitalizeText(' helloWorld') // ' HelloWorld'
+   *
+   * @returns string
+   */
+  capitalizeText: PrivateUtils.capitalizeText,
 };

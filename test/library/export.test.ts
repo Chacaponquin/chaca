@@ -16,6 +16,70 @@ const schemaWithArray = new chaca.Schema({
 const root = "./data";
 
 describe("#Export Test", () => {
+  describe("export a single object ( With chaca.export )", () => {
+    const object = {
+      userName: "Hector Gomez",
+      likes: 10,
+      users: [
+        { hola: 1, hola2: 5 },
+        { hola: 1, hola2: 5 },
+        { hola: 1, hola2: 5 },
+        { hola: 1, hola2: 5 },
+      ],
+      date: new Date(),
+    };
+
+    it("In a Json File", () => {
+      chaca
+        .export(object, {
+          fileName: "simpleObject",
+          location: root,
+          format: "json",
+        })
+        .then((s) => expect(typeof s === "string").toBe(true));
+    });
+
+    it("In a Javasrcipt File", () => {
+      chaca
+        .export(object, {
+          fileName: "simpleObject",
+          location: root,
+          format: "javascript",
+        })
+        .then((s) => expect(typeof s === "string").toBe(true));
+    });
+
+    it("In a Typescript File", () => {
+      chaca
+        .export(object, {
+          fileName: "simpleObject",
+          location: root,
+          format: "typescript",
+        })
+        .then((s) => expect(typeof s === "string").toBe(true));
+    });
+
+    it("In a CSV File", () => {
+      chaca
+        .export(object, {
+          fileName: "simpleObject",
+          location: root,
+          format: "csv",
+        })
+        .then((s) => expect(typeof s === "string").toBe(true));
+    });
+
+    it("In a Java File", () => {
+      chaca
+        .export(object, {
+          fileName: "simpleObject",
+          location: root,
+          format: "java",
+        })
+        .then((s) => expect(typeof s === "string").toBe(true));
+    });
+  });
+
   describe("export a complete schema in all formats", () => {
     const postSchema = chaca.defineSchema("MoviePost", {
       id: schemas.id.uuid(),
@@ -93,177 +157,137 @@ describe("#Export Test", () => {
     });
   });
 
-  describe("create and export one object", () => {
-    describe("current export file", () => {
-      it("no file name. Should throw an error", () => {
-        schema
-          .generateAndExport(1, {
-            fileName: "",
-            format: "json",
-            location: root,
-          })
-          .catch((error) => expect(error instanceof ChacaError).toBe(true));
-      });
-
-      it("incorrect format file. Should throw an error", () => {
-        schema
-          .generateAndExport(1, {
-            fileName: "quetal",
-            format: "buenas" as any,
-            location: root,
-          })
-          .catch((error) => expect(error instanceof ChacaError).toBe(true));
-      });
+  describe("export with incorrrect arguments", () => {
+    it("no file name. Should throw an error", () => {
+      schema
+        .generateAndExport(1, {
+          fileName: "",
+          format: "json",
+          location: root,
+        })
+        .catch((error) => expect(error instanceof ChacaError).toBe(true));
     });
 
-    describe("Export in a JSON File", () => {
-      it("export in a JSON File (correct)", () => {
-        schema
-          .generateAndExport(1, {
-            fileName: "WASAAA",
-            format: "json",
-            location: root,
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
+    it("incorrect format file. Should throw an error", () => {
+      schema
+        .generateAndExport(1, {
+          fileName: "quetal",
+          format: "buenas" as any,
+          location: root,
+        })
+        .catch((error) => expect(error instanceof ChacaError).toBe(true));
+    });
+  });
+
+  describe("create and export an array with one object", () => {
+    it("In a JSON File ", () => {
+      schema
+        .generateAndExport(1, {
+          fileName: "oneObjectArray",
+          format: "json",
+          location: root,
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
     });
 
-    describe("Export in a Javascript File", () => {
-      it("export a single object", () => {
-        schema
-          .generateAndExport(1, {
-            fileName: "Js",
-            format: "javascript",
-            location: root,
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
-
-      it("export multiple documents", () => {
-        schema
-          .generateAndExport(20, {
-            fileName: "Js24242",
-            format: "javascript",
-            location: root,
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
-
-      it("export an object with array values", () => {
-        schemaWithArray
-          .generateAndExport(10, {
-            fileName: "vrer",
-            location: root,
-            format: "javascript",
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
+    it("In a JS File", () => {
+      schema
+        .generateAndExport(1, {
+          fileName: "oneObjectArray",
+          format: "javascript",
+          location: root,
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
     });
 
-    describe("Export in a CSV File", () => {
-      it("export a single object in a CSV File", () => {
-        schema
-          .generateAndExport(1, {
-            fileName: "CSV",
-            format: "csv",
-            location: root,
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
-
-      it("export multiple documents in a CSV File", async () => {
-        await schema.generateAndExport(10, {
-          fileName: "CSVm",
+    it("In a CSV File", () => {
+      schema
+        .generateAndExport(1, {
+          fileName: "oneObjectArray",
           format: "csv",
           location: root,
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
         });
-      });
     });
 
-    describe("Export in a Java File", () => {
-      it("export a single object", () => {
-        schema
-          .generateAndExport(1, {
-            location: root,
-            fileName: "buenas",
-            format: "java",
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
-
-      it("export multiple documents", () => {
-        schema
-          .generateAndExport(20, {
-            location: root,
-            fileName: "buenas2542526",
-            format: "java",
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
-
-      it("export an object with array values", () => {
-        schemaWithArray
-          .generateAndExport(20, {
-            location: root,
-            fileName: "buenas25425262342",
-            format: "java",
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
+    it("In a Java File", () => {
+      schema
+        .generateAndExport(1, {
+          location: root,
+          fileName: "oneObjectArray",
+          format: "java",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
     });
 
-    describe("Export in Typescript File", () => {
-      it("export a single object", () => {
-        schema
-          .generateAndExport(1, {
-            fileName: "type29479",
-            location: root,
-            format: "typescript",
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
+    it("in a TS File", () => {
+      schema
+        .generateAndExport(1, {
+          fileName: "oneObjectArray",
+          location: root,
+          format: "typescript",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
 
-      it("export multiple documents", () => {
-        schema
-          .generateAndExport(20, {
-            location: root,
-            fileName: "type2947984038",
-            format: "typescript",
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
+    it("In a TS File", () => {
+      schema
+        .generateAndExport(1, {
+          fileName: "oneObjectArray",
+          location: root,
+          format: "typescript",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
+  });
 
-      it("export an object with array values", () => {
-        schemaWithArray
-          .generateAndExport(20, {
-            location: root,
-            fileName: "type29Array",
-            format: "typescript",
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
+  describe("create and export documents with a field that contains an array of values", () => {
+    it("In a JS File", () => {
+      schemaWithArray
+        .generateAndExport(10, {
+          fileName: "oneObjectArray",
+          location: root,
+          format: "javascript",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
+
+    it("In a Java File", () => {
+      schemaWithArray
+        .generateAndExport(20, {
+          location: root,
+          fileName: "documentsWithArrayFields",
+          format: "java",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
+
+    it("In a TS File", () => {
+      schemaWithArray
+        .generateAndExport(20, {
+          location: root,
+          fileName: "documentsWithArrayFields",
+          format: "typescript",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
     });
   });
 
