@@ -4,7 +4,7 @@ import { SchemaInput } from "./utils/interfaces/schema.interface.js";
 
 import { ChacaError } from "./errors/ChacaError.js";
 import { ExportAllConfig } from "./utils/interfaces/export.interface.js";
-import { SchemaResolver } from "./utils/classes/SchemaResolver.js";
+import { Schema } from "./utils/classes/Schema.js";
 import { Schemas } from "./schemas/index.js";
 import { SchemaField } from "./schemas/SchemaField.js";
 
@@ -17,7 +17,7 @@ abstract class Chaca {
    * All schemas created
    */
   private static schemasCreated: CustomSchema[] = [];
-  public static Schema = SchemaResolver;
+  public static Schema = Schema;
   public static utils = ChacaUtils;
 
   /**
@@ -26,7 +26,8 @@ abstract class Chaca {
    * @throws The name of schema can't be an empty string, or a repetive name
    *
    * @param inputObj The object with the keys and type of each field
-   * @example { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
+   * @example
+   * { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
    */
   public static defineSchema<K = any, T = any>(
     schemaName: string,

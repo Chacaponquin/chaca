@@ -1,5 +1,5 @@
 import { SchemaField } from "../../schemas/SchemaField.js";
-import { SchemaResolver } from "../classes/SchemaResolver.js";
+import { Schema } from "../classes/Schema.js";
 
 export type SchemaInput<C, T> = {
   [key in keyof T]: FieldSchemaConfig<C, T[key]>;
@@ -19,10 +19,10 @@ export type FieldSchemaConfig<C, R> =
   | FieldObjectInput<C, R>
   | CustomField<C, R>
   | SchemaField<R, any>
-  | SchemaResolver<R>;
+  | Schema<R>;
 
 type FieldObjectInput<C, R> = {
-  type?: SchemaField<R, any> | SchemaResolver<R>;
+  type?: SchemaField<R, any> | Schema<R>;
   isArray?: boolean | number | { min?: number; max?: number };
   posibleNull?: boolean | number;
   custom?: CustomField<C, R>;

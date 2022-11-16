@@ -16,7 +16,7 @@ type OrderSchema<C, T> = {
   schema: ResolverObject<C, T[keyof T]>;
 };
 
-export class SchemaResolver<K = any, T = any>
+export class Schema<K = any, T = any>
   extends ChacaSchema<K, T>
   implements IResolver<K, K>
 {
@@ -27,14 +27,15 @@ export class SchemaResolver<K = any, T = any>
     this.schemaObj = this.validateObjectSchema(inputObj);
   }
 
-  public *resolve(field: K): Generator<K> {
+  public *resolve(cont: K): Generator<K> {
     let doc = {} as K;
+    let newCont = cont;
 
     for (const o of this.orderSchemasByPriority()) {
       let retValue: any;
 
       if (o.schema.isArray) {
-        retValue = [] as unknown[];
+        retValue = [] as any[];
 
         const limit = PrivateUtils.intNumber({
           min: o.schema.isArray.min,
@@ -42,10 +43,10 @@ export class SchemaResolver<K = any, T = any>
         });
 
         for (let i = 1; i <= limit; i++) {
-          retValue.push(this.resolveSchema(doc, o.schema));
+          retValue.push(this.resolveSchema(newCont, o.schema));
         }
       } else {
-        retValue = this.resolveSchema(doc, o.schema);
+        retValue = this.resolve(newCont, o.schema);
       }
 
       if (o.schema.posibleNull) {
@@ -65,6 +66,7 @@ export class SchemaResolver<K = any, T = any>
       }
 
       doc = { ...doc, [o.key]: retValue };
+      newCont = { ...cont, ...doc };
 
       yield doc;
     }
@@ -100,19 +102,22 @@ export class SchemaResolver<K = any, T = any>
   }
 
   private orderSchemasByPriority(): Array<OrderSchema<K, T>> {
-    const headSchemas: Array<OrderSchema<K, T>> = [];
-    const finalSchemas: Array<OrderSchema<K, T>> = [];
+    const customSchemas: Array<OrderSchema<K, T>> = [];
+    const normalSchemas: Array<OrderSchema<K, T>> = [];
+    const nestedSchemas: Array<OrderSchema<K, T>> = [];
 
     for (const k of Object.keys(this.schemaObj)) {
       const key = k as keyof T;
       const schema = this.schemaObj[key] as ResolverObject<K, T[keyof T]>;
       if (schema.type instanceof CustomFieldResolver) {
-        finalSchemas.push({ key, schema });
+        customSchemas.push({ key, schema });
+      } else if (schema.type instanceof Schema) {
+        nestedSchemas.push({ key, schema });
       } else {
-        headSchemas.push({ key, schema });
+        normalSchemas.push({ key, schema });
       }
     }
 
-    return [...headSchemas, ...finalSchemas];
+    return [...normalSchemas, ...customSchemas, ...nestedSchemas];
   }
 }

@@ -161,6 +161,45 @@ describe("#Schema Creation Test", () => {
         const docs = schema.generate(10);
         expect(docs[0]["custom"] === docs[0]["id"]).toBe(true);
       });
+
+      it("custom function in a nested schema", () => {
+        const schema = new chaca.Schema({
+          id: schemas.id.mongodbID(),
+          user: new chaca.Schema({
+            image: schemas.science.unit(),
+            followersInf: {
+              custom: (a) => {
+                return a.id;
+              },
+              isArray: 20,
+            },
+          }),
+        });
+
+        const doc = schema.generate(20)[0];
+
+        expect(doc["user"]["followersInf"][0]).toBe(doc["id"]);
+      });
+
+      it("custom function in a nested schema inside an other nested schema", () => {
+        const schema2 = new chaca.Schema({
+          id: schemas.id.mongodbID(),
+          user: new chaca.Schema({
+            image: schemas.science.unit(),
+            custom: (h) => h.id,
+            followerInf: new chaca.Schema({
+              name: schemas.person.firstName(),
+              hola: (a) => {
+                return a.user.custom;
+              },
+            }),
+          }),
+        });
+
+        const doc = schema2.generate(20)[0];
+        console.log(doc);
+        //expect(doc["user"]["followerInf"]["hola"]).toBe(doc["user"]["custom"]);
+      });
     });
 
     describe("schema with enum field", () => {

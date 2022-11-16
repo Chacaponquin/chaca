@@ -1,5 +1,5 @@
 import { SchemaInput } from "../interfaces/schema.interface.js";
-import { SchemaResolver } from "./SchemaResolver.js";
+import { Schema } from "./Schema.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { ChacaSchema } from "./ChacaSchema.js";
 
@@ -8,7 +8,7 @@ import { ChacaSchema } from "./ChacaSchema.js";
  * field defined by the user
  */
 export class CustomSchema<K = any, T = any> extends ChacaSchema<K, T> {
-  private rootSchema: SchemaResolver<K, T>;
+  private rootSchema: Schema<K, T>;
 
   constructor(
     public readonly schemaName: string,
@@ -18,7 +18,7 @@ export class CustomSchema<K = any, T = any> extends ChacaSchema<K, T> {
     if (!schemaName || !(typeof schemaName === "string")) {
       throw new ChacaError("Your Schema must have a name");
     }
-    this.rootSchema = new SchemaResolver(schemaObj);
+    this.rootSchema = new Schema(schemaObj);
   }
 
   public generate(cantDocuments: number): K[] {

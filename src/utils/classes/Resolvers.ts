@@ -25,9 +25,7 @@ export class CustomFieldResolver<C, R> implements IResolver<C, R> {
 
   public *resolve(field: C): Generator<R> {
     let retValue = undefined as R;
-    const f = field;
-
-    retValue = this.fun(f);
+    retValue = this.fun(field);
 
     return retValue !== undefined ? retValue : null;
   }

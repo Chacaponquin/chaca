@@ -16,7 +16,7 @@ import {
   EnumFielResolver,
   SchemaFieldResolver,
 } from "./Resolvers.js";
-import { SchemaResolver } from "./SchemaResolver.js";
+import { Schema } from "./Schema.js";
 
 export abstract class ChacaSchema<K, T> {
   /**
@@ -39,14 +39,17 @@ export abstract class ChacaSchema<K, T> {
     return await Export(data, configFile);
   }
 
-  protected resolveSchema(field: K, schema: ResolverObject<K, T[keyof T]>): T {
+  protected *resolveSchema(
+    cont: K,
+    schema: ResolverObject<K, T[keyof T]>,
+  ): Generator<K, T> {
     let retValue: T = null as T;
-    const gen = schema.type.resolve(field);
+    const gen = schema.type.resolve(cont);
 
     let stop = false;
     while (!stop) {
       const result = gen.next();
-      retValue = result.value as any;
+      retValue = result.value;
       if (result.done) {
         stop = true;
       }
@@ -78,7 +81,7 @@ export abstract class ChacaSchema<K, T> {
       for (const k of Object.keys(obj)) {
         const key = k as keyof T;
         const schema = obj[key] as FieldSchemaConfig<K, T[keyof T]>;
-        if (schema instanceof SchemaResolver) {
+        if (schema instanceof Schema) {
           schemaToSave = {
             ...schemaToSave,
             [key]: { type: schema, ...defaultConfig },
@@ -111,7 +114,7 @@ export abstract class ChacaSchema<K, T> {
                 ...schemaToSave,
                 [key]: {
                   type:
-                    type instanceof SchemaResolver
+                    type instanceof Schema
                       ? type
                       : new SchemaFieldResolver<K, T[keyof T]>(type),
                   ...defaultConfig,
@@ -172,9 +175,9 @@ export abstract class ChacaSchema<K, T> {
 
   private validateType(
     key: keyof T,
-    type: SchemaResolver<T[keyof T]> | SchemaField<T[keyof T], any>,
-  ): SchemaResolver<T[keyof T]> | SchemaField<T[keyof T], any> {
-    if (type instanceof SchemaResolver || type instanceof SchemaField) {
+    type: Schema<T[keyof T]> | SchemaField<T[keyof T], any>,
+  ): Schema<T[keyof T]> | SchemaField<T[keyof T], any> {
+    if (type instanceof Schema || type instanceof SchemaField) {
       return type;
     } else throw new ChacaError(`Invalid type for key ${String(key)}`);
   }
