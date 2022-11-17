@@ -197,7 +197,7 @@ describe("#Schema Creation Test", () => {
         });
 
         const doc = schema2.generate(20)[0];
-        console.log(doc);
+
         //expect(doc["user"]["followerInf"]["hola"]).toBe(doc["user"]["custom"]);
       });
     });

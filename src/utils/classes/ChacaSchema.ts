@@ -7,7 +7,6 @@ import {
   CommonSchema,
   CustomField,
   FieldSchemaConfig,
-  ResolverObject,
   SchemaInput,
   SchemaToResolve,
 } from "../interfaces/schema.interface.js";
@@ -37,25 +36,6 @@ export abstract class ChacaSchema<K, T> {
   ): Promise<string> {
     const data = this.generate(cantDocuments);
     return await Export(data, configFile);
-  }
-
-  protected *resolveSchema(
-    cont: K,
-    schema: ResolverObject<K, T[keyof T]>,
-  ): Generator<K, T> {
-    let retValue: T = null as T;
-    const gen = schema.type.resolve(cont);
-
-    let stop = false;
-    while (!stop) {
-      const result = gen.next();
-      retValue = result.value;
-      if (result.done) {
-        stop = true;
-      }
-    }
-
-    return retValue;
   }
 
   protected validateObjectSchema(

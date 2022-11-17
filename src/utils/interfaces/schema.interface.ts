@@ -37,5 +37,5 @@ export interface CommonSchema {
 }
 
 export interface IResolver<C, R> {
-  resolve(field: C): Generator<R>;
+  resolve(field: C): R;
 }
