@@ -110,10 +110,13 @@ describe("#Export Test", () => {
           return true;
         } else return false;
       },
-      directorInf: new chaca.Schema({
-        name: schemas.person.fullName({}),
-        age: schemas.dataType.int({ min: 18, max: 85 }),
-      }),
+      directorsInf: {
+        type: new chaca.Schema({
+          name: schemas.person.fullName({}),
+          age: schemas.dataType.int({ min: 18, max: 85 }),
+        }),
+        isArray: { min: 1, max: 4 },
+      },
     });
 
     it("JSON File", async () => {

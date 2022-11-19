@@ -10,6 +10,7 @@ import {
 } from "../interfaces/schema.interface.js";
 import { Schema } from "./Schema.js";
 import { GeneralTree, TreeNode } from "./GeneralTree.js";
+import nodeTest from "node:test";
 
 export class EnumFielResolver<C, R> implements IResolver<C, R> {
   constructor(public readonly array: R[]) {}
@@ -49,70 +50,81 @@ export class SchemaResolver<K, T> {
   private arrayOfKeys: Array<string> = [];
 
   constructor(private readonly schemaObject: SchemaToResolve<K, T>) {
-    this.document = new GeneralTree(new TreeNode("object"));
+    this.document = new GeneralTree(new TreeNode("object", null));
   }
 
-  private resolveSchemaByConfig(schemaConfig: OrderSchema<K, T>) {
-    let retValue;
+  private resolveSchemaByConfig(o: OrderSchema<K, T>): void {
+    this.arrayOfKeys.push(String(o.key));
 
-    if (schemaConfig.schema.isArray) {
-      retValue = [];
+    if (o.schema.isArray) {
+      // CONVERTIR EL NODO EN UN NODO_ARRAY
+      this.document.searchNodeAndCreate(this.arrayOfKeys).isArray = true;
 
+      // LIMITE DEL ARRAY
       const limit = PrivateUtils.intNumber({
-        min: schemaConfig.schema.isArray.min,
-        max: schemaConfig.schema.isArray.max,
+        min: o.schema.isArray.min,
+        max: o.schema.isArray.max,
       });
 
       for (let i = 1; i <= limit; i++) {
-        retValue.push(this.resolveSchema(schemaConfig));
+        this.arrayOfKeys.push(`${String(o.key)}${i}`);
+
+        if (o.schema.type instanceof Schema) {
+          for (const s of this.orderSchemasByPriority(
+            o.schema.type.getSchemaObject(),
+          )) {
+            this.resolveSchemaByConfig(s);
+          }
+        } else {
+          const value = o.schema.type.resolve(this.document.getObject());
+          this.document.searchNodeAndCreate(this.arrayOfKeys).setValue(value);
+        }
+
+        this.arrayOfKeys.pop();
       }
     } else {
-      retValue = this.resolveSchema(schemaConfig);
+      if (o.schema.type instanceof Schema) {
+        for (const s of this.orderSchemasByPriority(
+          o.schema.type.getSchemaObject(),
+        )) {
+          this.resolveSchemaByConfig(s);
+        }
+      } else {
+        this.document
+          .searchNodeAndCreate(this.arrayOfKeys)
+          .setValue(o.schema.type.resolve(this.document.getObject()));
+      }
     }
 
-    if (schemaConfig.schema.posibleNull) {
-      let porcentNull: number = schemaConfig.schema.posibleNull;
+    if (o.schema.posibleNull) {
+      let porcentNull: number = o.schema.posibleNull;
       const array = new Array(100).fill(0);
 
       for (let i = 0; i < array.length; i++) {
         if (porcentNull > 0) {
-          array.push(null);
+          array.push(true);
           porcentNull--;
         } else {
-          array.push(retValue);
+          array.push(false);
         }
       }
-    }
-  }
 
-  private resolveSchema(rObj: OrderSchema<K, T>) {
-    this.arrayOfKeys.push(rObj.key as string);
-
-    if (rObj.schema.type instanceof Schema) {
-      for (const o of this.orderSchemasByPriority(
-        rObj.schema.type.getSchemaObject(),
-      )) {
-        this.resolveSchema(o);
-      }
-    } else {
-      const node = new TreeNode(rObj.key as string);
-      node.setValue(this.resolveSchemaByConfig(rObj));
-      this.document.setNode(this.arrayOfKeys, node);
+      this.document
+        .searchNodeAndCreate(this.arrayOfKeys)
+        .setValue(PrivateUtils.oneOfArray(array));
     }
 
     this.arrayOfKeys.pop();
   }
 
-  private resolveRootSchema(schema: SchemaToResolve<K, T>) {
-    for (const o of this.orderSchemasByPriority(schema)) {
-      this.arrayOfKeys.push(o.key as string);
-      this.resolveSchema(o);
-      this.arrayOfKeys = [];
+  private resolveRootSchema() {
+    for (const o of this.orderSchemasByPriority(this.schemaObject)) {
+      this.resolveSchemaByConfig(o);
     }
   }
 
   public resolve(): K {
-    this.resolveRootSchema(this.schemaObject);
+    this.resolveRootSchema();
     return this.document.getObject();
   }
 
@@ -135,6 +147,6 @@ export class SchemaResolver<K, T> {
       }
     }
 
-    return [...normalSchemas, ...customSchemas, ...nestedSchemas];
+    return [...normalSchemas, ...nestedSchemas, ...customSchemas];
   }
 }

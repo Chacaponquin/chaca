@@ -140,7 +140,7 @@ export class PersonSchema {
 
         let retString = "";
         for (let i = 0; i < fullName.length; i++) {
-          if (fullName[i]) retString += `${fullName[i]} `;
+          if (fullName[i]) retString += `${fullName[i]}`;
         }
 
         return retString;

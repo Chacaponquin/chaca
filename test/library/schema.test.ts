@@ -69,10 +69,11 @@ describe("#Schema Creation Test", () => {
       it("passing a number as argument. Should return an array of documents with the id property with that number as length", () => {
         const schema = new chaca.Schema({
           id: { type: schemas.id.mongodbID(), isArray: 20 },
+          name: schemas.person.firstName(),
         });
 
         const docs = schema.generate(10);
-        expect(docs[0]["id"].length === 20).toBe(true);
+        expect(docs[0]["id"].length).toBe(20);
       });
 
       describe("passing a object as parameter", () => {
@@ -145,7 +146,7 @@ describe("#Schema Creation Test", () => {
         });
 
         const docs = schema.generate(10);
-        expect(docs[0]["custom"] === null).toBe(true);
+        expect(docs[0]["custom"]).toBe(null);
       });
 
       it("custom function access to this property", () => {
@@ -190,7 +191,7 @@ describe("#Schema Creation Test", () => {
             followerInf: new chaca.Schema({
               name: schemas.person.firstName(),
               hola: (a) => {
-                return a.user.custom;
+                return a.user.image;
               },
             }),
           }),
@@ -198,7 +199,7 @@ describe("#Schema Creation Test", () => {
 
         const doc = schema2.generate(20)[0];
 
-        //expect(doc["user"]["followerInf"]["hola"]).toBe(doc["user"]["custom"]);
+        expect(doc["user"]["followerInf"]["hola"]).toBe(doc["user"]["image"]);
       });
     });
 
@@ -243,7 +244,7 @@ describe("#Schema Creation Test", () => {
         const schema = new chaca.Schema({
           id: schemas.id.mongodbID(),
           image: schemas.image.people(),
-          user: new chaca.Schema<{ userName: string; images: string }>({
+          user: new chaca.Schema({
             userName: schemas.internet.userName(),
             images: { type: schemas.image.fashion(), isArray: 10 },
           }),
@@ -251,7 +252,7 @@ describe("#Schema Creation Test", () => {
 
         const doc = schema.generate(5)[0]["user"];
 
-        expect(schema.generate(5)[0]["user"].images.length === 10).toBe(true);
+        expect(doc.images.length).toBe(10);
       });
 
       it("should return an object with a user field as an array of objects with image and userName property", () => {
@@ -274,7 +275,7 @@ describe("#Schema Creation Test", () => {
 
         const doc = schema.generate(5)[0];
 
-        expect(doc["user"].length === 20).toBe(true);
+        expect(doc["user"].length).toBe(20);
       });
     });
   });
