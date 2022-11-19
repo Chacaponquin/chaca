@@ -4,6 +4,7 @@ import { JavascriptGenerator } from "./JavascriptGenerator.js";
 import fs from "fs";
 import { PrivateUtils } from "../utils/helpers/PrivateUtils.js";
 
+type DataObject = { [key: string]: any };
 export class TypescriptGenerator extends Generator {
   private interfacesCode = "";
   private interfacesCreated: string[] = [];
@@ -69,12 +70,7 @@ export class TypescriptGenerator extends Generator {
       let keyInterface: string;
       if (uniqueValues.length <= 1) keyInterface = `${uniqueValues[0]}`;
       else {
-        let str = "(";
-        for (let i = 0; i < uniqueValues.length; i++) {
-          if (i !== uniqueValues.length - 1) str += `${uniqueValues[i]} |`;
-          else str += `${uniqueValues[i]}`;
-        }
-        str += ")";
+        const str = "(" + uniqueValues.join(" | ") + ")";
         keyInterface = str;
       }
 
@@ -89,9 +85,7 @@ export class TypescriptGenerator extends Generator {
 
   private generateObjectInterface(
     interfaceName: string,
-    doc: {
-      [path: string]: any;
-    },
+    doc: DataObject,
   ): string {
     const foundInterface = this.interfacesCreated.find(
       (el) => el === interfaceName,
@@ -99,17 +93,85 @@ export class TypescriptGenerator extends Generator {
 
     if (!foundInterface) {
       let interfaceCode = `interface ${interfaceName}{\n\t`;
-      for (const [key, value] of Object.entries(doc)) {
-        interfaceCode += `${key}: ${this.generateInterfaceByValue(value)};`;
+      const similiarObjects = this.searchSimilarObjects(doc);
+
+      console.log(similiarObjects);
+
+      if (similiarObjects.length > 0) {
+        for (const key of Object.keys(doc)) {
+          const allKeysValues = similiarObjects.map((el) => {
+            return el[key];
+          });
+
+          const allTypes = allKeysValues.map((el) =>
+            this.generateInterfaceByValue(el),
+          );
+          const uniqueTypes = new Set(allTypes);
+
+          let type: string;
+          if (uniqueTypes.size <= 1) {
+            type = `${allTypes[0]}`;
+          } else {
+            const unique: string[] = [];
+            uniqueTypes.forEach((el) => unique.push(el));
+            const str = "(" + unique.join(" | ") + ")";
+            type = `${str}`;
+          }
+
+          interfaceCode += `${key}: ${type};`;
+        }
+      } else {
+        for (const [key, value] of Object.entries(doc)) {
+          interfaceCode += `${key}: ${this.generateInterfaceByValue(value)};`;
+        }
       }
+
       interfaceCode += "}\n";
-
       this.interfacesCode += interfaceCode;
-
       this.interfacesCreated.push(interfaceName);
     }
 
     return interfaceName;
+  }
+
+  private searchSimilarObjects(object: DataObject): Array<DataObject> {
+    const retArray = [] as DataObject[];
+
+    const objectCompare = (val: any) => {
+      if (Array.isArray(val)) {
+        for (const v of val) {
+          if (PrivateUtils.isSimilarObjects(object, v)) {
+            retArray.push(v as DataObject);
+          }
+
+          if (v instanceof Object) {
+            for (const valAnid of Object.values(val)) {
+              objectCompare(valAnid);
+            }
+          }
+        }
+      } else {
+        if (PrivateUtils.isSimilarObjects(object, val)) {
+          retArray.push(val as DataObject);
+        }
+
+        if (val instanceof Object) {
+          for (const valAnid of Object.values(val)) {
+            objectCompare(valAnid);
+          }
+        }
+      }
+    };
+
+    if (Array.isArray(this.data)) {
+      for (const doc of this.data) {
+        for (const val of Object.values(doc)) {
+          objectCompare(val);
+        }
+      }
+    }
+
+    return retArray;
   }
 
   private generateInterfaceByValue(value: any): string {
@@ -146,15 +208,7 @@ export class TypescriptGenerator extends Generator {
       const unique: string[] = [];
       uniqueTypes.forEach((el) => unique.push(el));
 
-      let str = "(";
-      for (let i = 0; i < unique.length; i++) {
-        if (i !== unique.length - 1) {
-          str += `${unique[i]} |`;
-        } else {
-          str += `${unique[i]}`;
-        }
-      }
-      str += ")";
+      const str = "(" + unique.join(" | ") + ")";
 
       interfaceCode += `${str}`;
     }

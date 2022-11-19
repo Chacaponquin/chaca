@@ -19,7 +19,15 @@ describe("#DataType Tests", () => {
 
     it("Passing min: -10 && max: -1. Should return an int number between -1 and -10", () => {
       const value = schemas.dataType.int().getValue({ max: -1, min: -10 });
-      expect(value <= -1 && value >= -10 && Number.isInteger(value)).toBe(true);
+      expect(Number.isInteger(value)).toBe(true);
+      expect(value).toBeLessThanOrEqual(-1);
+      expect(value).toBeGreaterThanOrEqual(-10);
+    });
+
+    it("Passing min: -50. Should return an int grater than -50", () => {
+      const value = schemas.dataType.int().getValue({ min: -50 });
+      expect(Number.isInteger(value)).toBe(true);
+      expect(value).toBeGreaterThanOrEqual(-50);
     });
   });
 

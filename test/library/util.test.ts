@@ -40,6 +40,11 @@ describe("#Util Tests", () => {
       const val = chaca.utils.capitalizeCamelCase("Hello World");
       expect(val === "HelloWorld").toBe(true);
     });
+
+    it("With 'HELLO_THERE'. Should return 'HelloThere'", () => {
+      const val = chaca.utils.capitalizeCamelCase("HELLO_THERE");
+      expect(val).toBe("HelloThere");
+    });
   });
 
   describe("capitalizeWord test", () => {
@@ -52,9 +57,14 @@ describe("#Util Tests", () => {
       const val = chaca.utils.capitalizeWord("hello");
       expect(val === "Hello").toBe(true);
     });
+
+    it("With 'HELLO_THERE'. Should return 'HELLO_THERE'", () => {
+      const val = chaca.utils.capitalizeWord("HELLO_THERE");
+      expect(val).toBe("HELLO_THERE");
+    });
   });
 
-  describe("capitalizeWord test", () => {
+  describe("capitalizeText test", () => {
     it("With 'hi there friend' as argument. Should return 'Hi There Friend'", () => {
       const val = chaca.utils.capitalizeText("hi there friend");
       expect(val === "Hi There Friend").toBe(true);
@@ -63,6 +73,23 @@ describe("#Util Tests", () => {
     it("With ' helloWorld' as argument. Should return ' HelloWorld'", () => {
       const val = chaca.utils.capitalizeText(" helloWorld");
       expect(val === " HelloWorld").toBe(true);
+    });
+  });
+
+  describe("isSimilarObjects test", () => {
+    it("test 1", () => {
+      expect(
+        chaca.utils.isSimilarObjects(
+          { id: "", hola: "" },
+          { id: "", hola: "" },
+        ),
+      ).toBe(true);
+    });
+
+    it("test 2", () => {
+      expect(
+        chaca.utils.isSimilarObjects({ id: "", hola: "" }, { id: "" }),
+      ).toBe(false);
     });
   });
 });

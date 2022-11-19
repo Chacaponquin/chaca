@@ -10,7 +10,6 @@ import {
 } from "../interfaces/schema.interface.js";
 import { Schema } from "./Schema.js";
 import { GeneralTree, TreeNode } from "./GeneralTree.js";
-import nodeTest from "node:test";
 
 export class EnumFielResolver<C, R> implements IResolver<C, R> {
   constructor(public readonly array: R[]) {}
@@ -102,16 +101,15 @@ export class SchemaResolver<K, T> {
 
       for (let i = 0; i < array.length; i++) {
         if (porcentNull > 0) {
-          array.push(true);
+          array[i] = true;
           porcentNull--;
         } else {
-          array.push(false);
+          array[i] = false;
         }
       }
 
-      this.document
-        .searchNodeAndCreate(this.arrayOfKeys)
-        .setValue(PrivateUtils.oneOfArray(array));
+      this.document.searchNodeAndCreate(this.arrayOfKeys).isNull =
+        PrivateUtils.oneOfArray(array);
     }
 
     this.arrayOfKeys.pop();

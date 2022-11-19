@@ -50,7 +50,10 @@ export class PrivateUtils {
     } else maximun = 999999;
 
     const val = Math.random() * (maximun - minimun + 1) + minimun;
-    return Number.parseInt(String(val));
+    const retValue = Number.parseInt(String(val));
+    return retValue >= minimun && retValue <= maximun
+      ? retValue
+      : PrivateUtils.intNumber({ min, max });
   }
 
   static numbersArray(): string[] {
@@ -95,10 +98,7 @@ export class PrivateUtils {
         for (let i = 0; i < text.length; i++) {
           if (
             text[i] != " " &&
-            text[i] != "_" &&
-            text[i] != "-" &&
-            text[i] != "(" &&
-            text[i] != ")"
+            !PrivateUtils.specialCharacters().find((el) => el === text[i])
           ) {
             const isOnlyMayus: boolean =
               text[i].toUpperCase() === text[i] &&
@@ -210,5 +210,24 @@ export class PrivateUtils {
     }
 
     return newResult;
+  }
+
+  static isSimilarObjects(obj1: any, obj2: any): boolean {
+    let ret = true;
+
+    if (obj1 && obj2 && typeof obj1 === "object" && typeof obj2 === "object") {
+      const keys1 = Object.keys(obj1);
+      const keys2 = Object.keys(obj2);
+
+      if (keys1.length !== keys2.length) ret = false;
+
+      for (let i = 0; i < keys1.length && ret; i++) {
+        if (!keys2.find((el) => String(el) === String(keys1[i]))) {
+          ret = false;
+        }
+      }
+    } else ret = false;
+
+    return ret;
   }
 }
