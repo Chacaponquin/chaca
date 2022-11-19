@@ -95,8 +95,6 @@ export class TypescriptGenerator extends Generator {
       let interfaceCode = `interface ${interfaceName}{\n\t`;
       const similiarObjects = this.searchSimilarObjects(doc);
 
-      console.log(similiarObjects);
-
       if (similiarObjects.length > 0) {
         for (const key of Object.keys(doc)) {
           const allKeysValues = similiarObjects.map((el) => {
