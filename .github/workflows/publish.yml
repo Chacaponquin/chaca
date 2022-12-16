@@ -19,7 +19,7 @@ jobs:
       - name: ci
         run: npm ci
       - name: build
-        run: num run build
+        run: npm run build
       - name: publish
         run: npm publish --access public
         env:
