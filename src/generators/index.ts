@@ -1,9 +1,9 @@
-import { JsonGenerator } from "./JsonGenerator.js";
+import { JsonGenerator } from "./JSON/JsonGenerator.js";
 import { Generator } from "./Generator.js";
-import { JavascriptGenerator } from "./JavascriptGenerator.js";
-import { CSVGenerator } from "./CSVGenerator.js";
-import { JavaGenerator } from "./JavaGenerator.js";
-import { TypescriptGenerator } from "./TypescriptGenerator.js";
+import { JavascriptGenerator } from "./Javascript/JavascriptGenerator.js";
+import { CSVGenerator } from "./CSV/CSVGenerator.js";
+import { JavaGenerator } from "./Java/JavaGenerator.js";
+import { TypescriptGenerator } from "./Typescript/TypescriptGenerator.js";
 
 export {
   JsonGenerator,
