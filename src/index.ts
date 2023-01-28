@@ -129,3 +129,5 @@ abstract class Chaca {
 
 export const chaca = Chaca;
 export const schemas = Schemas;
+
+export { SchemaField };

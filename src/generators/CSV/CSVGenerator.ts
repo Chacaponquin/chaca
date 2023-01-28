@@ -1,5 +1,5 @@
-import { FileConfig } from "../utils/interfaces/export.interface.js";
-import { Generator } from "./Generator.js";
+import { FileConfig } from "../../utils/interfaces/export.interface.js";
+import { Generator } from "./../Generator.js";
 import { Parser } from "json2csv";
 import fs from "fs";
 
