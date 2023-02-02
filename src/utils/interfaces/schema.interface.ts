@@ -5,12 +5,12 @@ export type SchemaInput<C, T> = {
   [key in keyof T]: FieldSchemaConfig<C, T[key]>;
 };
 
-export type SchemaToResolve<C, T> = {
-  [key in keyof T]: ResolverObject<C, T[key]>;
+export type SchemaToResolve<T> = {
+  [key in keyof T]: ResolverObject;
 };
 
-export type ResolverObject<C, R> = {
-  type: IResolver<C, R>;
+export type ResolverObject = {
+  type: IResolver;
   isArray: { min: number; max: number } | null;
   posibleNull: number;
 };
@@ -32,10 +32,10 @@ type FieldObjectInput<C, R> = {
 export type CustomField<C, V> = (docFields: C) => V;
 
 export interface CommonSchema {
-  isArray: { min: number; max: number } | null;
+  isArray: FieldIsArrayConfig;
   posibleNull: number;
 }
 
-export interface IResolver<C, R> {
-  resolve(field: C): R;
-}
+export type FieldIsArrayConfig = { min: number; max: number } | null;
+
+export class IResolver {}

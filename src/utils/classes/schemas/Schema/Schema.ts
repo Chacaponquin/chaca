@@ -9,7 +9,7 @@ import { SchemaResolver } from "../../Resolvers.js";
 import { ChacaError } from "../../../../errors/ChacaError.js";
 
 export class Schema<K = any, T = any> extends ChacaSchema<K, T> {
-  private schemaObj: SchemaToResolve<K, T>;
+  private schemaObj: SchemaToResolve<T>;
 
   constructor(inputObj: SchemaInput<K, T>) {
     super();
@@ -37,7 +37,10 @@ export class Schema<K = any, T = any> extends ChacaSchema<K, T> {
 
     const returnArray = [] as K[];
     for (let i = 1; i <= numberCant; i++) {
-      returnArray.push(new SchemaResolver(this.schemaObj).resolve());
+      const schemaToResolve = new SchemaResolver<K, T>(
+        this.schemaObj,
+      ).resolve();
+      returnArray.push(schemaToResolve);
     }
 
     return returnArray;

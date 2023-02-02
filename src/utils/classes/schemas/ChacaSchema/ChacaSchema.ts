@@ -12,9 +12,9 @@ import {
 } from "../../../interfaces/schema.interface.js";
 import {
   CustomFieldResolver,
-  EnumFielResolver,
+  EnumFieldResolver,
   SchemaFieldResolver,
-} from "../../Resolvers.js";
+} from "../../Resolvers/index.js";
 import { Schema } from "../Schema/Schema.js";
 
 export abstract class ChacaSchema<K, T> {
@@ -38,20 +38,18 @@ export abstract class ChacaSchema<K, T> {
     return await Export(data, configFile);
   }
 
-  protected validateObjectSchema(
-    obj: SchemaInput<K, T>,
-  ): SchemaToResolve<K, T> {
+  protected validateObjectSchema(obj: SchemaInput<K, T>): SchemaToResolve<T> {
     if (
       !obj ||
       (typeof obj === "object" && Array.isArray(obj)) ||
       Object.keys(obj).length === 0 ||
       obj instanceof Date
-    )
+    ) {
       throw new ChacaError(
         "Your schema has to be an object with the fields descriptions",
       );
-    else {
-      let schemaToSave: SchemaToResolve<K, T> = {} as SchemaToResolve<K, T>;
+    } else {
+      let schemaToSave = {} as SchemaToResolve<T>;
 
       const defaultConfig: CommonSchema = {
         isArray: null,
@@ -79,7 +77,7 @@ export abstract class ChacaSchema<K, T> {
           schemaToSave = {
             ...schemaToSave,
             [key]: {
-              type: new SchemaFieldResolver<K, T[keyof T]>(schema),
+              type: new SchemaFieldResolver(schema),
               ...defaultConfig,
             },
           };
@@ -97,7 +95,7 @@ export abstract class ChacaSchema<K, T> {
                   type:
                     type instanceof Schema
                       ? type
-                      : new SchemaFieldResolver<K, T[keyof T]>(type),
+                      : new SchemaFieldResolver(type),
                   ...defaultConfig,
                 },
               };
@@ -105,7 +103,7 @@ export abstract class ChacaSchema<K, T> {
               schemaToSave = {
                 ...schemaToSave,
                 [key]: {
-                  type: new EnumFielResolver<K, T[keyof T]>(
+                  type: new EnumFieldResolver<T[keyof T]>(
                     this.validateEnum(key, schema.enum),
                   ),
                   ...defaultConfig,

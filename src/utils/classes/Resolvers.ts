@@ -11,34 +11,6 @@ import {
 import { Schema } from "./schemas/Schema/Schema.js";
 import { GeneralTree, TreeNode } from "./GeneralTree.js";
 
-export class EnumFielResolver<C, R> implements IResolver<C, R> {
-  constructor(public readonly array: R[]) {}
-
-  public resolve(field: C): R {
-    return PrivateUtils.oneOfArray(this.array);
-  }
-}
-
-export class SchemaFieldResolver<C, R> implements IResolver<C, R> {
-  constructor(readonly schema: SchemaField<R, any>) {}
-
-  public resolve(field: C): R {
-    return this.schema.getValue();
-  }
-}
-
-export class CustomFieldResolver<C, R> implements IResolver<C, R> {
-  constructor(public readonly fun: CustomField<C, R>) {}
-
-  public resolve(field: C): R {
-    let retValue = undefined as R;
-    retValue = this.fun(field);
-
-    const val = retValue !== undefined ? retValue : null;
-    return val as R;
-  }
-}
-
 type OrderSchema<C, T> = {
   key: keyof T;
   schema: ResolverObject<C, T[keyof T]>;
@@ -48,7 +20,7 @@ export class SchemaResolver<K, T> {
   private document: GeneralTree<K>;
   private arrayOfKeys: Array<string> = [];
 
-  constructor(private readonly schemaObject: SchemaToResolve<K, T>) {
+  constructor(private readonly schemaObject: SchemaToResolve<T>) {
     this.document = new GeneralTree(new TreeNode("object", null));
   }
 
