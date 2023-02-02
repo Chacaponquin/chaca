@@ -50,7 +50,10 @@ export class ChacaInputTree<T> {
       returnNode = new EnumValueNode(nodeConfig, object.type.array);
     } else if (object.type instanceof MixedFieldResolver) {
       returnNode = new MixedValueNode(nodeConfig);
-      this.createSubNodesOfMixedField(returnNode, object.type.schema);
+      this.createSubNodesOfMixedField(
+        returnNode as MixedValueNode,
+        object.type.schema,
+      );
     } else {
       throw new ChacaError(`Dont exists that resolver`);
     }

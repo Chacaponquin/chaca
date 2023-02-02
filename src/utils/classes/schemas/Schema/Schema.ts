@@ -35,14 +35,8 @@ export class Schema<K = any, T = any> extends ChacaSchema<K, T> {
       }
     }
 
-    const returnArray = [] as K[];
-    for (let i = 1; i <= numberCant; i++) {
-      const schemaToResolve = new SchemaResolver<K, T>(
-        this.schemaObj,
-      ).resolve();
-      returnArray.push(schemaToResolve);
-    }
+    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj);
 
-    return returnArray;
+    return schemaToResolve.resolve(numberCant);
   }
 }
