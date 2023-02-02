@@ -1,5 +1,5 @@
 import { SchemaField } from "../../schemas/SchemaField.js";
-import { Schema } from "../classes/Schema.js";
+import { Schema } from "../classes/schemas/Schema/Schema.js";
 
 export type SchemaInput<C, T> = {
   [key in keyof T]: FieldSchemaConfig<C, T[key]>;

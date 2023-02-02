@@ -1,21 +1,21 @@
-import { ChacaError } from "../../errors/ChacaError.js";
-import { SchemaField } from "../../schemas/SchemaField.js";
-import { Export } from "../helpers/Export.js";
+import { ChacaError } from "../../../../errors/ChacaError.js";
+import { SchemaField } from "../../../../schemas/SchemaField.js";
+import { Export } from "../../../helpers/Export.js";
 
-import { FileConfig } from "../interfaces/export.interface.js";
+import { FileConfig } from "../../../interfaces/export.interface.js";
 import {
   CommonSchema,
   CustomField,
   FieldSchemaConfig,
   SchemaInput,
   SchemaToResolve,
-} from "../interfaces/schema.interface.js";
+} from "../../../interfaces/schema.interface.js";
 import {
   CustomFieldResolver,
   EnumFielResolver,
   SchemaFieldResolver,
-} from "./Resolvers.js";
-import { Schema } from "./Schema.js";
+} from "../../Resolvers.js";
+import { Schema } from "../Schema/Schema.js";
 
 export abstract class ChacaSchema<K, T> {
   /**
@@ -61,6 +61,7 @@ export abstract class ChacaSchema<K, T> {
       for (const k of Object.keys(obj)) {
         const key = k as keyof T;
         const schema = obj[key] as FieldSchemaConfig<K, T[keyof T]>;
+
         if (schema instanceof Schema) {
           schemaToSave = {
             ...schemaToSave,

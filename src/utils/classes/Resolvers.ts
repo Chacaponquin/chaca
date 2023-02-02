@@ -8,7 +8,7 @@ import {
   SchemaToResolve,
   ResolverObject,
 } from "../interfaces/schema.interface.js";
-import { Schema } from "./Schema.js";
+import { Schema } from "./schemas/Schema/Schema.js";
 import { GeneralTree, TreeNode } from "./GeneralTree.js";
 
 export class EnumFielResolver<C, R> implements IResolver<C, R> {

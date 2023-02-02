@@ -1,8 +1,8 @@
-import { SchemaInput } from "../interfaces/schema.interface.js";
-import { Schema } from "./Schema.js";
-import { ChacaError } from "../../errors/ChacaError.js";
-import { ChacaSchema } from "./ChacaSchema.js";
-import { SchemaResolver } from "./Resolvers.js";
+import { SchemaInput } from "../../../interfaces/schema.interface.js";
+import { Schema } from "../Schema/Schema.js";
+import { ChacaError } from "../../../../errors/ChacaError.js";
+import { ChacaSchema } from "../ChacaSchema/ChacaSchema.js";
+import { SchemaResolver } from "../../Resolvers.js";
 
 /**
  * Class for creation of a model with the configuration of each

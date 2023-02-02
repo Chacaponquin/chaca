@@ -1,10 +1,10 @@
 import { ChacaUtils } from "./utils/helpers/ChacaUtils.js";
-import { CustomSchema } from "./utils/classes/CustomSchema.js";
+import { CustomSchema } from "./utils/classes/schemas/CustomSchema/CustomSchema.js";
 import { SchemaInput } from "./utils/interfaces/schema.interface.js";
 
 import { ChacaError } from "./errors/ChacaError.js";
 import { ExportAllConfig } from "./utils/interfaces/export.interface.js";
-import { Schema } from "./utils/classes/Schema.js";
+import { Schema } from "./utils/classes/schemas/Schema/Schema.js";
 import { Schemas } from "./schemas/index.js";
 import { SchemaField } from "./schemas/SchemaField.js";
 
@@ -33,7 +33,7 @@ abstract class Chaca {
     schemaName: string,
     inputObj: SchemaInput<K, T>,
   ): CustomSchema<K, T> {
-    const findSchema = this.schemasCreated.find(
+    const findSchema = this.schemasCreated.some(
       (el) => el.schemaName === schemaName,
     );
     if (!findSchema) {
@@ -131,3 +131,5 @@ export const chaca = Chaca;
 export const schemas = Schemas;
 
 export { SchemaField };
+
+export type { SchemaInput };
