@@ -1,4 +1,3 @@
-import { ChacaError } from "../../../../../errors/ChacaError.js";
 import { CustomField } from "../../../../interfaces/schema.interface.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
@@ -22,9 +21,7 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
     const value = this.valueFunction(fields);
 
     if (value === undefined) {
-      throw new ChacaError(
-        `The field ${this.nodeConfig.name} returns undefined`,
-      );
+      return null as R;
     } else {
       return value;
     }

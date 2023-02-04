@@ -2,7 +2,7 @@ import { SchemaInput } from "../../../interfaces/schema.interface.js";
 import { Schema } from "../Schema/Schema.js";
 import { ChacaError } from "../../../../errors/ChacaError.js";
 import { ChacaSchema } from "../ChacaSchema/ChacaSchema.js";
-import { SchemaResolver } from "../../Resolvers.js";
+import { SchemaResolver } from "../../SchemaResolver.js";
 
 /**
  * Class for creation of a model with the configuration of each
@@ -23,18 +23,24 @@ export class CustomSchema<K = any, T = any> extends ChacaSchema<K, T> {
   }
 
   public generate(cantDocuments: number): K[] {
-    const cantDoc =
-      typeof cantDocuments === "number" && cantDocuments > 0
-        ? cantDocuments
-        : 10;
+    let numberCant = 10;
 
-    const returnArray = [] as K[];
-    for (let i = 1; i <= cantDoc; i++) {
-      returnArray.push(
-        new SchemaResolver(this.rootSchema.getSchemaObject()).resolve(),
-      );
+    if (typeof cantDocuments === "number") {
+      if (cantDocuments >= 0 && cantDocuments <= 500) {
+        numberCant = cantDocuments;
+      } else if (cantDocuments < 0) {
+        throw new ChacaError(
+          `You can not generate a negative number of documents`,
+        );
+      } else if (cantDocuments > 500) {
+        throw new ChacaError(`You can not generate too much documents`);
+      }
     }
 
-    return returnArray;
+    const schemaToResolve = new SchemaResolver<K, T>(
+      this.rootSchema.getSchemaObject(),
+    );
+
+    return schemaToResolve.resolve(numberCant);
   }
 }

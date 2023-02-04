@@ -17,6 +17,7 @@ import {
   MixedValueNode,
   SchemaValueNode,
 } from "./classes/index.js";
+import { orderFieldsByPriority } from "./utils/treeUtils.js";
 
 export class ChacaInputTree<T> {
   private nodes: Array<ChacaTreeNode> = [];
@@ -79,5 +80,6 @@ export class ChacaInputTree<T> {
 
   public insertNode(node: ChacaTreeNode) {
     this.nodes.push(node);
+    orderFieldsByPriority(this.nodes);
   }
 }

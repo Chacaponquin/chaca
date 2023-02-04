@@ -28,9 +28,10 @@ export class SchemaResolver<K, T> {
   }
 
   public resolve(numDocs: number): Array<K> {
-    for (let indexDoc = 1; indexDoc <= numDocs; indexDoc++) {
+    for (let indexDoc = 0; indexDoc < numDocs; indexDoc++) {
       const newDoc = new DocumentTree<K>();
 
+      // insert new document
       this.resultTree.insertDocument(newDoc);
 
       // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
@@ -139,7 +140,7 @@ export class SchemaResolver<K, T> {
       else if (field instanceof CustomValueNode) {
         // obtener el valor de la funcion pasando como parametro el documento actual del ciclo
         const value = field.getValue(
-          this.resultTree.getDocumentByIndex(indexDoc),
+          this.resultTree.getDocumentByIndex(indexDoc).getDocumentObject(),
         );
 
         return new SingleResultNode(field.getFieldInfo(), value);

@@ -5,7 +5,7 @@ import {
 
 import { ChacaSchema } from "../ChacaSchema/ChacaSchema.js";
 
-import { SchemaResolver } from "../../Resolvers.js";
+import { SchemaResolver } from "../../SchemaResolver.js";
 import { ChacaError } from "../../../../errors/ChacaError.js";
 
 export class Schema<K = any, T = any> extends ChacaSchema<K, T> {

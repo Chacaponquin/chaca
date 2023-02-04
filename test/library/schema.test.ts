@@ -59,9 +59,12 @@ describe("#Schema Creation Test", () => {
         expect(doc).toHaveProperty("name");
       });
 
-      it("generate negative number documents. Should generate 10 documents by default", () => {
-        const docs = schema.generate(-10);
-        expect(docs.length === 10).toBe(true);
+      it("generate negative number documents. Should throw an error", () => {
+        try {
+          const docs = schema.generate(-10);
+        } catch (error) {
+          expect(error instanceof ChacaError).toBe(true);
+        }
       });
     });
 
@@ -160,6 +163,7 @@ describe("#Schema Creation Test", () => {
         });
 
         const docs = schema.generate(10);
+
         expect(docs[0]["custom"] === docs[0]["id"]).toBe(true);
       });
 

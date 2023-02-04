@@ -1,5 +1,6 @@
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
+import { orderFieldsByPriority } from "../../utils/treeUtils.js";
 
 export class MixedValueNode extends ChacaTreeNode {
   private nodes: Array<ChacaTreeNode> = [];
@@ -18,5 +19,6 @@ export class MixedValueNode extends ChacaTreeNode {
 
   public insertNode(node: ChacaTreeNode): void {
     this.nodes.push(node);
+    orderFieldsByPriority(this.nodes);
   }
 }
