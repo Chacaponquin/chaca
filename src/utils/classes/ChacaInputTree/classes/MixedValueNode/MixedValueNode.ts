@@ -8,6 +8,10 @@ export class MixedValueNode extends ChacaTreeNode {
     super(config);
   }
 
+  public getFields() {
+    return this.nodes;
+  }
+
   public getNoArrayNode(): ChacaTreeNode {
     return new MixedValueNode({ ...this.nodeConfig, isArray: null });
   }

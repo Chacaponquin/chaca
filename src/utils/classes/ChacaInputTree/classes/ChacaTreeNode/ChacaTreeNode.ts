@@ -1,19 +1,15 @@
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 
 export abstract class ChacaTreeNode {
-  constructor(protected readonly nodeConfig: ChacaTreeNodeConfig) {}
+  constructor(public readonly nodeConfig: ChacaTreeNodeConfig) {}
 
   public abstract getNoArrayNode(): ChacaTreeNode;
 
-  get name() {
-    return this.nodeConfig.name;
-  }
-
-  get isArray() {
-    return this.nodeConfig.isArray;
-  }
-
-  get posibleNull() {
-    return this.nodeConfig.posibleNull;
+  public getFieldInfo() {
+    return {
+      name: this.nodeConfig.name,
+      isPosibleNull: this.nodeConfig.posibleNull,
+      isArray: this.nodeConfig.isArray,
+    };
   }
 }

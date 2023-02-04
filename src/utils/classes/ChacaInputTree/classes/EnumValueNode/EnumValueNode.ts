@@ -5,7 +5,7 @@ import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 export class EnumValueNode extends ChacaTreeNode {
   constructor(
     config: ChacaTreeNodeConfig,
-    private readonly enumOptions: Array<any>,
+    public readonly enumOptions: Array<any>,
   ) {
     super(config);
   }

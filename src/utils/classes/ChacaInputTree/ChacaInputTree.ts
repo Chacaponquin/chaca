@@ -30,6 +30,10 @@ export class ChacaInputTree<T> {
     }
   }
 
+  public getFields() {
+    return this.nodes;
+  }
+
   private createNodeByType(
     name: string,
     object: ResolverObject,

@@ -4,15 +4,7 @@ export interface FieldNodeProps {
 }
 
 export abstract class FieldNode {
-  constructor(protected readonly nodeConfig: FieldNodeProps) {}
-
-  get isPosibleNull() {
-    return this.nodeConfig.isPosibleNull;
-  }
-
-  get name() {
-    return this.nodeConfig.name;
-  }
+  constructor(public readonly nodeConfig: FieldNodeProps) {}
 
   public abstract getValue(): unknown | Array<unknown>;
 }
