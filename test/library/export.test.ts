@@ -121,6 +121,7 @@ describe("#Export Test", () => {
             }),
             posibleNull: 50,
           },
+          email: schemas.internet.email(),
         }),
         isArray: { min: 1, max: 4 },
       },

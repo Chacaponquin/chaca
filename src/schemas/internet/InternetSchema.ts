@@ -77,10 +77,14 @@ export class InternetSchema {
                 "hotmail.com",
               ]);
 
-        return `${this.userName({
+        const userName = this.userName({
           firstName: a.firstName,
           lastName: a.lastName,
-        })}@${provider}`;
+        })
+          .getValue()
+          .toLowerCase();
+
+        return `${userName}@${provider}`;
       },
       args || {},
     );
