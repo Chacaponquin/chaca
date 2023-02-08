@@ -80,6 +80,6 @@ const Chaca = {
 export const chaca = Chaca;
 export const schemas = Schemas;
 
-export { SchemaField };
+export { SchemaField, ChacaSchema };
 
 export type { SchemaInput };

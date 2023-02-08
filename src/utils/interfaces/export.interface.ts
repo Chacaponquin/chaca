@@ -3,7 +3,8 @@ export type ExportFormat =
   | "java"
   | "typescript"
   | "csv"
-  | "javascript";
+  | "javascript"
+  | "yaml";
 
 /**
  * Export File Configuration

@@ -29,6 +29,16 @@ describe("#Export Test", () => {
       date: new Date(),
     };
 
+    it("In a Yaml File", () => {
+      chaca
+        .export(object, {
+          fileName: "simpleObject",
+          location: root,
+          format: "yaml",
+        })
+        .then((s) => expect(typeof s === "string").toBe(true));
+    });
+
     it("In a Json File", () => {
       chaca
         .export(object, {

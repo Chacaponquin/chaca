@@ -4,6 +4,7 @@ import { JavascriptGenerator } from "./Javascript/JavascriptGenerator.js";
 import { CSVGenerator } from "./CSV/CSVGenerator.js";
 import { JavaGenerator } from "./Java/JavaGenerator.js";
 import { TypescriptGenerator } from "./Typescript/TypescriptGenerator.js";
+import { YamlGenerator } from "./Yaml/YamlGenerator.js";
 
 export {
   JsonGenerator,
@@ -12,4 +13,5 @@ export {
   CSVGenerator,
   JavaGenerator,
   TypescriptGenerator,
+  YamlGenerator,
 };

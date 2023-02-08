@@ -6,6 +6,7 @@ import {
   JsonGenerator,
   TypescriptGenerator,
   Generator,
+  YamlGenerator,
 } from "../../generators/index.js";
 import { FileConfig } from "../interfaces/export.interface.js";
 
@@ -58,10 +59,13 @@ export async function Export(data: any, config: FileConfig): Promise<string> {
       case "typescript":
         gen = new TypescriptGenerator(data, config);
         break;
+      case "yaml":
+        gen = new YamlGenerator(data, config);
+        break;
       default:
-        throw new ChacaError(`Format ${config.format} invalid`);
+        throw new ChacaError(`Format '${String(config.format)}' invalid`);
     }
 
     return await gen.generateFile();
-  } else throw new ChacaError(`Format ${config.format} invalid`);
+  } else throw new ChacaError(`Format '${String(config.format)}' invalid`);
 }
