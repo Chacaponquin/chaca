@@ -129,9 +129,13 @@ export class PersonSchema {
       (a) => {
         const lan = this.filterNameByLanguage(a.language);
 
-        const firstName = PrivateUtils.oneOfArray(this.filterBySex(lan, a.sex));
-        const middleName = PrivateUtils.oneOfArray([true, false])
-          ? PrivateUtils.oneOfArray(this.filterBySex(lan, a.sex))
+        const sex = a.sex
+          ? a.sex
+          : (PrivateUtils.oneOfArray(["male", "female"]) as Sex);
+
+        const firstName = PrivateUtils.oneOfArray(this.filterBySex(lan, sex));
+        const middleName = PrivateUtils.boolean()
+          ? PrivateUtils.oneOfArray(this.filterBySex(lan, sex))
           : undefined;
         const lastNameFirst = PrivateUtils.oneOfArray(lan.lastNames);
         const lastNameSecond = PrivateUtils.oneOfArray(lan.lastNames);
