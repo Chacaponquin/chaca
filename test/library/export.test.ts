@@ -176,6 +176,14 @@ describe("#Export Test", () => {
         format: "java",
       });
     });
+
+    it("Yaml File", async () => {
+      await postSchema.generateAndExport(50, {
+        fileName: "completeSchema",
+        location: root,
+        format: "yaml",
+      });
+    });
   });
 
   describe("export with incorrrect arguments", () => {
