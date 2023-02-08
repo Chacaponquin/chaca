@@ -9,7 +9,7 @@ import {
   MixedFieldResolver,
   SchemaFieldResolver,
 } from "../Resolvers/index.js";
-import { Schema } from "../schemas/Schema/Schema.js";
+import { ChacaSchema } from "../ChacaSchema/ChacaSchema.js";
 import {
   ChacaTreeNode,
   CustomValueNode,
@@ -68,7 +68,7 @@ export class ChacaInputTree<T> {
 
   private createSubNodesOfMixedField(
     parentNode: MixedValueNode,
-    schema: Schema,
+    schema: ChacaSchema,
   ) {
     for (const [key, obj] of Object.entries<ResolverObject>(
       schema.getSchemaObject(),

@@ -285,19 +285,11 @@ describe("#Schema Creation Test", () => {
   });
 
   describe("schema with incorrect arguments", () => {
-    it("without schema name. Should throw an error", () => {
-      try {
-        chaca.defineSchema("", {
-          id: { type: schemas.id.mongodbID() },
-        });
-      } catch (error) {
-        expect(error instanceof ChacaError).toBe(true);
-      }
-    });
+ 
 
     it("passing invalid empty schema object. Should throw an error", () => {
       try {
-        chaca.defineSchema("buenas", {});
+        chaca.defineSchema( {});
       } catch (error) {
         expect(error instanceof ChacaError).toBe(true);
       }
@@ -305,7 +297,7 @@ describe("#Schema Creation Test", () => {
 
     it("schema object with custom and type property", () => {
       try {
-        chaca.defineSchema("buenasdaadvadv", {
+        chaca.defineSchema( {
           id: {
             type: schemas.id.mongodbID(),
             custom: () => {
@@ -320,7 +312,7 @@ describe("#Schema Creation Test", () => {
 
     it("with empty array as argument. Should throw an error", () => {
       try {
-        chaca.defineSchema("schema", { id: { enum: [] } });
+        chaca.defineSchema( { id: { enum: [] } });
       } catch (error) {
         expect(error instanceof ChacaError).toBe(true);
       }

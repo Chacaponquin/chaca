@@ -5,7 +5,14 @@ export type ExportFormat =
   | "csv"
   | "javascript";
 
-interface FileConfigCommon {
+/**
+ * Export File Configuration
+ */
+export interface FileConfig {
+  /**
+   * Name of the file
+   */
+  fileName: string;
   /**
    * Location of the file
    * @example
@@ -33,21 +40,4 @@ interface FileConfigCommon {
    * @example { format: 'csv' }
    */
   format: ExportFormat;
-}
-
-export interface ExportAllConfig extends FileConfigCommon {
-  /**
-   * Name of the zip file
-   */
-  zipName: string;
-}
-
-/**
- * Export File Configuration
- */
-export interface FileConfig extends FileConfigCommon {
-  /**
-   * Name of the file
-   */
-  fileName: string;
 }

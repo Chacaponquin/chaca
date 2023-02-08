@@ -1,29 +1,33 @@
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { SchemaField } from "../../../../schemas/SchemaField.js";
-import { Export } from "../../../helpers/Export.js";
+import { ChacaError } from "../../../errors/ChacaError.js";
+import { SchemaField } from "../../../schemas/SchemaField.js";
+import { Export } from "../../helpers/Export.js";
 
-import { FileConfig } from "../../../interfaces/export.interface.js";
+import { FileConfig } from "../../interfaces/export.interface.js";
 import {
   CommonSchema,
   CustomField,
   FieldSchemaConfig,
   SchemaInput,
   SchemaToResolve,
-} from "../../../interfaces/schema.interface.js";
+} from "../../interfaces/schema.interface.js";
 import {
   CustomFieldResolver,
   EnumFieldResolver,
   MixedFieldResolver,
   SchemaFieldResolver,
-} from "../../Resolvers/index.js";
-import { Schema } from "../Schema/Schema.js";
+} from "../Resolvers/index.js";
+import { SchemaResolver } from "../SchemaResolver.js";
 
-export abstract class ChacaSchema<K, T> {
-  /**
-   * Generate an array of schema documents
-   * @param cantDocuments number of documents that you want to create
-   */
-  public abstract generate(cantDocuments: number): K[];
+export class ChacaSchema<K = any, T = any> {
+  private schemaObj: SchemaToResolve<T>;
+
+  constructor(inputObj: SchemaInput<K, T>) {
+    this.schemaObj = this.validateObjectSchema(inputObj);
+  }
+
+  public getSchemaObject() {
+    return this.schemaObj;
+  }
 
   /**
    * Generate and export the schema documents
@@ -61,7 +65,7 @@ export abstract class ChacaSchema<K, T> {
         const key = k as keyof T;
         const schema = obj[key] as FieldSchemaConfig<K, T[keyof T]>;
 
-        if (schema instanceof Schema) {
+        if (schema instanceof ChacaSchema) {
           schemaToSave = {
             ...schemaToSave,
             [key]: { type: new MixedFieldResolver(schema), ...defaultConfig },
@@ -94,7 +98,7 @@ export abstract class ChacaSchema<K, T> {
                 ...schemaToSave,
                 [key]: {
                   type:
-                    type instanceof Schema
+                    type instanceof ChacaSchema
                       ? new MixedFieldResolver(type)
                       : new SchemaFieldResolver(type),
                   ...defaultConfig,
@@ -155,9 +159,9 @@ export abstract class ChacaSchema<K, T> {
 
   private validateType(
     key: keyof T,
-    type: Schema<T[keyof T]> | SchemaField<T[keyof T], any>,
-  ): Schema<T[keyof T]> | SchemaField<T[keyof T], any> {
-    if (type instanceof Schema || type instanceof SchemaField) {
+    type: ChacaSchema<T[keyof T]> | SchemaField<T[keyof T], any>,
+  ): ChacaSchema<T[keyof T]> | SchemaField<T[keyof T], any> {
+    if (type instanceof ChacaSchema || type instanceof SchemaField) {
       return type;
     } else throw new ChacaError(`Invalid type for key ${String(key)}`);
   }
@@ -242,5 +246,29 @@ export abstract class ChacaSchema<K, T> {
     }
 
     return value;
+  }
+
+  /**
+   * Generate an array of schema documents
+   * @param cantDocuments number of documents that you want to create
+   */
+  public generate(cantDocuments: number): K[] {
+    let numberCant = 10;
+
+    if (typeof cantDocuments === "number") {
+      if (cantDocuments >= 0 && cantDocuments <= 500) {
+        numberCant = cantDocuments;
+      } else if (cantDocuments < 0) {
+        throw new ChacaError(
+          `You can not generate a negative number of documents`,
+        );
+      } else if (cantDocuments > 500) {
+        throw new ChacaError(`You can not generate too much documents`);
+      }
+    }
+
+    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj);
+
+    return schemaToResolve.resolve(numberCant);
   }
 }

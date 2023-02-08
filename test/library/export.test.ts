@@ -81,7 +81,7 @@ describe("#Export Test", () => {
   });
 
   describe("export a complete schema in all formats", () => {
-    const postSchema = chaca.defineSchema("MoviePost", {
+    const postSchema = chaca.defineSchema({
       id: schemas.id.uuid(),
       authors: {
         type: schemas.person.fullName({ language: "es" }),
@@ -324,50 +324,6 @@ describe("#Export Test", () => {
             expect(typeof s === "string").toBe(true);
           });
       });
-    });
-  });
-
-  describe("exportAll tests", () => {
-    const schema1 = chaca.defineSchema("mySchema1", {
-      id: { type: schemas.id.mongodbID(), isArray: 20 },
-      image: { type: schemas.image.film() },
-      name: { type: schemas.person.firstName({ language: "es" }) },
-    });
-
-    const schema2 = chaca.defineSchema("mySchema2", {
-      id: { type: schemas.id.mongodbID(), isArray: 20 },
-      image: { type: schemas.image.film() },
-      name: { type: schemas.person.firstName({ language: "es" }) },
-    });
-
-    const schema3 = chaca.defineSchema("mySchema3", {
-      id: { type: schemas.id.mongodbID(), isArray: 20 },
-      image: { type: schemas.image.film() },
-      name: { type: schemas.person.firstName({ language: "es" }) },
-    });
-
-    it("export a zip, with all schemas with extension json", () => {
-      chaca
-        .exportAll({
-          zipName: "testExportAllJson",
-          location: root,
-          format: "json",
-        })
-        .then((s) => {
-          expect(typeof s === "string").toBe(true);
-        });
-    });
-
-    it("export a zip, with schemas with java extension", async () => {
-      chaca
-        .exportAll({
-          zipName: "testExportAllJava",
-          location: root,
-          format: "java",
-        })
-        .then((s) => {
-          expect(typeof s === "string").toBe(true);
-        });
     });
   });
 });
