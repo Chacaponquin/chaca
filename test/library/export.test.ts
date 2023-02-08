@@ -342,18 +342,64 @@ describe("#Export Test", () => {
       }),
     });
 
-    describe("JSON File", () => {
-      it("should return an array with objects with the key user as object with property firstName and image", () => {
-        schema
-          .generateAndExport(20, {
-            fileName: "632864289",
-            location: root,
-            format: "json",
-          })
-          .then((s) => {
-            expect(typeof s === "string").toBe(true);
-          });
-      });
+    it("JSON File", () => {
+      schema
+        .generateAndExport(20, {
+          fileName: "schemaNestedObjects",
+          location: root,
+          format: "json",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
+
+    it("JS File", () => {
+      schema
+        .generateAndExport(20, {
+          fileName: "schemaNestedObjects",
+          location: root,
+          format: "javascript",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
+
+    it("TS File", () => {
+      schema
+        .generateAndExport(20, {
+          fileName: "schemaNestedObjects",
+          location: root,
+          format: "typescript",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
+
+    it("Yaml File", () => {
+      schema
+        .generateAndExport(20, {
+          fileName: "schemaNestedObjects",
+          location: root,
+          format: "yaml",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
+
+    it("CSV File", () => {
+      schema
+        .generateAndExport(20, {
+          fileName: "schemaNestedObjects",
+          location: root,
+          format: "csv",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
     });
   });
 });
