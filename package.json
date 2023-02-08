@@ -43,9 +43,10 @@
     "generate data",
     "random data",
     "data",
-    "fake data",
     "fake-data-generator",
-    "logical data"
+    "logical data",
+    "generator",
+    "data"
   ],
   "author": "chacaponquin <hectorangel2001@gmail.com>",
   "license": "MIT",
