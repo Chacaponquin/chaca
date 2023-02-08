@@ -27,7 +27,7 @@ type MoviePost = {
   };
 };
 
-const postSchema = chaca.defineSchema<MoviePost>("MoviePost", {
+const postSchema = chaca.defineSchema<MoviePost>({
   id: schemas.id.uuid(),
   authors: {
     type: schemas.person.fullName({ language: "es" }),
@@ -96,23 +96,6 @@ await postSchema.generateAndExport(20, {
 });
 ```
 
-## Schema Definition
-
-When creating schemas you have two options: use a defined schema with the method `defineSchema` or a simple schema by instantiating the class `Schema`
-
-> Differences between both schemas:
->
-> - The simple schema can be used to nest schemas inside other schemas as you can see in the [example at the beginning](#usage)
-> - The defined schema is stored and can be exported with the other defined schemas with the [exportAll method](#chacaexportall)
-
-```ts
-// Defined Schema
-const definedSchema = chaca.defineSchema("mySchema", { ...fields });
-
-// Nested Schema
-const nestedSchema = new chaca.Schema({ ...fields });
-```
-
 ## Config API
 
 ### `type`
@@ -158,7 +141,7 @@ enum: ['Hello World', 'Hi Friend', 'My Name is Hector'] // 'Hi Friend'
 enum: [1, 5, 3, 20, 2] // 2
 ```
 
-> **Note** If you pass an empty array `[]` an error will be sent
+> **Note** If you pass an empty array `[]` an the result will be `null`
 
 ### `custom`
 
@@ -235,6 +218,7 @@ schemas.person.firstName();
 
 // Get a value from the schema
 schemas.person.firstName().getValue(); // 'Juan'
+// Get a value from the schema with arguments
 schemas.person.firstName().getValue({ sex: "female" }); // 'Camila'
 ```
 
@@ -557,28 +541,13 @@ const fileLocation = await chaca.export(data, {
 });
 ```
 
-### `chaca.exportAll`
-
-Export all the defined schemas
-
-> See [Schema Definition](#schema-definition) to understand about diferences between schemas
-
-```ts
-// Export all the defined schemas in a zip (With diferent csv files)
-await chaca.exportAll({
-  zipName: "myData",
-  location: "./dataFolder",
-  format: "csv",
-});
-```
-
 ### `schema.generateAndExport`
 
 ```ts
 const schema = new chaca.Schema({
-  id: { type: schemas.id.mongodbID() },
-  image: { type: schemas.image.film() },
-  name: { type: schemas.person.firstName({ language: "es" }) },
+  id: schemas.id.mongodbID(),
+  image: schemas.image.film(),
+  name: schemas.person.firstName({ language: "es" }),
 });
 
 // Generates and export in a json file 30 documents of the schema

@@ -269,12 +269,12 @@ describe("#Export Test", () => {
         });
     });
 
-    it("In a TS File", () => {
+    it("In a Yaml File", () => {
       schema
         .generateAndExport(1, {
           fileName: "oneObjectArray",
           location: root,
-          format: "typescript",
+          format: "yaml",
         })
         .then((s) => {
           expect(typeof s === "string").toBe(true);
@@ -289,6 +289,18 @@ describe("#Export Test", () => {
           fileName: "oneObjectArray",
           location: root,
           format: "javascript",
+        })
+        .then((s) => {
+          expect(typeof s === "string").toBe(true);
+        });
+    });
+
+    it("In a Yaml File", () => {
+      schemaWithArray
+        .generateAndExport(10, {
+          fileName: "oneObjectArray",
+          location: root,
+          format: "yaml",
         })
         .then((s) => {
           expect(typeof s === "string").toBe(true);
