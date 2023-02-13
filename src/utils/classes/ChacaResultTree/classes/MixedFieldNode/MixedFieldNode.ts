@@ -11,7 +11,7 @@ export class MixedFieldNode extends FieldNode {
     let resultObject = {};
 
     this.nodes.forEach((n) => {
-      resultObject = { ...resultObject, [n.nodeConfig.name]: n.getValue() };
+      resultObject = { ...resultObject, [n.nodeConfig.name]: n.getRealValue() };
     });
 
     return resultObject;

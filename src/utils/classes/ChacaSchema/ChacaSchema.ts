@@ -129,9 +129,7 @@ export class ChacaSchema<K = any, T = any> {
                 `The field ${String(key)} dosen't have a resolve function`,
               );
             }
-          }
 
-          if (schema.posibleNull) {
             schemaToSave = {
               ...schemaToSave,
               [key]: {
@@ -139,9 +137,7 @@ export class ChacaSchema<K = any, T = any> {
                 posibleNull: this.validatePosibleNull(schema.posibleNull),
               },
             };
-          }
 
-          if (schema.isArray) {
             schemaToSave = {
               ...schemaToSave,
               [key]: {
@@ -195,54 +191,62 @@ export class ChacaSchema<K = any, T = any> {
       );
   }
 
-  private validatePosibleNull(pos: boolean | number): number {
+  private validatePosibleNull(pos: boolean | number | undefined): number {
     let value: number;
 
-    if (typeof pos === "number") {
-      value = pos <= 100 && pos >= 0 ? pos : 50;
-    } else {
-      value = pos ? 50 : 0;
-    }
+    if (pos) {
+      if (typeof pos === "number") {
+        value = pos <= 100 && pos >= 0 ? pos : 0;
+      } else if (typeof pos === "boolean") {
+        value = pos ? 50 : 0;
+      } else {
+        value = 0;
+      }
+    } else value = 0;
 
     return value;
   }
 
   private validateIsArray(
-    isArray: boolean | number | { min?: number; max?: number },
+    isArray: boolean | number | { min?: number; max?: number } | undefined,
   ): { min: number; max: number } | null {
     let value: { min: number; max: number } | null = null;
 
-    if (typeof isArray === "number") {
-      if (isArray >= 1) {
-        value = {
-          min: isArray,
-          max: isArray,
-        };
-      } else {
-        value = {
-          min: 10,
-          max: 10,
-        };
-      }
-    } else if (typeof isArray === "boolean") {
-      if (isArray) value = { min: 0, max: 10 };
-      else value = null;
-    } else if (
-      typeof isArray === "object" &&
-      !(isArray instanceof Date) &&
-      !Array.isArray(isArray) &&
-      isArray !== null
-    ) {
-      const min =
-        typeof isArray["min"] === "number" && isArray["min"] > 0
-          ? isArray["min"]
-          : 1;
-      const max =
-        typeof isArray["max"] === "number" && isArray["max"] > min
-          ? isArray["max"]
-          : min + 9;
+    if (isArray) {
+      if (typeof isArray === "number") {
+        if (isArray >= 1) {
+          value = {
+            min: isArray,
+            max: isArray,
+          };
+        } else {
+          value = {
+            min: 10,
+            max: 10,
+          };
+        }
+      } else if (typeof isArray === "boolean") {
+        if (isArray) value = { min: 0, max: 10 };
+        else value = null;
+      } else if (
+        typeof isArray === "object" &&
+        !(isArray instanceof Date) &&
+        !Array.isArray(isArray) &&
+        isArray !== null
+      ) {
+        const min =
+          typeof isArray["min"] === "number" && isArray["min"] > 0
+            ? isArray["min"]
+            : 1;
+        const max =
+          typeof isArray["max"] === "number" && isArray["max"] > min
+            ? isArray["max"]
+            : min + 9;
 
-      value = { min, max };
+        value = { min, max };
+      }
+    } else {
+      value = null;
     }
 
     return value;

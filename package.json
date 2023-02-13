@@ -1,6 +1,6 @@
 {
   "name": "chaca",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A Node JS library to create and export data schemas with your rules",
   "main": "./lib/esm/index.js",
   "module": "./lib/esm/index.js",

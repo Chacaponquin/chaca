@@ -11,7 +11,10 @@ export class DocumentTree<D> {
     let returnObject = {} as D;
 
     for (const n of this.nodes) {
-      returnObject = { ...returnObject, [n.nodeConfig.name]: n.getValue() };
+      returnObject = {
+        ...returnObject,
+        [n.nodeConfig.name]: n.getRealValue(),
+      };
     }
 
     return returnObject;

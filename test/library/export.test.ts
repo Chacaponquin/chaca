@@ -9,7 +9,7 @@ const schema = new chaca.Schema({
 
 const schemaWithArray = new chaca.Schema({
   id: { type: schemas.id.mongodbID(), isArray: 20 },
-  image: { type: schemas.image.film() },
+  image: { type: schemas.image.film(), posibleNull: 50 },
   name: { type: schemas.person.firstName({ language: "es" }) },
 });
 
