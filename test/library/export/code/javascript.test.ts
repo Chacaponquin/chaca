@@ -68,6 +68,18 @@ describe("#Javascript Export Test", () => {
     });
   });
 
+  describe("Export an Date", () => {
+    it("Export a new Date", () => {
+      chaca
+        .export(new Date(), {
+          format: "javascript",
+          fileName: objectFileName + "DateNow",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s === "string").toBe(true));
+    });
+  });
+
   describe("Export an object", () => {
     it("Export empty object", () => {
       chaca
