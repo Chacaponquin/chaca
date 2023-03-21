@@ -18,23 +18,21 @@ export class TypescriptGenerator extends Generator {
     let javascriptCode = "";
     let code = "";
 
-    const nameCapitalizaed = PrivateUtils.camelCaseText(this.config.fileName);
+    const variableName = PrivateUtils.camelCaseText(this.config.fileName);
 
     if (Array.isArray(this.data)) {
       javascriptCode = new JavascriptGenerator(
         this.data,
         this.config,
       ).generateSchemaArray(this.data);
-      code = `const ${nameCapitalizaed} :  ${this.generateSchemaInterface()}[] = ${javascriptCode};\n`;
+      code = `const ${variableName} :  ${this.generateSchemaInterface()}[] = ${javascriptCode};\n`;
     } else {
-      javascriptCode = javascriptCode = new JavascriptGenerator(
+      javascriptCode = new JavascriptGenerator(
         this.data,
         this.config,
-      ).generateObject(this.data);
-      code = `const ${nameCapitalizaed} :  ${this.generateObjectInterface(
-        PrivateUtils.capitalizeCamelCase(this.config.fileName),
-        this.data,
-      )} = ${javascriptCode};\n`;
+      ).filterTypeValue(this.data);
+
+      code = `const ${variableName} = ${javascriptCode};\n`;
     }
 
     allCode += code;

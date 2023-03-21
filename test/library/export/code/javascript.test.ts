@@ -1,7 +1,7 @@
 import { chaca } from "../../../../src";
 
 const objectFileName = "javascriptExport";
-const ROOT = "./data";
+const ROOT = "./data/javascript";
 
 describe("#Javascript Export Test", () => {
   describe("Export Primitive values", () => {
