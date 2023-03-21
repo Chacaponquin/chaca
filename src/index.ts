@@ -1,5 +1,9 @@
 import { ChacaUtils } from "./utils/helpers/ChacaUtils.js";
 import { SchemaInput } from "./utils/interfaces/schema.interface.js";
+import {
+  ExportFormat,
+  FileConfig,
+} from "./utils/interfaces/export.interface.js";
 
 import { Schemas } from "./schemas/index.js";
 import { SchemaField } from "./schemas/SchemaField.js";
@@ -7,11 +11,9 @@ import { SchemaField } from "./schemas/SchemaField.js";
 import { ChacaSchema } from "./utils/classes/ChacaSchema/ChacaSchema.js";
 
 import { Export } from "./utils/helpers/Export.js";
+import { ChacaError } from "./errors/ChacaError.js";
 
 const Chaca = {
-  /**
-   * All schemas created
-   */
   Schema: ChacaSchema,
   utils: ChacaUtils,
 
@@ -49,7 +51,7 @@ const Chaca = {
    * @param data Data you want to export
    * @param config Configuration of the file you want to export (name, location, format, etc.)
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'`)
    *
    *  - `'java'`
    * Export a zip file with the classes files and the main java file with the initialization of data
@@ -66,6 +68,9 @@ const Chaca = {
    * - `'json'`
    * Export a json file with the data created
    *
+   * - `'yaml'`
+   * Export a yaml file with the data created
+   *
    * @example
    * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]
    * const config = {fileName: 'Users', format: 'json', location: '../../data'}
@@ -80,6 +85,6 @@ const Chaca = {
 export const chaca = Chaca;
 export const schemas = Schemas;
 
-export { SchemaField, ChacaSchema };
+export { SchemaField, ChacaSchema, ChacaError };
 
-export type { SchemaInput };
+export type { SchemaInput, ExportFormat, FileConfig };

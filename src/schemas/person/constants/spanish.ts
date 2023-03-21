@@ -3,6 +3,7 @@ import { ILanguageNames } from ".";
 export const SPANISH_NAMES: ILanguageNames = {
   female: [
     "Olivia",
+    "Amaya",
     "Ava",
     "Isabella",
     "Luna",

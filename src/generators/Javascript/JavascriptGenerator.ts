@@ -11,14 +11,16 @@ export class JavascriptGenerator extends Generator {
   public async generateFile(): Promise<string> {
     let returnData = ``;
 
+    const variableName = PrivateUtils.camelCaseText(this.config.fileName);
+
     if (Array.isArray(this.data)) {
-      returnData += `const ${PrivateUtils.camelCaseText(
-        this.config.fileName,
-      )} = ${this.generateSchemaArray(this.data)};\n`;
+      returnData += `const ${variableName} = ${this.generateSchemaArray(
+        this.data,
+      )};\n`;
     } else {
-      returnData += `const ${PrivateUtils.camelCaseText(
-        this.config.fileName,
-      )} = ${this.generateObject(this.data)}`;
+      returnData += `const ${variableName} = ${this.filterTypeValue(
+        this.data,
+      )}`;
     }
 
     await fs.promises.writeFile(this.route, returnData, "utf-8");
@@ -30,13 +32,10 @@ export class JavascriptGenerator extends Generator {
     let returnArray = `[`;
 
     for (let i = 0; i < schemaObjects.length; i++) {
-      if (
-        typeof schemaObjects[i] === "object" &&
-        !Array.isArray(schemaObjects[i])
-      ) {
-        if (i !== schemaObjects.length - 1)
-          returnArray += `${this.generateObject(schemaObjects[i])}, `;
-        else returnArray += `${this.generateObject(schemaObjects[i])}`;
+      if (i !== schemaObjects.length - 1)
+        returnArray += `${this.filterTypeValue(schemaObjects[i])}, `;
+      else {
+        returnArray += `${this.filterTypeValue(schemaObjects[i])}`;
       }
     }
 
@@ -48,10 +47,11 @@ export class JavascriptGenerator extends Generator {
   private filterTypeValue(value: any): string {
     let returnValue = "undefined";
 
-    if (typeof value === "string") returnValue = `"${value}"`;
-    else if (typeof value === "number" || typeof value === "boolean")
+    if (typeof value === "string") {
+      returnValue = `"${value}"`;
+    } else if (typeof value === "number" || typeof value === "boolean") {
       returnValue = `${value}`;
-    else if (typeof value === "object") {
+    } else if (typeof value === "object") {
       if (Array.isArray(value)) returnValue = this.generateArray(value);
       else {
         if (value === null) returnValue = "null";

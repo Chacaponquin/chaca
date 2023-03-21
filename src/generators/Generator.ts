@@ -28,20 +28,8 @@ export abstract class Generator {
   }
 
   private validateData(): void {
-    if (
-      !(typeof this.data === "object") ||
-      this.data === null ||
-      this.data instanceof Date
-    ) {
-      if (Array.isArray(this.data)) {
-        for (const o of this.data) {
-          if (!(typeof o === "object") || o === null || o instanceof Date) {
-            throw new ChacaError("You must pass an array of objects");
-          }
-        }
-      }
-
-      throw new ChacaError("The data must be an array or an object");
+    if (typeof this.data === "function") {
+      throw new ChacaError("The data can not be a function");
     }
   }
 

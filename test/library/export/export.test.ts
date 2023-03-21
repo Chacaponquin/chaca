@@ -1,5 +1,5 @@
-import { schemas, chaca } from "../../src";
-import { ChacaError } from "../../src/errors/ChacaError";
+import { schemas, chaca } from "../../../src";
+import { ChacaError } from "../../../src/errors/ChacaError";
 
 const schema = new chaca.Schema({
   id: { type: schemas.id.mongodbID() },

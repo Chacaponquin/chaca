@@ -38,6 +38,9 @@ export interface FileConfig {
    * - `'json'`
    * Export a json file with the data created
    *
+   * - `'yaml'`
+   * Export a yaml file with the data created
+   *
    * @example { format: 'csv' }
    */
   format: ExportFormat;
