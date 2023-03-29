@@ -249,6 +249,14 @@ export class ChacaSchema<K = any, T = any> {
   }
 
   /**
+   * Generate a schema document
+   */
+  public generateObject(): K {
+    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj);
+    return schemaToResolve.resolve(1)[0];
+  }
+
+  /**
    * Generate an array of schema documents
    * @param cantDocuments number of documents that you want to create
    */
@@ -268,7 +276,6 @@ export class ChacaSchema<K = any, T = any> {
     }
 
     const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj);
-
     return schemaToResolve.resolve(numberCant);
   }
 }

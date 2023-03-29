@@ -2,9 +2,9 @@ import { schemas, chaca } from "../../../src";
 import { ChacaError } from "../../../src/errors/ChacaError";
 
 const schema = new chaca.Schema({
-  id: { type: schemas.id.mongodbID() },
-  image: { type: schemas.image.film() },
-  name: { type: schemas.person.firstName({ language: "es" }) },
+  id: schemas.id.mongodbID(),
+  image: schemas.image.film(),
+  name: schemas.person.firstName({ language: "es" }),
 });
 
 const root = "./data";

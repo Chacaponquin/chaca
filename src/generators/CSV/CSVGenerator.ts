@@ -16,6 +16,8 @@ export class CSVGenerator extends Generator {
     } else {
       if (typeof this.data === "object" && this.data !== null) {
         content = this.generateArrayObjectsContent([this.data]);
+      } else {
+        throw new ChacaError(`Your data is not an object`);
       }
     }
 
