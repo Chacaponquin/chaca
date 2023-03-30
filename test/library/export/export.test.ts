@@ -1,18 +1,12 @@
-import { schemas, chaca } from "../../../src";
 import { ChacaError } from "../../../src/errors/ChacaError";
-
-const schema = new chaca.Schema({
-  id: schemas.id.mongodbID(),
-  image: schemas.image.film(),
-  name: schemas.person.firstName({ language: "es" }),
-});
+import { simpleSchema } from "./utils/simpleSchema";
 
 const root = "./data";
 
 describe("#Export Test", () => {
   describe("export with incorrrect arguments", () => {
-    it("no file name. Should throw an error", () => {
-      schema
+    it("No file name. Should throw an error", () => {
+      simpleSchema
         .generateAndExport(1, {
           fileName: "",
           format: "json",
@@ -22,7 +16,7 @@ describe("#Export Test", () => {
     });
 
     it("incorrect format file. Should throw an error", () => {
-      schema
+      simpleSchema
         .generateAndExport(1, {
           fileName: "quetal",
           format: "buenas" as any,

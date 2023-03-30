@@ -28,7 +28,7 @@ export class CSVGenerator extends Generator {
   private generateArrayObjectsContent(objects: Array<any>): string {
     let content = "";
 
-    const allProperties = this.getAllProperties(this.data);
+    const allProperties = this.getAllProperties(objects);
 
     allProperties.forEach((p, i) => {
       if (i !== allProperties.length - 1) {
@@ -70,6 +70,8 @@ export class CSVGenerator extends Generator {
 
     if (value == null) {
       retString = `NULL`;
+    } else if (typeof value === "object" && !(value instanceof Date)) {
+      throw new ChacaError(`Yo can not insert a nested object into a CSV File`);
     } else {
       retString = JSON.stringify(value);
     }
