@@ -76,17 +76,29 @@ describe("#Export CSV test", () => {
         .catch((error) => expect(error instanceof ChacaError).toBe(true));
     });
 
-    it("Array of complete schema", () => {
-      chaca
-        .export(COMPLETE_SCHEMA_DOCS, {
+    it("Array of complete schema", async () => {
+      await expect(
+        chaca.export(COMPLETE_SCHEMA_DOCS, {
           fileName: objectFileName + "ArrayCompleteSchema",
           location: ROOT,
           format: "csv",
+        }),
+      ).rejects.toThrowError(ChacaError);
+    });
+
+    it("Array of object with diferent properties", async () => {
+      const data = [
+        { name: "Hector", age: 20 },
+        { fullName: "Pquito antonio", favoriteNumber: 50 },
+      ];
+
+      chaca
+        .export(data, {
+          fileName: objectFileName + "ArrayObjectDiferentProperties",
+          location: ROOT,
+          format: "csv",
         })
-        .then(() => {
-          throw new Error();
-        })
-        .catch((error) => expect(error instanceof ChacaError).toBe(true));
+        .then((s) => expect(typeof s === "string").toBe(true));
     });
   });
 });

@@ -27,9 +27,26 @@ describe("#Export Typescript", () => {
 
     it("Export String", () => {
       chaca
-        .export(false, {
+        .export("Buenas", {
           format: "typescript",
           fileName: objectFileName + "String",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s === "string").toBe(true));
+    });
+  });
+
+  describe("Export Array", () => {
+    it("Array of diferent objects", () => {
+      const data = [
+        { name: "Hector", age: 20 },
+        { fullName: "Pquito antonio", favoriteNumber: 50 },
+      ];
+
+      chaca
+        .export(data, {
+          format: "typescript",
+          fileName: objectFileName + "ArrayDiferentObject",
           location: ROOT,
         })
         .then((s) => expect(typeof s === "string").toBe(true));
@@ -49,6 +66,8 @@ describe("#Export Typescript", () => {
         )
         .then((s) => expect(typeof s === "string").toBe(true));
     });
+
+    it("Export ", () => {});
 
     it("Export empty object", () => {
       chaca
