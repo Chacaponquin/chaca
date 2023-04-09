@@ -5,6 +5,15 @@ export class PrivateUtils {
     return this.oneOfArray([true, false]);
   }
 
+  /*static equalArray(array1: Array<string | number>, array2: Array<string | number>): boolean{
+const topLength = array1.length >= array2.length ?  array1.length : array2.length
+
+let equal = true
+for(let i = 0; i < topLength && equal; i++) {
+  if()
+}
+  }*/
+
   static joinWords(words: string[] | string, sep?: string): string {
     const separator = typeof sep === "string" ? sep : "_";
     if (typeof words === "string") {

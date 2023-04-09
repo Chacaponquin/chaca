@@ -3,11 +3,19 @@ import { Generator } from "../Generator.js";
 import { JavascriptGenerator } from "../Javascript/JavascriptGenerator.js";
 import fs from "fs";
 import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { Schemas } from "../../schemas/index.js";
 
-type DataObject = { [key: string]: any };
+interface ObjectInterface {
+  name: string;
+  fields: Array<{
+    fieldName: string;
+
+    types: Array<string>;
+  }>;
+}
+
 export class TypescriptGenerator extends Generator {
-  private interfacesCode = "";
-  private interfacesCreated: string[] = [];
+  private interfaceCode: Array<ObjectInterface> = [];
 
   constructor(data: any, config: FileConfig) {
     super(data, "ts", config);
@@ -24,8 +32,11 @@ export class TypescriptGenerator extends Generator {
       javascriptCode = new JavascriptGenerator(
         this.data,
         this.config,
-      ).generateSchemaArray(this.data);
-      code = `const ${variableName} :  ${this.generateSchemaInterface()}[] = ${javascriptCode};\n`;
+      ).filterTypeValue(this.data);
+
+      code = `const ${variableName} : ${this.generateArrayInterface(
+        this.data,
+      )} = ${javascriptCode};\n`;
     } else {
       javascriptCode = new JavascriptGenerator(
         this.data,
@@ -39,178 +50,122 @@ export class TypescriptGenerator extends Generator {
 
     await fs.promises.writeFile(
       this.route,
-      this.interfacesCode + allCode,
+      this.transformInterfacesToCode() + allCode,
       "utf8",
     );
 
     return this.route;
   }
 
-  private generateSchemaInterface(): string {
-    const interfaceName = `I${PrivateUtils.capitalizeCamelCase(
-      this.config.fileName,
-    )}`;
-    let interfaceCode = `interface ${interfaceName}{\n`;
+  private transformInterfacesToCode(): string {
+    let returnInterfaces = "";
 
-    for (const key of Object.keys(this.data[0])) {
-      const allValues = this.data.map((el: any) => el[key]);
+    this.interfaceCode.forEach((i) => {
+      returnInterfaces += `interface ${i.name}{`;
 
-      const retInt: string[] = [];
-      for (const val of allValues) {
-        if (Array.isArray(val)) retInt.push(this.generateArrayInterface(val));
-        else retInt.push(this.generateInterfaceByValue(val));
-      }
+      i.fields.forEach((f) => {
+        returnInterfaces += `${f.fieldName}: ${f.types.join(" | ")};`;
+      });
 
-      const uniqueInt = new Set(retInt);
-      const uniqueValues: string[] = [];
-      uniqueInt.forEach((el) => uniqueValues.push(el));
+      returnInterfaces += "}\n";
+    });
 
-      let keyInterface: string;
-      if (uniqueValues.length <= 1) keyInterface = `${uniqueValues[0]}`;
-      else {
-        const str = "(" + uniqueValues.join(" | ") + ")";
-        keyInterface = str;
-      }
-
-      interfaceCode += `${key}: ${keyInterface};`;
-    }
-
-    interfaceCode += "}\n";
-    this.interfacesCode += interfaceCode;
-
-    return interfaceName;
-  }
-
-  private generateObjectInterface(
-    interfaceName: string,
-    doc: DataObject,
-  ): string {
-    const foundInterface = this.interfacesCreated.find(
-      (el) => el === interfaceName,
-    );
-
-    if (!foundInterface) {
-      let interfaceCode = `interface ${interfaceName}{\n\t`;
-      const similiarObjects = this.searchSimilarObjects(doc);
-
-      if (similiarObjects.length > 0) {
-        for (const key of Object.keys(doc)) {
-          const allKeysValues = similiarObjects.map((el) => {
-            return el[key];
-          });
-
-          const allTypes = allKeysValues.map((el) =>
-            this.generateInterfaceByValue(el),
-          );
-          const uniqueTypes = new Set(allTypes);
-
-          let type: string;
-          if (uniqueTypes.size <= 1) {
-            type = `${allTypes[0]}`;
-          } else {
-            const unique: string[] = [];
-            uniqueTypes.forEach((el) => unique.push(el));
-            const str = "(" + unique.join(" | ") + ")";
-            type = `${str}`;
-          }
-
-          interfaceCode += `${key}: ${type};`;
-        }
-      } else {
-        for (const [key, value] of Object.entries(doc)) {
-          interfaceCode += `${key}: ${this.generateInterfaceByValue(value)};`;
-        }
-      }
-
-      interfaceCode += "}\n";
-      this.interfacesCode += interfaceCode;
-      this.interfacesCreated.push(interfaceName);
-    }
-
-    return interfaceName;
-  }
-
-  private searchSimilarObjects(object: DataObject): Array<DataObject> {
-    const retArray = [] as DataObject[];
-
-    const objectCompare = (val: any) => {
-      if (Array.isArray(val)) {
-        for (const v of val) {
-          if (PrivateUtils.isSimilarObjects(object, v)) {
-            retArray.push(v as DataObject);
-          }
-
-          if (v instanceof Object) {
-            for (const valAnid of Object.values(val)) {
-              objectCompare(valAnid);
-            }
-          }
-        }
-      } else {
-        if (PrivateUtils.isSimilarObjects(object, val)) {
-          retArray.push(val as DataObject);
-        }
-
-        if (val instanceof Object) {
-          for (const valAnid of Object.values(val)) {
-            objectCompare(valAnid);
-          }
-        }
-      }
-    };
-
-    if (Array.isArray(this.data)) {
-      for (const doc of this.data) {
-        for (const val of Object.values(doc)) {
-          objectCompare(val);
-        }
-      }
-    }
-
-    return retArray;
-  }
-
-  private generateInterfaceByValue(value: any): string {
-    let returnValue = "undefined";
-
-    if (typeof value == "string") returnValue = "string";
-    else if (typeof value === "number") returnValue = "number";
-    else if (typeof value === "boolean") returnValue = "boolean";
-    else if (value === null) returnValue = "null";
-    else if (typeof value == "object") {
-      if (Array.isArray(value)) {
-        returnValue = this.generateArrayInterface(value);
-      } else if (value instanceof Date) returnValue = "Date";
-      else {
-        let name = `Object`;
-        const keys = Object.keys(value);
-        for (const key of keys) name += key;
-        returnValue = this.generateObjectInterface(name, value);
-      }
-    }
-
-    return returnValue;
+    return returnInterfaces;
   }
 
   private generateArrayInterface(array: Array<any>): string {
-    let interfaceCode = ``;
+    const arrayTypes = [] as Array<string>;
 
-    const allTypes = array.map((el) => this.generateInterfaceByValue(el));
-    const uniqueTypes = new Set(allTypes);
-
-    if (uniqueTypes.size <= 1) {
-      interfaceCode += `${allTypes[0]}`;
-    } else {
-      const unique: string[] = [];
-      uniqueTypes.forEach((el) => unique.push(el));
-
-      const str = "(" + unique.join(" | ") + ")";
-
-      interfaceCode += `${str}`;
+    for (const value of array) {
+      const t = this.filterTypeValue(value);
+      arrayTypes.push(t);
     }
 
-    interfaceCode += `[]`;
+    const interfaceName = `Array< ${arrayTypes.join(" | ")} > `;
 
-    return interfaceCode;
+    return interfaceName;
+  }
+
+  filterTypeValue(value: any): string {
+    let t = "null";
+
+    if (typeof value === "string") {
+      t = "string";
+    } else if (typeof value === "number") {
+      t = "number";
+    } else if (typeof value === "boolean") {
+      t = "boolean";
+    } else if (typeof value === "undefined") {
+      t = "undefined";
+    } else if (typeof value === "object") {
+      if (Array.isArray(value)) {
+        t = this.generateArrayInterface(value);
+      } else if (value instanceof Date) {
+        t = "Date";
+      } else if (value === null) {
+        t = "null";
+      } else {
+        t = this.generateObjectInterface(value);
+      }
+    }
+
+    return t;
+  }
+
+  private generateObjectInterface(doc: any): string {
+    let interfaceName = `Object${Schemas.id.mongodbID().getValue()}`;
+
+    // Buscar si el objeto ya fue creado
+    let exists = false;
+    Object.keys(doc).forEach((key) => {
+      for (let i = 0; i < this.interfaceCode.length && !exists; i++) {
+        const int = this.interfaceCode[i];
+
+        for (let j = 0; j < int.fields.length; j++) {
+          if (int.fields[j].fieldName === key) {
+            exists = true;
+            interfaceName = int.name;
+          }
+        }
+      }
+    });
+
+    // Si existe solo se cambia en la interfaz creada
+    if (exists) {
+      this.interfaceCode.forEach((i) => {
+        if (i.name === interfaceName) {
+          Object.entries(doc).forEach(([key, value]) => {
+            const foundKey = i.fields.find((subI) => subI.fieldName === key);
+
+            if (foundKey) {
+              const valueType = this.filterTypeValue(value);
+              const existsType = foundKey.types.some((t) => t === valueType);
+
+              if (!existsType) {
+                foundKey.types.push(valueType);
+              }
+            }
+          });
+        }
+      });
+
+      // En caso de no existir se crea la interfaz
+    } else {
+      const newInterface: ObjectInterface = {
+        name: interfaceName,
+        fields: [],
+      };
+
+      Object.entries(doc).forEach(([key, value]) => {
+        newInterface.fields.push({
+          fieldName: key,
+          types: [this.filterTypeValue(value)],
+        });
+      });
+
+      this.interfaceCode.push(newInterface);
+    }
+
+    return interfaceName;
   }
 }
