@@ -6,7 +6,7 @@ export const SCHEMA = new chaca.Schema({
   name: schemas.person.firstName({ language: "es" }),
   currentMovie: new chaca.Schema({
     name: schemas.person.firstName(),
-    image: schemas.image.event(),
+    image: { type: schemas.image.event(), posibleNull: 60 },
   }),
 });
 
