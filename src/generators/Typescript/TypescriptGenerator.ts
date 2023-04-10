@@ -78,7 +78,10 @@ export class TypescriptGenerator extends Generator {
 
     for (const value of array) {
       const t = this.filterTypeValue(value);
-      arrayTypes.push(t);
+
+      if (!arrayTypes.includes(t)) {
+        arrayTypes.push(t);
+      }
     }
 
     const interfaceName = `Array< ${arrayTypes.join(" | ")} > `;

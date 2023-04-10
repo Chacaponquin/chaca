@@ -1,7 +1,13 @@
 import { chaca, schemas } from "../../../../src";
 
-export const TEST_ARRAY_DOCS = new chaca.Schema({
-  id: { type: schemas.id.mongodbID(), isArray: 20 },
-  image: { type: schemas.image.film() },
-  name: { type: schemas.person.firstName({ language: "es" }) },
-}).generate(50);
+export const SCHEMA = new chaca.Schema({
+  id: { type: schemas.id.mongodbID(), isArray: 10 },
+  image: schemas.image.film(),
+  name: schemas.person.firstName({ language: "es" }),
+  currentMovie: new chaca.Schema({
+    name: schemas.person.firstName(),
+    image: schemas.image.event(),
+  }),
+});
+
+export const NESTED_OBJECTS_DOCS = SCHEMA.generate(50);

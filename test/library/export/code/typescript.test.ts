@@ -1,4 +1,6 @@
 import { chaca } from "../../../../src";
+import { COMPLETE_SCHEMA_DOCS } from "../utils/schemaComplete";
+import { NESTED_OBJECTS_DOCS } from "../utils/schemaNestedObjects";
 
 const objectFileName = "typescriptExport";
 const ROOT = "./data/typescript";
@@ -49,7 +51,27 @@ describe("#Export Typescript", () => {
           fileName: objectFileName + "ArrayDiferentObject",
           location: ROOT,
         })
-        .then((s) => expect(typeof s === "string").toBe(true));
+        .then((s) => expect(typeof s).toBe("string"));
+    });
+
+    it("Array of Complete Schema", () => {
+      chaca
+        .export(COMPLETE_SCHEMA_DOCS, {
+          format: "typescript",
+          fileName: objectFileName + "ArrayCompleteSchema",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s).toBe("string"));
+    });
+
+    it("Array of Schema with Nested Objects", () => {
+      chaca
+        .export(NESTED_OBJECTS_DOCS, {
+          format: "typescript",
+          fileName: objectFileName + "ArrayNestedObjectsSchema",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s).toBe("string"));
     });
   });
 

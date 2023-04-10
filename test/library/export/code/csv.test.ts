@@ -1,6 +1,6 @@
 import { chaca, ChacaError } from "../../../../src";
 import { COMPLETE_SCHEMA_DOCS } from "../utils/schemaComplete";
-import { TEST_ARRAY_DOCS } from "../utils/schemaNestedObjects";
+import { NESTED_OBJECTS_DOCS } from "../utils/schemaNestedObjects";
 import { SIMPLE_OBJECT } from "../utils/simpleSchema";
 
 const objectFileName = "csvExport";
@@ -65,7 +65,7 @@ describe("#Export CSV test", () => {
   describe("Export Array", () => {
     it("Array of similar objects", () => {
       chaca
-        .export(TEST_ARRAY_DOCS, {
+        .export(NESTED_OBJECTS_DOCS, {
           fileName: objectFileName + "ArraySimilarObjects",
           location: ROOT,
           format: "csv",
