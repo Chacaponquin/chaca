@@ -1,7 +1,7 @@
 import { chaca, schemas } from "../../../../src";
 
 export const SCHEMA = new chaca.Schema({
-  id: { type: schemas.id.mongodbID(), isArray: 10 },
+  id: { type: schemas.id.mongodbID() },
   image: schemas.image.film(),
   name: schemas.person.firstName({ language: "es" }),
   currentMovie: new chaca.Schema({

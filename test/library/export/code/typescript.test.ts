@@ -1,6 +1,7 @@
 import { chaca } from "../../../../src";
 import { COMPLETE_SCHEMA_DOCS } from "../utils/schemaComplete";
 import { NESTED_OBJECTS_DOCS } from "../utils/schemaNestedObjects";
+import { SIMPLE_OBJECT } from "../utils/simpleObject";
 
 const objectFileName = "typescriptExport";
 const ROOT = "./data/typescript";
@@ -89,21 +90,13 @@ describe("#Export Typescript", () => {
         .then((s) => expect(typeof s === "string").toBe(true));
     });
 
-    it("Export ", () => {});
-
-    it("Export empty object", () => {
+    it("Export simple object", () => {
       chaca
-        .export(
-          {
-            buenas: "Hola",
-            yeah: "Que tal",
-          },
-          {
-            format: "typescript",
-            fileName: objectFileName + "ComplexObject",
-            location: ROOT,
-          },
-        )
+        .export(SIMPLE_OBJECT, {
+          format: "typescript",
+          fileName: objectFileName + "SimpleObject",
+          location: ROOT,
+        })
         .then((s) => expect(typeof s === "string").toBe(true));
     });
   });
