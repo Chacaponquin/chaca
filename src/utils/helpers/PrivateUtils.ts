@@ -1,8 +1,13 @@
 import { ChacaError } from "../../errors/ChacaError.js";
+import { Schemas } from "../../schemas/index.js";
 
 export class PrivateUtils {
   static boolean(): boolean {
     return this.oneOfArray([true, false]);
+  }
+
+  static id() {
+    return Schemas.id.mongodbID().getValue();
   }
 
   /*static equalArray(array1: Array<string | number>, array2: Array<string | number>): boolean{

@@ -44,12 +44,7 @@ export class ChacaSchema<K = any, T = any> {
   }
 
   protected validateObjectSchema(obj: SchemaInput<K, T>): SchemaToResolve<T> {
-    if (
-      !obj ||
-      (typeof obj === "object" && Array.isArray(obj)) ||
-      Object.keys(obj).length === 0 ||
-      obj instanceof Date
-    ) {
+    if (!obj || (typeof obj === "object" && Array.isArray(obj))) {
       throw new ChacaError(
         "Your schema has to be an object with the fields descriptions",
       );
@@ -87,11 +82,7 @@ export class ChacaSchema<K = any, T = any> {
             },
           };
         } else {
-          if (
-            typeof schema === "object" &&
-            schema !== null &&
-            !(schema instanceof Date)
-          ) {
+          if (typeof schema === "object" && schema !== null) {
             if (schema.type) {
               const type = this.validateType(key, schema.type);
               schemaToSave = {

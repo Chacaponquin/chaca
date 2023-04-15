@@ -1,7 +1,7 @@
 import { chaca, schemas } from "../../../../src";
 
 export const SCHEMA = new chaca.Schema({
-  id: { type: schemas.id.mongodbID() },
+  id: schemas.id.mongodbID(),
   image: schemas.image.film(),
   name: schemas.person.firstName({ language: "es" }),
   currentMovie: new chaca.Schema({
@@ -11,3 +11,5 @@ export const SCHEMA = new chaca.Schema({
 });
 
 export const NESTED_OBJECTS_DOCS = SCHEMA.generate(50);
+
+export const NESTED_OBJECTS_OBJECT = SCHEMA.generateObject();

@@ -14,8 +14,6 @@ export class DocumentTree<D> {
       const nodeName = n.nodeConfig.name;
       const nodeValue = n.getRealValue();
 
-      if (nodeValue === null) console.log("Is null", nodeName);
-
       returnObject = { ...returnObject, [nodeName]: nodeValue };
     }
 

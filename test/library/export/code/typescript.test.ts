@@ -1,6 +1,10 @@
 import { chaca } from "../../../../src";
-import { COMPLETE_SCHEMA_DOCS } from "../utils/schemaComplete";
+import {
+  COMPLETE_SCHEMA_DOCS,
+  COMPLETE_SCHEMA_OBJECT,
+} from "../utils/schemaComplete";
 import { NESTED_OBJECTS_DOCS } from "../utils/schemaNestedObjects";
+import { SCHEMA_WITH_ARRAY_OBJECT } from "../utils/schemaWithArray";
 import { SIMPLE_OBJECT } from "../utils/simpleObject";
 
 const objectFileName = "typescriptExport";
@@ -87,7 +91,7 @@ describe("#Export Typescript", () => {
             location: ROOT,
           },
         )
-        .then((s) => expect(typeof s === "string").toBe(true));
+        .then((s) => expect(typeof s).toBe("string"));
     });
 
     it("Export simple object", () => {
@@ -97,7 +101,37 @@ describe("#Export Typescript", () => {
           fileName: objectFileName + "SimpleObject",
           location: ROOT,
         })
-        .then((s) => expect(typeof s === "string").toBe(true));
+        .then((s) => expect(typeof s).toBe("string"));
+    });
+
+    it("Export complete schema object", () => {
+      chaca
+        .export(COMPLETE_SCHEMA_OBJECT, {
+          format: "typescript",
+          fileName: objectFileName + "CompleteSchemaObject",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s).toBe("string"));
+    });
+
+    it("Export nested object schema object", () => {
+      chaca
+        .export(COMPLETE_SCHEMA_OBJECT, {
+          format: "typescript",
+          fileName: objectFileName + "NestedObjectsSchemaObject",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s).toBe("string"));
+    });
+
+    it("Export schema with array fields object", () => {
+      chaca
+        .export(SCHEMA_WITH_ARRAY_OBJECT, {
+          format: "typescript",
+          fileName: objectFileName + "FieldsWithArrayObject",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s).toBe("string"));
     });
   });
 });
