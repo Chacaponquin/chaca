@@ -46,6 +46,6 @@ export const SCHEMA = chaca.defineSchema({
   },
 });
 
-export const COMPLETE_SCHEMA_DOCS = SCHEMA.generate(2);
+export const COMPLETE_SCHEMA_DOCS = SCHEMA.generate(50);
 
 export const COMPLETE_SCHEMA_OBJECT = SCHEMA.generateObject();

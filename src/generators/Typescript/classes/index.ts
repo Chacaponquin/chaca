@@ -32,7 +32,7 @@ export abstract class TypescriptInterface {
         t = new PrimitiveInterface("null");
       } else {
         const newObject = new ObjectInterface(value);
-        t = ObjectInterface.setObjectToCreate(newObject as ObjectInterface);
+        t = ObjectInterface.setObjectToCreate(newObject);
       }
     }
 
@@ -72,7 +72,8 @@ export abstract class TypescriptInterface {
     array: Array<TypescriptInterface>,
     int: TypescriptInterface,
   ) {
-    if (!array.some((v) => v.equal(int))) {
+    const exists = array.some((v) => v.equal(int));
+    if (!exists) {
       array.push(int);
     }
   }
@@ -104,21 +105,106 @@ export class ObjectInterface extends TypescriptInterface {
   }
 
   public static setObjectToCreate(object: ObjectInterface): ObjectInterface {
-    let found = object;
+    let returnObject = object;
 
-    for (let i = 0; i < this.objectsToCreate.length && found === object; i++) {
-      const compare = this.objectsToCreate[i].compareAndUpdate(object);
+    let found = false;
+    for (let i = 0; i < this.objectsToCreate.length && !found; i++) {
+      const areSimiliar = this.similarObjects(this.objectsToCreate[i], object);
 
-      if (compare === this.objectsToCreate[i]) {
-        found = this.objectsToCreate[i];
+      if (areSimiliar) {
+        returnObject = this.objectsToCreate[i].compareAndUpdate(object);
+        found = true;
+      } else {
+        returnObject = object;
       }
     }
 
-    if (found === object) {
-      this.objectsToCreate.push(found);
+    this.objectsToCreate.push(returnObject);
+
+    return returnObject;
+  }
+
+  public compareAndUpdate(
+    compareObjectInterface: ObjectInterface,
+  ): ObjectInterface {
+    const { maxObject, minObject } = ObjectInterface.separateObjectsByLength(
+      this,
+      compareObjectInterface,
+    );
+
+    const newKeysInterfaces: Array<ObjectKeys> = [];
+
+    maxObject.getKeysInterfaces().forEach((key) => {
+      const found = minObject.keys.find((k) => k.keyName === key.keyName);
+
+      if (found) {
+        const communInterfaces = this.communInterfaces(
+          key.fieldInterface,
+          found.fieldInterface,
+        );
+
+        newKeysInterfaces.push({
+          keyName: key.keyName,
+          fieldInterface: communInterfaces,
+        });
+      } else {
+        newKeysInterfaces.push({
+          keyName: key.keyName,
+          fieldInterface: [
+            ...key.fieldInterface.filter((k) => k !== minObject),
+            new PrimitiveInterface("undefined"),
+          ],
+        });
+      }
+    });
+
+    maxObject.setKeysInterfaces(newKeysInterfaces);
+
+    ObjectInterface.deleteObjectToCreateByName(minObject.name);
+    ObjectInterface.deleteObjectToCreateByName(maxObject.name);
+
+    return maxObject;
+  }
+
+  public static similarObjects(
+    objInterfaceOne: ObjectInterface,
+    objInterfaceTwo: ObjectInterface,
+  ): boolean {
+    let cont = 0;
+
+    const maxKeysInterfaces = objInterfaceOne.getKeysInterfaces();
+    for (let i = 0; i < maxKeysInterfaces.length && cont < 2; i++) {
+      const exists = objInterfaceTwo
+        .getKeysInterfaces()
+        .some((k) => maxKeysInterfaces[i].keyName === k.keyName);
+
+      if (exists) {
+        cont++;
+      }
     }
 
-    return found;
+    return cont >= 2;
+  }
+
+  private static separateObjectsByLength(
+    objInterfaceOne: ObjectInterface,
+    objInterfaceTwo: ObjectInterface,
+  ) {
+    let maxObject: ObjectInterface;
+    let minObject: ObjectInterface;
+
+    const len1 = objInterfaceOne.getKeysInterfaces().length;
+    const len2 = objInterfaceTwo.getKeysInterfaces().length;
+
+    if (len1 > len2 || len1 === len2) {
+      maxObject = objInterfaceOne;
+      minObject = objInterfaceTwo;
+    } else {
+      maxObject = objInterfaceTwo;
+      minObject = objInterfaceOne;
+    }
+
+    return { maxObject, minObject };
   }
 
   public static deleteObjectToCreateByName(name: string): void {
@@ -130,16 +216,30 @@ export class ObjectInterface extends TypescriptInterface {
   }
 
   public getInterfaceCode(): string {
+    const createDataInterface = (key: ObjectKeys): string => {
+      let returnIndefined: string;
+
+      const includeUndefined = key.fieldInterface
+        .map((i) => i.getInterface())
+        .includes("undefined");
+
+      if (includeUndefined) {
+        returnIndefined = `${key.keyName}?: ${key.fieldInterface
+          .map((i) => i.getInterface())
+          .filter((i) => i !== "undefined")
+          .join(" | ")}`;
+      } else {
+        returnIndefined = `${key.keyName}: ${key.fieldInterface
+          .map((i) => i.getInterface())
+          .join(" | ")}`;
+      }
+
+      return returnIndefined;
+    };
+
     const returnInterface =
       `interface ${this.name}{` +
-      `${this.keys
-        .map(
-          (k) =>
-            `${k.keyName}: ${k.fieldInterface
-              .map((i) => i.getInterface())
-              .join(" | ")}`,
-        )
-        .join(";")}` +
+      `${this.keys.map(createDataInterface).join(";")}` +
       "}";
 
     return returnInterface;
@@ -147,37 +247,6 @@ export class ObjectInterface extends TypescriptInterface {
 
   public getKeysInterfaces() {
     return this.keys;
-  }
-
-  public compareAndUpdate(
-    compareObjectInterface: ObjectInterface,
-  ): ObjectInterface {
-    if (!compareObjectInterface.isUsed()) {
-      compareObjectInterface.getKeysInterfaces().forEach((key) => {
-        const found = this.keys.find((k) => k.keyName === key.keyName);
-
-        if (found) {
-          const communInterfaces = this.communInterfaces(
-            key.fieldInterface,
-            found.fieldInterface,
-          );
-
-          if (communInterfaces.length > 0) {
-            compareObjectInterface.changeIsUsed();
-            key.fieldInterface = communInterfaces;
-          }
-        }
-      });
-
-      if (compareObjectInterface.isUsed()) {
-        ObjectInterface.deleteObjectToCreateByName(compareObjectInterface.name);
-        return this;
-      } else {
-        return compareObjectInterface;
-      }
-    } else {
-      return this;
-    }
   }
 
   private communInterfaces(
@@ -190,6 +259,10 @@ export class ObjectInterface extends TypescriptInterface {
     interfacesTwo.forEach((i) => this.pushIsNotInArray(returnArray, i));
 
     return returnArray;
+  }
+
+  public setKeysInterfaces(array: Array<ObjectKeys>): void {
+    this.keys = array;
   }
 
   public equal(int: TypescriptInterface): boolean {
@@ -254,20 +327,7 @@ export class ArrayInterface extends TypescriptInterface {
 
   public equal(int: TypescriptInterface): boolean {
     if (int instanceof ArrayInterface) {
-      let isEqual = true;
-
-      const compareValueInterfaces = int.getValuesInterfaces();
-      for (let i = 0; i < compareValueInterfaces.length && isEqual; i++) {
-        const exists = this.values.some((v) =>
-          v.equal(compareValueInterfaces[i]),
-        );
-
-        if (!exists) {
-          isEqual = false;
-        }
-      }
-
-      return isEqual;
+      return this.equalArrayInterfaces(int.getValuesInterfaces(), this.values);
     } else {
       return false;
     }
@@ -304,18 +364,10 @@ export class ArrayInterface extends TypescriptInterface {
 
               const areTheSameInterface =
                 actualInterface.equal(compareInterface);
-              if (!areTheSameInterface) {
-                if (
-                  actualInterface instanceof ObjectInterface &&
-                  compareInterface instanceof ObjectInterface
-                ) {
-                  actualInterface.compareAndUpdate(compareInterface);
-                  updatedInterfaces.push(actualInterface);
-                } else {
-                  this.pushIsNotInArray(updatedInterfaces, actualInterface);
-                }
-              } else {
-                this.pushIsNotInArray(updatedInterfaces, actualInterface);
+
+              this.pushIsNotInArray(updatedInterfaces, actualInterface);
+
+              if (areTheSameInterface) {
                 compareInterface.changeIsUsed();
               }
             }
@@ -324,7 +376,7 @@ export class ArrayInterface extends TypescriptInterface {
           // si es el último elemento significa que su interfaz no se repite en todo el array
           // porque si existiera ya hubiera sido usada
           else {
-            updatedInterfaces.push(actualInterface);
+            this.pushIsNotInArray(updatedInterfaces, actualInterface);
           }
         }
       }
