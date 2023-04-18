@@ -80,6 +80,10 @@ const Chaca = {
    * Promise<string>
    */
   export: Export,
+
+  multiGenerate(schemas: Array<ChacaSchema>) {
+    //
+  },
 };
 
 export const chaca = Chaca;

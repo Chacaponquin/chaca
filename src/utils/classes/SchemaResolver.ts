@@ -27,6 +27,14 @@ export class SchemaResolver<K, T> {
     this.resultTree = new ChacaResultTree<K>();
   }
 
+  public getInputTree() {
+    return this.inputTree;
+  }
+
+  public getResultTree() {
+    return this.resultTree;
+  }
+
   public resolve(numDocs: number): Array<K> {
     for (let indexDoc = 0; indexDoc < numDocs; indexDoc++) {
       const newDoc = new DocumentTree<K>();
