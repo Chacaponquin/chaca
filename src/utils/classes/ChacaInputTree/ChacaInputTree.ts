@@ -23,9 +23,7 @@ export class ChacaInputTree<T> {
   private nodes: Array<ChacaTreeNode> = [];
 
   constructor(schemaToResolve: SchemaToResolve<T>) {
-    for (const [key, obj] of Object.entries<ResolverObject>(
-      schemaToResolve as any,
-    )) {
+    for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
       const newNode = this.createNodeByType(key, obj);
       this.insertNode(newNode);
     }
