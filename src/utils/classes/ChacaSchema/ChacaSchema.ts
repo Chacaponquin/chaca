@@ -14,6 +14,7 @@ import {
   CustomFieldResolver,
   EnumFieldResolver,
   MixedFieldResolver,
+  RefFieldResolver,
   SchemaFieldResolver,
 } from "../Resolvers/index.js";
 import { SchemaResolver } from "../SchemaResolver.js";
@@ -78,6 +79,14 @@ export class ChacaSchema<K = any, T = any> {
             ...schemaToSave,
             [key]: {
               type: new SchemaFieldResolver(schema),
+              ...defaultConfig,
+            },
+          };
+        } else if (schema instanceof RefFieldResolver) {
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: {
+              type: schema,
               ...defaultConfig,
             },
           };

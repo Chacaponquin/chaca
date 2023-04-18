@@ -13,6 +13,17 @@ import { ChacaSchema } from "./utils/classes/ChacaSchema/ChacaSchema.js";
 import { Export } from "./utils/helpers/Export.js";
 import { ChacaError } from "./errors/ChacaError.js";
 
+import {
+  MultiGenerate,
+  MultiGenerateSchema,
+} from "./utils/helpers/MultiGenerate.js";
+
+import {
+  FieldToRef,
+  FieldToRefObject,
+  RefFieldResolver,
+} from "./utils/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
+
 const Chaca = {
   Schema: ChacaSchema,
   utils: ChacaUtils,
@@ -44,6 +55,10 @@ const Chaca = {
   ): (args?: T) => SchemaField<K, T> {
     return (args) =>
       new SchemaField<K, T>(name, valueFunction, args || ({} as T));
+  },
+
+  ref(fieldToRef: FieldToRef) {
+    return new RefFieldResolver(fieldToRef);
   },
 
   /**
@@ -81,9 +96,7 @@ const Chaca = {
    */
   export: Export,
 
-  multiGenerate(schemas: Array<ChacaSchema>) {
-    //
-  },
+  multiGenerate: MultiGenerate,
 };
 
 export const chaca = Chaca;
@@ -91,4 +104,11 @@ export const schemas = Schemas;
 
 export { SchemaField, ChacaSchema, ChacaError };
 
-export type { SchemaInput, ExportFormat, FileConfig };
+export type {
+  SchemaInput,
+  ExportFormat,
+  FileConfig,
+  MultiGenerateSchema,
+  FieldToRef,
+  FieldToRefObject,
+};
