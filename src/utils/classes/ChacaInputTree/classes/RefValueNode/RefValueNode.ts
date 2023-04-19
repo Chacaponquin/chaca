@@ -20,7 +20,10 @@ export class RefValueNode extends ChacaTreeNode {
     this.fieldTreeRoute = this.validateFieldTreeRoute(this.refField.refField);
 
     let exists = -1;
+
     for (let i = 0; i < this.injectedSchemas.length && exists === -1; i++) {
+      this.injectedSchemas[i].buildInputTree();
+
       const inputTree = this.injectedSchemas[i].getInputTree();
 
       if (inputTree) {
@@ -33,7 +36,9 @@ export class RefValueNode extends ChacaTreeNode {
     }
 
     if (exists === -1) {
-      throw new ChacaError(`The field ${this.refField.refField} don't exists`);
+      throw new ChacaError(
+        `From ${this.nodeConfig.name}, The field ${this.refField.refField} does not exists`,
+      );
     } else {
       this.schemaRef = this.injectedSchemas[exists];
     }

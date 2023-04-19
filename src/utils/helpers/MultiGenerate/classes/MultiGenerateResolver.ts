@@ -23,6 +23,8 @@ export class MultiGenerateResolver<K> {
       const otherResolvers = this.resolversArray.filter((r) => r !== resolver);
       resolver.setInjectedSchemas(otherResolvers);
     }
+
+    this.resolversArray.forEach((r) => r.buildInputTree());
   }
 
   public resolve(): K {

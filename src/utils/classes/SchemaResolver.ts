@@ -41,12 +41,15 @@ export class SchemaResolver<K = any, T = any> {
     this.countDoc = this.validateCountDoc(countDoc);
   }
 
-  public buildInputTree() {
-    this.inputTree = new ChacaInputTree(
-      this.schemaName,
-      this.schemaObject,
-      this.injectedSchemas,
-    );
+  public buildInputTree(): void {
+    console.log(this.schemaName);
+    if (!this.inputTree) {
+      this.inputTree = new ChacaInputTree(
+        this.schemaName,
+        this.schemaObject,
+        this.injectedSchemas,
+      );
+    }
   }
 
   private validateCountDoc(cantDocuments: number): number {
@@ -89,7 +92,6 @@ export class SchemaResolver<K = any, T = any> {
 
   public setInjectedSchemas(array: Array<SchemaResolver>): void {
     this.injectedSchemas = array;
-    this.buildInputTree();
   }
 
   public getInputTree() {
