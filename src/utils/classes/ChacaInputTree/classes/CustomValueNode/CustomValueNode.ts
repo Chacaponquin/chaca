@@ -26,4 +26,12 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
       return value;
     }
   }
+
+  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+    if (fieldTreeRoute.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

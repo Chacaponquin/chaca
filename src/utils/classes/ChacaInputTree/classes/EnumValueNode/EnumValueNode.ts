@@ -22,4 +22,12 @@ export class EnumValueNode extends ChacaTreeNode {
       this.enumOptions,
     );
   }
+
+  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+    if (fieldTreeRoute.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

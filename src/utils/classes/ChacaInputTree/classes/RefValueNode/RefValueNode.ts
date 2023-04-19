@@ -3,6 +3,7 @@ import { FieldToRefObject } from "../../../Resolvers/RefFieldResolver/RefFieldRe
 import { SchemaResolver } from "../../../SchemaResolver.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
+import { TryRefARefFieldError } from "../../errors/index.js";
 
 export class RefValueNode extends ChacaTreeNode {
   private fieldTreeRoute: Array<string>;
@@ -15,6 +16,13 @@ export class RefValueNode extends ChacaTreeNode {
     super(config);
 
     this.fieldTreeRoute = this.validateFieldTreeRoute(this.refField.refField);
+
+    let exists = false;
+    for (let i = 0; i < this.injectedSchemas.length && !exists; i++) {
+      exists = this.injectedSchemas[i]
+        .getInputTree()
+        .checkIfFieldExists(this.fieldTreeRoute);
+    }
   }
 
   private validateFieldTreeRoute(route: string): Array<string> {
@@ -27,14 +35,15 @@ export class RefValueNode extends ChacaTreeNode {
     }
   }
 
-  public getValue() {
-    let exists = false;
-
-    for (let i = 0; i < this.injectedSchemas.length && !exists; i++) {
-      exists = this.injectedSchemas[i]
-        .getInputTree()
-        .checkIfFieldExists(this.fieldTreeRoute);
+  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+    if (fieldTreeRoute.length === 0) {
+      throw new TryRefARefFieldError();
+    } else {
+      return false;
     }
+  }
+
+  public getValue() {
     return "";
   }
 

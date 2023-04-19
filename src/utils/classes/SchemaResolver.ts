@@ -22,14 +22,29 @@ export class SchemaResolver<K = any, T = any> {
   private inputTree: ChacaInputTree<K>;
   private resultTree: ChacaResultTree<K>;
   private injectedSchemas: Array<SchemaResolver>;
+  public schemaName: string;
 
   constructor(
+    schemaName: string,
     schemaObject: SchemaToResolve<T>,
     injectedSchemas: Array<SchemaResolver>,
   ) {
+    this.schemaName = this.validateSchemaName(schemaName);
     this.injectedSchemas = injectedSchemas;
-    this.inputTree = new ChacaInputTree(schemaObject, this.injectedSchemas);
+    this.inputTree = new ChacaInputTree(
+      this.schemaName,
+      schemaObject,
+      this.injectedSchemas,
+    );
     this.resultTree = new ChacaResultTree<K>();
+  }
+
+  public validateSchemaName(name: string): string {
+    if (name && typeof name === "string") {
+      return name;
+    } else {
+      throw new ChacaError("You must provide a name for the schema");
+    }
   }
 
   public setInjectedSchemas(array: Array<SchemaResolver>): void {

@@ -25,12 +25,15 @@ import { SchemaResolver } from "../SchemaResolver.js";
 export class ChacaInputTree<T> {
   private nodes: Array<ChacaTreeNode> = [];
   private injectedSchemas: Array<SchemaResolver>;
+  private schemaName: string;
 
   constructor(
+    schemaName: string,
     schemaToResolve: SchemaToResolve<T>,
     injectedSchemas: Array<SchemaResolver>,
   ) {
     this.injectedSchemas = injectedSchemas;
+    this.schemaName = schemaName;
 
     for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
       const newNode = this.createNodeByType(key, obj);
@@ -96,5 +99,23 @@ export class ChacaInputTree<T> {
     orderFieldsByPriority(this.nodes);
   }
 
-  public checkIfFieldExists(fieldTreeRoute: Array<string>): boolean {}
+  public checkIfFieldExists(fieldTreeRoute: Array<string>): boolean {
+    let exists = false;
+    for (let i = 0; i < this.nodes.length && !exists; i++) {
+      if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
+        const routeWithoutFirstElement = fieldTreeRoute.slice(1);
+        const found = this.nodes[i].checkIfFieldExists(
+          routeWithoutFirstElement,
+        );
+
+        if (!found) {
+          break;
+        } else {
+          exists = true;
+        }
+      }
+    }
+
+    return exists;
+  }
 }

@@ -9,7 +9,7 @@ export interface MultiGenerateSchema {
 
 export function MultiGenerate(schemas: Array<MultiGenerateSchema>) {
   const resolversArray = schemas.map(
-    (s) => new SchemaResolver(s.schema.getSchemaObject(), []),
+    (s) => new SchemaResolver(s.name, s.schema.getSchemaObject(), []),
   );
 
   for (const resolver of resolversArray) {

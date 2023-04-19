@@ -21,4 +21,20 @@ export class MixedValueNode extends ChacaTreeNode {
     this.nodes.push(node);
     orderFieldsByPriority(this.nodes);
   }
+
+  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+    if (fieldTreeRoute.length === 0) {
+      return true;
+    } else {
+      let found = false;
+      for (let i = 0; i < this.nodes.length && !found; i++) {
+        if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
+          const routeWithoutFirstElement = fieldTreeRoute.slice(1);
+          found = this.nodes[i].checkIfFieldExists(routeWithoutFirstElement);
+        }
+      }
+
+      return found;
+    }
+  }
 }

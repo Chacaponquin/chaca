@@ -5,6 +5,8 @@ export abstract class ChacaTreeNode {
 
   public abstract getNoArrayNode(): ChacaTreeNode;
 
+  public abstract checkIfFieldExists(fieldTreeRoute: Array<string>): boolean;
+
   public getFieldInfo() {
     return {
       name: this.nodeConfig.name,

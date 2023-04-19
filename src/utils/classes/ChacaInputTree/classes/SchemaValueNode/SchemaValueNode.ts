@@ -16,4 +16,12 @@ export class SchemaValueNode extends ChacaTreeNode {
       this.schema,
     );
   }
+
+  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+    if (fieldTreeRoute.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }
