@@ -11,7 +11,6 @@ export class MultiGenerateResolver<K> {
         return new SchemaResolver(
           s.name,
           s.schema.getSchemaObject(),
-          [],
           s.documents,
         );
       } else {

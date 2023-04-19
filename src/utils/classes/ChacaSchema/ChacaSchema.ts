@@ -268,7 +268,6 @@ export class ChacaSchema<K = any, T = any> {
     const schemaToResolve = new SchemaResolver<K, T>(
       PrivateUtils.id(),
       this.schemaObj,
-      [],
       1,
     );
     return schemaToResolve.resolve()[0];
@@ -282,7 +281,6 @@ export class ChacaSchema<K = any, T = any> {
     const schemaToResolve = new SchemaResolver<K, T>(
       PrivateUtils.id(),
       this.schemaObj,
-      [],
       cantDocuments,
     );
 

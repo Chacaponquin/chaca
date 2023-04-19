@@ -1,9 +1,8 @@
-import { chaca, schemas } from "../../../src";
-import { POST_SCHEMA } from "../utils/postSchema";
+import { chaca } from "../../../src";
+import { RELATIONAL_USER_POST } from "../utils/data/relationalUserPost";
 import { COMPLETE_SCHEMA } from "../utils/schemaComplete";
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../utils/schemaWithArray";
 import { SIMPLE_SCHEMA } from "../utils/simpleSchema";
-import { USER_SCHEMA } from "../utils/userSchema";
 
 describe("Multiple Generation Test", () => {
   describe("Generate no relational schemas", () => {
@@ -26,13 +25,8 @@ describe("Multiple Generation Test", () => {
 
   describe("Generate relational schemas", () => {
     it("Schemas: User -> Post", () => {
-      const data = chaca.multiGenerate([
-        { name: "User", documents: 40, schema: USER_SCHEMA },
-        { name: "Post", documents: 40, schema: POST_SCHEMA },
-      ]);
-
-      expect(data).toHaveProperty("User");
-      expect(data).toHaveProperty("Post");
+      expect(RELATIONAL_USER_POST).toHaveProperty("User");
+      expect(RELATIONAL_USER_POST).toHaveProperty("Post");
     });
   });
 });

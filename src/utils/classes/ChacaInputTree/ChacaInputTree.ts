@@ -102,6 +102,7 @@ export class ChacaInputTree<T> {
   public checkIfFieldExists(fieldTreeRoute: Array<string>): boolean {
     if (this.schemaName === fieldTreeRoute[0]) {
       let exists = false;
+
       for (let i = 0; i < this.nodes.length && !exists; i++) {
         if (this.nodes[i].nodeConfig.name === fieldTreeRoute[1]) {
           const routeWithoutFirstElement = fieldTreeRoute.slice(2);

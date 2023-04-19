@@ -20,11 +20,12 @@ import {
 } from "./ChacaResultTree/classes/index.js";
 
 export class SchemaResolver<K = any, T = any> {
-  private inputTree: ChacaInputTree<K>;
+  private inputTree: ChacaInputTree<K> | null = null;
   private resultTree: ChacaResultTree<K>;
-  private injectedSchemas: Array<SchemaResolver>;
+  private injectedSchemas: Array<SchemaResolver> = [];
   private schemaName: string;
   private countDoc: number;
+  private schemaObject: SchemaToResolve<T>;
 
   private isBuilding = false;
   private finishBuilding = false;
@@ -32,18 +33,20 @@ export class SchemaResolver<K = any, T = any> {
   constructor(
     schemaName: string,
     schemaObject: SchemaToResolve<T>,
-    injectedSchemas: Array<SchemaResolver>,
     countDoc: number,
   ) {
     this.schemaName = this.validateSchemaName(schemaName);
-    this.injectedSchemas = injectedSchemas;
-    this.inputTree = new ChacaInputTree(
-      this.schemaName,
-      schemaObject,
-      this.injectedSchemas,
-    );
+    this.schemaObject = schemaObject;
     this.resultTree = new ChacaResultTree<K>(this.schemaName);
     this.countDoc = this.validateCountDoc(countDoc);
+  }
+
+  public buildInputTree() {
+    this.inputTree = new ChacaInputTree(
+      this.schemaName,
+      this.schemaObject,
+      this.injectedSchemas,
+    );
   }
 
   private validateCountDoc(cantDocuments: number): number {
@@ -86,6 +89,7 @@ export class SchemaResolver<K = any, T = any> {
 
   public setInjectedSchemas(array: Array<SchemaResolver>): void {
     this.injectedSchemas = array;
+    this.buildInputTree();
   }
 
   public getInputTree() {
@@ -106,40 +110,45 @@ export class SchemaResolver<K = any, T = any> {
 
   public buildTrees(): void {
     if (!this.finishBuilding) {
-      // cambiar isBuilding a true
-      this.isBuilding = true;
+      if (this.inputTree) {
+        // cambiar isBuilding a true
+        this.isBuilding = true;
 
-      for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
-        const newDoc = new DocumentTree<K>();
+        for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
+          const newDoc = new DocumentTree<K>();
 
-        // insert new document
-        this.resultTree.insertDocument(newDoc);
+          // insert new document
+          this.resultTree.insertDocument(newDoc);
 
-        // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
-        for (const datField of this.inputTree.getFields()) {
-          const fieldSolutionNode = this.createSolutionNodeByType(
-            datField,
-            indexDoc,
-          );
+          // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
+          for (const datField of this.inputTree.getFields()) {
+            const fieldSolutionNode = this.createSolutionNodeByType(
+              datField,
+              indexDoc,
+            );
 
-          // insertar la solucion del field en el documento
-          newDoc.insertField(fieldSolutionNode);
+            // insertar la solucion del field en el documento
+            newDoc.insertField(fieldSolutionNode);
 
-          // resolver el field actual en caso de ser un array o un mixed
-          this.resolveArrayAndMixedFields(
-            datField,
-            fieldSolutionNode,
-            indexDoc,
-          );
+            // resolver el field actual en caso de ser un array o un mixed
+            this.resolveArrayAndMixedFields(
+              datField,
+              fieldSolutionNode,
+              indexDoc,
+            );
+          }
         }
-      }
 
-      // indicar que ha acabado de crear los result trees
-      this.finishBuilding = true;
+        // indicar que se acabo de construir
+        this.isBuilding = false;
+        // indicar que ha acabado de crear los result trees
+        this.finishBuilding = true;
+      }
     }
   }
 
   public resolve(): Array<K> {
+    this.buildInputTree();
     this.buildTrees();
     return this.resultTree.getDocumentsArray();
   }

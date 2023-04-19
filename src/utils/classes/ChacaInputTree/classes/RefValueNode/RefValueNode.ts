@@ -21,12 +21,14 @@ export class RefValueNode extends ChacaTreeNode {
 
     let exists = -1;
     for (let i = 0; i < this.injectedSchemas.length && exists === -1; i++) {
-      const found = this.injectedSchemas[i]
-        .getInputTree()
-        .checkIfFieldExists(this.fieldTreeRoute);
+      const inputTree = this.injectedSchemas[i].getInputTree();
 
-      if (found) {
-        exists = i;
+      if (inputTree) {
+        const found = inputTree.checkIfFieldExists(this.fieldTreeRoute);
+
+        if (found) {
+          exists = i;
+        }
       }
     }
 
