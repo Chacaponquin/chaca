@@ -1,4 +1,8 @@
-import { NO_RELATIONAL_DATA, RELATIONAL_USER_POST_DATA } from "../utils/data";
+import {
+  NO_RELATIONAL_DATA,
+  RELATIONAL_USER_POST_CATEGORY_DATA,
+  RELATIONAL_USER_POST_DATA,
+} from "../utils/data";
 
 describe("Multiple Generation Test", () => {
   describe("Generate no relational schemas", () => {
@@ -13,6 +17,14 @@ describe("Multiple Generation Test", () => {
     it("Schemas: User -> Post", () => {
       expect(RELATIONAL_USER_POST_DATA).toHaveProperty("User");
       expect(RELATIONAL_USER_POST_DATA).toHaveProperty("Post");
+    });
+
+    it("Schemas: User -> Post -> Category", () => {
+      expect(RELATIONAL_USER_POST_CATEGORY_DATA).toHaveProperty("User");
+      expect(RELATIONAL_USER_POST_CATEGORY_DATA).toHaveProperty("Post");
+      expect(RELATIONAL_USER_POST_CATEGORY_DATA).toHaveProperty(
+        "Category Post",
+      );
     });
   });
 });

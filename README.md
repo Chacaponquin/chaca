@@ -1,4 +1,5 @@
-<h1 align='center'>CHACA</h1>
+<p align="center"><img align="center" src="https://res.cloudinary.com/chaca-sa/image/upload/v1681924431/Logopit_1681682634889_hywzcu.png" style="width:300px"/></p>
+
 <p align="center">A Node JS library to create and export data schemas with your rules</p>
 
 > **Note** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!

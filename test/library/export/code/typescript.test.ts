@@ -5,6 +5,7 @@ import {
   COMPLETE_SCHEMA_OBJECT,
   NESTED_OBJECTS_DATA,
   NO_RELATIONAL_DATA,
+  RELATIONAL_USER_POST_CATEGORY_DATA,
   RELATIONAL_USER_POST_DATA,
   SIMPLE_SCHEMA_OBJECT,
 } from "../../utils/data";
@@ -150,7 +151,17 @@ describe("#Export Typescript", () => {
       chaca
         .export(RELATIONAL_USER_POST_DATA, {
           format: "typescript",
-          fileName: objectFileName + "RelationalSchemasuserPost",
+          fileName: objectFileName + "RelationalSchemasUserPost",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s).toBe("string"));
+    });
+
+    it("Object of relational data User -> Post -> PostCategory", () => {
+      chaca
+        .export(RELATIONAL_USER_POST_CATEGORY_DATA, {
+          format: "typescript",
+          fileName: objectFileName + "RelationalSchemasUserPostCategory",
           location: ROOT,
         })
         .then((s) => expect(typeof s).toBe("string"));
