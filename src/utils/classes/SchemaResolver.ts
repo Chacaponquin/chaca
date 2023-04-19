@@ -7,6 +7,7 @@ import {
   CustomValueNode,
   EnumValueNode,
   MixedValueNode,
+  RefValueNode,
   SchemaValueNode,
 } from "./ChacaInputTree/classes/index.js";
 import { ChacaResultTree } from "./ChacaResultTree/ChacaResultTree.js";
@@ -22,12 +23,17 @@ export class SchemaResolver<K = any, T = any> {
   private inputTree: ChacaInputTree<K>;
   private resultTree: ChacaResultTree<K>;
   private injectedSchemas: Array<SchemaResolver>;
-  public schemaName: string;
+  private schemaName: string;
+  private countDoc: number;
+
+  private isBuilding = false;
+  private finishBuilding = false;
 
   constructor(
     schemaName: string,
     schemaObject: SchemaToResolve<T>,
     injectedSchemas: Array<SchemaResolver>,
+    countDoc: number,
   ) {
     this.schemaName = this.validateSchemaName(schemaName);
     this.injectedSchemas = injectedSchemas;
@@ -36,7 +42,8 @@ export class SchemaResolver<K = any, T = any> {
       schemaObject,
       this.injectedSchemas,
     );
-    this.resultTree = new ChacaResultTree<K>();
+    this.resultTree = new ChacaResultTree<K>(this.schemaName);
+    this.countDoc = countDoc;
   }
 
   public validateSchemaName(name: string): string {
@@ -45,6 +52,18 @@ export class SchemaResolver<K = any, T = any> {
     } else {
       throw new ChacaError("You must provide a name for the schema");
     }
+  }
+
+  public getSchemaName(): string {
+    return this.schemaName;
+  }
+
+  public isFinishBuilding() {
+    return this.finishBuilding;
+  }
+
+  public isBuildingTrees(): boolean {
+    return this.isBuilding;
   }
 
   public setInjectedSchemas(array: Array<SchemaResolver>): void {
@@ -59,8 +78,19 @@ export class SchemaResolver<K = any, T = any> {
     return this.resultTree;
   }
 
-  public resolve(numDocs: number): Array<K> {
-    for (let indexDoc = 0; indexDoc < numDocs; indexDoc++) {
+  public getAllValuesByNodeRoute(
+    fieldTreeRoute: Array<string>,
+  ): Array<unknown> {
+    const allValues = this.resultTree.getAllValuesByNodeRoute(fieldTreeRoute);
+
+    return allValues;
+  }
+
+  public buildTrees(): void {
+    // cambiar isBuilding a true
+    this.isBuilding = true;
+
+    for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
       const newDoc = new DocumentTree<K>();
 
       // insert new document
@@ -81,6 +111,12 @@ export class SchemaResolver<K = any, T = any> {
       }
     }
 
+    // indicar que ha acabado de crear los result trees
+    this.finishBuilding = true;
+  }
+
+  public resolve(): Array<K> {
+    this.buildTrees();
     return this.resultTree.getDocumentsArray();
   }
 
@@ -176,6 +212,13 @@ export class SchemaResolver<K = any, T = any> {
         );
 
         return new SingleResultNode(field.getFieldInfo(), value);
+      }
+
+      // en caso de ser un ref field
+      else if (field instanceof RefValueNode) {
+        const refValue = field.getValue();
+
+        return new SingleResultNode(field.getFieldInfo(), refValue);
       }
 
       // en caso de ser un mixed field

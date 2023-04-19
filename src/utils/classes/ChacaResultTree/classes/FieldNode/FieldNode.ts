@@ -12,7 +12,9 @@ export abstract class FieldNode {
     this.isNull = this.nullPosibility();
   }
 
-  public abstract getValue(): unknown | Array<unknown>;
+  protected abstract getValue(): unknown | Array<unknown>;
+
+  public abstract getValueByNodeRoute(fieldTreeRoute: Array<string>): unknown;
 
   public getRealValue() {
     return this.isNull ? null : this.getValue();

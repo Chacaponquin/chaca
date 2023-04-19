@@ -1,3 +1,4 @@
+import { ChacaError } from "../../../../../errors/ChacaError.js";
 import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode.js";
 
 export class SingleResultNode extends FieldNode {
@@ -8,7 +9,17 @@ export class SingleResultNode extends FieldNode {
     this.value = value;
   }
 
-  public getValue(): unknown {
+  protected getValue(): unknown {
     return this.value;
+  }
+
+  public getValueByNodeRoute(fieldTreeRoute: string[]): unknown {
+    if (fieldTreeRoute.length === 0) {
+      return this.getRealValue();
+    } else {
+      throw new ChacaError(
+        `The field ${fieldTreeRoute.join(".")} do not exists`,
+      );
+    }
   }
 }

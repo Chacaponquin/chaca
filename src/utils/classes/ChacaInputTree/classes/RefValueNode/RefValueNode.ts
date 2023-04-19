@@ -4,9 +4,11 @@ import { SchemaResolver } from "../../../SchemaResolver.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { TryRefARefFieldError } from "../../errors/index.js";
+import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
 
 export class RefValueNode extends ChacaTreeNode {
   private fieldTreeRoute: Array<string>;
+  private schemaRef: SchemaResolver;
 
   constructor(
     config: ChacaTreeNodeConfig,
@@ -17,16 +19,26 @@ export class RefValueNode extends ChacaTreeNode {
 
     this.fieldTreeRoute = this.validateFieldTreeRoute(this.refField.refField);
 
-    let exists = false;
-    for (let i = 0; i < this.injectedSchemas.length && !exists; i++) {
-      exists = this.injectedSchemas[i]
+    let exists = -1;
+    for (let i = 0; i < this.injectedSchemas.length && exists === -1; i++) {
+      const found = this.injectedSchemas[i]
         .getInputTree()
         .checkIfFieldExists(this.fieldTreeRoute);
+
+      if (found) {
+        exists = i;
+      }
     }
 
-    if (!exists) {
+    if (exists === -1) {
       throw new ChacaError(`The field ${this.refField.refField} don't exists`);
+    } else {
+      this.schemaRef = this.injectedSchemas[exists];
     }
+  }
+
+  public getSchemaRef() {
+    return this.schemaRef;
   }
 
   private validateFieldTreeRoute(route: string): Array<string> {
@@ -47,8 +59,34 @@ export class RefValueNode extends ChacaTreeNode {
     }
   }
 
-  public getValue() {
-    return "";
+  public getValue(): unknown | Array<unknown> {
+    if (
+      !this.schemaRef.isBuildingTrees() &&
+      this.schemaRef.isFinishBuilding()
+    ) {
+      const allValues = this.schemaRef.getAllValuesByNodeRoute(
+        this.fieldTreeRoute,
+      );
+
+      return PrivateUtils.oneOfArray(allValues);
+    } else if (
+      !this.schemaRef.isBuildingTrees() &&
+      !this.schemaRef.isFinishBuilding()
+    ) {
+      this.schemaRef.buildTrees();
+
+      const allValues = this.schemaRef.getAllValuesByNodeRoute(
+        this.fieldTreeRoute,
+      );
+
+      return PrivateUtils.oneOfArray(allValues);
+    } else {
+      throw new ChacaError(
+        `You are trying to access ${
+          this.refField.refField
+        } when the data in ${this.schemaRef.getSchemaName()} is not finish`,
+      );
+    }
   }
 
   public getNoArrayNode(): ChacaTreeNode {
