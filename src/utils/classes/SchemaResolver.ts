@@ -105,32 +105,38 @@ export class SchemaResolver<K = any, T = any> {
   }
 
   public buildTrees(): void {
-    // cambiar isBuilding a true
-    this.isBuilding = true;
+    if (!this.finishBuilding) {
+      // cambiar isBuilding a true
+      this.isBuilding = true;
 
-    for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
-      const newDoc = new DocumentTree<K>();
+      for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
+        const newDoc = new DocumentTree<K>();
 
-      // insert new document
-      this.resultTree.insertDocument(newDoc);
+        // insert new document
+        this.resultTree.insertDocument(newDoc);
 
-      // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
-      for (const datField of this.inputTree.getFields()) {
-        const fieldSolutionNode = this.createSolutionNodeByType(
-          datField,
-          indexDoc,
-        );
+        // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
+        for (const datField of this.inputTree.getFields()) {
+          const fieldSolutionNode = this.createSolutionNodeByType(
+            datField,
+            indexDoc,
+          );
 
-        // insertar la solucion del field en el documento
-        newDoc.insertField(fieldSolutionNode);
+          // insertar la solucion del field en el documento
+          newDoc.insertField(fieldSolutionNode);
 
-        // resolver el field actual en caso de ser un array o un mixed
-        this.resolveArrayAndMixedFields(datField, fieldSolutionNode, indexDoc);
+          // resolver el field actual en caso de ser un array o un mixed
+          this.resolveArrayAndMixedFields(
+            datField,
+            fieldSolutionNode,
+            indexDoc,
+          );
+        }
       }
-    }
 
-    // indicar que ha acabado de crear los result trees
-    this.finishBuilding = true;
+      // indicar que ha acabado de crear los result trees
+      this.finishBuilding = true;
+    }
   }
 
   public resolve(): Array<K> {

@@ -2,7 +2,7 @@ import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SchemaResolver } from "../../../classes/SchemaResolver.js";
 import { MultiGenerateSchema } from "../interfaces/multiGenerate.interface.js";
 
-export class MultiGenerateResolver {
+export class MultiGenerateResolver<K> {
   private resolversArray: Array<SchemaResolver>;
 
   constructor(schemas: Array<MultiGenerateSchema>) {
@@ -26,11 +26,13 @@ export class MultiGenerateResolver {
     }
   }
 
-  public resolve() {
-    return this.resolversArray.map((r) => {
-      return {
-        [r.getSchemaName()]: r.resolve(),
-      };
+  public resolve(): K {
+    let data = {} as K;
+
+    this.resolversArray.forEach((r) => {
+      data = { ...data, [r.getSchemaName()]: r.resolve() };
     });
+
+    return data;
   }
 }
