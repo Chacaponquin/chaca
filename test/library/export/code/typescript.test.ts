@@ -2,9 +2,9 @@ import { chaca } from "../../../../src";
 import {
   COMPLETE_SCHEMA_DOCS,
   COMPLETE_SCHEMA_OBJECT,
-} from "../utils/schemaComplete";
-import { NESTED_OBJECTS_DOCS } from "../utils/schemaNestedObjects";
-import { SCHEMA_WITH_ARRAY_OBJECT } from "../utils/schemaWithArray";
+} from "../../utilSchemas/schemaComplete";
+import { NESTED_OBJECTS_DOCS } from "../../utilSchemas/schemaNestedObjects";
+import { SCHEMA_WITH_ARRAY_OBJECT } from "../../utilSchemas/schemaWithArray";
 import { SIMPLE_OBJECT } from "../utils/simpleObject";
 
 const objectFileName = "typescriptExport";

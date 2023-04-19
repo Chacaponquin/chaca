@@ -1,28 +1,24 @@
 import { ChacaError } from "../../../src/errors/ChacaError";
-import { simpleSchema } from "./utils/simpleSchema";
+import { SIMPLE_SCHEMA } from "../utilSchemas/simpleSchema";
 
 const root = "./data";
 
 describe("#Export Test", () => {
   describe("export with incorrrect arguments", () => {
     it("No file name. Should throw an error", () => {
-      simpleSchema
-        .generateAndExport(1, {
-          fileName: "",
-          format: "json",
-          location: root,
-        })
-        .catch((error) => expect(error instanceof ChacaError).toBe(true));
+      SIMPLE_SCHEMA.generateAndExport(1, {
+        fileName: "",
+        format: "json",
+        location: root,
+      }).catch((error) => expect(error instanceof ChacaError).toBe(true));
     });
 
     it("incorrect format file. Should throw an error", () => {
-      simpleSchema
-        .generateAndExport(1, {
-          fileName: "quetal",
-          format: "buenas" as any,
-          location: root,
-        })
-        .catch((error) => expect(error instanceof ChacaError).toBe(true));
+      SIMPLE_SCHEMA.generateAndExport(1, {
+        fileName: "quetal",
+        format: "buenas" as any,
+        location: root,
+      }).catch((error) => expect(error instanceof ChacaError).toBe(true));
     });
   });
 });

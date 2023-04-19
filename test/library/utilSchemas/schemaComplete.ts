@@ -1,6 +1,6 @@
-import { chaca, schemas } from "../../../../src";
+import { chaca, schemas } from "../../../src";
 
-export const SCHEMA = chaca.defineSchema({
+export const COMPLETE_SCHEMA = chaca.defineSchema({
   id: schemas.id.uuid(),
   authors: {
     type: schemas.person.fullName({ language: "es" }),
@@ -46,6 +46,6 @@ export const SCHEMA = chaca.defineSchema({
   },
 });
 
-export const COMPLETE_SCHEMA_DOCS = SCHEMA.generate(50);
+export const COMPLETE_SCHEMA_DOCS = COMPLETE_SCHEMA.generate(50);
 
-export const COMPLETE_SCHEMA_OBJECT = SCHEMA.generateObject();
+export const COMPLETE_SCHEMA_OBJECT = COMPLETE_SCHEMA.generateObject();
