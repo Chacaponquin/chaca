@@ -1,5 +1,5 @@
 import { ChacaError } from "../../../src/errors/ChacaError";
-import { SIMPLE_SCHEMA } from "../utilSchemas/simpleSchema";
+import { SIMPLE_SCHEMA } from "../utils/simpleSchema";
 
 const root = "./data";
 

@@ -20,7 +20,8 @@ export type FieldSchemaConfig<C, R> =
   | FieldObjectInput<C, R>
   | CustomField<C, R>
   | SchemaField<R, any>
-  | ChacaSchema<R>;
+  | ChacaSchema<R>
+  | RefFieldResolver;
 
 type FieldObjectInput<C, R> = {
   type?: SchemaField<R, any> | ChacaSchema<R>;

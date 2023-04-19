@@ -57,6 +57,13 @@ const Chaca = {
       new SchemaField<K, T>(name, valueFunction, args || ({} as T));
   },
 
+  /**
+   * Create a reference field for a selected schema
+   * @param fieldToRef configuration of the reference field. the field location must be separated points
+   *
+   * @example
+   * {field: chaca.ref('Schema.fieldToRef')}
+   */
   ref(fieldToRef: FieldToRef) {
     return new RefFieldResolver(fieldToRef);
   },
