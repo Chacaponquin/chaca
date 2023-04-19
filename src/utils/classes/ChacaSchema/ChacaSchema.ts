@@ -279,25 +279,11 @@ export class ChacaSchema<K = any, T = any> {
    * @param cantDocuments number of documents that you want to create
    */
   public generate(cantDocuments: number): K[] {
-    let numberCant = 10;
-
-    if (typeof cantDocuments === "number") {
-      if (cantDocuments >= 0 && cantDocuments <= 500) {
-        numberCant = cantDocuments;
-      } else if (cantDocuments < 0) {
-        throw new ChacaError(
-          `You can not generate a negative number of documents`,
-        );
-      } else if (cantDocuments > 500) {
-        throw new ChacaError(`You can not generate too much documents`);
-      }
-    }
-
     const schemaToResolve = new SchemaResolver<K, T>(
       PrivateUtils.id(),
       this.schemaObj,
       [],
-      numberCant,
+      cantDocuments,
     );
 
     return schemaToResolve.resolve();

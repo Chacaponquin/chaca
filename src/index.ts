@@ -16,7 +16,7 @@ import { ChacaError } from "./errors/ChacaError.js";
 import {
   MultiGenerate,
   MultiGenerateSchema,
-} from "./utils/helpers/MultiGenerate.js";
+} from "./utils/helpers/MultiGenerate/MultiGenerate.js";
 
 import {
   FieldToRef,

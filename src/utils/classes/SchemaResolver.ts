@@ -43,10 +43,28 @@ export class SchemaResolver<K = any, T = any> {
       this.injectedSchemas,
     );
     this.resultTree = new ChacaResultTree<K>(this.schemaName);
-    this.countDoc = countDoc;
+    this.countDoc = this.validateCountDoc(countDoc);
   }
 
-  public validateSchemaName(name: string): string {
+  private validateCountDoc(cantDocuments: number): number {
+    let numberCant = 10;
+
+    if (typeof cantDocuments === "number") {
+      if (cantDocuments >= 0 && cantDocuments <= 500) {
+        numberCant = cantDocuments;
+      } else if (cantDocuments < 0) {
+        throw new ChacaError(
+          `You can not generate a negative number of documents`,
+        );
+      } else if (cantDocuments > 500) {
+        throw new ChacaError(`You can not generate too much documents`);
+      }
+    }
+
+    return numberCant;
+  }
+
+  private validateSchemaName(name: string): string {
     if (name && typeof name === "string") {
       return name;
     } else {
