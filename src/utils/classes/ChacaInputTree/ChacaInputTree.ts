@@ -95,4 +95,6 @@ export class ChacaInputTree<T> {
     this.nodes.push(node);
     orderFieldsByPriority(this.nodes);
   }
+
+  public checkIfFieldExists(fieldTreeRoute: Array<string>): boolean {}
 }

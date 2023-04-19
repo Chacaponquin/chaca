@@ -1,22 +1,39 @@
+import { ChacaError } from "../../../../../errors/ChacaError.js";
 import { FieldToRefObject } from "../../../Resolvers/RefFieldResolver/RefFieldResolver.js";
 import { SchemaResolver } from "../../../SchemaResolver.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 
 export class RefValueNode extends ChacaTreeNode {
+  private fieldTreeRoute: Array<string>;
+
   constructor(
     config: ChacaTreeNodeConfig,
     public readonly refField: FieldToRefObject,
     public readonly injectedSchemas: Array<SchemaResolver>,
   ) {
     super(config);
+
+    this.fieldTreeRoute = this.validateFieldTreeRoute(this.refField.refField);
+  }
+
+  private validateFieldTreeRoute(route: string): Array<string> {
+    const saveRoute = route.split(".");
+
+    if (saveRoute.length === 0) {
+      throw new ChacaError("You can't ref an empty field");
+    } else {
+      return saveRoute;
+    }
   }
 
   public getValue() {
     let exists = false;
 
     for (let i = 0; i < this.injectedSchemas.length && !exists; i++) {
-      this.injectedSchemas[i].getInputTree().check;
+      exists = this.injectedSchemas[i]
+        .getInputTree()
+        .checkIfFieldExists(this.fieldTreeRoute);
     }
     return "";
   }
