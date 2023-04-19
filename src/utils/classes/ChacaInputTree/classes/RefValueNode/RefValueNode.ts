@@ -23,6 +23,10 @@ export class RefValueNode extends ChacaTreeNode {
         .getInputTree()
         .checkIfFieldExists(this.fieldTreeRoute);
     }
+
+    if (!exists) {
+      throw new ChacaError(`The field ${this.refField.refField} don't exists`);
+    }
   }
 
   private validateFieldTreeRoute(route: string): Array<string> {

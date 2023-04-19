@@ -1,3 +1,5 @@
+import { v4 as uuid } from "uuid";
+
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { SchemaField } from "../../../schemas/SchemaField.js";
 import { Export } from "../../helpers/Export.js";
@@ -264,7 +266,11 @@ export class ChacaSchema<K = any, T = any> {
    * Generate a schema document
    */
   public generateObject(): K {
-    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj, []);
+    const schemaToResolve = new SchemaResolver<K, T>(
+      uuid(),
+      this.schemaObj,
+      [],
+    );
     return schemaToResolve.resolve(1)[0];
   }
 
@@ -287,7 +293,11 @@ export class ChacaSchema<K = any, T = any> {
       }
     }
 
-    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj, []);
+    const schemaToResolve = new SchemaResolver<K, T>(
+      uuid(),
+      this.schemaObj,
+      [],
+    );
     return schemaToResolve.resolve(numberCant);
   }
 }

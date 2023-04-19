@@ -100,22 +100,26 @@ export class ChacaInputTree<T> {
   }
 
   public checkIfFieldExists(fieldTreeRoute: Array<string>): boolean {
-    let exists = false;
-    for (let i = 0; i < this.nodes.length && !exists; i++) {
-      if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
-        const routeWithoutFirstElement = fieldTreeRoute.slice(1);
-        const found = this.nodes[i].checkIfFieldExists(
-          routeWithoutFirstElement,
-        );
+    if (this.schemaName === fieldTreeRoute[0]) {
+      let exists = false;
+      for (let i = 0; i < this.nodes.length && !exists; i++) {
+        if (this.nodes[i].nodeConfig.name === fieldTreeRoute[1]) {
+          const routeWithoutFirstElement = fieldTreeRoute.slice(2);
+          const found = this.nodes[i].checkIfFieldExists(
+            routeWithoutFirstElement,
+          );
 
-        if (!found) {
-          break;
-        } else {
-          exists = true;
+          if (!found) {
+            break;
+          } else {
+            exists = true;
+          }
         }
       }
-    }
 
-    return exists;
+      return exists;
+    } else {
+      return false;
+    }
   }
 }
