@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../src";
+import { chaca, schemas } from "../../../../src";
 
 export const COMPLETE_SCHEMA = chaca.defineSchema({
   id: schemas.id.uuid(),
@@ -45,7 +45,3 @@ export const COMPLETE_SCHEMA = chaca.defineSchema({
     isArray: { min: 1, max: 4 },
   },
 });
-
-export const COMPLETE_SCHEMA_DOCS = COMPLETE_SCHEMA.generate(50);
-
-export const COMPLETE_SCHEMA_OBJECT = COMPLETE_SCHEMA.generateObject();

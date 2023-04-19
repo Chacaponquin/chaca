@@ -70,7 +70,7 @@ export class JavascriptGenerator extends Generator {
     let objectData = `{`;
     for (const [key, value] of Object.entries(doc)) {
       const val = this.filterTypeValue(value);
-      objectData += `${key}: ${val},`;
+      objectData += `"${key}": ${val},`;
     }
     objectData += "}";
 

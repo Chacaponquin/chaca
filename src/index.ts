@@ -24,6 +24,8 @@ import {
   RefFieldResolver,
 } from "./utils/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
 
+import { TryRefARefFieldError } from "./utils/classes/ChacaInputTree/errors/index.js";
+
 const Chaca = {
   Schema: ChacaSchema,
   utils: ChacaUtils,
@@ -109,7 +111,7 @@ const Chaca = {
 export const chaca = Chaca;
 export const schemas = Schemas;
 
-export { SchemaField, ChacaSchema, ChacaError };
+export { SchemaField, ChacaSchema, ChacaError, TryRefARefFieldError };
 
 export type {
   SchemaInput,

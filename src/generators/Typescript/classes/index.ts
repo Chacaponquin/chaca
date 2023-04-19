@@ -224,12 +224,12 @@ export class ObjectInterface extends TypescriptInterface {
         .includes("undefined");
 
       if (includeUndefined) {
-        returnIndefined = `${key.keyName}?: ${key.fieldInterface
+        returnIndefined = `"${key.keyName}"?: ${key.fieldInterface
           .map((i) => i.getInterface())
           .filter((i) => i !== "undefined")
           .join(" | ")}`;
       } else {
-        returnIndefined = `${key.keyName}: ${key.fieldInterface
+        returnIndefined = `"${key.keyName}": ${key.fieldInterface
           .map((i) => i.getInterface())
           .join(" | ")}`;
       }

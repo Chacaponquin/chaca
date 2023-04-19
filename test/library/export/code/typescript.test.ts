@@ -1,11 +1,13 @@
 import { chaca } from "../../../../src";
 import {
-  COMPLETE_SCHEMA_DOCS,
+  ARRAY_FIELDS_OBJECT,
+  COMPLETE_SCHEMA_DATA,
   COMPLETE_SCHEMA_OBJECT,
-} from "../../utils/schemaComplete";
-import { NESTED_OBJECTS_DOCS } from "../../utils/schemaNestedObjects";
-import { SCHEMA_WITH_ARRAY_OBJECT } from "../../utils/schemaWithArray";
-import { SIMPLE_OBJECT } from "../utils/simpleObject";
+  NESTED_OBJECTS_DATA,
+  NO_RELATIONAL_DATA,
+  RELATIONAL_USER_POST_DATA,
+  SIMPLE_SCHEMA_OBJECT,
+} from "../../utils/data";
 
 const objectFileName = "typescriptExport";
 const ROOT = "./data/typescript";
@@ -61,7 +63,7 @@ describe("#Export Typescript", () => {
 
     it("Array of Complete Schema", () => {
       chaca
-        .export(COMPLETE_SCHEMA_DOCS, {
+        .export(COMPLETE_SCHEMA_DATA, {
           format: "typescript",
           fileName: objectFileName + "ArrayCompleteSchema",
           location: ROOT,
@@ -71,7 +73,7 @@ describe("#Export Typescript", () => {
 
     it("Array of Schema with Nested Objects", () => {
       chaca
-        .export(NESTED_OBJECTS_DOCS, {
+        .export(NESTED_OBJECTS_DATA, {
           format: "typescript",
           fileName: objectFileName + "ArrayNestedObjectsSchema",
           location: ROOT,
@@ -96,7 +98,7 @@ describe("#Export Typescript", () => {
 
     it("Export simple object", () => {
       chaca
-        .export(SIMPLE_OBJECT, {
+        .export(SIMPLE_SCHEMA_OBJECT, {
           format: "typescript",
           fileName: objectFileName + "SimpleObject",
           location: ROOT,
@@ -126,9 +128,29 @@ describe("#Export Typescript", () => {
 
     it("Export schema with array fields object", () => {
       chaca
-        .export(SCHEMA_WITH_ARRAY_OBJECT, {
+        .export(ARRAY_FIELDS_OBJECT, {
           format: "typescript",
           fileName: objectFileName + "FieldsWithArrayObject",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s).toBe("string"));
+    });
+
+    it("Object of no relational schemas data", () => {
+      chaca
+        .export(NO_RELATIONAL_DATA, {
+          format: "typescript",
+          fileName: objectFileName + "NoRelationalSchemasData",
+          location: ROOT,
+        })
+        .then((s) => expect(typeof s).toBe("string"));
+    });
+
+    it("Object of relational data User -> Post", () => {
+      chaca
+        .export(RELATIONAL_USER_POST_DATA, {
+          format: "typescript",
+          fileName: objectFileName + "RelationalSchemasuserPost",
           location: ROOT,
         })
         .then((s) => expect(typeof s).toBe("string"));
