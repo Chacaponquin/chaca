@@ -8,11 +8,15 @@ export interface FieldToRefObject {
 }
 
 export class RefFieldResolver extends IResolver {
-  public refField: FieldToRefObject;
+  private refField: FieldToRefObject;
 
   constructor(refField: FieldToRef) {
     super();
     this.refField = this.validateFieldToRef(refField);
+  }
+
+  public getRefField() {
+    return this.refField;
   }
 
   private validateFieldToRef(refField: FieldToRef): FieldToRefObject {

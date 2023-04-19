@@ -3,6 +3,7 @@ import { CustomValueNode } from "./CustomValueNode/CustomValueNode.js";
 import { EnumValueNode } from "./EnumValueNode/EnumValueNode.js";
 import { MixedValueNode } from "./MixedValueNode/MixedValueNode.js";
 import { SchemaValueNode } from "./SchemaValueNode/SchemaValueNode.js";
+import { RefValueNode } from "./RefValueNode/RefValueNode.js";
 
 export {
   ChacaTreeNode,
@@ -10,4 +11,5 @@ export {
   EnumValueNode,
   MixedValueNode,
   SchemaValueNode,
+  RefValueNode,
 };

@@ -1,5 +1,6 @@
 import { SchemaField } from "../../schemas/SchemaField.js";
 import { ChacaSchema } from "../classes/ChacaSchema/ChacaSchema.js";
+import { RefFieldResolver } from "../classes/Resolvers/index.js";
 
 export type SchemaInput<C, T> = {
   [key in keyof T]: FieldSchemaConfig<C, T[key]>;
@@ -27,6 +28,7 @@ type FieldObjectInput<C, R> = {
   posibleNull?: boolean | number;
   custom?: CustomField<C, R>;
   enum?: R[];
+  ref?: RefFieldResolver;
 };
 
 export type CustomField<C, V> = (docFields: C) => V;

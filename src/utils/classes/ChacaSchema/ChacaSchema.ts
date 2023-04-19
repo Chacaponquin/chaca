@@ -124,6 +124,18 @@ export class ChacaSchema<K = any, T = any> {
                   ...defaultConfig,
                 },
               };
+            } else if (schema.ref) {
+              if (schema.ref instanceof RefFieldResolver) {
+                schemaToSave = {
+                  ...schemaToSave,
+                  [key]: {
+                    type: schema.ref,
+                    ...defaultConfig,
+                  },
+                };
+              } else {
+                throw new ChacaError("Incorrect type for the ref field");
+              }
             } else {
               throw new ChacaError(
                 `The field ${String(key)} dosen't have a resolve function`,
@@ -252,7 +264,7 @@ export class ChacaSchema<K = any, T = any> {
    * Generate a schema document
    */
   public generateObject(): K {
-    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj);
+    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj, []);
     return schemaToResolve.resolve(1)[0];
   }
 
@@ -275,7 +287,7 @@ export class ChacaSchema<K = any, T = any> {
       }
     }
 
-    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj);
+    const schemaToResolve = new SchemaResolver<K, T>(this.schemaObj, []);
     return schemaToResolve.resolve(numberCant);
   }
 }

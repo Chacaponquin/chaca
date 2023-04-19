@@ -18,13 +18,22 @@ import {
   SingleResultNode,
 } from "./ChacaResultTree/classes/index.js";
 
-export class SchemaResolver<K, T> {
+export class SchemaResolver<K = any, T = any> {
   private inputTree: ChacaInputTree<K>;
   private resultTree: ChacaResultTree<K>;
+  private injectedSchemas: Array<SchemaResolver>;
 
-  constructor(schemaObject: SchemaToResolve<T>) {
-    this.inputTree = new ChacaInputTree(schemaObject);
+  constructor(
+    schemaObject: SchemaToResolve<T>,
+    injectedSchemas: Array<SchemaResolver>,
+  ) {
+    this.injectedSchemas = injectedSchemas;
+    this.inputTree = new ChacaInputTree(schemaObject, this.injectedSchemas);
     this.resultTree = new ChacaResultTree<K>();
+  }
+
+  public setInjectedSchemas(array: Array<SchemaResolver>): void {
+    this.injectedSchemas = array;
   }
 
   public getInputTree() {
