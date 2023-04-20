@@ -22,7 +22,7 @@ export class MultiGenerateResolver<K> {
           s.documents,
         );
       } else {
-        throw new ChacaError("You must provide a name to your schema");
+        throw new ChacaError("You must provide a name for your schema");
       }
     });
   }
