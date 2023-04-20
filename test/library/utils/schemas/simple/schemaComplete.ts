@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../../src";
+import { chaca, schemas } from "../../../../../src";
 
 export const COMPLETE_SCHEMA = chaca.defineSchema({
   id: schemas.id.uuid(),

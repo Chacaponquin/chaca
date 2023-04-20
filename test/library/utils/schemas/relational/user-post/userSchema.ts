@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../../src";
+import { chaca, schemas } from "../../../../../../src";
 
 export const USER_SCHEMA = new chaca.Schema({
   id: schemas.id.mongodbID(),

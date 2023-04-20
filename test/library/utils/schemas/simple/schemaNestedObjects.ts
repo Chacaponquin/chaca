@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../../src";
+import { chaca, schemas } from "../../../../../src";
 
 export const NESTED_OBJECT_SCHEMA = new chaca.Schema({
   id: schemas.id.mongodbID(),

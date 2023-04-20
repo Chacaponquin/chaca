@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../../src";
+import { chaca, schemas } from "../../../../../src";
 
 export const SCHEMA_WITH_ARRAY_FIELDS = new chaca.Schema({
   id: { type: schemas.id.mongodbID(), isArray: 20 },

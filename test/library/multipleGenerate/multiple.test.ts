@@ -1,8 +1,10 @@
+import { TryRefARefFieldError } from "../../../src";
 import {
   NO_RELATIONAL_DATA,
   RELATIONAL_USER_POST_CATEGORY_DATA,
   RELATIONAL_USER_POST_DATA,
 } from "../utils/data";
+import { REF_REF_VALUE_DATA } from "./utils/ref-ref/schemas";
 
 describe("Multiple Generation Test", () => {
   describe("Generate no relational schemas", () => {
@@ -25,6 +27,12 @@ describe("Multiple Generation Test", () => {
       expect(RELATIONAL_USER_POST_CATEGORY_DATA).toHaveProperty(
         "Category Post",
       );
+    });
+  });
+
+  describe("Incorrect declaration of reference field", () => {
+    it("Trying reference a reference field.", () => {
+      expect(REF_REF_VALUE_DATA).toThrowError(TryRefARefFieldError);
     });
   });
 });
