@@ -1,4 +1,5 @@
 import { chaca } from "../../../../../src";
+import { PHASE_NAMES } from "./constants";
 import { GAME_SCHEMA } from "./schemas/game";
 import { PHASE_SCHEMA } from "./schemas/phase";
 import { STADIUM_SCHEMA } from "./schemas/stadium";
@@ -14,7 +15,7 @@ import {
 const CANT_DOC = 500;
 
 export const BASEBALL_CASE_DATA = chaca.multiGenerate([
-  { name: "Phase", schema: PHASE_SCHEMA, documents: CANT_DOC },
+  { name: "Phase", schema: PHASE_SCHEMA, documents: PHASE_NAMES.length },
   { name: "Stadium", documents: CANT_DOC, schema: STADIUM_SCHEMA },
   { name: "Team", documents: CANT_DOC, schema: TEAM_SCHEMA },
   { name: "TeamMember", documents: CANT_DOC, schema: TEAM_MEMBER_SCHEMA },

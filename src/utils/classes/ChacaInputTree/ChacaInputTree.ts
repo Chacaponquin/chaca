@@ -18,9 +18,11 @@ import {
   MixedValueNode,
   RefValueNode,
   SchemaValueNode,
+  SequentialValueNode,
 } from "./classes/index.js";
 import { orderFieldsByPriority } from "./utils/treeUtils.js";
 import { SchemaResolver } from "../SchemaResolver.js";
+import { SequentialFieldResolver } from "../Resolvers/SequentialFieldResolver/SequentialFieldResolver.js";
 
 export class ChacaInputTree<T> {
   private nodes: Array<ChacaTreeNode> = [];
@@ -35,7 +37,9 @@ export class ChacaInputTree<T> {
     this.injectedSchemas = injectedSchemas;
     this.schemaName = schemaName;
 
-    for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
+    for (const [key, obj] of Object.entries<
+      ResolverObject | SequentialFieldResolver
+    >(schemaToResolve)) {
       const newNode = this.createNodeByType(key, obj);
       this.insertNode(newNode);
     }
@@ -47,38 +51,41 @@ export class ChacaInputTree<T> {
 
   private createNodeByType(
     name: string,
-    object: ResolverObject,
+    object: ResolverObject | SequentialFieldResolver,
   ): ChacaTreeNode {
     let returnNode: ChacaTreeNode;
 
-    const nodeConfig = {
-      name: name,
-      isArray: object.isArray,
-      posibleNull: object.posibleNull,
-    };
-
-    if (object.type instanceof CustomFieldResolver) {
-      returnNode = new CustomValueNode(nodeConfig, object.type.fun);
-    } else if (object.type instanceof SchemaFieldResolver) {
-      returnNode = new SchemaValueNode(nodeConfig, object.type.schema);
-    } else if (object.type instanceof EnumFieldResolver) {
-      returnNode = new EnumValueNode(nodeConfig, object.type.array);
-    } else if (object.type instanceof MixedFieldResolver) {
-      returnNode = new MixedValueNode(nodeConfig);
-      this.createSubNodesOfMixedField(
-        returnNode as MixedValueNode,
-        object.type.schema,
-      );
-    } else if (object.type instanceof RefFieldResolver) {
-      returnNode = new RefValueNode(
-        nodeConfig,
-        object.type.getRefField(),
-        this.injectedSchemas,
-      );
+    if (object instanceof SequentialFieldResolver) {
+      returnNode = new SequentialValueNode(name, object.valuesArray);
     } else {
-      throw new ChacaError(`Dont exists that resolver`);
-    }
+      const nodeConfig = {
+        name: name,
+        isArray: object.isArray,
+        posibleNull: object.posibleNull,
+      };
 
+      if (object.type instanceof CustomFieldResolver) {
+        returnNode = new CustomValueNode(nodeConfig, object.type.fun);
+      } else if (object.type instanceof SchemaFieldResolver) {
+        returnNode = new SchemaValueNode(nodeConfig, object.type.schema);
+      } else if (object.type instanceof EnumFieldResolver) {
+        returnNode = new EnumValueNode(nodeConfig, object.type.array);
+      } else if (object.type instanceof MixedFieldResolver) {
+        returnNode = new MixedValueNode(nodeConfig);
+        this.createSubNodesOfMixedField(
+          returnNode as MixedValueNode,
+          object.type.schema,
+        );
+      } else if (object.type instanceof RefFieldResolver) {
+        returnNode = new RefValueNode(
+          nodeConfig,
+          object.type.getRefField(),
+          this.injectedSchemas,
+        );
+      } else {
+        throw new ChacaError(`Dont exists that resolver`);
+      }
+    }
     return returnNode;
   }
 
@@ -86,9 +93,9 @@ export class ChacaInputTree<T> {
     parentNode: MixedValueNode,
     schema: ChacaSchema,
   ) {
-    for (const [key, obj] of Object.entries<ResolverObject>(
-      schema.getSchemaObject(),
-    )) {
+    for (const [key, obj] of Object.entries<
+      ResolverObject | SequentialFieldResolver
+    >(schema.getSchemaObject())) {
       const newNode = this.createNodeByType(key, obj);
       parentNode.insertNode(newNode);
     }

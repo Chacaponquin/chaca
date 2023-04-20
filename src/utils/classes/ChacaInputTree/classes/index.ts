@@ -4,6 +4,7 @@ import { EnumValueNode } from "./EnumValueNode/EnumValueNode.js";
 import { MixedValueNode } from "./MixedValueNode/MixedValueNode.js";
 import { SchemaValueNode } from "./SchemaValueNode/SchemaValueNode.js";
 import { RefValueNode } from "./RefValueNode/RefValueNode.js";
+import { SequentialValueNode } from "./SequentialValueNode/SequentialValueNode.js";
 
 export {
   ChacaTreeNode,
@@ -12,4 +13,5 @@ export {
   MixedValueNode,
   SchemaValueNode,
   RefValueNode,
+  SequentialValueNode,
 };

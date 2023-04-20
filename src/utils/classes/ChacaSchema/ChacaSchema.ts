@@ -17,6 +17,7 @@ import {
   MixedFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
+  SequentialFieldResolver,
 } from "../Resolvers/index.js";
 import { SchemaResolver } from "../SchemaResolver.js";
 import { SequentialField } from "../SequentialField/SequentialField.js";
@@ -60,8 +61,10 @@ export class ChacaSchema<K = any, T = any> {
       };
 
       for (const k of Object.keys(obj)) {
-        const key = k as keyof T;
-        const schema = obj[key] as FieldSchemaConfig<K, T[keyof T]>;
+        const key = String(k) as keyof T;
+        const schema = obj[key] as
+          | FieldSchemaConfig<K, T[keyof T]>
+          | SequentialField;
 
         if (schema instanceof ChacaSchema) {
           schemaToSave = {
@@ -93,7 +96,12 @@ export class ChacaSchema<K = any, T = any> {
             },
           };
         } else if (schema instanceof SequentialField) {
-          schemaToSave = { ...schemaToSave, [key]: schema };
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: new SequentialFieldResolver(
+              (schema as SequentialField).getValuesArray(),
+            ),
+          };
         } else {
           if (typeof schema === "object" && schema !== null) {
             if (schema.type) {

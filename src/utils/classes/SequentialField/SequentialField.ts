@@ -10,4 +10,8 @@ export class SequentialField<K = any> {
       throw new ChacaError("The sequential field must be an array of fields");
     }
   }
+
+  public getValuesArray() {
+    return this.valuesArray;
+  }
 }

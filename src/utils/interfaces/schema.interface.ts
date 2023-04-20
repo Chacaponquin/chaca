@@ -1,5 +1,6 @@
 import { SchemaField } from "../../schemas/SchemaField.js";
 import { ChacaSchema } from "../classes/ChacaSchema/ChacaSchema.js";
+import { SequentialFieldResolver } from "../classes/Resolvers/SequentialFieldResolver/SequentialFieldResolver.js";
 import { RefFieldResolver } from "../classes/Resolvers/index.js";
 import { SequentialField } from "../classes/SequentialField/SequentialField.js";
 
@@ -8,7 +9,7 @@ export type SchemaInput<C, T> = {
 };
 
 export type SchemaToResolve<T> = {
-  [key in keyof T]: ResolverObject | SequentialField;
+  [key in keyof T]: ResolverObject | SequentialFieldResolver;
 };
 
 export type ResolverObject = {
