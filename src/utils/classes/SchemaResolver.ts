@@ -42,7 +42,6 @@ export class SchemaResolver<K = any, T = any> {
   }
 
   public buildInputTree(): void {
-    console.log(this.schemaName);
     if (!this.inputTree) {
       this.inputTree = new ChacaInputTree(
         this.schemaName,

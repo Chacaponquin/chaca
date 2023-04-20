@@ -11,14 +11,16 @@ import {
   TEAM_MEMBER_SCHEMA,
 } from "./schemas/teamMember";
 
+const CANT_DOC = 500;
+
 export const BASEBALL_CASE_DATA = chaca.multiGenerate([
-  { name: "Phase", schema: PHASE_SCHEMA, documents: 10 },
-  { name: "Stadium", documents: 10, schema: STADIUM_SCHEMA },
-  { name: "Team", documents: 10, schema: TEAM_SCHEMA },
-  { name: "TeamMember", documents: 10, schema: TEAM_MEMBER_SCHEMA },
-  { name: "Player", documents: 10, schema: PLAYER_SCHEMA },
-  { name: "Coach", documents: 10, schema: COACH_SCHEMA },
-  { name: "Pitcher", documents: 10, schema: PITCHER_SCHEMA },
-  { name: "Batter", documents: 10, schema: BATTER_SCHEMA },
-  { name: "Game", documents: 10, schema: GAME_SCHEMA },
+  { name: "Phase", schema: PHASE_SCHEMA, documents: CANT_DOC },
+  { name: "Stadium", documents: CANT_DOC, schema: STADIUM_SCHEMA },
+  { name: "Team", documents: CANT_DOC, schema: TEAM_SCHEMA },
+  { name: "TeamMember", documents: CANT_DOC, schema: TEAM_MEMBER_SCHEMA },
+  { name: "Player", documents: CANT_DOC, schema: PLAYER_SCHEMA },
+  { name: "Coach", documents: CANT_DOC, schema: COACH_SCHEMA },
+  { name: "Pitcher", documents: CANT_DOC, schema: PITCHER_SCHEMA },
+  { name: "Batter", documents: CANT_DOC, schema: BATTER_SCHEMA },
+  { name: "Game", documents: CANT_DOC, schema: GAME_SCHEMA },
 ]);
