@@ -7,7 +7,7 @@ export const SCHEMA_ONE = chaca.defineSchema({
 
 export const SCHEMA_TWO = chaca.defineSchema({
   id: schemas.id.uuid(),
-  ref: chaca.ref("SchemaThree.ref"),
+  ref: chaca.ref("SchemaThree.name"),
 });
 
 export const SCHEMA_THREE = chaca.defineSchema({

@@ -10,7 +10,7 @@ import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
 
 export class RefValueNode extends ChacaTreeNode {
   private fieldTreeRoute: Array<string>;
-  private schemaRef: SchemaResolver;
+  private schemaRef: SchemaResolver | null;
 
   constructor(
     config: ChacaTreeNodeConfig,
@@ -21,11 +21,13 @@ export class RefValueNode extends ChacaTreeNode {
 
     this.fieldTreeRoute = this.validateFieldTreeRoute(this.refField.refField);
 
+    this.schemaRef = null;
+  }
+
+  public searchSchemaRef(): void {
     let exists = -1;
 
     for (let i = 0; i < this.injectedSchemas.length && exists === -1; i++) {
-      this.injectedSchemas[i].buildInputTree();
-
       const inputTree = this.injectedSchemas[i].getInputTree();
 
       if (inputTree) {
@@ -69,32 +71,36 @@ export class RefValueNode extends ChacaTreeNode {
   }
 
   public getValue(): unknown | Array<unknown> {
-    if (
-      !this.schemaRef.isBuildingTrees() &&
-      this.schemaRef.isFinishBuilding()
-    ) {
-      const allValues = this.schemaRef.getAllValuesByNodeRoute(
-        this.fieldTreeRoute,
-      );
+    if (this.schemaRef) {
+      if (
+        !this.schemaRef.isBuildingTrees() &&
+        this.schemaRef.isFinishBuilding()
+      ) {
+        const allValues = this.schemaRef.getAllValuesByNodeRoute(
+          this.fieldTreeRoute,
+        );
 
-      return PrivateUtils.oneOfArray(allValues);
-    } else if (
-      !this.schemaRef.isBuildingTrees() &&
-      !this.schemaRef.isFinishBuilding()
-    ) {
-      this.schemaRef.buildTrees();
+        return PrivateUtils.oneOfArray(allValues);
+      } else if (
+        !this.schemaRef.isBuildingTrees() &&
+        !this.schemaRef.isFinishBuilding()
+      ) {
+        this.schemaRef.buildTrees();
 
-      const allValues = this.schemaRef.getAllValuesByNodeRoute(
-        this.fieldTreeRoute,
-      );
+        const allValues = this.schemaRef.getAllValuesByNodeRoute(
+          this.fieldTreeRoute,
+        );
 
-      return PrivateUtils.oneOfArray(allValues);
+        return PrivateUtils.oneOfArray(allValues);
+      } else {
+        throw new ChacaError(
+          `You are trying to access ${
+            this.refField.refField
+          } when the data in ${this.schemaRef.getSchemaName()} is not finish`,
+        );
+      }
     } else {
-      throw new ChacaError(
-        `You are trying to access ${
-          this.refField.refField
-        } when the data in ${this.schemaRef.getSchemaName()} is not finish`,
-      );
+      return null;
     }
   }
 

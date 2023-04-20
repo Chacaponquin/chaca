@@ -10,6 +10,7 @@ export class MultiGenerateResolver<K> {
     this.resolversArray = this.createSchemaResolvers(schemas);
     this.injectSchemas();
     this.buildInputTrees();
+    this.buildRefFields();
   }
 
   private validateNotRepeatSchemaNames(
@@ -25,6 +26,10 @@ export class MultiGenerateResolver<K> {
         );
       }
     }
+  }
+
+  private buildRefFields() {
+    this.resolversArray.forEach((r) => r.searchRefNodes());
   }
 
   private createSchemaResolvers(

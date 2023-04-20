@@ -29,6 +29,8 @@ export class ChacaInputTree<T> {
   private injectedSchemas: Array<SchemaResolver>;
   private schemaName: string;
 
+  private refToResolve: Array<RefValueNode> = [];
+
   constructor(
     schemaName: string,
     schemaToResolve: SchemaToResolve<T>,
@@ -77,11 +79,14 @@ export class ChacaInputTree<T> {
           object.type.schema,
         );
       } else if (object.type instanceof RefFieldResolver) {
-        returnNode = new RefValueNode(
+        const newRefNode = new RefValueNode(
           nodeConfig,
           object.type.getRefField(),
           this.injectedSchemas,
         );
+
+        this.refToResolve.push(newRefNode);
+        returnNode = newRefNode;
       } else {
         throw new ChacaError(`Dont exists that resolver`);
       }
@@ -129,5 +134,9 @@ export class ChacaInputTree<T> {
     } else {
       return false;
     }
+  }
+
+  public searchRefNodes(): void {
+    this.refToResolve.forEach((r) => r.searchSchemaRef());
   }
 }

@@ -110,6 +110,12 @@ export class SchemaResolver<K = any, T = any> {
     return allValues;
   }
 
+  public searchRefNodes() {
+    if (this.inputTree) {
+      this.inputTree.searchRefNodes();
+    }
+  }
+
   public buildTrees(): void {
     if (!this.finishBuilding) {
       if (this.inputTree) {
