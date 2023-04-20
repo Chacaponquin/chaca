@@ -11,7 +11,7 @@ import { SchemaField } from "./schemas/SchemaField.js";
 import { ChacaSchema } from "./utils/classes/ChacaSchema/ChacaSchema.js";
 
 import { Export } from "./utils/helpers/Export.js";
-import { ChacaError } from "./errors/ChacaError.js";
+import { ChacaError, EmptySequentialValuesError } from "./errors/ChacaError.js";
 
 import {
   MultiGenerate,
@@ -127,7 +127,13 @@ const Chaca = {
 export const chaca = Chaca;
 export const schemas = Schemas;
 
-export { SchemaField, ChacaSchema, ChacaError, TryRefARefFieldError };
+export {
+  SchemaField,
+  ChacaSchema,
+  ChacaError,
+  TryRefARefFieldError,
+  EmptySequentialValuesError,
+};
 
 export type {
   SchemaInput,

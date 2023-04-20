@@ -1,3 +1,4 @@
+import { EmptySequentialValuesError } from "../../../src";
 import { CORRECT_SEQUENTIAL_DATA } from "./schemas/correctSchema";
 import { FEW_VALUES_SEQUENTIAL_SCHEMA } from "./schemas/incorrectSchemas";
 
@@ -11,6 +12,8 @@ describe("# Sequential Field test", () => {
   });
 
   it("Not enought values for the generate data. Should return an error", () => {
-    expect(FEW_VALUES_SEQUENTIAL_SCHEMA.generate(10)).toThrow();
+    expect(FEW_VALUES_SEQUENTIAL_SCHEMA.generate(10)).toThrow(
+      EmptySequentialValuesError,
+    );
   });
 });
