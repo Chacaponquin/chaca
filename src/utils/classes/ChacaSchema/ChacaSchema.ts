@@ -19,6 +19,7 @@ import {
   SchemaFieldResolver,
 } from "../Resolvers/index.js";
 import { SchemaResolver } from "../SchemaResolver.js";
+import { SequentialField } from "../SequentialField/SequentialField.js";
 
 export class ChacaSchema<K = any, T = any> {
   private schemaObj: SchemaToResolve<T>;
@@ -91,6 +92,8 @@ export class ChacaSchema<K = any, T = any> {
               ...defaultConfig,
             },
           };
+        } else if (schema instanceof SequentialField) {
+          schemaToSave = { ...schemaToSave, [key]: schema };
         } else {
           if (typeof schema === "object" && schema !== null) {
             if (schema.type) {
