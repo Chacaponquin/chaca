@@ -25,6 +25,7 @@ import {
 } from "./utils/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
 
 import { TryRefARefFieldError } from "./utils/classes/ChacaInputTree/errors/index.js";
+import { SequentialField } from "./utils/classes/SequentialField/SequentialField.js";
 
 const Chaca = {
   Schema: ChacaSchema,
@@ -68,6 +69,21 @@ const Chaca = {
    */
   ref(fieldToRef: FieldToRef) {
     return new RefFieldResolver(fieldToRef);
+  },
+
+  /**
+   *
+   * @param valuesArray array of the secuential values
+   * @example
+   * // the first generated object will have the favoriteNumber with value 1
+   * // the second generated object will have the favoriteNumber with value 2
+   * // the third generated object will have the favoriteNumber with value 3
+   * {
+   *   favoriteNumber: chaca.sequential([1, 2, 3])
+   * }
+   */
+  sequential<K = any>(valuesArray: Array<K>) {
+    return new SequentialField(valuesArray);
   },
 
   /**
