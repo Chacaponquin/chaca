@@ -1,13 +1,14 @@
 import { SchemaField } from "../../schemas/SchemaField.js";
 import { ChacaSchema } from "../classes/ChacaSchema/ChacaSchema.js";
 import { RefFieldResolver } from "../classes/Resolvers/index.js";
+import { SequentialField } from "../classes/SequentialField/SequentialField.js";
 
 export type SchemaInput<C, T> = {
-  [key in keyof T]: FieldSchemaConfig<C, T[key]>;
+  [key in keyof T]: FieldSchemaConfig<C, T[key]> | SequentialField;
 };
 
 export type SchemaToResolve<T> = {
-  [key in keyof T]: ResolverObject;
+  [key in keyof T]: ResolverObject | SequentialField;
 };
 
 export type ResolverObject = {
