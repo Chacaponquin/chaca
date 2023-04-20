@@ -170,7 +170,7 @@ export class ObjectInterface extends TypescriptInterface {
         newKeysInterfaces.push({
           keyName: maxKey.keyName,
           fieldInterface: [
-            ...maxKey.fieldInterface,
+            ...maxKey.fieldInterface.filter((k) => k !== minObject),
             new PrimitiveInterface("undefined"),
           ],
         });
@@ -186,7 +186,7 @@ export class ObjectInterface extends TypescriptInterface {
         newKeysInterfaces.push({
           keyName: minKey.keyName,
           fieldInterface: [
-            ...minKey.fieldInterface,
+            ...minKey.fieldInterface.filter((k) => k !== minObject),
             new PrimitiveInterface("undefined"),
           ],
         });
