@@ -6,9 +6,25 @@ export class MultiGenerateResolver<K> {
   private resolversArray: Array<SchemaResolver>;
 
   constructor(schemas: Array<MultiGenerateSchema>) {
+    this.validateNotRepeatSchemaNames(schemas);
     this.resolversArray = this.createSchemaResolvers(schemas);
     this.injectSchemas();
     this.buildInputTrees();
+  }
+
+  private validateNotRepeatSchemaNames(
+    schemas: Array<MultiGenerateSchema>,
+  ): void {
+    for (let i = 0; i < schemas.length; i++) {
+      const notRepeat =
+        schemas.filter((s) => s.name === schemas[i].name).length === 1;
+
+      if (!notRepeat) {
+        throw new ChacaError(
+          `The name ${schemas[i].name} is repeat. Your schemas must have different names`,
+        );
+      }
+    }
   }
 
   private createSchemaResolvers(
