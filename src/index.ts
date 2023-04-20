@@ -11,7 +11,11 @@ import { SchemaField } from "./schemas/SchemaField.js";
 import { ChacaSchema } from "./utils/classes/ChacaSchema/ChacaSchema.js";
 
 import { Export } from "./utils/helpers/Export.js";
-import { ChacaError, EmptySequentialValuesError } from "./errors/ChacaError.js";
+import {
+  ChacaError,
+  EmptySequentialValuesError,
+  TryRefARefFieldError,
+} from "./errors/ChacaError.js";
 
 import {
   MultiGenerate,
@@ -24,7 +28,6 @@ import {
   RefFieldResolver,
 } from "./utils/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
 
-import { TryRefARefFieldError } from "./utils/classes/ChacaInputTree/errors/index.js";
 import { SequentialField } from "./utils/classes/SequentialField/SequentialField.js";
 
 const Chaca = {

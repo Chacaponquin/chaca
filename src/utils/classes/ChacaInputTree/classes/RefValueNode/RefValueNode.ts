@@ -1,9 +1,11 @@
-import { ChacaError } from "../../../../../errors/ChacaError.js";
+import {
+  ChacaError,
+  TryRefARefFieldError,
+} from "../../../../../errors/ChacaError.js";
 import { FieldToRefObject } from "../../../Resolvers/RefFieldResolver/RefFieldResolver.js";
 import { SchemaResolver } from "../../../SchemaResolver.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
-import { TryRefARefFieldError } from "../../errors/index.js";
 import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
 
 export class RefValueNode extends ChacaTreeNode {
@@ -60,7 +62,7 @@ export class RefValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefARefFieldError();
+      throw new TryRefARefFieldError(this.nodeConfig.name);
     } else {
       return false;
     }
