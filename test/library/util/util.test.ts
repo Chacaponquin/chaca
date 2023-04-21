@@ -1,5 +1,5 @@
-import { chaca } from "../../src";
-import { ChacaError } from "../../src/errors/ChacaError";
+import { chaca } from "../../../src";
+import { ChacaError } from "../../../src/errors/ChacaError";
 
 describe("#Util Tests", () => {
   describe("capitalizaText test", () => {

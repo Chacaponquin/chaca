@@ -54,16 +54,19 @@ export class SchemaResolver<K = any, T = any> {
 
   private validateCountDoc(cantDocuments: number): number {
     let numberCant = 10;
+    const MAX_COUNT = 400000;
 
     if (typeof cantDocuments === "number") {
-      if (cantDocuments >= 0) {
+      if (cantDocuments >= 0 && MAX_COUNT) {
         numberCant = cantDocuments;
       } else if (cantDocuments < 0) {
         throw new ChacaError(
           `You can not generate a negative number of documents`,
         );
-      } else if (cantDocuments > 500) {
-        throw new ChacaError(`You can not generate too much documents`);
+      } else if (cantDocuments > MAX_COUNT) {
+        throw new ChacaError(
+          `You can not generate more than ${MAX_COUNT} documents`,
+        );
       }
     }
 
