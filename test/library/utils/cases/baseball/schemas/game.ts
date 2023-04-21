@@ -6,7 +6,7 @@ export const GAME_SCHEMA = chaca.defineSchema({
   game_id: schemas.id.uuid(),
   date: schemas.date.past(),
   winner: (fields) => {
-    chaca.utils.oneOfArray([fields.home_club, fields.visitant]);
+    return chaca.utils.oneOfArray([fields.home_club, fields.visitant]);
   },
   phaseID: chaca.ref("Phase.phase_id"),
 });
