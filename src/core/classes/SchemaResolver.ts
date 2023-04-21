@@ -56,7 +56,7 @@ export class SchemaResolver<K = any, T = any> {
     let numberCant = 10;
 
     if (typeof cantDocuments === "number") {
-      if (cantDocuments >= 0 && cantDocuments <= 500) {
+      if (cantDocuments >= 0) {
         numberCant = cantDocuments;
       } else if (cantDocuments < 0) {
         throw new ChacaError(
