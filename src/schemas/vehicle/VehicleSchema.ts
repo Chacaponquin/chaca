@@ -1,5 +1,5 @@
 import { SchemaField } from "../SchemaField.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants/index.js";
 
 export class VehicleSchema {

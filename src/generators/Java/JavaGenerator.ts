@@ -1,10 +1,10 @@
-import { FileConfig } from "../../utils/interfaces/export.interface.js";
+import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { Generator } from "./../Generator.js";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
 import { ChacaError } from "../../errors/ChacaError.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 
 export class JavaGenerator extends Generator {
   constructor(data: any, config: FileConfig) {

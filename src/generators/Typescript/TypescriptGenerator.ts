@@ -1,8 +1,8 @@
-import { FileConfig } from "../../utils/interfaces/export.interface.js";
+import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { Generator } from "../Generator.js";
 import { JavascriptGenerator } from "../Javascript/JavascriptGenerator.js";
 import fs from "fs";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { ObjectInterface, TypescriptInterface } from "./classes/index.js";
 
 export class TypescriptGenerator extends Generator {

@@ -1,16 +1,16 @@
-import { ChacaUtils } from "./utils/helpers/ChacaUtils.js";
-import { SchemaInput } from "./utils/interfaces/schema.interface.js";
+import { ChacaUtils } from "./core/helpers/ChacaUtils.js";
+import { SchemaInput } from "./core/interfaces/schema.interface.js";
 import {
   ExportFormat,
   FileConfig,
-} from "./utils/interfaces/export.interface.js";
+} from "./core/interfaces/export.interface.js";
 
 import { Schemas } from "./schemas/index.js";
 import { SchemaField } from "./schemas/SchemaField.js";
 
-import { ChacaSchema } from "./utils/classes/ChacaSchema/ChacaSchema.js";
+import { ChacaSchema } from "./core/classes/ChacaSchema/ChacaSchema.js";
 
-import { Export } from "./utils/helpers/Export.js";
+import { Export } from "./core/helpers/Export.js";
 import {
   ChacaError,
   EmptySequentialValuesError,
@@ -20,15 +20,15 @@ import {
 import {
   MultiGenerate,
   MultiGenerateSchema,
-} from "./utils/helpers/MultiGenerate/MultiGenerate.js";
+} from "./core/helpers/MultiGenerate/MultiGenerate.js";
 
 import {
   FieldToRef,
   FieldToRefObject,
   RefFieldResolver,
-} from "./utils/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
+} from "./core/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
 
-import { SequentialField } from "./utils/classes/SequentialField/SequentialField.js";
+import { SequentialField } from "./core/classes/SequentialField/SequentialField.js";
 
 const Chaca = {
   Schema: ChacaSchema,

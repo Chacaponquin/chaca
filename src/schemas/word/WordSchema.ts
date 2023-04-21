@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import WORDS, { ILanguageWord } from "./constants/index.js";
 

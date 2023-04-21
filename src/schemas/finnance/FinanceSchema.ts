@@ -1,6 +1,6 @@
 import { SchemaField } from "../SchemaField.js";
 import { Schemas } from "../index.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { ACCOUNT_TYPES, IBAN, MONEY_INFO } from "./constants/index.js";
 
 type AmountProps = {

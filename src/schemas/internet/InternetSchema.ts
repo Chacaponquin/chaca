@@ -1,5 +1,5 @@
 import { SchemaField } from "../SchemaField.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { EMOJIS } from "./constants/emojis.js";
 import { DOMAIN_SUFFIX } from "./constants/domainSuffix.js";
 import { HTTP_STATUS } from "./constants/httpStatus.js";

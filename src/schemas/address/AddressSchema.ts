@@ -1,6 +1,6 @@
 import { SchemaField } from "../SchemaField.js";
 import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { TIME_ZONE } from "./constants/timeZone.js";
 
 type ZipCodeProps = {

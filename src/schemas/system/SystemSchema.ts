@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import { Schemas } from "../index.js";
 import { MIME_TYPES } from "./constants/mimeTypes.js";

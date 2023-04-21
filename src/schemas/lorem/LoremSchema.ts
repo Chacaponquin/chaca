@@ -1,6 +1,6 @@
 import { SchemaField } from "../SchemaField.js";
 import { loremIpsum } from "lorem-ipsum";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 
 type WordsProps = {
   count?: number;

@@ -1,4 +1,4 @@
-import { FileConfig } from "../../utils/interfaces/export.interface.js";
+import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { Generator } from "./../Generator.js";
 import fs from "fs";
 import { ChacaError } from "../../errors/ChacaError.js";
