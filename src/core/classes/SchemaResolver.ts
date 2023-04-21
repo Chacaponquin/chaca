@@ -57,7 +57,7 @@ export class SchemaResolver<K = any, T = any> {
     const MAX_COUNT = 400000;
 
     if (typeof cantDocuments === "number") {
-      if (cantDocuments >= 0 && MAX_COUNT) {
+      if (cantDocuments >= 0 && cantDocuments <= MAX_COUNT) {
         numberCant = cantDocuments;
       } else if (cantDocuments < 0) {
         throw new ChacaError(
@@ -68,6 +68,10 @@ export class SchemaResolver<K = any, T = any> {
           `You can not generate more than ${MAX_COUNT} documents`,
         );
       }
+    } else {
+      throw new ChacaError(
+        `You have to specify a number of documents to create`,
+      );
     }
 
     return numberCant;
