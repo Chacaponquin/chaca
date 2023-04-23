@@ -6,6 +6,7 @@ import {
 import {
   CustomFieldResolver,
   EnumFieldResolver,
+  KeyFieldResolver,
   MixedFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
@@ -15,6 +16,7 @@ import {
   ChacaTreeNode,
   CustomValueNode,
   EnumValueNode,
+  KeyValueNode,
   MixedValueNode,
   RefValueNode,
   SchemaValueNode,
@@ -40,7 +42,7 @@ export class ChacaInputTree<T> {
     this.schemaName = schemaName;
 
     for (const [key, obj] of Object.entries<
-      ResolverObject | SequentialFieldResolver
+      ResolverObject | SequentialFieldResolver | KeyFieldResolver
     >(schemaToResolve)) {
       const newNode = this.createNodeByType(key, obj);
       this.insertNode(newNode);
@@ -53,12 +55,14 @@ export class ChacaInputTree<T> {
 
   private createNodeByType(
     name: string,
-    object: ResolverObject | SequentialFieldResolver,
+    object: ResolverObject | SequentialFieldResolver | KeyFieldResolver,
   ): ChacaTreeNode {
     let returnNode: ChacaTreeNode;
 
     if (object instanceof SequentialFieldResolver) {
       returnNode = new SequentialValueNode(name, object.valuesArray);
+    } else if (object instanceof KeyFieldResolver) {
+      returnNode = new KeyValueNode(name, object.fieldFiunction);
     } else {
       const nodeConfig = {
         name: name,
@@ -99,7 +103,7 @@ export class ChacaInputTree<T> {
     schema: ChacaSchema,
   ) {
     for (const [key, obj] of Object.entries<
-      ResolverObject | SequentialFieldResolver
+      ResolverObject | SequentialFieldResolver | KeyFieldResolver
     >(schema.getSchemaObject())) {
       const newNode = this.createNodeByType(key, obj);
       parentNode.insertNode(newNode);

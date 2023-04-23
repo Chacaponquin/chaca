@@ -8,6 +8,10 @@ export class KeyField<A = any> {
     this.fieldFiunction = this.validateFieldFunction(fieldFiunction);
   }
 
+  public getFieldFunction() {
+    return this.fieldFiunction;
+  }
+
   private validateFieldFunction(
     fieldFunction: SchemaField<string | number, A>,
   ): SchemaField<string | number, A> {

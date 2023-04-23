@@ -12,7 +12,7 @@ const stadiumNameSchema = chaca.defineSchemaField<unknown, string>(
 );
 
 export const STADIUM_SCHEMA = chaca.defineSchema({
-  stadiumID: schemas.id.uuid(),
+  stadiumID: chaca.key(schemas.id.uuid()),
   name: stadiumNameSchema(),
   capacity: schemas.dataType.int({ min: 5000, max: 20000 }),
 });

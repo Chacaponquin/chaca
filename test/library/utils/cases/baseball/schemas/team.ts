@@ -2,7 +2,7 @@ import { chaca, schemas } from "../../../../../../src";
 import { PROVINCES } from "../constants";
 
 export const TEAM_SCHEMA = chaca.defineSchema({
-  team_id: schemas.id.uuid(),
+  team_id: chaca.key(schemas.id.uuid()),
   played_championships: schemas.dataType.int({ min: 1, max: 70 }),
   color: () => "#000000",
   name: (fields) => {

@@ -90,7 +90,7 @@ const Chaca = {
     return new SequentialField(valuesArray);
   },
 
-  key<A>(schemaField: SchemaField<string | number, A>) {
+  key<A = any>(schemaField: SchemaField<string | number, A>) {
     return new KeyField<A>(schemaField);
   },
 

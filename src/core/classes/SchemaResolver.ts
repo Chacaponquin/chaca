@@ -294,7 +294,7 @@ export class SchemaResolver<K = any, T = any> {
       // en caso de no ser ninguno de los anteriores
       else {
         throw new ChacaError(
-          `${field.nodeConfig.name} has an invalid method of solution`,
+          `'${field.nodeConfig.name}' has an invalid method of solution`,
         );
       }
     }

@@ -11,9 +11,11 @@ import {
   SchemaInput,
   SchemaToResolve,
 } from "../../interfaces/schema.interface.js";
+import { KeyField } from "../KeyField/KeyField.js";
 import {
   CustomFieldResolver,
   EnumFieldResolver,
+  KeyFieldResolver,
   MixedFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
@@ -64,7 +66,8 @@ export class ChacaSchema<K = any, T = any> {
         const key = String(k) as keyof T;
         const schema = obj[key] as
           | FieldSchemaConfig<K, T[keyof T]>
-          | SequentialField;
+          | SequentialField
+          | KeyField;
 
         if (schema instanceof ChacaSchema) {
           schemaToSave = {
@@ -100,6 +103,13 @@ export class ChacaSchema<K = any, T = any> {
             ...schemaToSave,
             [key]: new SequentialFieldResolver(
               (schema as SequentialField).getValuesArray(),
+            ),
+          };
+        } else if (schema instanceof KeyField) {
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: new KeyFieldResolver(
+              (schema as KeyField).getFieldFunction(),
             ),
           };
         } else {
