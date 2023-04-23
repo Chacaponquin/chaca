@@ -1,3 +1,4 @@
+import { TryRefANoKeyFieldError } from "../../../../../errors/ChacaError.js";
 import { CustomField } from "../../../../interfaces/schema.interface.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
@@ -29,7 +30,7 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      return true;
+      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
     } else {
       return false;
     }

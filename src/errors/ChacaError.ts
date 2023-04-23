@@ -11,10 +11,10 @@ export class EmptySequentialValuesError extends ChacaError {
   }
 }
 
-export class TryRefARefFieldError extends ChacaError {
+export class TryRefANoKeyFieldError extends ChacaError {
   constructor(fieldName: string) {
     super(
-      `The field '${fieldName}' is a reference field, so you can't reference this one`,
+      `The field '${fieldName}' is not a key field, so you can't reference this one`,
     );
   }
 }

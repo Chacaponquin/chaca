@@ -14,7 +14,7 @@ import { Export } from "./core/helpers/Export.js";
 import {
   ChacaError,
   EmptySequentialValuesError,
-  TryRefARefFieldError,
+  TryRefANoKeyFieldError,
 } from "./errors/ChacaError.js";
 
 import {
@@ -29,6 +29,7 @@ import {
 } from "./core/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
 
 import { SequentialField } from "./core/classes/SequentialField/SequentialField.js";
+import { KeyField } from "./core/classes/KeyField/KeyField.js";
 
 const Chaca = {
   Schema: ChacaSchema,
@@ -89,6 +90,10 @@ const Chaca = {
     return new SequentialField(valuesArray);
   },
 
+  key<A>(schemaField: SchemaField<string | number, A>) {
+    return new KeyField<A>(schemaField);
+  },
+
   /**
    * Export the data to a selected code format
    * @param data Data you want to export
@@ -134,8 +139,9 @@ export {
   SchemaField,
   ChacaSchema,
   ChacaError,
-  TryRefARefFieldError,
+  TryRefANoKeyFieldError,
   EmptySequentialValuesError,
+  KeyField,
 };
 
 export type {

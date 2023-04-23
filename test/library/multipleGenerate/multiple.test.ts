@@ -1,4 +1,4 @@
-import { ChacaError, TryRefARefFieldError } from "../../../src";
+import { ChacaError, TryRefANoKeyFieldError } from "../../../src";
 import {
   NO_RELATIONAL_DATA,
   RELATIONAL_USER_POST_CATEGORY_DATA,
@@ -37,7 +37,7 @@ describe("Multiple Generation Test", () => {
     });
 
     it("Trying reference a reference field.", () => {
-      expect(REF_REF_VALUE_DATA).toThrowError(TryRefARefFieldError);
+      expect(REF_REF_VALUE_DATA).toThrowError(TryRefANoKeyFieldError);
     });
   });
 });

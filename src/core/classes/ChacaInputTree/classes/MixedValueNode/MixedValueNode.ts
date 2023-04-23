@@ -1,6 +1,7 @@
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { orderFieldsByPriority } from "../../utils/treeUtils.js";
+import { TryRefANoKeyFieldError } from "../../../../../errors/ChacaError.js";
 
 export class MixedValueNode extends ChacaTreeNode {
   private nodes: Array<ChacaTreeNode> = [];
@@ -24,7 +25,7 @@ export class MixedValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      return true;
+      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
     } else {
       let found = false;
       for (let i = 0; i < this.nodes.length && !found; i++) {

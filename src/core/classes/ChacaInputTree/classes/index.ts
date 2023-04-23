@@ -5,6 +5,7 @@ import { MixedValueNode } from "./MixedValueNode/MixedValueNode.js";
 import { SchemaValueNode } from "./SchemaValueNode/SchemaValueNode.js";
 import { RefValueNode } from "./RefValueNode/RefValueNode.js";
 import { SequentialValueNode } from "./SequentialValueNode/SequentialValueNode.js";
+import { KeyValueNode } from "./KeyValueNode/KeyValueNode.js";
 
 export {
   ChacaTreeNode,
@@ -14,4 +15,5 @@ export {
   SchemaValueNode,
   RefValueNode,
   SequentialValueNode,
+  KeyValueNode,
 };

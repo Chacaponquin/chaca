@@ -1,11 +1,12 @@
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { SchemaField } from "../../../../../schemas/SchemaField.js";
+import { TryRefANoKeyFieldError } from "../../../../../errors/ChacaError.js";
 
 export class SchemaValueNode extends ChacaTreeNode {
   constructor(
     config: ChacaTreeNodeConfig,
-    public readonly schema: SchemaField,
+    private readonly schema: SchemaField,
   ) {
     super(config);
   }
@@ -19,9 +20,13 @@ export class SchemaValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      return true;
+      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
     } else {
       return false;
     }
+  }
+
+  public getValue() {
+    return this.schema.getValue();
   }
 }

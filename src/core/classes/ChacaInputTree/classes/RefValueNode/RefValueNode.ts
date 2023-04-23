@@ -1,6 +1,6 @@
 import {
   ChacaError,
-  TryRefARefFieldError,
+  TryRefANoKeyFieldError,
 } from "../../../../../errors/ChacaError.js";
 import { FieldToRefObject } from "../../../Resolvers/RefFieldResolver/RefFieldResolver.js";
 import { SchemaResolver } from "../../../SchemaResolver.js";
@@ -64,7 +64,7 @@ export class RefValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefARefFieldError(this.nodeConfig.name);
+      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
     } else {
       return false;
     }

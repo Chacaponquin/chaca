@@ -1,4 +1,7 @@
-import { EmptySequentialValuesError } from "../../../../../errors/ChacaError.js";
+import {
+  EmptySequentialValuesError,
+  TryRefANoKeyFieldError,
+} from "../../../../../errors/ChacaError.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 
 export class SequentialValueNode extends ChacaTreeNode {
@@ -15,7 +18,7 @@ export class SequentialValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      return true;
+      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
     } else {
       return false;
     }
