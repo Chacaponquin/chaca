@@ -115,17 +115,27 @@ export class ChacaSchema<K = any, T = any> {
         } else {
           if (typeof schema === "object" && schema !== null) {
             if (schema.type) {
-              const type = this.validateType(key, schema.type);
-              schemaToSave = {
-                ...schemaToSave,
-                [key]: {
-                  type:
-                    type instanceof ChacaSchema
-                      ? new MixedFieldResolver(type)
-                      : new SchemaFieldResolver(type),
-                  ...defaultConfig,
-                },
-              };
+              if (schema.type instanceof RefFieldResolver) {
+                schemaToSave = {
+                  ...schemaToSave,
+                  [key]: {
+                    type: schema.type,
+                    ...defaultConfig,
+                  },
+                };
+              } else {
+                const type = this.validateType(key, schema.type);
+                schemaToSave = {
+                  ...schemaToSave,
+                  [key]: {
+                    type:
+                      type instanceof ChacaSchema
+                        ? new MixedFieldResolver(type)
+                        : new SchemaFieldResolver(type),
+                    ...defaultConfig,
+                  },
+                };
+              }
             } else if (schema.enum) {
               schemaToSave = {
                 ...schemaToSave,

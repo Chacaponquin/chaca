@@ -27,13 +27,13 @@ export abstract class Generator {
     this.route = this.generateRoute(config.fileName);
   }
 
+  public abstract generateFile(): Promise<string>;
+
   private validateData(): void {
     if (typeof this.data === "function") {
       throw new ChacaError("The data can not be a function");
     }
   }
-
-  public abstract generateFile(): Promise<string>;
 
   protected generateRoute(name: string): string {
     return `${path.join(this.baseLocation, `${name}.${this.ext}`)}`;

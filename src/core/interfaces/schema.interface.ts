@@ -30,7 +30,7 @@ export type FieldSchemaConfig<C, R> =
   | RefFieldResolver;
 
 type FieldObjectInput<C, R> = {
-  type?: SchemaField<R, any> | ChacaSchema<R>;
+  type?: SchemaField<R, any> | ChacaSchema<R> | RefFieldResolver;
   isArray?: boolean | number | { min?: number; max?: number };
   posibleNull?: boolean | number;
   custom?: CustomField<C, R>;
