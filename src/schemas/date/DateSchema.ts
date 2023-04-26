@@ -144,9 +144,11 @@ export class DateSchema {
 
         let future = refDate.getTime();
         future += PrivateUtils.intNumber(range);
-        refDate.setTime(future);
 
-        return refDate;
+        const newDate = new Date();
+        newDate.setTime(future);
+
+        return newDate;
       },
       args || {},
     );

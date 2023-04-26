@@ -9,7 +9,37 @@ describe("# Car Case Test", () => {
     chaca
       .export(CAR_CASE_DATA, {
         location: EXPORT_ROUTE,
-        fileName: FILE_NAME,
+        fileName: FILE_NAME + "Json",
+        format: "json",
+      })
+      .then((s) => expect(typeof s).toBe("string"));
+  });
+
+  it("Javascript", () => {
+    chaca
+      .export(CAR_CASE_DATA, {
+        location: EXPORT_ROUTE,
+        fileName: FILE_NAME + "Javascript",
+        format: "javascript",
+      })
+      .then((s) => expect(typeof s).toBe("string"));
+  });
+
+  it("Yaml", () => {
+    chaca
+      .export(CAR_CASE_DATA, {
+        location: EXPORT_ROUTE,
+        fileName: FILE_NAME + "Yaml",
+        format: "yaml",
+      })
+      .then((s) => expect(typeof s).toBe("string"));
+  });
+
+  it("Typescript", () => {
+    chaca
+      .export(CAR_CASE_DATA, {
+        location: EXPORT_ROUTE,
+        fileName: FILE_NAME + "Typescript",
         format: "typescript",
       })
       .then((s) => expect(typeof s).toBe("string"));
