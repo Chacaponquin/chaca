@@ -3,19 +3,19 @@ import { ChacaError } from "../../errors/ChacaError.js";
 import { Generator } from "../Generator.js";
 import {
   SQLObject,
-  SQLType,
   SQLBoolean,
   SQLDate,
   SQLNumber,
   SQLString,
-  SQLTableTree,
-  SQLTreeNode,
+  SQLNode,
   SQLNull,
+  SQLArray,
+  SQLDocumentTree,
 } from "./classes/index.js";
 
 export class SQLGenerator extends Generator {
   private sqlData: Array<any> = [];
-  private tableTrees: Array<SQLTableTree> = [];
+  private objectDocuments: Array<SQLDocumentTree> = [];
 
   constructor(data: any, config: FileConfig) {
     super(data, "sql", config);
@@ -30,28 +30,40 @@ export class SQLGenerator extends Generator {
   private createNodeByValue(
     fieldName: string,
     value: any,
-    actualRoute: Array<string>,
-  ): SQLTreeNode {
-    let newNode: SQLTreeNode;
+    parentRoute: Array<string>,
+  ): SQLNode {
+    let newNode: SQLNode;
+    const fieldRoute = [...parentRoute, fieldName];
 
     if (typeof value === "string") {
       const fieldType = new SQLString(value);
-      newNode = new SQLTreeNode(fieldName, fieldType);
+      newNode = new SQLNode(fieldRoute, fieldType);
     } else if (typeof value === "number") {
       const fieldType = new SQLNumber(value);
-      newNode = new SQLTreeNode(fieldName, fieldType);
+      newNode = new SQLNode(fieldRoute, fieldType);
     } else if (typeof value === "boolean") {
       const fieldType = new SQLBoolean(value);
-      newNode = new SQLTreeNode(fieldName, fieldType);
+      newNode = new SQLNode(fieldRoute, fieldType);
     } else {
       if (value instanceof Date) {
         const fieldType = new SQLDate(value);
-        newNode = new SQLTreeNode(fieldName, fieldType);
+        newNode = new SQLNode(fieldRoute, fieldType);
       } else if (value === null) {
         const fieldType = new SQLNull();
-        newNode = new SQLTreeNode(fieldName, fieldType);
+        newNode = new SQLNode(fieldRoute, fieldType);
+      } else if (Array.isArray(value)) {
+        const fieldType = new SQLArray(value);
+        this.createArrayFields(fieldRoute, value, fieldType);
+        newNode = new SQLNode(fieldRoute, fieldType);
       } else {
-        newNode = new SQLTreeNode(fieldName, fieldType);
+        const newObject = new SQLObject(value);
+
+        Object.entries(value).forEach(([name, v]) => {
+          const subNode = this.createNodeByValue(name, v, fieldRoute);
+          newObject.insertSubField(subNode);
+        });
+
+        newNode = new SQLNode(fieldRoute, newObject);
       }
     }
 
@@ -67,17 +79,14 @@ export class SQLGenerator extends Generator {
         objectData !== null &&
         !Array.isArray(objectData)
       ) {
-        const newTableTree = new SQLTableTree(this.fileName, []);
+        const newDocumentTree = new SQLDocumentTree();
+        this.createObjectSubFields(objectData, newDocumentTree, []);
 
-        if (this.tableTrees.length === 0) {
-          this.insertTableTree(newTableTree);
-          this.createTreeSubFields(objectData, newTableTree);
+        if (this.objectDocuments.length === 0) {
+          this.objectDocuments.push(newDocumentTree);
         } else {
-          const firstTree = this.getFirstTree();
-
-          this.createTreeSubFields(objectData, newTableTree);
-
-          firstTree.compare(newTableTree);
+          const firstObjectToCompare = this.objectDocuments[0];
+          newDocumentTree.compareWithFirstObject(firstObjectToCompare);
         }
       } else {
         throw new ChacaError("Your data must be an array of objects");
@@ -85,30 +94,30 @@ export class SQLGenerator extends Generator {
     }
   }
 
-  private createTreeSubFields(object: any, tree: SQLTableTree): void {
+  private createObjectSubFields(
+    object: any,
+    documentTree: SQLDocumentTree,
+    parentRoute: Array<string>,
+  ): void {
     const entries = Object.entries(object);
 
     entries.forEach(([fieldName, value]) => {
-      const newNode = this.createNodeByValue(
-        fieldName,
-        value,
-        tree.createRouteForSubFields(),
-      );
+      const fieldRoute = [...parentRoute, fieldName];
 
-      tree.insertNode(newNode);
+      const newNode = this.createNodeByValue(fieldName, value, fieldRoute);
+      documentTree.insertNode(newNode);
     });
   }
 
-  private compareWithFirstTree(newTree: SQLTableTree): boolean {
-    const firstTree = this.getFirstTree();
-  }
-
-  private getFirstTree() {
-    return this.tableTrees[0];
-  }
-
-  private insertTableTree(tableTree: SQLTableTree): void {
-    this.tableTrees.push(tableTree);
+  private createArrayFields(
+    fieldRoute: Array<string>,
+    array: Array<any>,
+    arrayNode: SQLArray,
+  ): void {
+    for (const val of array) {
+      const newNode = this.createNodeByValue("", val, fieldRoute);
+      arrayNode.insertNode(newNode);
+    }
   }
 
   public async generateFile(): Promise<string> {

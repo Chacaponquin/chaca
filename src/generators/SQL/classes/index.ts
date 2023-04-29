@@ -4,9 +4,10 @@ import { SQLNull } from "./SQLNull.js";
 import { SQLNumber } from "./SQLNumber.js";
 import { SQLObject } from "./SQLObject.js";
 import { SQLString } from "./SQLString.js";
-import { SQLTableTree } from "./SQLTableTree.js";
-import { SQLTreeNode } from "./SQLTreeNode.js";
+import { SQLNode } from "./SQLNode.js";
 import { SQLType } from "./SQLType.js";
+import { SQLArray } from "./SQLArray.js";
+import { SQLDocumentTree } from "./SQLDocumentTree.js";
 
 export {
   SQLObject,
@@ -15,7 +16,8 @@ export {
   SQLDate,
   SQLNumber,
   SQLString,
-  SQLTreeNode,
-  SQLTableTree,
+  SQLNode,
   SQLNull,
+  SQLArray,
+  SQLDocumentTree,
 };
