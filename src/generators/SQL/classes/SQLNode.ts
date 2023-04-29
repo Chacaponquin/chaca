@@ -1,4 +1,7 @@
 import { SQLNull } from "./SQLNull.js";
+import { SQLObject } from "./SQLObject.js";
+import { SQLTable } from "./SQLTable.js";
+import { SQLTableField } from "./SQLTableField.js";
 import { SQLType } from "./SQLType.js";
 
 export class SQLNode {
@@ -15,8 +18,22 @@ export class SQLNode {
     }
   }
 
+  public createTableField(tables: Array<SQLTable>): SQLTableField {
+    const nodeType = this.getValueType();
+
+    if (nodeType instanceof SQLObject) {
+      return nodeType.createTableField(this.getFieldName(), tables);
+    } else {
+      return new SQLTableField(nodeType, this.canBeNull());
+    }
+  }
+
   public getFieldRoute() {
     return this.fieldRoute;
+  }
+
+  private getFieldName() {
+    return this.fieldRoute[this.fieldRoute.length - 1];
   }
 
   public changeIsNull() {

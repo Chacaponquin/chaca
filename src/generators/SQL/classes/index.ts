@@ -8,6 +8,9 @@ import { SQLNode } from "./SQLNode.js";
 import { SQLType } from "./SQLType.js";
 import { SQLArray } from "./SQLArray.js";
 import { SQLDocumentTree } from "./SQLDocumentTree.js";
+import { SQLTable } from "./SQLTable.js";
+import { SQLTableField } from "./SQLTableField.js";
+import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
 
 export {
   SQLObject,
@@ -20,4 +23,7 @@ export {
   SQLNull,
   SQLArray,
   SQLDocumentTree,
+  SQLTable,
+  SQLTableField,
+  SQLPrimaryKey,
 };

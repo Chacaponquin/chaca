@@ -1,11 +1,28 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { SQLNode } from "./SQLNode.js";
+import { SQLTable } from "./SQLTable.js";
 
 export class SQLDocumentTree {
   private nodes: Array<SQLNode> = [];
+  private name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
 
   public insertNode(node: SQLNode): void {
     this.nodes.push(node);
+  }
+
+  public createSQLTables(tables: Array<SQLTable>): void {
+    const newTable = new SQLTable(this.name);
+
+    this.nodes.forEach((n) => {
+      const newField = n.createTableField(tables);
+      newTable.insertField(newField);
+    });
+
+    tables.push(newTable);
   }
 
   public compareWithFirstObject(documentToCompare: SQLDocumentTree): void {

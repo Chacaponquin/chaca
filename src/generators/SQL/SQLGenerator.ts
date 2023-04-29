@@ -1,6 +1,7 @@
 import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { Generator } from "../Generator.js";
+import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import {
   SQLObject,
   SQLBoolean,
@@ -11,11 +12,14 @@ import {
   SQLNull,
   SQLArray,
   SQLDocumentTree,
+  SQLTable,
+  SQLPrimaryKey,
 } from "./classes/index.js";
 
 export class SQLGenerator extends Generator {
   private sqlData: Array<any> = [];
   private objectDocuments: Array<SQLDocumentTree> = [];
+  private sqlTables: Array<SQLTable> = [];
 
   constructor(data: any, config: FileConfig) {
     super(data, "sql", config);
@@ -37,6 +41,9 @@ export class SQLGenerator extends Generator {
 
     if (typeof value === "string") {
       const fieldType = new SQLString(value);
+      newNode = new SQLNode(fieldRoute, fieldType);
+    } else if (typeof value === "undefined") {
+      const fieldType = new SQLNull();
       newNode = new SQLNode(fieldRoute, fieldType);
     } else if (typeof value === "number") {
       const fieldType = new SQLNumber(value);
@@ -63,6 +70,9 @@ export class SQLGenerator extends Generator {
           newObject.insertSubField(subNode);
         });
 
+        // add primary key
+        newObject.insertSubField(this.createPrimaryKey(parentRoute));
+
         newNode = new SQLNode(fieldRoute, newObject);
       }
     }
@@ -79,8 +89,8 @@ export class SQLGenerator extends Generator {
         objectData !== null &&
         !Array.isArray(objectData)
       ) {
-        const newDocumentTree = new SQLDocumentTree();
-        this.createObjectSubFields(objectData, newDocumentTree, []);
+        const newDocumentTree = new SQLDocumentTree(this.fileName);
+        this.createDocumentSubFields(objectData, newDocumentTree, []);
 
         if (this.objectDocuments.length === 0) {
           this.objectDocuments.push(newDocumentTree);
@@ -94,7 +104,7 @@ export class SQLGenerator extends Generator {
     }
   }
 
-  private createObjectSubFields(
+  private createDocumentSubFields(
     object: any,
     documentTree: SQLDocumentTree,
     parentRoute: Array<string>,
@@ -107,6 +117,17 @@ export class SQLGenerator extends Generator {
       const newNode = this.createNodeByValue(fieldName, value, fieldRoute);
       documentTree.insertNode(newNode);
     });
+
+    // add primary key
+    documentTree.insertNode(this.createPrimaryKey(parentRoute));
+  }
+
+  private createPrimaryKey(parentRoute: Array<string>): SQLNode {
+    const primaryKeyRoute = [...parentRoute, `id_${PrivateUtils.id()}`];
+    const fieldType = new SQLPrimaryKey(PrivateUtils.id());
+    const primaryKeyNode = new SQLNode(primaryKeyRoute, fieldType);
+
+    return primaryKeyNode;
   }
 
   private createArrayFields(
@@ -118,6 +139,10 @@ export class SQLGenerator extends Generator {
       const newNode = this.createNodeByValue("", val, fieldRoute);
       arrayNode.insertNode(newNode);
     }
+  }
+
+  private createSQLTables(): void {
+    this.objectDocuments[0].createSQLTables(this.sqlTables);
   }
 
   public async generateFile(): Promise<string> {
