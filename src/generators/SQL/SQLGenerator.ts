@@ -1,7 +1,6 @@
 import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { Generator } from "../Generator.js";
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import {
   SQLObject,
   SQLBoolean,
@@ -13,8 +12,9 @@ import {
   SQLArray,
   SQLDocumentTree,
   SQLTable,
-  SQLPrimaryKey,
+  SQLType,
 } from "./classes/index.js";
+import { createPrimaryKeyNode } from "./utils/createPrimaryKey.js";
 
 export class SQLGenerator extends Generator {
   private sqlData: Array<any> = [];
@@ -31,51 +31,57 @@ export class SQLGenerator extends Generator {
     }
   }
 
-  private createNodeByValue(
-    fieldName: string,
+  private filterTypeByValue(
     value: any,
+    fieldRoute: Array<string>,
     parentRoute: Array<string>,
-  ): SQLNode {
-    let newNode: SQLNode;
-    const fieldRoute = [...parentRoute, fieldName];
+  ): SQLType {
+    let columnType: SQLType;
 
     if (typeof value === "string") {
-      const fieldType = new SQLString(value);
-      newNode = new SQLNode(fieldRoute, fieldType);
+      columnType = new SQLString(value);
     } else if (typeof value === "undefined") {
-      const fieldType = new SQLNull();
-      newNode = new SQLNode(fieldRoute, fieldType);
+      columnType = new SQLNull();
     } else if (typeof value === "number") {
-      const fieldType = new SQLNumber(value);
-      newNode = new SQLNode(fieldRoute, fieldType);
+      columnType = new SQLNumber(value);
     } else if (typeof value === "boolean") {
-      const fieldType = new SQLBoolean(value);
-      newNode = new SQLNode(fieldRoute, fieldType);
+      columnType = new SQLBoolean(value);
     } else {
       if (value instanceof Date) {
-        const fieldType = new SQLDate(value);
-        newNode = new SQLNode(fieldRoute, fieldType);
+        columnType = new SQLDate(value);
       } else if (value === null) {
-        const fieldType = new SQLNull();
-        newNode = new SQLNode(fieldRoute, fieldType);
+        columnType = new SQLNull();
       } else if (Array.isArray(value)) {
-        const fieldType = new SQLArray(value);
-        this.createArrayFields(fieldRoute, value, fieldType);
-        newNode = new SQLNode(fieldRoute, fieldType);
+        const arrayType = new SQLArray(value);
+        this.createArrayFields(fieldRoute, parentRoute, value, arrayType);
+
+        columnType = arrayType;
       } else {
         const newObject = new SQLObject(value);
+
+        // add primary key
+        newObject.insertSubField(createPrimaryKeyNode(parentRoute));
 
         Object.entries(value).forEach(([name, v]) => {
           const subNode = this.createNodeByValue(name, v, fieldRoute);
           newObject.insertSubField(subNode);
         });
 
-        // add primary key
-        newObject.insertSubField(this.createPrimaryKey(parentRoute));
-
-        newNode = new SQLNode(fieldRoute, newObject);
+        columnType = newObject;
       }
     }
+
+    return columnType;
+  }
+
+  private createNodeByValue(
+    fieldName: string,
+    value: any,
+    parentRoute: Array<string>,
+  ): SQLNode {
+    const fieldRoute = [...parentRoute, fieldName];
+    const nodeType = this.filterTypeByValue(value, fieldRoute, parentRoute);
+    const newNode = new SQLNode(fieldRoute, nodeType);
 
     return newNode;
   }
@@ -111,33 +117,27 @@ export class SQLGenerator extends Generator {
   ): void {
     const entries = Object.entries(object);
 
+    // add primary key
+    documentTree.insertNode(createPrimaryKeyNode(parentRoute));
+
     entries.forEach(([fieldName, value]) => {
       const fieldRoute = [...parentRoute, fieldName];
 
       const newNode = this.createNodeByValue(fieldName, value, fieldRoute);
       documentTree.insertNode(newNode);
     });
-
-    // add primary key
-    documentTree.insertNode(this.createPrimaryKey(parentRoute));
-  }
-
-  private createPrimaryKey(parentRoute: Array<string>): SQLNode {
-    const primaryKeyRoute = [...parentRoute, `id_${PrivateUtils.id()}`];
-    const fieldType = new SQLPrimaryKey(PrivateUtils.id());
-    const primaryKeyNode = new SQLNode(primaryKeyRoute, fieldType);
-
-    return primaryKeyNode;
   }
 
   private createArrayFields(
     fieldRoute: Array<string>,
+    parentRoute: Array<string>,
     array: Array<any>,
     arrayNode: SQLArray,
   ): void {
     for (const val of array) {
-      const newNode = this.createNodeByValue("", val, fieldRoute);
-      arrayNode.insertNode(newNode);
+      const valueType = this.filterTypeByValue(val, fieldRoute, parentRoute);
+
+      arrayNode.insertValue(valueType);
     }
   }
 

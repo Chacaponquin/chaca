@@ -1,11 +1,18 @@
-import { SQLTableField } from "./SQLTableField.js";
+import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
+import { SQLTableColumn } from "./SQLTableColumn.js";
 
 export class SQLTable {
-  private fields: Array<SQLTableField> = [];
+  private columns: Array<SQLTableColumn> = [];
 
   constructor(public readonly tableName: string) {}
 
-  public insertField(field: SQLTableField) {
-    this.fields.push(field);
+  public insertColumn(field: SQLTableColumn) {
+    this.columns.push(field);
+  }
+
+  public getTablePrimaryKey(): SQLTableColumn {
+    return this.columns.find(
+      (f) => f.getColumnType() instanceof SQLPrimaryKey,
+    ) as SQLTableColumn;
   }
 }

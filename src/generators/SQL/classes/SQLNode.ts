@@ -1,7 +1,8 @@
+import { SQLArray } from "./SQLArray.js";
 import { SQLNull } from "./SQLNull.js";
 import { SQLObject } from "./SQLObject.js";
 import { SQLTable } from "./SQLTable.js";
-import { SQLTableField } from "./SQLTableField.js";
+import { SQLTableColumn } from "./SQLTableColumn.js";
 import { SQLType } from "./SQLType.js";
 
 export class SQLNode {
@@ -18,13 +19,27 @@ export class SQLNode {
     }
   }
 
-  public createTableField(tables: Array<SQLTable>): SQLTableField {
+  public getValues() {
+    return this.values;
+  }
+
+  public createTableColumn(
+    currentTable: SQLTable,
+    tables: Array<SQLTable>,
+  ): void {
     const nodeType = this.getValueType();
 
     if (nodeType instanceof SQLObject) {
-      return nodeType.createTableField(this.getFieldName(), tables);
+      const newColumn = nodeType.createTableColumn(this.getFieldName(), tables);
+      currentTable.insertColumn(newColumn);
+    } else if (nodeType instanceof SQLArray) {
+      nodeType.createTableColumn(this.getFieldName(), currentTable, tables);
     } else {
-      return new SQLTableField(nodeType, this.canBeNull());
+      const newColumn = new SQLTableColumn(
+        this.getFieldName(),
+        this.canBeNull(),
+      );
+      currentTable.insertColumn(newColumn);
     }
   }
 

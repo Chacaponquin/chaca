@@ -1,8 +1,8 @@
 import { SQLNode } from "./SQLNode.js";
-import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
 import { SQLTable } from "./SQLTable.js";
-import { SQLTableField } from "./SQLTableField.js";
+import { SQLTableColumn } from "./SQLTableColumn.js";
 import { SQLType } from "./SQLType.js";
+import { SQLArray } from "./SQLArray.js";
 
 export class SQLObject extends SQLType {
   private objectFields: Array<SQLNode> = [];
@@ -19,40 +19,43 @@ export class SQLObject extends SQLType {
     this.objectFields.push(field);
   }
 
-  private getPrimaryKey(): SQLNode {
-    return this.objectFields.find(
-      (o) => o.getValueType() instanceof SQLPrimaryKey,
-    ) as SQLNode;
-  }
-
-  public createTableField(
+  public createTableColumn(
     fieldName: string,
     tables: Array<SQLTable>,
-  ): SQLTableField {
+  ): SQLTableColumn {
+    // new table creation
     const newTable = new SQLTable(fieldName);
-
-    this.objectFields.forEach((o) => {
-      let newField: SQLTableField;
-
-      const objectValueType = o.getValueType();
-      if (objectValueType instanceof SQLObject) {
-        newField = objectValueType.createTableField(fieldName, tables);
-      } else {
-        newField = new SQLTableField(objectValueType, o.canBeNull());
-      }
-
-      newTable.insertField(newField);
-    });
-
     tables.push(newTable);
 
-    const primaryKey = this.getPrimaryKey();
-    const newForengKeyField = new SQLTableField(
-      primaryKey.getValueType(),
-      primaryKey.canBeNull(),
+    this.objectFields.forEach((o) => {
+      const objectValueType = o.getValueType();
+      if (objectValueType instanceof SQLObject) {
+        const newColumn = objectValueType.createTableColumn(fieldName, tables);
+        newTable.insertColumn(newColumn);
+      } else if (objectValueType instanceof SQLArray) {
+        objectValueType.createTableColumn(fieldName, newTable, tables);
+      } else {
+        const newColumn = new SQLTableColumn(fieldName, o.canBeNull());
+        newTable.insertColumn(newColumn);
+
+        newColumn.insertAllValues(o.getValues());
+      }
+    });
+
+    // creation of the return column
+    const newForengKeyColumn = new SQLTableColumn(
+      this.createForengColumnName(fieldName),
+      false,
     );
 
-    return newForengKeyField;
+    const externalIDList = newTable.getTablePrimaryKey().getRows();
+    newForengKeyColumn.insertAllValues(externalIDList);
+
+    return newForengKeyColumn;
+  }
+
+  private createForengColumnName(name: string) {
+    return `${name}_id`;
   }
 
   public equal(otherType: SQLType): boolean {

@@ -18,8 +18,7 @@ export class SQLDocumentTree {
     const newTable = new SQLTable(this.name);
 
     this.nodes.forEach((n) => {
-      const newField = n.createTableField(tables);
-      newTable.insertField(newField);
+      n.createTableColumn(newTable, tables);
     });
 
     tables.push(newTable);
