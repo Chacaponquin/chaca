@@ -1,7 +1,7 @@
-import { ISQLDefinition } from "../interfaces/sqlDefinition.interface.js";
 import { SQLType } from "./SQLType.js";
+import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 
-export class SQLString extends SQLType implements ISQLDefinition {
+export class SQLString extends SQLTypeWithDefinition {
   constructor(public readonly value: string) {
     super();
   }
@@ -12,5 +12,9 @@ export class SQLString extends SQLType implements ISQLDefinition {
 
   public getSQLDefinition(): string {
     return "VARCHAR";
+  }
+
+  getSQLValue(): string {
+    return `'${this.value}'`;
   }
 }

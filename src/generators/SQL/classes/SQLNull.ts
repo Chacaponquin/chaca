@@ -1,7 +1,7 @@
-import { ISQLDefinition } from "../interfaces/sqlDefinition.interface.js";
 import { SQLType } from "./SQLType.js";
+import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 
-export class SQLNull extends SQLType implements ISQLDefinition {
+export class SQLNull extends SQLTypeWithDefinition {
   public readonly value = null;
 
   constructor() {
@@ -14,5 +14,9 @@ export class SQLNull extends SQLType implements ISQLDefinition {
 
   public equal(otherType: SQLType): boolean {
     return otherType instanceof SQLNull;
+  }
+
+  public getSQLValue(): string {
+    return `NULL`;
   }
 }

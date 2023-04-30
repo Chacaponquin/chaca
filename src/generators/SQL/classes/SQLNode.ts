@@ -35,11 +35,10 @@ export class SQLNode {
     } else if (nodeType instanceof SQLArray) {
       nodeType.createTableColumn(this.getFieldName(), parentTable, tables);
     } else {
-      const newColumn = new SQLTableColumn(
-        this.getFieldName(),
-        this.canBeNull(),
-      );
+      const newColumn = new SQLTableColumn(this.getFieldName());
       parentTable.insertColumn(newColumn);
+
+      newColumn.insertAllRowValues(this.getValues());
     }
   }
 
@@ -47,7 +46,7 @@ export class SQLNode {
     return this.fieldRoute;
   }
 
-  private getFieldName() {
+  public getFieldName() {
     return this.fieldRoute[this.fieldRoute.length - 1];
   }
 
@@ -67,12 +66,27 @@ export class SQLNode {
     return this.values[0];
   }
 
-  public getValueType() {
-    return this.values[0];
+  public getValueType(): SQLType {
+    const allValuesAreNull =
+      this.values.filter((v) => v instanceof SQLNull).length ===
+      this.values.length;
+
+    if (allValuesAreNull) {
+      return this.values[0];
+    } else {
+      return this.values.find((v) => !(v instanceof SQLNull)) as SQLType;
+    }
   }
 
   public equal(otherNode: SQLNode): boolean {
-    return this.getValueType().equal(otherNode.getValueType());
+    const otherNodeType = otherNode.getValueType();
+    const thisValueType = this.getValueType();
+
+    return (
+      otherNode.canBeNull() ||
+      this.canBeNull() ||
+      thisValueType.equal(otherNodeType)
+    );
   }
 
   public foundNode(otherFieldRoute: Array<string>): null | SQLNode {

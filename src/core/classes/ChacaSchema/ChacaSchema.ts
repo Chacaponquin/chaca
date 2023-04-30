@@ -101,16 +101,22 @@ export class ChacaSchema<K = any, T = any> {
         } else if (schema instanceof SequentialField) {
           schemaToSave = {
             ...schemaToSave,
-            [key]: new SequentialFieldResolver(
-              (schema as SequentialField).getValuesArray(),
-            ),
+            [key]: {
+              type: new SequentialFieldResolver(
+                (schema as SequentialField).getValuesArray(),
+              ),
+              ...defaultConfig,
+            },
           };
         } else if (schema instanceof KeyField) {
           schemaToSave = {
             ...schemaToSave,
-            [key]: new KeyFieldResolver(
-              (schema as KeyField).getFieldFunction(),
-            ),
+            [key]: {
+              type: new KeyFieldResolver(
+                (schema as KeyField).getFieldFunction(),
+              ),
+              ...defaultConfig,
+            },
           };
         } else {
           if (typeof schema === "object" && schema !== null) {

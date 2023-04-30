@@ -1,4 +1,7 @@
+import { KeyFieldResolver } from "../../core/classes/Resolvers/index.js";
+import { SchemaResolver } from "../../core/classes/SchemaResolver.js";
 import { FileConfig } from "../../core/interfaces/export.interface.js";
+import { ResolverObject } from "../../core/interfaces/schema.interface.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { Generator } from "../Generator.js";
 import {
@@ -19,7 +22,6 @@ import fs from "fs";
 
 export class SQLGenerator extends Generator {
   private sqlData: Array<any> = [];
-  private objectDocuments: Array<SQLDocumentTree> = [];
   private sqlTables: Array<SQLTable> = [];
 
   constructor(data: any, config: FileConfig) {
@@ -115,32 +117,35 @@ export class SQLGenerator extends Generator {
     }
   }
 
-  private createSQLTables(): void {
-    this.objectDocuments[0].createSQLTables(this.sqlTables);
+  private createSQLTables(documentTree: SQLDocumentTree): void {
+    documentTree.createSQLTables(this.sqlTables);
   }
 
-  private createData(): void {
-    for (let i = 0; i < this.sqlData.length; i++) {
-      const objectData = this.sqlData[i];
+  private createData(data: any): SQLDocumentTree {
+    let documentTree: SQLDocumentTree | null = null;
+
+    for (let i = 0; i < data.length; i++) {
+      const objectData = data[i];
 
       if (
         typeof objectData === "object" &&
         objectData !== null &&
         !Array.isArray(objectData)
       ) {
-        const newDocumentTree = new SQLDocumentTree(this.fileName);
+        const newDocumentTree = new SQLDocumentTree(this.config.fileName);
         this.createDocumentSubFields(objectData, newDocumentTree);
 
-        if (this.objectDocuments.length === 0) {
-          this.objectDocuments.push(newDocumentTree);
+        if (documentTree === null) {
+          documentTree = newDocumentTree;
         } else {
-          const firstObjectToCompare = this.objectDocuments[0];
-          newDocumentTree.compareWithFirstObject(firstObjectToCompare);
+          newDocumentTree.compareWithFirstObject(documentTree);
         }
       } else {
         throw new ChacaError("Your data must be an array of objects");
       }
     }
+
+    return documentTree as SQLDocumentTree;
   }
 
   public createTablesString(): string {
@@ -150,7 +155,15 @@ export class SQLGenerator extends Generator {
       code += `CREATE TABLE ${table.tableName}(\n`;
 
       table.getColumns().forEach((column) => {
-        code += `${column.columnName} ${column.getColumnType()}\n`;
+        const columnType = column.getColumnType().getSQLDefinition();
+
+        code += `\t${column.columnName} ${columnType} `;
+
+        if (!column.couldBeNull()) {
+          code += `NOT NULL`;
+        }
+
+        code += ",\n";
       });
 
       code += ")\n\n";
@@ -159,12 +172,59 @@ export class SQLGenerator extends Generator {
     return code;
   }
 
-  public async generateFile(): Promise<string> {
-    this.createData();
-    this.createSQLTables();
+  public createTableDataString(): string {
+    let data = "";
 
-    await fs.promises.writeFile(this.route, this.createTablesString(), "utf-8");
+    this.sqlTables.forEach((table) => {
+      const tablesData = table.getColumnsData();
+
+      tablesData.forEach((d) => {
+        data += `INSERT INTO ${table.tableName} VALUES (`;
+        data += d.join(", ");
+        data += `)\n`;
+      });
+    });
+
+    return data;
+  }
+
+  public async generateFile(): Promise<string> {
+    const documentTree = this.createData(this.sqlData);
+
+    this.createSQLTables(documentTree);
+
+    await fs.promises.writeFile(
+      this.route,
+      this.createTablesString() + this.createTableDataString(),
+      "utf-8",
+    );
 
     return this.route;
+  }
+
+  public async generateRelationalDataFile(
+    data: any,
+    resolvers: Array<SchemaResolver>,
+  ) {
+    Object.entries(data).forEach(([tableName, dataArray]) => {
+      const documentTree = this.createData(dataArray);
+    });
+
+    resolvers.forEach((r) => {
+      const schemaToResolve = r.getSchemaToResolve();
+
+      const columnsToChange = [];
+
+      Object.entries<ResolverObject>(schemaToResolve).forEach(
+        ([fieldName, rObj]) => {
+          if (rObj.isArray === null) {
+            const fieldType = rObj.type;
+
+            if (fieldType instanceof KeyFieldResolver) {
+            }
+          }
+        },
+      );
+    });
   }
 }

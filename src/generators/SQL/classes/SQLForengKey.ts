@@ -1,8 +1,8 @@
-import { ISQLDefinition } from "../interfaces/sqlDefinition.interface.js";
 import { SQLType } from "./SQLType.js";
+import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 
-export class SQLForengKey extends SQLType implements ISQLDefinition {
-  constructor(public readonly value: string | number) {
+export class SQLForengKey extends SQLTypeWithDefinition {
+  constructor(public readonly value: SQLTypeWithDefinition) {
     super();
   }
 
@@ -12,5 +12,9 @@ export class SQLForengKey extends SQLType implements ISQLDefinition {
 
   public getSQLDefinition(): string {
     return "FOREING KEY";
+  }
+
+  public getSQLValue(): string {
+    return `${this.value.getSQLValue()}`;
   }
 }

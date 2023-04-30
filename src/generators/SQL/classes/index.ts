@@ -12,6 +12,7 @@ import { SQLTable } from "./SQLTable.js";
 import { SQLTableColumn } from "./SQLTableColumn.js";
 import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
 import { SQLForengKey } from "./SQLForengKey.js";
+import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 
 export {
   SQLObject,
@@ -28,4 +29,5 @@ export {
   SQLTableColumn,
   SQLPrimaryKey,
   SQLForengKey,
+  SQLTypeWithDefinition,
 };

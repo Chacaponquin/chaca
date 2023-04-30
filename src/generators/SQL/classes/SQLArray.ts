@@ -38,19 +38,22 @@ export class SQLArray extends SQLType {
   ) {
     const newArrayTable = new SQLTable(fieldName);
 
-    const idColumn = new SQLTableColumn("id", false);
-    const valuesColumn = new SQLTableColumn("value", false);
+    const idColumn = new SQLTableColumn("id");
+    const valuesColumn = new SQLTableColumn("value");
     const parentIDColumn = new SQLTableColumn(
       this.createParentIDColumnName(parentTable.tableName),
-      false,
     );
 
+    console.log(this.values);
+
     this.values.forEach((v) => {
-      idColumn.insertValue(createPrimaryKey());
-      valuesColumn.insertValue(v);
+      idColumn.insertRowValue(createPrimaryKey());
+      valuesColumn.insertRowValue(v);
     });
 
-    parentIDColumn.insertAllValues(parentTable.getTablePrimaryKey().getRows());
+    parentIDColumn.insertAllRowValues(
+      parentTable.getTablePrimaryKey().getRows(),
+    );
 
     newArrayTable.insertColumn(idColumn);
     newArrayTable.insertColumn(valuesColumn);

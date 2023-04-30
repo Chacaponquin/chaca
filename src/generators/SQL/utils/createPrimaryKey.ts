@@ -1,5 +1,5 @@
 import { PrivateUtils } from "../../../core/helpers/PrivateUtils.js";
-import { SQLNode, SQLPrimaryKey } from "../classes/index.js";
+import { SQLNode, SQLPrimaryKey, SQLString } from "../classes/index.js";
 
 export function createPrimaryKeyNode(parentRoute: Array<string>): SQLNode {
   const primaryKeyRoute = [...parentRoute, `id_buenas`];
@@ -10,5 +10,6 @@ export function createPrimaryKeyNode(parentRoute: Array<string>): SQLNode {
 }
 
 export function createPrimaryKey() {
-  return new SQLPrimaryKey(PrivateUtils.id());
+  const stringType = new SQLString(PrivateUtils.id());
+  return new SQLPrimaryKey(stringType);
 }

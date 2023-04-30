@@ -33,8 +33,6 @@ export class SQLDocumentTree {
   public searchAndPushValue(node: SQLNode): void {
     let found: SQLNode | null = null;
 
-    console.log(this.nodes);
-
     for (let i = 0; i < this.nodes.length && !found; i++) {
       found = this.nodes[i].foundNode(node.getFieldRoute());
     }
@@ -46,11 +44,13 @@ export class SQLDocumentTree {
         found.insertValue(node.getFirstValue());
       } else {
         throw new ChacaError(
-          `The field ${node.getFieldRoute()} has different types`,
+          `The field ${node.getFieldRoute().join(".")} has different types`,
         );
       }
     } else {
-      throw new ChacaError(`The field ${node.getFieldRoute()} does not exists`);
+      throw new ChacaError(
+        `The field ${node.getFieldRoute().join(".")} does not exists`,
+      );
     }
   }
 }

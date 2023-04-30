@@ -1,7 +1,7 @@
-import { ISQLDefinition } from "../interfaces/sqlDefinition.interface.js";
 import { SQLType } from "./SQLType.js";
+import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 
-export class SQLBoolean extends SQLType implements ISQLDefinition {
+export class SQLBoolean extends SQLTypeWithDefinition {
   constructor(public readonly value: boolean) {
     super();
   }
@@ -12,5 +12,13 @@ export class SQLBoolean extends SQLType implements ISQLDefinition {
 
   public getSQLDefinition(): string {
     return "BOOLEAN";
+  }
+
+  public getSQLValue(): string {
+    if (this.value) {
+      return "TRUE";
+    } else {
+      return "FALSE";
+    }
   }
 }

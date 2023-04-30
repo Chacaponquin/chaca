@@ -1,7 +1,7 @@
-import { ISQLDefinition } from "../interfaces/sqlDefinition.interface.js";
 import { SQLType } from "./SQLType.js";
+import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 
-export class SQLDate extends SQLType implements ISQLDefinition {
+export class SQLDate extends SQLTypeWithDefinition {
   constructor(public readonly value: Date) {
     super();
   }
@@ -12,5 +12,9 @@ export class SQLDate extends SQLType implements ISQLDefinition {
 
   public getSQLDefinition(): string {
     return "DATE";
+  }
+
+  public getSQLValue(): string {
+    return `'${this.value.getUTCDate()}'`;
   }
 }

@@ -26,26 +26,29 @@ export class SQLObject extends SQLType {
     this.objectFields.forEach((o) => {
       const objectValueType = o.getValueType();
       if (objectValueType instanceof SQLObject) {
-        const newColumn = objectValueType.createTableColumn(fieldName, tables);
+        const newColumn = objectValueType.createTableColumn(
+          o.getFieldName(),
+          tables,
+        );
+
         newTable.insertColumn(newColumn);
       } else if (objectValueType instanceof SQLArray) {
-        objectValueType.createTableColumn(fieldName, newTable, tables);
+        objectValueType.createTableColumn(o.getFieldName(), newTable, tables);
       } else {
-        const newColumn = new SQLTableColumn(fieldName, o.canBeNull());
+        const newColumn = new SQLTableColumn(o.getFieldName());
         newTable.insertColumn(newColumn);
 
-        newColumn.insertAllValues(o.getValues());
+        newColumn.insertAllRowValues(o.getValues());
       }
     });
 
     // creation of the return column
     const newForengKeyColumn = new SQLTableColumn(
       this.createForengColumnName(fieldName),
-      false,
     );
 
     const externalIDList = newTable.getTablePrimaryKey().getRows();
-    newForengKeyColumn.insertAllValues(externalIDList);
+    newForengKeyColumn.insertAllRowValues(externalIDList);
 
     return newForengKeyColumn;
   }
@@ -65,6 +68,12 @@ export class SQLObject extends SQLType {
           if (!e) {
             areEqual = false;
           }
+        }
+
+        if (areEqual) {
+          this.objectFields.forEach((o, i) => {
+            o.insertValue(otherType.getFields()[i].getFirstValue());
+          });
         }
 
         return areEqual;

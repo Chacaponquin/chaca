@@ -43,6 +43,10 @@ export class SchemaResolver<K = any, T = any> {
     this.countDoc = this.validateCountDoc(countDoc);
   }
 
+  public getSchemaToResolve() {
+    return this.schemaObject;
+  }
+
   public buildInputTree(): void {
     if (!this.inputTree) {
       this.inputTree = new ChacaInputTree(

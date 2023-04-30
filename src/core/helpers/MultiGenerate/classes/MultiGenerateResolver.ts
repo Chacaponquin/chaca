@@ -13,6 +13,10 @@ export class MultiGenerateResolver<K> {
     this.buildRefFields();
   }
 
+  public getResolvers() {
+    return this.resolversArray;
+  }
+
   private validateNotRepeatSchemaNames(
     schemas: Array<MultiGenerateSchema>,
   ): void {
