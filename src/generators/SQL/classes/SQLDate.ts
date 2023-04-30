@@ -15,6 +15,10 @@ export class SQLDate extends SQLTypeWithDefinition {
   }
 
   public getSQLValue(): string {
-    return `'${this.value.getUTCDate()}'`;
+    const year = this.value.getFullYear();
+    const day = this.value.getDay();
+    const month = this.value.getMonth();
+
+    return `'${year}-${month}-${day}'`;
   }
 }

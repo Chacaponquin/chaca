@@ -35,6 +35,10 @@ export abstract class Generator {
     }
   }
 
+  public getRoute() {
+    return this.route;
+  }
+
   protected generateRoute(name: string): string {
     return `${path.join(this.baseLocation, `${name}.${this.ext}`)}`;
   }

@@ -1,5 +1,5 @@
 import { chaca } from "../../../src";
-import { BASEBALL_CASE_DATA } from "../utils/cases/baseball";
+import { BASEBALL_CASE_DATA, BASEBALL_SCHEMAS } from "../utils/cases/baseball";
 
 const EXPORT_ROUTE = "./data/cases/baseball";
 const FILE_NAME = "caseBaseball";
@@ -15,6 +15,15 @@ describe("# Test Case Baseball", () => {
     expect(BASEBALL_CASE_DATA).toHaveProperty("Coach");
     expect(BASEBALL_CASE_DATA).toHaveProperty("Pitcher");
     expect(BASEBALL_CASE_DATA).toHaveProperty("Batter");
+  });
+
+  it("Export baseball case in SQL", () => {
+    chaca
+      .toSQL(BASEBALL_SCHEMAS, {
+        fileName: FILE_NAME,
+        location: EXPORT_ROUTE,
+      })
+      .then((s) => expect(typeof s).toBe("string"));
   });
 
   it("Export baseball case in JSON", () => {

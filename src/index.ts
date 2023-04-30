@@ -31,6 +31,8 @@ import {
 import { SequentialField } from "./core/classes/SequentialField/SequentialField.js";
 import { KeyField } from "./core/classes/KeyField/KeyField.js";
 
+import { ToSQL, ToSQLConfig } from "./core/helpers/ToSQL/ToSQL.js";
+
 const Chaca = {
   Schema: ChacaSchema,
   utils: ChacaUtils,
@@ -94,6 +96,8 @@ const Chaca = {
     return new KeyField<A>(schemaField);
   },
 
+  toSQL: ToSQL,
+
   /**
    * Export the data to a selected code format
    * @param data Data you want to export
@@ -151,4 +155,5 @@ export type {
   MultiGenerateSchema,
   FieldToRef,
   FieldToRefObject,
+  ToSQLConfig,
 };

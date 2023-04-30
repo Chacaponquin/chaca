@@ -2,6 +2,10 @@ import { SQLType } from "./SQLType.js";
 import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { SQLNull } from "./SQLNull.js";
+import { ColumnVariation } from "../interfaces/sqlTable.interface.js";
+import { COLUMN_VARIATION } from "../constants/COLUMN_VARIATION.enum.js";
+import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
+import { SQLForengKey } from "./SQLForengKey.js";
 
 export class SQLTableColumn {
   private values: Array<SQLTypeWithDefinition> = [];
@@ -27,6 +31,20 @@ export class SQLTableColumn {
     this.columnType = columnType;
   }
 
+  public changeColumnByVariation(variation: ColumnVariation): void {
+    const columnVariation = variation.variation;
+
+    columnVariation.forEach((v) => {
+      if (v === COLUMN_VARIATION.PRIMARY_KEY) {
+        this.changeColumnType(new SQLPrimaryKey(this.values[0]));
+      } else if (v === COLUMN_VARIATION.POSIBLE_NULL) {
+        this.changeIsNull();
+      } else if (v === COLUMN_VARIATION.FOREING_KEY) {
+        this.changeColumnType(new SQLForengKey(this.values[0]));
+      }
+    });
+  }
+
   public couldBeNull() {
     return this.isNull;
   }
@@ -42,15 +60,7 @@ export class SQLTableColumn {
   }
 
   public getColumnType(): SQLTypeWithDefinition {
-    const valueNotNull = this.values.find(
-      (v) => !(v instanceof SQLNull),
-    ) as SQLTypeWithDefinition;
-
-    if (valueNotNull) {
-      return valueNotNull;
-    } else {
-      return this.values[0];
-    }
+    return this.columnType;
   }
 
   public getCantDocuments() {

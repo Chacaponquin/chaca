@@ -11,7 +11,11 @@ export class SQLNumber extends SQLTypeWithDefinition {
   }
 
   public getSQLDefinition(): string {
-    return "NUMBER";
+    if (Number.isInteger(this.value)) {
+      return "INT";
+    } else {
+      return "DOUBLE PRECISION";
+    }
   }
 
   public getSQLValue(): string {
