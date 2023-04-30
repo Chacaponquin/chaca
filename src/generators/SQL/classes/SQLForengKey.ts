@@ -2,7 +2,10 @@ import { SQLType } from "./SQLType.js";
 import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 
 export class SQLForengKey extends SQLTypeWithDefinition {
-  constructor(public readonly value: SQLTypeWithDefinition) {
+  constructor(
+    public readonly value: SQLTypeWithDefinition,
+    public readonly refersTo: string,
+  ) {
     super();
   }
 

@@ -20,8 +20,8 @@ import {
   SQLTable,
   SQLType,
   SQLPrimaryKey,
+  SQLForengKey,
 } from "./classes/index.js";
-import { COLUMN_VARIATION } from "./constants/COLUMN_VARIATION.enum.js";
 import { ColumnVariation } from "./interfaces/sqlTable.interface.js";
 import { createPrimaryKeyNode } from "./utils/createPrimaryKey.js";
 import fs from "fs";
@@ -120,7 +120,6 @@ export class SQLGenerator extends Generator {
   ): void {
     for (const val of array) {
       const valueType = this.filterTypeByValue(val, fieldRoute, parentRoute);
-
       arrayNode.insertValue(valueType);
     }
   }
@@ -240,28 +239,34 @@ export class SQLGenerator extends Generator {
 
           Object.entries<ResolverObject>(schemaToResolve).forEach(
             ([fieldName, rObj]) => {
-              const columnV: ColumnVariation = {
-                key: fieldName,
-                variation: [],
-              };
-
               if (rObj.isArray === null) {
                 const fieldType = rObj.type;
 
                 if (fieldType instanceof KeyFieldResolver) {
-                  columnV.variation.push(COLUMN_VARIATION.PRIMARY_KEY);
+                  const saveColumn = {
+                    isNull: false,
+                    key: fieldName,
+                    newType: new SQLPrimaryKey(new SQLNull()),
+                  };
+
+                  if (rObj.posibleNull > 0) {
+                    saveColumn.isNull = true;
+                  }
+
+                  columnsToChange.push(saveColumn);
                 }
 
                 if (fieldType instanceof RefFieldResolver) {
-                  columnV.variation.push(COLUMN_VARIATION.FOREING_KEY);
-                }
-
-                if (rObj.posibleNull > 0) {
-                  columnV.variation.push(COLUMN_VARIATION.POSIBLE_NULL);
+                  columnsToChange.push({
+                    isNull: false,
+                    key: fieldName,
+                    newType: new SQLForengKey(
+                      new SQLNull(),
+                      fieldType.getSchemaToRef(),
+                    ),
+                  });
                 }
               }
-
-              columnsToChange.push(columnV);
             },
           );
 

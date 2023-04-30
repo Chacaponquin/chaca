@@ -1,5 +1,0 @@
-export enum COLUMN_VARIATION {
-  PRIMARY_KEY,
-  FOREING_KEY,
-  POSIBLE_NULL,
-}

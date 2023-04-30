@@ -16,5 +16,5 @@ export const TEAM_SCHEMA = chaca.defineSchema({
       .getValue({ min: 0, max: fields.playedChampionships });
   },
   points: schemas.dataType.int({ min: 0, max: 50 }),
-  stadiumID: chaca.ref("Stadium.stadiumID"),
+  stadiumID: chaca.ref("Stadium.stadium_id"),
 });
