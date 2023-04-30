@@ -7,6 +7,7 @@ import {
   TypescriptGenerator,
   Generator,
   YamlGenerator,
+  SQLGenerator,
 } from "../../generators/index.js";
 import { FileConfig } from "../interfaces/export.interface.js";
 
@@ -61,6 +62,9 @@ export async function Export(data: any, config: FileConfig): Promise<string> {
         break;
       case "yaml":
         gen = new YamlGenerator(data, config);
+        break;
+      case "sql":
+        gen = new SQLGenerator(data, config);
         break;
       default:
         throw new ChacaError(`Format '${String(config.format)}' invalid`);

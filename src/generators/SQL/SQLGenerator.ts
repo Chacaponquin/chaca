@@ -15,6 +15,7 @@ import {
   SQLType,
 } from "./classes/index.js";
 import { createPrimaryKeyNode } from "./utils/createPrimaryKey.js";
+import fs from "fs";
 
 export class SQLGenerator extends Generator {
   private sqlData: Array<any> = [];
@@ -52,12 +53,12 @@ export class SQLGenerator extends Generator {
       } else if (value === null) {
         columnType = new SQLNull();
       } else if (Array.isArray(value)) {
-        const arrayType = new SQLArray(value);
+        const arrayType = new SQLArray();
         this.createArrayFields(fieldRoute, parentRoute, value, arrayType);
 
         columnType = arrayType;
       } else {
-        const newObject = new SQLObject(value);
+        const newObject = new SQLObject();
 
         // add primary key
         newObject.insertSubField(createPrimaryKeyNode(parentRoute));
@@ -86,44 +87,17 @@ export class SQLGenerator extends Generator {
     return newNode;
   }
 
-  private createData(): void {
-    for (let i = 0; i < this.sqlData.length; i++) {
-      const objectData = this.sqlData[i];
-
-      if (
-        typeof objectData === "object" &&
-        objectData !== null &&
-        !Array.isArray(objectData)
-      ) {
-        const newDocumentTree = new SQLDocumentTree(this.fileName);
-        this.createDocumentSubFields(objectData, newDocumentTree, []);
-
-        if (this.objectDocuments.length === 0) {
-          this.objectDocuments.push(newDocumentTree);
-        } else {
-          const firstObjectToCompare = this.objectDocuments[0];
-          newDocumentTree.compareWithFirstObject(firstObjectToCompare);
-        }
-      } else {
-        throw new ChacaError("Your data must be an array of objects");
-      }
-    }
-  }
-
   private createDocumentSubFields(
     object: any,
     documentTree: SQLDocumentTree,
-    parentRoute: Array<string>,
   ): void {
     const entries = Object.entries(object);
 
     // add primary key
-    documentTree.insertNode(createPrimaryKeyNode(parentRoute));
+    documentTree.insertNode(createPrimaryKeyNode([]));
 
     entries.forEach(([fieldName, value]) => {
-      const fieldRoute = [...parentRoute, fieldName];
-
-      const newNode = this.createNodeByValue(fieldName, value, fieldRoute);
+      const newNode = this.createNodeByValue(fieldName, value, []);
       documentTree.insertNode(newNode);
     });
   }
@@ -145,7 +119,52 @@ export class SQLGenerator extends Generator {
     this.objectDocuments[0].createSQLTables(this.sqlTables);
   }
 
+  private createData(): void {
+    for (let i = 0; i < this.sqlData.length; i++) {
+      const objectData = this.sqlData[i];
+
+      if (
+        typeof objectData === "object" &&
+        objectData !== null &&
+        !Array.isArray(objectData)
+      ) {
+        const newDocumentTree = new SQLDocumentTree(this.fileName);
+        this.createDocumentSubFields(objectData, newDocumentTree);
+
+        if (this.objectDocuments.length === 0) {
+          this.objectDocuments.push(newDocumentTree);
+        } else {
+          const firstObjectToCompare = this.objectDocuments[0];
+          newDocumentTree.compareWithFirstObject(firstObjectToCompare);
+        }
+      } else {
+        throw new ChacaError("Your data must be an array of objects");
+      }
+    }
+  }
+
+  public createTablesString(): string {
+    let code = "";
+
+    this.sqlTables.forEach((table) => {
+      code += `CREATE TABLE ${table.tableName}(\n`;
+
+      table.getColumns().forEach((column) => {
+        code += `${column.columnName} ${column.getColumnType()}\n`;
+      });
+
+      code += ")\n\n";
+    });
+
+    return code;
+  }
+
   public async generateFile(): Promise<string> {
-    return "";
+    this.createData();
+    this.createSQLTables();
+
+    await fs.promises.writeFile(this.route, this.createTablesString(), "utf-8");
+
+    return this.route;
   }
 }

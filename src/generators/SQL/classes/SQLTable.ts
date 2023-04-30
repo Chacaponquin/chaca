@@ -10,6 +10,10 @@ export class SQLTable {
     this.columns.push(field);
   }
 
+  public getColumns() {
+    return this.columns;
+  }
+
   public getTablePrimaryKey(): SQLTableColumn {
     return this.columns.find(
       (f) => f.getColumnType() instanceof SQLPrimaryKey,

@@ -33,6 +33,8 @@ export class SQLDocumentTree {
   public searchAndPushValue(node: SQLNode): void {
     let found: SQLNode | null = null;
 
+    console.log(this.nodes);
+
     for (let i = 0; i < this.nodes.length && !found; i++) {
       found = this.nodes[i].foundNode(node.getFieldRoute());
     }

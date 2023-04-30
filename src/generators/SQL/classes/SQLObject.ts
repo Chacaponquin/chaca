@@ -7,10 +7,6 @@ import { SQLArray } from "./SQLArray.js";
 export class SQLObject extends SQLType {
   private objectFields: Array<SQLNode> = [];
 
-  constructor(value: any) {
-    super(value);
-  }
-
   public getFields() {
     return this.objectFields;
   }

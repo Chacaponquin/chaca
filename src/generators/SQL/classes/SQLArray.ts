@@ -7,10 +7,6 @@ import { SQLType } from "./SQLType.js";
 export class SQLArray extends SQLType {
   private values: Array<SQLType> = [];
 
-  constructor(value: Array<any>) {
-    super(value);
-  }
-
   public equal(otherType: SQLType): boolean {
     if (otherType instanceof SQLArray) {
       return this.getArrayType().equal(otherType.getArrayType());

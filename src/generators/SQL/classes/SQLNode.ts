@@ -24,22 +24,22 @@ export class SQLNode {
   }
 
   public createTableColumn(
-    currentTable: SQLTable,
+    parentTable: SQLTable,
     tables: Array<SQLTable>,
   ): void {
     const nodeType = this.getValueType();
 
     if (nodeType instanceof SQLObject) {
       const newColumn = nodeType.createTableColumn(this.getFieldName(), tables);
-      currentTable.insertColumn(newColumn);
+      parentTable.insertColumn(newColumn);
     } else if (nodeType instanceof SQLArray) {
-      nodeType.createTableColumn(this.getFieldName(), currentTable, tables);
+      nodeType.createTableColumn(this.getFieldName(), parentTable, tables);
     } else {
       const newColumn = new SQLTableColumn(
         this.getFieldName(),
         this.canBeNull(),
       );
-      currentTable.insertColumn(newColumn);
+      parentTable.insertColumn(newColumn);
     }
   }
 

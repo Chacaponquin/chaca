@@ -4,7 +4,8 @@ export type ExportFormat =
   | "typescript"
   | "csv"
   | "javascript"
-  | "yaml";
+  | "yaml"
+  | "sql";
 
 /**
  * Export File Configuration
