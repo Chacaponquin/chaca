@@ -11,7 +11,7 @@ export class SQLString extends SQLTypeWithDefinition {
   }
 
   public getSQLDefinition(): string {
-    return "TEXT";
+    return "VARCHAR(255)";
   }
 
   getSQLValue(): string {

@@ -19,8 +19,8 @@ export class RefFieldResolver extends IResolver {
     return this.refField;
   }
 
-  public getSchemaToRef(): string {
-    return this.refField.refField.split(".")[0];
+  public getFieldToRef(): string {
+    return this.refField.refField;
   }
 
   private validateFieldToRef(refField: FieldToRef): FieldToRefObject {

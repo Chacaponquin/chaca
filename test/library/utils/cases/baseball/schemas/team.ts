@@ -8,7 +8,7 @@ export const TEAM_SCHEMA = chaca.defineSchema({
   name: (fields) => {
     return fields.province + " Team";
   },
-  province: { enum: PROVINCES },
+  province: chaca.sequential(PROVINCES),
   pet: schemas.animal.animalType(),
   wonChampionships: (fields) => {
     return schemas.dataType
@@ -16,5 +16,5 @@ export const TEAM_SCHEMA = chaca.defineSchema({
       .getValue({ min: 0, max: fields.playedChampionships });
   },
   points: schemas.dataType.int({ min: 0, max: 50 }),
-  stadiumID: chaca.ref("Stadium.stadium_id"),
+  stadium_id: chaca.ref("Stadium.stadium_id"),
 });

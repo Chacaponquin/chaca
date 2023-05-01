@@ -6,7 +6,17 @@ export const PHASE_NAMES = [
   "Final",
 ];
 
-export const PLAYER_POSITIONS = ["C", "SS", "1B", "2B", "3B", "LF", "CF", "RF"];
+export const PLAYER_POSITIONS = [
+  "C",
+  "SS",
+  "1B",
+  "2B",
+  "3B",
+  "LF",
+  "CF",
+  "RF",
+  "P",
+];
 
 export const PROVINCES = [
   "Pinar del Rio",

@@ -172,7 +172,7 @@ export class SQLGenerator extends Generator {
       code += `CREATE TABLE ${table.tableName}(\n`;
 
       // create all values definition
-      table.getColumns().forEach((column) => {
+      table.getColumns().forEach((column, index) => {
         const columnType = column.getColumnType();
 
         if (columnType instanceof SQLPrimaryKey) {
@@ -183,33 +183,53 @@ export class SQLGenerator extends Generator {
 
         code += `\t${column.columnName} ${columnType.getSQLDefinition()}`;
 
-        if (
-          !column.couldBeNull() &&
-          !(column.getColumnType() instanceof SQLPrimaryKey)
-        ) {
+        if (!column.couldBeNull()) {
           code += ` NOT NULL`;
         }
 
-        code += ",\n";
+        if (
+          index === table.getColumns().length - 1 &&
+          primaryKeys.length === 0 &&
+          foreingKeys.length === 0
+        ) {
+          code += "\n";
+        } else {
+          code += ",\n";
+        }
       });
 
       // define primary and foreing keys
+
       if (primaryKeys.length) {
         code += `\tPRIMARY KEY (${primaryKeys
           .map((p) => p.columnName)
-          .join(", ")}),\n`;
+          .join(", ")})`;
+
+        if (foreingKeys.length === 0) {
+          code += "\n";
+        } else {
+          code += `,\n`;
+        }
       }
 
       // definir foreign keys
       if (foreingKeys.length) {
-        foreingKeys.forEach((f) => {
-          const tableRef = (f.getColumnType() as SQLForengKey).refersTo;
+        foreingKeys.forEach((f, index) => {
+          const [tableRef, columnRef] = (
+            f.getColumnType() as SQLForengKey
+          ).refersTo.split(".");
 
-          code += `\tFOREIGN KEY (${f.columnName}) REFERENCES ${tableRef},\n`;
+          code += `\tFOREIGN KEY (${f.columnName}) REFERENCES ${tableRef} (${columnRef})`;
+
+          if (index === foreingKeys.length - 1) {
+            code += "\n";
+          } else {
+            code += ",\n";
+          }
         });
       }
 
-      code += ")\n\n";
+      code += ");\n\n";
     });
 
     return code;
@@ -224,7 +244,7 @@ export class SQLGenerator extends Generator {
       tablesData.forEach((d) => {
         data += `INSERT INTO ${table.tableName} VALUES (`;
         data += d.join(", ");
-        data += `)\n`;
+        data += `);\n`;
       });
     });
 
@@ -284,12 +304,14 @@ export class SQLGenerator extends Generator {
                 }
 
                 if (fieldType instanceof RefFieldResolver) {
+                  const fieldToRef = fieldType.getFieldToRef().split(".");
+
                   columnsToChange.push({
                     isNull: false,
                     key: fieldName,
                     newType: new SQLForengKey(
                       new SQLNull(),
-                      fieldType.getSchemaToRef(),
+                      fieldToRef.slice(0, 2).join("."),
                     ),
                   });
                 }

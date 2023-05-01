@@ -15,10 +15,6 @@ export class SQLDate extends SQLTypeWithDefinition {
   }
 
   public getSQLValue(): string {
-    const year = this.value.getFullYear();
-    const day = this.value.getDay();
-    const month = this.value.getMonth();
-
-    return `'${year}-${month}-${day}'`;
+    return `'${this.value.toISOString().slice(0, 10)}'`;
   }
 }

@@ -8,5 +8,5 @@ export const GAME_SCHEMA = chaca.defineSchema({
   winner: (fields) => {
     return chaca.utils.oneOfArray([fields.home_club, fields.visitant]);
   },
-  phaseID: chaca.ref("Phase.phase_id"),
+  phase_id: chaca.ref("Phase.phase_id"),
 });
