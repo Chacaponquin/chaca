@@ -4,8 +4,8 @@ import { RefFieldResolver } from "../classes/Resolvers/index.js";
 import { SequentialField } from "../classes/SequentialField/SequentialField.js";
 import { KeyField } from "../classes/KeyField/KeyField.js";
 
-export type SchemaInput<C, T> = {
-  [key in keyof T]: FieldSchemaConfig<C, T[key]> | SequentialField | KeyField;
+export type SchemaInput<T> = {
+  [key in keyof T]: FieldSchemaConfig<T[key]> | SequentialField | KeyField;
 };
 
 export type SchemaToResolve<T> = {
@@ -18,18 +18,18 @@ export type ResolverObject = {
   posibleNull: number;
 };
 
-export type FieldSchemaConfig<C, R> =
-  | FieldObjectInput<C, R>
-  | CustomField<C, R>
+export type FieldSchemaConfig<R> =
+  | FieldObjectInput<R>
+  | CustomField<any, R>
   | SchemaField<R, any>
   | ChacaSchema<R>
   | RefFieldResolver;
 
-type FieldObjectInput<C, R> = {
+type FieldObjectInput<R> = {
   type?: SchemaField<R, any> | ChacaSchema<R> | RefFieldResolver;
   isArray?: boolean | number | { min?: number; max?: number };
   posibleNull?: boolean | number;
-  custom?: CustomField<C, R>;
+  custom?: CustomField<any, R>;
   enum?: R[];
   ref?: RefFieldResolver;
 };

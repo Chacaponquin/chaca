@@ -46,9 +46,7 @@ const Chaca = {
    * @example
    * { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
    */
-  defineSchema<K = any, T = any>(
-    inputObj: SchemaInput<K, T>,
-  ): ChacaSchema<K, T> {
+  defineSchema<K = any, T = any>(inputObj: SchemaInput<T>): ChacaSchema<K, T> {
     const newSchema = new ChacaSchema<K, T>(inputObj);
     return newSchema;
   },

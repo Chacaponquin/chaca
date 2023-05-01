@@ -14,7 +14,7 @@ export class SQLForengKey extends SQLTypeWithDefinition {
   }
 
   public getSQLDefinition(): string {
-    return "FOREING KEY";
+    return `${this.value.getSQLDefinition()}`;
   }
 
   public getSQLValue(): string {

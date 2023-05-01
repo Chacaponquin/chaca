@@ -3,6 +3,8 @@ import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { SQLNull } from "./SQLNull.js";
 import { ColumnVariation } from "../interfaces/sqlTable.interface.js";
+import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
+import { SQLForengKey } from "./SQLForengKey.js";
 
 export class SQLTableColumn {
   private values: Array<SQLTypeWithDefinition> = [];
@@ -29,7 +31,20 @@ export class SQLTableColumn {
   }
 
   public changeColumnByVariation(variation: ColumnVariation): void {
-    this.changeColumnType(variation.newType);
+    if (variation.newType instanceof SQLPrimaryKey) {
+      const newType = new SQLPrimaryKey(
+        this.columnType as SQLTypeWithDefinition,
+      );
+
+      this.changeColumnType(newType);
+    } else if (variation.newType instanceof SQLForengKey) {
+      const newType = new SQLForengKey(
+        this.columnType as SQLTypeWithDefinition,
+        variation.newType.refersTo,
+      );
+
+      this.changeColumnType(newType);
+    }
 
     if (variation.isNull) {
       this.changeIsNull();

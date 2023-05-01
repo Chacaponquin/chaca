@@ -27,7 +27,7 @@ import { SequentialField } from "../SequentialField/SequentialField.js";
 export class ChacaSchema<K = any, T = any> {
   private schemaObj: SchemaToResolve<T>;
 
-  constructor(inputObj: SchemaInput<K, T>) {
+  constructor(inputObj: SchemaInput<T>) {
     this.schemaObj = this.validateObjectSchema(inputObj);
   }
 
@@ -49,7 +49,7 @@ export class ChacaSchema<K = any, T = any> {
     return await Export(data, configFile);
   }
 
-  protected validateObjectSchema(obj: SchemaInput<K, T>): SchemaToResolve<T> {
+  protected validateObjectSchema(obj: SchemaInput<T>): SchemaToResolve<T> {
     if (!obj || (typeof obj === "object" && Array.isArray(obj))) {
       throw new ChacaError(
         "Your schema has to be an object with the fields descriptions",
@@ -65,7 +65,7 @@ export class ChacaSchema<K = any, T = any> {
       for (const k of Object.keys(obj)) {
         const key = String(k) as keyof T;
         const schema = obj[key] as
-          | FieldSchemaConfig<K, T[keyof T]>
+          | FieldSchemaConfig<T[keyof T]>
           | SequentialField
           | KeyField;
 

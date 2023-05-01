@@ -11,7 +11,7 @@ export class SQLPrimaryKey extends SQLTypeWithDefinition {
   }
 
   public getSQLDefinition(): string {
-    return `${this.value.getSQLDefinition()} PRIMARY KEY`;
+    return `${this.value.getSQLDefinition()}`;
   }
 
   public getSQLValue(): string {

@@ -21,6 +21,7 @@ import {
   SQLType,
   SQLPrimaryKey,
   SQLForengKey,
+  SQLTableColumn,
 } from "./classes/index.js";
 import { ColumnVariation } from "./interfaces/sqlTable.interface.js";
 import { createPrimaryKeyNode } from "./utils/createPrimaryKey.js";
@@ -165,12 +166,22 @@ export class SQLGenerator extends Generator {
     let code = "";
 
     tables.forEach((table) => {
+      const primaryKeys = [] as Array<SQLTableColumn>;
+      const foreingKeys = [] as Array<SQLTableColumn>;
+
       code += `CREATE TABLE ${table.tableName}(\n`;
 
+      // create all values definition
       table.getColumns().forEach((column) => {
-        const columnType = column.getColumnType().getSQLDefinition();
+        const columnType = column.getColumnType();
 
-        code += `\t${column.columnName} ${columnType}`;
+        if (columnType instanceof SQLPrimaryKey) {
+          primaryKeys.push(column);
+        } else if (columnType instanceof SQLForengKey) {
+          foreingKeys.push(column);
+        }
+
+        code += `\t${column.columnName} ${columnType.getSQLDefinition()}`;
 
         if (
           !column.couldBeNull() &&
@@ -181,6 +192,22 @@ export class SQLGenerator extends Generator {
 
         code += ",\n";
       });
+
+      // define primary and foreing keys
+      if (primaryKeys.length) {
+        code += `\tPRIMARY KEY (${primaryKeys
+          .map((p) => p.columnName)
+          .join(", ")}),\n`;
+      }
+
+      // definir foreign keys
+      if (foreingKeys.length) {
+        foreingKeys.forEach((f) => {
+          const tableRef = (f.getColumnType() as SQLForengKey).refersTo;
+
+          code += `\tFOREIGN KEY (${f.columnName}) REFERENCES ${tableRef},\n`;
+        });
+      }
 
       code += ")\n\n";
     });
