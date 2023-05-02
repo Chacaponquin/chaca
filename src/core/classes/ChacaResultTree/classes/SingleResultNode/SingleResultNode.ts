@@ -12,10 +12,12 @@ export class SingleResultNode extends FieldNode {
   protected getValue(): unknown {
     return this.value;
   }
+  public changeIsTaken() {
+    this.taken = true;
+  }
 
   public getValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
     if (fieldTreeRoute.length === 0) {
-      this.taken = true;
       return this;
     } else {
       throw new ChacaError(

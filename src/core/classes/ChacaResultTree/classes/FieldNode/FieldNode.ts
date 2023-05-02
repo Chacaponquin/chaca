@@ -29,8 +29,8 @@ export abstract class FieldNode {
     return this.isNull ? null : this.getValue();
   }
 
-  public isTaken() {
-    return this.isTaken;
+  public isTaken(): boolean {
+    return this.taken;
   }
 
   private nullPosibility(): boolean {

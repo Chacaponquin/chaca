@@ -1,5 +1,4 @@
 import { chaca, schemas } from "../../../../../../src";
-import { PLAYER_POSITIONS } from "../constants";
 
 export const TEAM_MEMBER_SCHEMA = chaca.defineSchema({
   member_id: chaca.key(schemas.id.uuid()),

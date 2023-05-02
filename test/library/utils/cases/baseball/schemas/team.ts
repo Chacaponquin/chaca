@@ -14,5 +14,5 @@ export const TEAM_SCHEMA = chaca.defineSchema({
       .int()
       .getValue({ min: 0, max: fields.played_championships });
   },
-  stadium_id: chaca.ref("Stadium.stadium_id"),
+  stadium_id: chaca.ref("Stadium.stadium_id", { unique: true }),
 });

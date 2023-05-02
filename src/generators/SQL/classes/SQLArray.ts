@@ -44,8 +44,6 @@ export class SQLArray extends SQLType {
       this.createParentIDColumnName(parentTable.tableName),
     );
 
-    console.log(this.values);
-
     this.values.forEach((v) => {
       idColumn.insertRowValue(createPrimaryKey());
       valuesColumn.insertRowValue(v);

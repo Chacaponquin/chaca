@@ -81,7 +81,19 @@ export class RefValueNode extends ChacaTreeNode {
           this.fieldTreeRoute,
         );
 
-        return PrivateUtils.oneOfArray(allValues);
+        if (this.refField.unique) {
+          const noTakenValues = allValues.filter((n) => !n.isTaken());
+
+          if (noTakenValues.length === 0) {
+            throw new NotEnoughValuesForRefError(this.nodeConfig.name);
+          } else {
+            const node = PrivateUtils.oneOfArray(noTakenValues);
+            node.changeIsTaken();
+            return node.getRealValue();
+          }
+        } else {
+          return PrivateUtils.oneOfArray(allValues).getRealValue();
+        }
       } else if (
         !this.schemaRef.isBuildingTrees() &&
         !this.schemaRef.isFinishBuilding()
@@ -96,9 +108,11 @@ export class RefValueNode extends ChacaTreeNode {
           const noTakenValues = allValues.filter((n) => !n.isTaken());
 
           if (noTakenValues.length === 0) {
-            throw new NotEnoughValuesForRefError(this.refField.refField);
+            throw new NotEnoughValuesForRefError(this.nodeConfig.name);
           } else {
-            return PrivateUtils.oneOfArray(noTakenValues).getRealValue();
+            const node = PrivateUtils.oneOfArray(noTakenValues);
+            node.changeIsTaken();
+            return node.getRealValue();
           }
         } else {
           return PrivateUtils.oneOfArray(allValues).getRealValue();
