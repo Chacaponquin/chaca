@@ -114,7 +114,7 @@ export class ChacaInputTree<T> {
 
   public insertNode(node: ChacaTreeNode) {
     this.nodes.push(node);
-    orderFieldsByPriority(this.nodes);
+    this.nodes = orderFieldsByPriority(this.nodes);
   }
 
   public checkIfFieldExists(fieldTreeRoute: Array<string>): boolean {

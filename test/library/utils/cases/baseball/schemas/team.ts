@@ -1,11 +1,11 @@
 import { chaca, schemas } from "../../../../../../src";
-import { PROVINCES } from "../constants";
 
 export const TEAM_SCHEMA = chaca.defineSchema({
   team_id: chaca.key(schemas.id.uuid()),
   played_championships: schemas.dataType.int({ min: 1, max: 70 }),
   color: () => "#000000",
-  name: (fields) => {
+  team_name: (fields) => {
+    console.log(fields);
     return fields.province + " Team";
   },
   province: chaca.ref("Province.province_id"),
@@ -13,8 +13,7 @@ export const TEAM_SCHEMA = chaca.defineSchema({
   wonChampionships: (fields) => {
     return schemas.dataType
       .int()
-      .getValue({ min: 0, max: fields.playedChampionships });
+      .getValue({ min: 0, max: fields.played_championships });
   },
-  points: schemas.dataType.int({ min: 0, max: 50 }),
   stadium_id: chaca.ref("Stadium.stadium_id"),
 });
