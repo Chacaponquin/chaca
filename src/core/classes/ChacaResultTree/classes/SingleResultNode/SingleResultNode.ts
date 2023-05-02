@@ -13,9 +13,10 @@ export class SingleResultNode extends FieldNode {
     return this.value;
   }
 
-  public getValueByNodeRoute(fieldTreeRoute: string[]): unknown {
+  public getValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
     if (fieldTreeRoute.length === 0) {
-      return this.getRealValue();
+      this.taken = true;
+      return this;
     } else {
       throw new ChacaError(
         `The field ${fieldTreeRoute.join(".")} do not exists`,

@@ -31,6 +31,7 @@ export class ChacaInputTree<T> {
   private injectedSchemas: Array<SchemaResolver>;
   private schemaName: string;
 
+  // ref nodes
   private refToResolve: Array<RefValueNode> = [];
 
   constructor(

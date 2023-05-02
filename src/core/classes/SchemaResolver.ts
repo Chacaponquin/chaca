@@ -116,7 +116,7 @@ export class SchemaResolver<K = any, T = any> {
 
   public getAllValuesByNodeRoute(
     fieldTreeRoute: Array<string>,
-  ): Array<unknown> {
+  ): Array<SingleResultNode> {
     const allValues = this.resultTree.getAllValuesByNodeRoute(fieldTreeRoute);
 
     return allValues;

@@ -1,5 +1,6 @@
 import {
   ChacaError,
+  NotEnoughValuesForRefError,
   TryRefANoKeyFieldError,
 } from "../../../../../errors/ChacaError.js";
 import { FieldToRefObject } from "../../../Resolvers/RefFieldResolver/RefFieldResolver.js";
@@ -91,7 +92,17 @@ export class RefValueNode extends ChacaTreeNode {
           this.fieldTreeRoute,
         );
 
-        return PrivateUtils.oneOfArray(allValues);
+        if (this.refField.unique) {
+          const noTakenValues = allValues.filter((n) => !n.isTaken());
+
+          if (noTakenValues.length === 0) {
+            throw new NotEnoughValuesForRefError(this.refField.refField);
+          } else {
+            return PrivateUtils.oneOfArray(noTakenValues).getRealValue();
+          }
+        } else {
+          return PrivateUtils.oneOfArray(allValues).getRealValue();
+        }
       } else {
         throw new ChacaError(
           `You are trying to access ${

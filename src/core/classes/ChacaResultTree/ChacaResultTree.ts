@@ -1,4 +1,4 @@
-import { DocumentTree } from "./classes/index.js";
+import { DocumentTree, SingleResultNode } from "./classes/index.js";
 
 export class ChacaResultTree<D> {
   constructor(public readonly schemaName: string) {}
@@ -15,8 +15,8 @@ export class ChacaResultTree<D> {
 
   public getAllValuesByNodeRoute(
     fieldTreeRoute: Array<string>,
-  ): Array<unknown> {
-    const allValues: Array<unknown> = [];
+  ): Array<SingleResultNode> {
+    const allValues: Array<SingleResultNode> = [];
 
     this.documents.forEach((d) => {
       // quitar el primer elemento de la ruta pues pertenece al nombre del schema al que pertenece

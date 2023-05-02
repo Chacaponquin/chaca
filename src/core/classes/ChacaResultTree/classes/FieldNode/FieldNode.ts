@@ -1,4 +1,5 @@
 import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
+import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
 
 export interface FieldNodeProps {
   name: string;
@@ -7,6 +8,7 @@ export interface FieldNodeProps {
 
 export abstract class FieldNode {
   protected isNull: boolean;
+  protected taken = false;
 
   constructor(public readonly nodeConfig: FieldNodeProps) {
     this.isNull = this.nullPosibility();
@@ -14,10 +16,21 @@ export abstract class FieldNode {
 
   protected abstract getValue(): unknown | Array<unknown>;
 
-  public abstract getValueByNodeRoute(fieldTreeRoute: Array<string>): unknown;
+  protected abstract getValueByNodeRoute(
+    fieldTreeRoute: Array<string>,
+  ): SingleResultNode;
+
+  public getRefValueByRoute(fieldTreeRoute: Array<string>): SingleResultNode {
+    const value = this.getValueByNodeRoute(fieldTreeRoute);
+    return value;
+  }
 
   public getRealValue() {
     return this.isNull ? null : this.getValue();
+  }
+
+  public isTaken() {
+    return this.isTaken;
   }
 
   private nullPosibility(): boolean {

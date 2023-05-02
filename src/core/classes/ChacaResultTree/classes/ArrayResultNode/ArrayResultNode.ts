@@ -1,6 +1,7 @@
 import { ChacaError } from "../../../../../errors/ChacaError.js";
 import { ChacaTreeNode } from "../../../ChacaInputTree/classes/index.js";
 import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode.js";
+import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
 
 export class ArrayResultNode extends FieldNode {
   private arrayNodes: Array<FieldNode> = [];
@@ -20,9 +21,11 @@ export class ArrayResultNode extends FieldNode {
     this.arrayNodes.push(n);
   }
 
-  public getValueByNodeRoute(fieldTreeRoute: string[]): unknown {
+  public getValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
     if (fieldTreeRoute.length === 0) {
-      return this.getRealValue();
+      throw new ChacaError(
+        `The field ${fieldTreeRoute.join(".")} do not exists`,
+      );
     } else {
       throw new ChacaError(
         `The field ${fieldTreeRoute.join(".")} do not exists`,

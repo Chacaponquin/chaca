@@ -18,3 +18,9 @@ export class TryRefANoKeyFieldError extends ChacaError {
     );
   }
 }
+
+export class NotEnoughValuesForRefError extends ChacaError {
+  constructor(refFieldName: string) {
+    super(`Not enough values for the ref field ${refFieldName}`);
+  }
+}

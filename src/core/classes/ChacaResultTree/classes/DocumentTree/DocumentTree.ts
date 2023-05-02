@@ -1,4 +1,6 @@
+import { ChacaError } from "../../../../../errors/ChacaError.js";
 import { FieldNode } from "../FieldNode/FieldNode.js";
+import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
 
 export class DocumentTree<D> {
   private nodes: Array<FieldNode> = [];
@@ -20,17 +22,21 @@ export class DocumentTree<D> {
     return returnObject;
   }
 
-  public getValueByNodeRoute(fieldTreeRoute: Array<string>): unknown {
+  public getValueByNodeRoute(fieldTreeRoute: Array<string>): SingleResultNode {
     let returnValue = undefined;
 
     for (let i = 0; i < this.nodes.length && returnValue === undefined; i++) {
       if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
-        returnValue = this.nodes[i].getValueByNodeRoute(
-          fieldTreeRoute.slice(1),
-        );
+        returnValue = this.nodes[i].getRefValueByRoute(fieldTreeRoute.slice(1));
       }
     }
 
-    return returnValue;
+    if (returnValue) {
+      return returnValue;
+    } else {
+      throw new ChacaError(
+        `The field ${fieldTreeRoute.join(".")} do not exists`,
+      );
+    }
   }
 }
