@@ -8,7 +8,7 @@ export const TEAM_SCHEMA = chaca.defineSchema({
   name: (fields) => {
     return fields.province + " Team";
   },
-  province: chaca.sequential(PROVINCES),
+  province: chaca.ref("Province.province_id"),
   pet: schemas.animal.animalType(),
   wonChampionships: (fields) => {
     return schemas.dataType

@@ -9,4 +9,5 @@ export const GAME_SCHEMA = chaca.defineSchema({
     return chaca.utils.oneOfArray([fields.home_club, fields.visitant]);
   },
   phase_id: chaca.ref("Phase.phase_id"),
+  total_audience: schemas.dataType.int({ min: 50, max: 16999 }),
 });

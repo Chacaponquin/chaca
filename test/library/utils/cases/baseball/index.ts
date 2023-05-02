@@ -1,7 +1,9 @@
 import { chaca } from "../../../../../src";
-import { PHASE_NAMES, PROVINCES } from "./constants";
+import { PHASE_NAMES, PLAYER_POSITIONS, PROVINCES } from "./constants";
 import { GAME_SCHEMA } from "./schemas/game";
 import { PHASE_SCHEMA } from "./schemas/phase";
+import { POSITION_SCHEMA } from "./schemas/position";
+import { PROVINCE_SCHEMA } from "./schemas/province";
 import { STADIUM_SCHEMA } from "./schemas/stadium";
 import { TEAM_SCHEMA } from "./schemas/team";
 import {
@@ -15,6 +17,12 @@ import {
 const CANT_DOC = 500;
 
 export const BASEBALL_SCHEMAS = [
+  {
+    name: "Position",
+    schema: POSITION_SCHEMA,
+    documents: PLAYER_POSITIONS.length,
+  },
+  { name: "Province", schema: PROVINCE_SCHEMA, documents: PROVINCES.length },
   { name: "Phase", schema: PHASE_SCHEMA, documents: PHASE_NAMES.length },
   { name: "Stadium", documents: 400, schema: STADIUM_SCHEMA },
   { name: "Team", documents: PROVINCES.length, schema: TEAM_SCHEMA },
