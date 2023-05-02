@@ -1,18 +1,23 @@
 import { ChacaError } from "../../../../errors/ChacaError.js";
 import { IResolver } from "../../../interfaces/schema.interface.js";
 
-export type FieldToRef = string | FieldToRefObject;
+export type FieldToRef = string;
+
+export type FieldRefInputConfig = {
+  unique?: boolean;
+};
 
 export interface FieldToRefObject {
   refField: string;
+  unique: boolean;
 }
 
 export class RefFieldResolver extends IResolver {
   private refField: FieldToRefObject;
 
-  constructor(refField: FieldToRef) {
+  constructor(refField: FieldToRef, config?: FieldRefInputConfig) {
     super();
-    this.refField = this.validateFieldToRef(refField);
+    this.refField = this.validateFieldToRef(refField, config);
   }
 
   public getRefField() {
@@ -23,23 +28,26 @@ export class RefFieldResolver extends IResolver {
     return this.refField.refField;
   }
 
-  private validateFieldToRef(refField: FieldToRef): FieldToRefObject {
+  private validateFieldToRef(
+    refField: FieldToRef,
+    config?: FieldRefInputConfig,
+  ): FieldToRefObject {
     if (typeof refField === "string") {
+      const saveConfig: FieldToRefObject = { refField: "", unique: false };
+
       if (refField === "") {
         throw new ChacaError("You can't ref an empty field");
       } else {
-        return { refField };
+        saveConfig.refField = refField;
       }
-    } else if (typeof refField === "object" && refField !== null) {
-      const returnField: FieldToRefObject = { refField: "" };
 
-      if (typeof refField.refField === "string" && refField.refField) {
-        returnField.refField = refField.refField;
-
-        return returnField;
-      } else {
-        throw new ChacaError("You can't ref an empty field");
+      if (config && typeof config === "object") {
+        if (typeof config.unique === "boolean") {
+          saveConfig.unique = config.unique;
+        }
       }
+
+      return saveConfig;
     } else {
       throw new ChacaError("You can't ref an empty field");
     }

@@ -5,7 +5,6 @@ export const TEAM_SCHEMA = chaca.defineSchema({
   played_championships: schemas.dataType.int({ min: 1, max: 70 }),
   color: () => "#000000",
   team_name: (fields) => {
-    console.log(fields);
     return fields.province + " Team";
   },
   province: chaca.ref("Province.province_id"),

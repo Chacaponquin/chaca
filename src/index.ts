@@ -23,6 +23,7 @@ import {
 } from "./core/helpers/MultiGenerate/MultiGenerate.js";
 
 import {
+  FieldRefInputConfig,
   FieldToRef,
   FieldToRefObject,
   RefFieldResolver,
@@ -71,8 +72,8 @@ const Chaca = {
    * @example
    * {field: chaca.ref('Schema.fieldToRef')}
    */
-  ref(fieldToRef: FieldToRef) {
-    return new RefFieldResolver(fieldToRef);
+  ref(fieldToRef: FieldToRef, config?: FieldRefInputConfig) {
+    return new RefFieldResolver(fieldToRef, config);
   },
 
   /**
