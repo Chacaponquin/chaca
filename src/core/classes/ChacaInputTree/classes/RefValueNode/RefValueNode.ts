@@ -73,35 +73,17 @@ export class RefValueNode extends ChacaTreeNode {
 
   public getValue(): unknown | Array<unknown> {
     if (this.schemaRef) {
+      this.schemaRef.buildTrees();
+
       if (
-        !this.schemaRef.isBuildingTrees() &&
-        this.schemaRef.isFinishBuilding()
+        (!this.schemaRef.isBuildingTrees() &&
+          this.schemaRef.isFinishBuilding()) ||
+        (!this.schemaRef.isBuildingTrees() &&
+          !this.schemaRef.isFinishBuilding())
       ) {
         const allValues = this.schemaRef.getAllValuesByNodeRoute(
           this.fieldTreeRoute,
-        );
-
-        if (this.refField.unique) {
-          const noTakenValues = allValues.filter((n) => !n.isTaken());
-
-          if (noTakenValues.length === 0) {
-            throw new NotEnoughValuesForRefError(this.nodeConfig.name);
-          } else {
-            const node = PrivateUtils.oneOfArray(noTakenValues);
-            node.changeIsTaken();
-            return node.getRealValue();
-          }
-        } else {
-          return PrivateUtils.oneOfArray(allValues).getRealValue();
-        }
-      } else if (
-        !this.schemaRef.isBuildingTrees() &&
-        !this.schemaRef.isFinishBuilding()
-      ) {
-        this.schemaRef.buildTrees();
-
-        const allValues = this.schemaRef.getAllValuesByNodeRoute(
-          this.fieldTreeRoute,
+          this,
         );
 
         if (this.refField.unique) {

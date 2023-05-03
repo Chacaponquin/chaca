@@ -116,9 +116,12 @@ export class SchemaResolver<K = any, T = any> {
 
   public getAllValuesByNodeRoute(
     fieldTreeRoute: Array<string>,
+    refFieldWhoCalls: RefValueNode,
   ): Array<SingleResultNode> {
-    const allValues = this.resultTree.getAllValuesByNodeRoute(fieldTreeRoute);
-
+    const allValues = this.resultTree.getAllRefValuesByNodeRoute(
+      fieldTreeRoute,
+      refFieldWhoCalls,
+    );
     return allValues;
   }
 

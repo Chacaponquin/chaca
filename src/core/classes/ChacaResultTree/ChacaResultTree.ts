@@ -1,3 +1,4 @@
+import { RefValueNode } from "../ChacaInputTree/classes/index.js";
 import { DocumentTree, SingleResultNode } from "./classes/index.js";
 
 export class ChacaResultTree<D> {
@@ -13,8 +14,9 @@ export class ChacaResultTree<D> {
     this.documents.push(document);
   }
 
-  public getAllValuesByNodeRoute(
+  public getAllRefValuesByNodeRoute(
     fieldTreeRoute: Array<string>,
+    refFieldWhoCalls: RefValueNode,
   ): Array<SingleResultNode> {
     const allValues: Array<SingleResultNode> = [];
 
@@ -22,7 +24,17 @@ export class ChacaResultTree<D> {
       // quitar el primer elemento de la ruta pues pertenece al nombre del schema al que pertenece
       const foundValue = d.getValueByNodeRoute(fieldTreeRoute.slice(1));
 
-      allValues.push(foundValue);
+      if (refFieldWhoCalls.refField.where) {
+        const isAccepted = refFieldWhoCalls.refField.where(
+          d.getDocumentObject(),
+        );
+
+        if (isAccepted) {
+          allValues.push(foundValue);
+        }
+      } else {
+        allValues.push(foundValue);
+      }
     });
 
     return allValues;

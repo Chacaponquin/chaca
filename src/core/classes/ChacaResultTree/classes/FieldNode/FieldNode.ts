@@ -8,7 +8,6 @@ export interface FieldNodeProps {
 
 export abstract class FieldNode {
   protected isNull: boolean;
-  protected taken = false;
 
   constructor(public readonly nodeConfig: FieldNodeProps) {
     this.isNull = this.nullPosibility();
@@ -27,10 +26,6 @@ export abstract class FieldNode {
 
   public getRealValue() {
     return this.isNull ? null : this.getValue();
-  }
-
-  public isTaken(): boolean {
-    return this.taken;
   }
 
   private nullPosibility(): boolean {

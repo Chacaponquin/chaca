@@ -3,13 +3,17 @@ import { IResolver } from "../../../interfaces/schema.interface.js";
 
 export type FieldToRef = string;
 
+export type RefFieldWhere<D = any> = (field: D) => boolean;
+
 export type FieldRefInputConfig = {
   unique?: boolean;
+  where?: RefFieldWhere;
 };
 
 export interface FieldToRefObject {
   refField: string;
   unique: boolean;
+  where: RefFieldWhere | null;
 }
 
 export class RefFieldResolver extends IResolver {
@@ -33,7 +37,11 @@ export class RefFieldResolver extends IResolver {
     config?: FieldRefInputConfig,
   ): FieldToRefObject {
     if (typeof refField === "string") {
-      const saveConfig: FieldToRefObject = { refField: "", unique: false };
+      const saveConfig: FieldToRefObject = {
+        refField: "",
+        unique: false,
+        where: null,
+      };
 
       if (refField === "") {
         throw new ChacaError("You can't ref an empty field");
@@ -44,6 +52,10 @@ export class RefFieldResolver extends IResolver {
       if (config && typeof config === "object") {
         if (typeof config.unique === "boolean") {
           saveConfig.unique = config.unique;
+        }
+
+        if (typeof config.where === "function") {
+          saveConfig.where = config.where;
         }
       }
 

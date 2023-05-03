@@ -15,6 +15,7 @@ import {
   ChacaError,
   EmptySequentialValuesError,
   TryRefANoKeyFieldError,
+  NotEnoughValuesForRefError,
 } from "./errors/ChacaError.js";
 
 import {
@@ -26,6 +27,7 @@ import {
   FieldRefInputConfig,
   FieldToRef,
   FieldToRefObject,
+  RefFieldWhere,
   RefFieldResolver,
 } from "./core/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
 
@@ -145,6 +147,7 @@ export {
   TryRefANoKeyFieldError,
   EmptySequentialValuesError,
   KeyField,
+  NotEnoughValuesForRefError,
 };
 
 export type {
@@ -155,4 +158,5 @@ export type {
   FieldToRef,
   FieldToRefObject,
   ToSQLConfig,
+  RefFieldWhere,
 };

@@ -3,6 +3,7 @@ import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode.js";
 
 export class SingleResultNode extends FieldNode {
   private value: unknown;
+  private taken = false;
 
   constructor(config: FieldNodeProps, value: unknown) {
     super(config);
@@ -12,8 +13,13 @@ export class SingleResultNode extends FieldNode {
   protected getValue(): unknown {
     return this.value;
   }
+
   public changeIsTaken() {
     this.taken = true;
+  }
+
+  public isTaken(): boolean {
+    return this.taken;
   }
 
   public getValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
