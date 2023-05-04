@@ -114,7 +114,14 @@ export class SchemaResolver<K = any, T = any> {
     return this.resultTree;
   }
 
-  public getAllValuesByNodeRoute(
+  public getAllValuesByRoute(fieldToGet: Array<string>): Array<unknown> {
+    if (fieldToGet.length === 0) {
+      return this.resultTree.getDocumentsArray();
+    } else {
+    }
+  }
+
+  public getAllRefValuesByNodeRoute(
     fieldTreeRoute: Array<string>,
     refFieldWhoCalls: RefValueNode,
   ): Array<SingleResultNode> {
@@ -122,6 +129,7 @@ export class SchemaResolver<K = any, T = any> {
       fieldTreeRoute,
       refFieldWhoCalls,
     );
+
     return allValues;
   }
 

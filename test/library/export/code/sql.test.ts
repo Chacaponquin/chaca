@@ -41,7 +41,7 @@ describe("# SQL Export Test", () => {
         .then((s) => expect(typeof s).toBe("string"));
     });
 
-    /*  it("Export Complete Schema Array", () => {
+    it("Export Complete Schema Array", () => {
       chaca
         .export(COMPLETE_SCHEMA_DATA, {
           fileName: "completeSchema" + objectFileName,
@@ -49,6 +49,6 @@ describe("# SQL Export Test", () => {
           format: "sql",
         })
         .then((s) => expect(typeof s).toBe("string"));
-    });*/
+    });
   });
 });

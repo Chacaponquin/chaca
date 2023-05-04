@@ -5,6 +5,8 @@ import {
   FileConfig,
 } from "./core/interfaces/export.interface.js";
 
+import { SchemaStore } from "./core/classes/SchemasStore/SchemaStore.js";
+
 import { Schemas } from "./schemas/index.js";
 import { SchemaField } from "./schemas/SchemaField.js";
 
@@ -148,6 +150,7 @@ export {
   EmptySequentialValuesError,
   KeyField,
   NotEnoughValuesForRefError,
+  SchemaStore,
 };
 
 export type {
