@@ -20,6 +20,7 @@ import {
   MixedFieldNode,
   SingleResultNode,
 } from "./ChacaResultTree/classes/index.js";
+import { SchemaStore } from "./SchemasStore/SchemaStore.js";
 
 export class SchemaResolver<K = any, T = any> {
   private inputTree: ChacaInputTree<K> | null = null;
@@ -32,6 +33,8 @@ export class SchemaResolver<K = any, T = any> {
   private isBuilding = false;
   private finishBuilding = false;
 
+  private schemasStore: SchemaStore = new SchemaStore([]);
+
   constructor(
     schemaName: string,
     schemaObject: SchemaToResolve<T>,
@@ -39,7 +42,10 @@ export class SchemaResolver<K = any, T = any> {
   ) {
     this.schemaName = this.validateSchemaName(schemaName);
     this.schemaObject = schemaObject;
-    this.resultTree = new ChacaResultTree<K>(this.schemaName);
+    this.resultTree = new ChacaResultTree<K>(
+      this.schemaName,
+      this.schemasStore,
+    );
     this.countDoc = this.validateCountDoc(countDoc);
   }
 
@@ -104,6 +110,7 @@ export class SchemaResolver<K = any, T = any> {
 
   public setInjectedSchemas(array: Array<SchemaResolver>): void {
     this.injectedSchemas = array;
+    this.schemasStore.setInjectedSchemas(array);
   }
 
   public getInputTree() {
@@ -279,6 +286,7 @@ export class SchemaResolver<K = any, T = any> {
         // obtener el valor de la funcion pasando como parametro el documento actual del ciclo
         const value = field.getValue(
           this.resultTree.getDocumentByIndex(indexDoc).getDocumentObject(),
+          this.schemasStore,
         );
 
         return new SingleResultNode(field.getFieldInfo(), value);

@@ -3,7 +3,7 @@ import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode.js";
 
 export class SingleResultNode extends FieldNode {
   private value: unknown;
-  private taken = false;
+  private taken: Array<string> = [];
 
   constructor(config: FieldNodeProps, value: unknown) {
     super(config);
@@ -14,12 +14,12 @@ export class SingleResultNode extends FieldNode {
     return this.value;
   }
 
-  public changeIsTaken() {
-    this.taken = true;
+  public changeIsTaken(fieldRoute: Array<string>) {
+    this.taken.push(fieldRoute.join("."));
   }
 
-  public isTaken(): boolean {
-    return this.taken;
+  public isTaken(fieldRoute: Array<string>): boolean {
+    return this.taken.join(".") === fieldRoute.join(".");
   }
 
   public getNodeByRoute(fieldTreeRoute: string[]): FieldNode {

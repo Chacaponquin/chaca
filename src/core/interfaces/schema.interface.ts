@@ -3,6 +3,7 @@ import { ChacaSchema } from "../classes/ChacaSchema/ChacaSchema.js";
 import { RefFieldResolver } from "../classes/Resolvers/index.js";
 import { SequentialField } from "../classes/SequentialField/SequentialField.js";
 import { KeyField } from "../classes/KeyField/KeyField.js";
+import { SchemaStore } from "../classes/SchemasStore/SchemaStore.js";
 
 export type SchemaInput<T> = {
   [key in keyof T]: FieldSchemaConfig<T[key]> | SequentialField | KeyField;
@@ -34,7 +35,7 @@ type FieldObjectInput<R> = {
   ref?: RefFieldResolver;
 };
 
-export type CustomField<C, V> = (docFields: C) => V;
+export type CustomField<C, V> = (docFields: C, schemas: SchemaStore) => V;
 
 export interface CommonSchema {
   isArray: FieldIsArrayConfig;

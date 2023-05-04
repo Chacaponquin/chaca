@@ -1,8 +1,12 @@
 import { RefValueNode } from "../ChacaInputTree/classes/index.js";
+import { SchemaStore } from "../SchemasStore/SchemaStore.js";
 import { DocumentTree, FieldNode, SingleResultNode } from "./classes/index.js";
 
 export class ChacaResultTree<D> {
-  constructor(public readonly schemaName: string) {}
+  constructor(
+    public readonly schemaName: string,
+    private readonly schemasStore: SchemaStore,
+  ) {}
 
   private documents: Array<DocumentTree<D>> = [];
 
@@ -40,6 +44,7 @@ export class ChacaResultTree<D> {
       if (refFieldWhoCalls.refField.where) {
         const isAccepted = refFieldWhoCalls.refField.where(
           d.getDocumentObject(),
+          this.schemasStore,
         );
 
         if (isAccepted) {

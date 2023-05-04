@@ -19,17 +19,23 @@ export class SchemaStore {
     }
   }
 
-  public getValue(fieldToGet: string): Array<unknown> {
+  public setInjectedSchemas(array: Array<SchemaResolver>): void {
+    this.schemas = array;
+  }
+
+  public getValue<R = any>(fieldToGet: string): Array<R> {
     const fieldToGetArray = this.validateFieldToGet(fieldToGet);
 
-    let values = [] as Array<unknown>;
+    let values = [] as Array<R>;
 
     for (let i = 0; i < this.schemas.length; i++) {
       // build tree if not created yet
-      this.schemas[i].buildTrees();
+      // this.schemas[i].buildTrees();
 
       if (this.schemas[i].getSchemaName() === fieldToGetArray[0]) {
-        values = this.schemas[i].getAllValuesByRoute(fieldToGetArray.slice(1));
+        values = this.schemas[i].getAllValuesByRoute(
+          fieldToGetArray.slice(1),
+        ) as Array<R>;
       }
     }
 

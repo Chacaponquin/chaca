@@ -14,7 +14,7 @@ import {
   TEAM_MEMBER_SCHEMA,
 } from "./schemas/teamMember";
 
-const CANT_DOC = 500;
+const CANT_DOC = 1000;
 
 export const BASEBALL_SCHEMAS = [
   {
@@ -27,10 +27,10 @@ export const BASEBALL_SCHEMAS = [
   { name: "Stadium", documents: 400, schema: STADIUM_SCHEMA },
   { name: "Team", documents: PROVINCES.length, schema: TEAM_SCHEMA },
   { name: "TeamMember", documents: CANT_DOC, schema: TEAM_MEMBER_SCHEMA },
-  { name: "Player", documents: 500, schema: PLAYER_SCHEMA },
-  { name: "Coach", documents: 33, schema: COACH_SCHEMA },
-  { name: "Pitcher", documents: 110, schema: PITCHER_SCHEMA },
-  { name: "Batter", documents: 500, schema: BATTER_SCHEMA },
+  { name: "Player", documents: CANT_DOC, schema: PLAYER_SCHEMA },
+  { name: "Coach", documents: CANT_DOC, schema: COACH_SCHEMA },
+  { name: "Pitcher", documents: 150, schema: PITCHER_SCHEMA },
+  { name: "Batter", documents: 150, schema: BATTER_SCHEMA },
   { name: "Game", documents: 500, schema: GAME_SCHEMA },
 ];
 

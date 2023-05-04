@@ -19,14 +19,50 @@ export const COACH_SCHEMA = chaca.defineSchema({
 });
 
 export const PITCHER_SCHEMA = chaca.defineSchema({
-  player_id: chaca.ref("Player.player_id"),
+  player_id: chaca.ref("Player.player_id", {
+    unique: true,
+    where: (fields, schemas) => {
+      let valid = false;
+
+      const allPositions = schemas.getValue("Position");
+
+      for (let i = 0; i < allPositions.length && !valid; i++) {
+        if (
+          fields.position_id === allPositions[i].position_id &&
+          allPositions[i].position_name === "P"
+        ) {
+          valid = true;
+        }
+      }
+
+      return valid;
+    },
+  }),
   innings_pitched: schemas.dataType.int({ min: 0, max: 1000 }),
   runs_allowed: schemas.dataType.int({ min: 0, max: 500 }),
   pcl: schemas.dataType.number({ min: 0, max: 5 }),
 });
 
 export const BATTER_SCHEMA = chaca.defineSchema({
-  player_id: chaca.ref("Player.player_id"),
+  player_id: chaca.ref("Player.player_id", {
+    unique: true,
+    where: (fields, schemas) => {
+      let valid = false;
+
+      const allPositions = schemas.getValue("Position");
+
+      for (let i = 0; i < allPositions.length && !valid; i++) {
+        if (
+          fields.position_id === allPositions[i].position_id &&
+          allPositions[i].position_name !== "P"
+        ) {
+          valid = true;
+        }
+      }
+
+      return valid;
+    },
+  }),
   at_bats: schemas.dataType.int({ min: 0, max: 10000 }),
   total_hits: (fields) => {
     return schemas.dataType.int().getValue({ min: 0, max: fields.at_bats });

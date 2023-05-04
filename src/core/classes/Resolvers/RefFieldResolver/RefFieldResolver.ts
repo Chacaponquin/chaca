@@ -1,9 +1,13 @@
 import { ChacaError } from "../../../../errors/ChacaError.js";
 import { IResolver } from "../../../interfaces/schema.interface.js";
+import { SchemaStore } from "../../SchemasStore/SchemaStore.js";
 
 export type FieldToRef = string;
 
-export type RefFieldWhere<D = any> = (field: D) => boolean;
+export type RefFieldWhere<D = any> = (
+  field: D,
+  schemas: SchemaStore,
+) => boolean;
 
 export type FieldRefInputConfig = {
   unique?: boolean;
