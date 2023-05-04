@@ -118,6 +118,8 @@ export class SchemaResolver<K = any, T = any> {
     if (fieldToGet.length === 0) {
       return this.resultTree.getDocumentsArray();
     } else {
+      const allNodes = this.resultTree.getAllValuesByNodeRoute(fieldToGet);
+      return allNodes.map((n) => n.getRealValue());
     }
   }
 

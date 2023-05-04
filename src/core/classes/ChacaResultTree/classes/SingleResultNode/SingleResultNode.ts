@@ -22,7 +22,17 @@ export class SingleResultNode extends FieldNode {
     return this.taken;
   }
 
-  public getValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
+  public getNodeByRoute(fieldTreeRoute: string[]): FieldNode {
+    if (fieldTreeRoute.length === 0) {
+      return this;
+    } else {
+      throw new ChacaError(
+        `The field ${fieldTreeRoute.join(".")} do not exists`,
+      );
+    }
+  }
+
+  public getRefValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
     if (fieldTreeRoute.length === 0) {
       return this;
     } else {

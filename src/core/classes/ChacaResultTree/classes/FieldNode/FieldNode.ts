@@ -14,13 +14,14 @@ export abstract class FieldNode {
   }
 
   protected abstract getValue(): unknown | Array<unknown>;
+  public abstract getNodeByRoute(fieldTreeRoute: Array<string>): FieldNode;
 
-  protected abstract getValueByNodeRoute(
+  protected abstract getRefValueByNodeRoute(
     fieldTreeRoute: Array<string>,
   ): SingleResultNode;
 
   public getRefValueByRoute(fieldTreeRoute: Array<string>): SingleResultNode {
-    const value = this.getValueByNodeRoute(fieldTreeRoute);
+    const value = this.getRefValueByNodeRoute(fieldTreeRoute);
     return value;
   }
 

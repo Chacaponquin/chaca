@@ -19,7 +19,27 @@ export class MixedFieldNode extends FieldNode {
     return resultObject;
   }
 
-  public getValueByNodeRoute(fieldTreeRoute: Array<string>): SingleResultNode {
+  public getNodeByRoute(fieldTreeRoute: string[]): FieldNode {
+    let returnNode = undefined;
+
+    for (let i = 0; i < this.nodes.length && returnNode === undefined; i++) {
+      if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
+        returnNode = this.nodes[i].getNodeByRoute(fieldTreeRoute.slice(1));
+      }
+    }
+
+    if (returnNode) {
+      return returnNode;
+    } else {
+      throw new ChacaError(
+        `The field ${fieldTreeRoute.join(".")} do not exists`,
+      );
+    }
+  }
+
+  public getRefValueByNodeRoute(
+    fieldTreeRoute: Array<string>,
+  ): SingleResultNode {
     let returnNode = undefined;
 
     for (let i = 0; i < this.nodes.length && returnNode === undefined; i++) {

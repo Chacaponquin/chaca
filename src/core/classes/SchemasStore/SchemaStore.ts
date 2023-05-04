@@ -20,14 +20,16 @@ export class SchemaStore {
   }
 
   public getValue(fieldToGet: string): Array<unknown> {
-const values = [] as Array<unknown>;
+    const fieldToGetArray = this.validateFieldToGet(fieldToGet);
 
-    const fieldToGetArray = this.validateFieldToGet(fieldToGet)
+    let values = [] as Array<unknown>;
 
-    for(let i = 0; i < this.schemas.length; i++){
-        if(this.schemas[i].getSchemaName() === fieldToGetArray[0]){
-            this.schemas[i].
-        }
+    for (let i = 0; i < this.schemas.length; i++) {
+      if (this.schemas[i].getSchemaName() === fieldToGetArray[0]) {
+        values = this.schemas[i].getAllValuesByRoute(fieldToGetArray.slice(1));
+      }
     }
+
+    return values;
   }
 }
