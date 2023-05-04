@@ -25,6 +25,9 @@ export class SchemaStore {
     let values = [] as Array<unknown>;
 
     for (let i = 0; i < this.schemas.length; i++) {
+      // build tree if not created yet
+      this.schemas[i].buildTrees();
+
       if (this.schemas[i].getSchemaName() === fieldToGetArray[0]) {
         values = this.schemas[i].getAllValuesByRoute(fieldToGetArray.slice(1));
       }
