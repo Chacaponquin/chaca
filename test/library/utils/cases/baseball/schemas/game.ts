@@ -10,7 +10,6 @@ export const GAME_SCHEMA = chaca.defineSchema({
     const foundPhase = phases.find((p) => p.phase_id === fields.phase_id);
 
     if (foundPhase) {
-      console.log(foundPhase.start_date, foundPhase.finish_date);
       return schemas.date.between().getValue({
         from: foundPhase.start_date,
         to: foundPhase.finish_date,
@@ -20,7 +19,10 @@ export const GAME_SCHEMA = chaca.defineSchema({
     return schemas.date.past().getValue();
   },
   winner: (fields) => {
-    return chaca.utils.oneOfArray([fields.home_club, fields.visitant]);
+    return chaca.utils.oneOfArray([
+      fields.team_home_club,
+      fields.team_visitant,
+    ]);
   },
   phase_id: chaca.ref("Phase.phase_id"),
   total_audience: (fields, schemaStore) => {
