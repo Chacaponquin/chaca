@@ -1,7 +1,7 @@
 import { FieldIsArrayConfig } from "../../../interfaces/schema.interface.js";
 
 export interface ChacaTreeNodeConfig {
-  name: string;
+  fieldTreeRoute: Array<string>;
   isArray: FieldIsArrayConfig;
   posibleNull: number;
 }

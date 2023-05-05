@@ -15,7 +15,7 @@ export class MixedValueNode extends ChacaTreeNode {
   }
 
   public getNoArrayNode(): ChacaTreeNode {
-    return new MixedValueNode({ ...this.nodeConfig, isArray: null });
+    return new MixedValueNode({ ...this.getNodeConfig(), isArray: null });
   }
 
   public insertNode(node: ChacaTreeNode): void {
@@ -25,11 +25,11 @@ export class MixedValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
+      throw new TryRefANoKeyFieldError(this.getNodeName());
     } else {
       let found = false;
       for (let i = 0; i < this.nodes.length && !found; i++) {
-        if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
+        if (this.nodes[i].getNodeName() === fieldTreeRoute[0]) {
           const routeWithoutFirstElement = fieldTreeRoute.slice(1);
           found = this.nodes[i].checkIfFieldExists(routeWithoutFirstElement);
         }

@@ -225,6 +225,7 @@ export class DateSchema {
         let min: number =
           typeof a.min === "number" && a.min > 0 ? a.min : refYear - 18;
         let max: number = typeof a.max === "number" ? a.max : refYear - 80;
+
         if (mode === "age") {
           min = new Date(refDate).setUTCFullYear(refYear - max - 1);
           max = new Date(refDate).setUTCFullYear(refYear - min);

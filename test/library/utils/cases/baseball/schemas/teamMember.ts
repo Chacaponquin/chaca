@@ -8,9 +8,9 @@ export const TEAM_MEMBER_SCHEMA = chaca.defineSchema({
 });
 
 export const PLAYER_SCHEMA = chaca.defineSchema({
-  team_member_id: chaca.ref("TeamMember.member_id"),
+  team_member_id: chaca.ref("TeamMember.member_id", { unique: true }),
   player_id: chaca.key(schemas.id.uuid()),
-  position: chaca.ref("Position.position_id"),
+  position_id: chaca.ref("Position.position_id"),
 });
 
 export const COACH_SCHEMA = chaca.defineSchema({

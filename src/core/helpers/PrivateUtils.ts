@@ -59,15 +59,13 @@ for(let i = 0; i < topLength && equal; i++) {
     if (typeof max === "number") {
       if (minimun) {
         if (max >= minimun) maximun = max;
-        else maximun = 999999;
+        else maximun = 99999;
       } else maximun = max;
-    } else maximun = 999999;
+    } else maximun = 99999;
 
-    const val = Math.random() * (maximun - minimun + 1) + minimun;
-    const retValue = Number.parseInt(String(val));
-    return retValue >= minimun && retValue <= maximun
-      ? retValue
-      : PrivateUtils.intNumber({ min, max });
+    const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
+
+    return val;
   }
 
   static numbersArray(): string[] {

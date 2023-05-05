@@ -19,14 +19,14 @@ export class EnumValueNode extends ChacaTreeNode {
 
   public getNoArrayNode(): ChacaTreeNode {
     return new EnumValueNode(
-      { ...this.nodeConfig, isArray: null },
+      { ...this.getNodeConfig(), isArray: null },
       this.enumOptions,
     );
   }
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
+      throw new TryRefANoKeyFieldError(this.getNodeName());
     } else {
       return false;
     }

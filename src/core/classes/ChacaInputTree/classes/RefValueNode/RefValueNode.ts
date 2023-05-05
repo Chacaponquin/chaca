@@ -10,7 +10,7 @@ import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
 
 export class RefValueNode extends ChacaTreeNode {
-  private fieldTreeRoute: Array<string>;
+  private refFieldTreeRoute: Array<string>;
   private schemaRef: SchemaResolver | null;
 
   constructor(
@@ -20,7 +20,9 @@ export class RefValueNode extends ChacaTreeNode {
   ) {
     super(config);
 
-    this.fieldTreeRoute = this.validateFieldTreeRoute(this.refField.refField);
+    this.refFieldTreeRoute = this.validateFieldTreeRoute(
+      this.refField.refField,
+    );
 
     this.schemaRef = null;
   }
@@ -32,7 +34,7 @@ export class RefValueNode extends ChacaTreeNode {
       const inputTree = this.injectedSchemas[i].getInputTree();
 
       if (inputTree) {
-        const found = inputTree.checkIfFieldExists(this.fieldTreeRoute);
+        const found = inputTree.checkIfFieldExists(this.refFieldTreeRoute);
 
         if (found) {
           exists = i;
@@ -42,7 +44,9 @@ export class RefValueNode extends ChacaTreeNode {
 
     if (exists === -1) {
       throw new ChacaError(
-        `From ${this.nodeConfig.name}, The field ${this.refField.refField} does not exists`,
+        `From ${this.getFieldRouteString()}, The field ${
+          this.refField.refField
+        } does not exists`,
       );
     } else {
       this.schemaRef = this.injectedSchemas[exists];
@@ -65,7 +69,7 @@ export class RefValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
+      throw new TryRefANoKeyFieldError(this.getNodeName());
     } else {
       return false;
     }
@@ -73,29 +77,31 @@ export class RefValueNode extends ChacaTreeNode {
 
   public getValue(): unknown | Array<unknown> {
     if (this.schemaRef) {
-      this.schemaRef.buildTrees();
-
       if (
         (!this.schemaRef.isBuildingTrees() &&
           this.schemaRef.isFinishBuilding()) ||
         (!this.schemaRef.isBuildingTrees() &&
           !this.schemaRef.isFinishBuilding())
       ) {
+        this.schemaRef.buildTrees();
+
         const allValues = this.schemaRef.getAllRefValuesByNodeRoute(
-          this.fieldTreeRoute,
+          this.refFieldTreeRoute,
           this,
         );
 
         if (this.refField.unique) {
           const noTakenValues = allValues.filter(
-            (n) => !n.isTaken(this.fieldTreeRoute),
+            (n) => !n.isTaken(this.getNodeConfig().fieldTreeRoute),
           );
 
           if (noTakenValues.length === 0) {
-            throw new NotEnoughValuesForRefError(this.fieldTreeRoute);
+            throw new NotEnoughValuesForRefError(
+              this.getNodeConfig().fieldTreeRoute,
+            );
           } else {
             const node = PrivateUtils.oneOfArray(noTakenValues);
-            node.changeIsTaken(this.fieldTreeRoute);
+            node.changeIsTaken(this.getNodeConfig().fieldTreeRoute);
             return node.getRealValue();
           }
         } else {
@@ -115,7 +121,7 @@ export class RefValueNode extends ChacaTreeNode {
 
   public getNoArrayNode(): ChacaTreeNode {
     return new RefValueNode(
-      { ...this.nodeConfig, isArray: null },
+      { ...this.getNodeConfig(), isArray: null },
       this.refField,
       this.injectedSchemas,
     );

@@ -13,14 +13,14 @@ export class SchemaValueNode extends ChacaTreeNode {
 
   public getNoArrayNode(): ChacaTreeNode {
     return new SchemaValueNode(
-      { ...this.nodeConfig, isArray: null },
+      { ...this.getNodeConfig(), isArray: null },
       this.schema,
     );
   }
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
+      throw new TryRefANoKeyFieldError(this.getNodeName());
     } else {
       return false;
     }

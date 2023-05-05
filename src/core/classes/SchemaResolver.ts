@@ -217,11 +217,12 @@ export class SchemaResolver<K = any, T = any> {
     field: ChacaTreeNode,
     indexDoc: number,
   ) {
-    if (field.nodeConfig.isArray) {
+    const fieldIsArray = field.getNodeConfig().isArray;
+    if (fieldIsArray) {
       // limite del arreglo de valores
       const limit = PrivateUtils.intNumber({
-        min: field.nodeConfig.isArray.min,
-        max: field.nodeConfig.isArray.max,
+        min: fieldIsArray.min,
+        max: fieldIsArray.max,
       });
 
       // resolver el field hasta llegar al limite del array
@@ -263,22 +264,25 @@ export class SchemaResolver<K = any, T = any> {
     indexDoc: number,
   ): FieldNode {
     // en caso de ser un array
-    if (field.nodeConfig.isArray) {
-      return new ArrayResultNode(field.getFieldInfo(), field);
+    if (field.getNodeConfig().isArray) {
+      return new ArrayResultNode(field.getResultNodeConfig(), field);
     }
 
     // en caso de no ser un array
     else {
       // en caso de ser un schema field
       if (field instanceof SchemaValueNode) {
-        return new SingleResultNode(field.getFieldInfo(), field.getValue());
+        return new SingleResultNode(
+          field.getResultNodeConfig(),
+          field.getValue(),
+        );
       }
 
       // en caso de ser un field sequential
       else if (field instanceof SequentialValueNode) {
         const value = field.getSequentialValue();
 
-        return new SingleResultNode(field.getFieldInfo(), value);
+        return new SingleResultNode(field.getResultNodeConfig(), value);
       }
 
       // en caso de ser un custom field
@@ -289,29 +293,32 @@ export class SchemaResolver<K = any, T = any> {
           this.schemasStore,
         );
 
-        return new SingleResultNode(field.getFieldInfo(), value);
+        return new SingleResultNode(field.getResultNodeConfig(), value);
       }
 
       // en caso de ser un ref field
       else if (field instanceof RefValueNode) {
         const refValue = field.getValue();
-        return new SingleResultNode(field.getFieldInfo(), refValue);
+        return new SingleResultNode(field.getResultNodeConfig(), refValue);
       }
 
       // en caso de ser un key field
       else if (field instanceof KeyValueNode) {
-        return new SingleResultNode(field.getFieldInfo(), field.getValue());
+        return new SingleResultNode(
+          field.getResultNodeConfig(),
+          field.getValue(),
+        );
       }
 
       // en caso de ser un mixed field
       else if (field instanceof MixedValueNode) {
-        return new MixedFieldNode(field.getFieldInfo());
+        return new MixedFieldNode(field.getResultNodeConfig());
       }
 
       // en caso de ser un enum field
       else if (field instanceof EnumValueNode) {
         return new SingleResultNode(
-          field.getFieldInfo(),
+          field.getResultNodeConfig(),
           PrivateUtils.oneOfArray(field.enumOptions),
         );
       }
@@ -319,7 +326,7 @@ export class SchemaResolver<K = any, T = any> {
       // en caso de no ser ninguno de los anteriores
       else {
         throw new ChacaError(
-          `'${field.nodeConfig.name}' has an invalid method of solution`,
+          `'${field.getNodeName()}' has an invalid method of solution`,
         );
       }
     }

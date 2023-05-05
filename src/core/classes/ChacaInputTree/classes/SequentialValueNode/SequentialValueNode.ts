@@ -7,18 +7,21 @@ import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 export class SequentialValueNode extends ChacaTreeNode {
   private valuesArray: Array<unknown>;
 
-  constructor(name: string, valuesArray: Array<unknown>) {
-    super({ name, isArray: null, posibleNull: 0 });
+  constructor(fieldTreeRoute: Array<string>, valuesArray: Array<unknown>) {
+    super({ fieldTreeRoute, isArray: null, posibleNull: 0 });
     this.valuesArray = valuesArray;
   }
 
   public getNoArrayNode(): ChacaTreeNode {
-    return new SequentialValueNode(this.nodeConfig.name, this.valuesArray);
+    return new SequentialValueNode(
+      this.getNodeConfig().fieldTreeRoute,
+      this.valuesArray,
+    );
   }
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
+      throw new TryRefANoKeyFieldError(this.getNodeName());
     } else {
       return false;
     }
@@ -26,7 +29,7 @@ export class SequentialValueNode extends ChacaTreeNode {
 
   public getSequentialValue(): unknown {
     if (this.valuesArray.length === 0) {
-      throw new EmptySequentialValuesError(this.nodeConfig.name);
+      throw new EmptySequentialValuesError(this.getNodeName());
     } else {
       const returnValue = this.valuesArray[0];
 

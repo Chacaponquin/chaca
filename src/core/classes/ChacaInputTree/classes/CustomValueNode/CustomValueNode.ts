@@ -14,7 +14,7 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
 
   public getNoArrayNode(): ChacaTreeNode {
     return new CustomValueNode<C, R>(
-      { ...this.nodeConfig, isArray: null },
+      { ...this.getNodeConfig(), isArray: null },
       this.valueFunction,
     );
   }
@@ -31,7 +31,7 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.nodeConfig.name);
+      throw new TryRefANoKeyFieldError(this.getNodeName());
     } else {
       return false;
     }

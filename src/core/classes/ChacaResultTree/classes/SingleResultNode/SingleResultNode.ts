@@ -19,7 +19,7 @@ export class SingleResultNode extends FieldNode {
   }
 
   public isTaken(fieldRoute: Array<string>): boolean {
-    return this.taken.join(".") === fieldRoute.join(".");
+    return this.taken.includes(fieldRoute.join("."));
   }
 
   public getNodeByRoute(fieldTreeRoute: string[]): FieldNode {

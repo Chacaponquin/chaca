@@ -43,7 +43,8 @@ export class ChacaInputTree<T> {
     this.schemaName = schemaName;
 
     for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
-      const newNode = this.createNodeByType(key, obj);
+      const fieldRoute = [this.schemaName, key];
+      const newNode = this.createNodeByType(fieldRoute, obj);
       this.insertNode(newNode);
     }
   }
@@ -53,18 +54,18 @@ export class ChacaInputTree<T> {
   }
 
   private createNodeByType(
-    name: string,
+    actualRoute: Array<string>,
     object: ResolverObject,
   ): ChacaTreeNode {
     let returnNode: ChacaTreeNode;
 
     if (object instanceof SequentialFieldResolver) {
-      returnNode = new SequentialValueNode(name, object.valuesArray);
+      returnNode = new SequentialValueNode(actualRoute, object.valuesArray);
     } else if (object instanceof KeyFieldResolver) {
-      returnNode = new KeyValueNode(name, object.fieldFiunction);
+      returnNode = new KeyValueNode(actualRoute, object.fieldFiunction);
     } else {
       const nodeConfig = {
-        name: name,
+        fieldTreeRoute: actualRoute,
         isArray: object.isArray,
         posibleNull: object.posibleNull,
       };
@@ -78,6 +79,7 @@ export class ChacaInputTree<T> {
       } else if (object.type instanceof MixedFieldResolver) {
         returnNode = new MixedValueNode(nodeConfig);
         this.createSubNodesOfMixedField(
+          actualRoute,
           returnNode as MixedValueNode,
           object.type.schema,
         );
@@ -91,9 +93,12 @@ export class ChacaInputTree<T> {
         this.refToResolve.push(newRefNode);
         returnNode = newRefNode;
       } else if (object.type instanceof SequentialFieldResolver) {
-        returnNode = new SequentialValueNode(name, object.type.valuesArray);
+        returnNode = new SequentialValueNode(
+          actualRoute,
+          object.type.valuesArray,
+        );
       } else if (object.type instanceof KeyFieldResolver) {
-        returnNode = new KeyValueNode(name, object.type.fieldFiunction);
+        returnNode = new KeyValueNode(actualRoute, object.type.fieldFiunction);
       } else {
         throw new ChacaError(`Dont exists that resolver`);
       }
@@ -102,13 +107,15 @@ export class ChacaInputTree<T> {
   }
 
   private createSubNodesOfMixedField(
+    actualRoute: Array<string>,
     parentNode: MixedValueNode,
     schema: ChacaSchema,
   ) {
     for (const [key, obj] of Object.entries<ResolverObject>(
       schema.getSchemaObject(),
     )) {
-      const newNode = this.createNodeByType(key, obj);
+      const fieldRoute = [...actualRoute, key];
+      const newNode = this.createNodeByType(fieldRoute, obj);
       parentNode.insertNode(newNode);
     }
   }
@@ -123,7 +130,7 @@ export class ChacaInputTree<T> {
       let exists = false;
 
       for (let i = 0; i < this.nodes.length && !exists; i++) {
-        if (this.nodes[i].nodeConfig.name === fieldTreeRoute[1]) {
+        if (this.nodes[i].getNodeName() === fieldTreeRoute[1]) {
           const routeWithoutFirstElement = fieldTreeRoute.slice(2);
           const found = this.nodes[i].checkIfFieldExists(
             routeWithoutFirstElement,

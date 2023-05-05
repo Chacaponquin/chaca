@@ -3,14 +3,17 @@ import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 
 export class KeyValueNode extends ChacaTreeNode {
   constructor(
-    name: string,
+    fieldTreeRoute: Array<string>,
     private readonly fieldFunction: SchemaField<string | number>,
   ) {
-    super({ name, isArray: null, posibleNull: 0 });
+    super({ fieldTreeRoute, isArray: null, posibleNull: 0 });
   }
 
   public getNoArrayNode(): ChacaTreeNode {
-    return new KeyValueNode(this.nodeConfig.name, this.fieldFunction);
+    return new KeyValueNode(
+      this.getNodeConfig().fieldTreeRoute,
+      this.fieldFunction,
+    );
   }
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
