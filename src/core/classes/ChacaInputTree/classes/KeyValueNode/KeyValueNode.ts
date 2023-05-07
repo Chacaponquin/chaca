@@ -1,10 +1,13 @@
-import { SchemaField } from "../../../../../schemas/SchemaField.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
+import { RefValueNode } from "../RefValueNode/RefValueNode.js";
+import { SchemaValueNode } from "../SchemaValueNode/SchemaValueNode.js";
+
+export type KeyValueNodeProps = RefValueNode | SchemaValueNode;
 
 export class KeyValueNode extends ChacaTreeNode {
   constructor(
     fieldTreeRoute: Array<string>,
-    private readonly fieldFunction: SchemaField<string | number>,
+    private readonly fieldNode: KeyValueNodeProps,
   ) {
     super({ fieldTreeRoute, isArray: null, posibleNull: 0 });
   }
@@ -12,7 +15,7 @@ export class KeyValueNode extends ChacaTreeNode {
   public getNoArrayNode(): ChacaTreeNode {
     return new KeyValueNode(
       this.getNodeConfig().fieldTreeRoute,
-      this.fieldFunction,
+      this.fieldNode,
     );
   }
 
@@ -21,6 +24,6 @@ export class KeyValueNode extends ChacaTreeNode {
   }
 
   public getValue() {
-    return this.fieldFunction.getValue();
+    return this.fieldNode.getValue();
   }
 }

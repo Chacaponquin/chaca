@@ -1,8 +1,7 @@
 export const PHASE_NAMES = [
-  "Fase de Grupos",
-  "Octavos",
-  "Cuartos",
-  "Semifinales",
+  "Primera Ronda",
+  "Segunda Ronda",
+  "Play off",
   "Final",
 ];
 
@@ -16,6 +15,7 @@ export const PLAYER_POSITIONS = [
   "CF",
   "RF",
   "P",
+  "BD",
 ];
 
 export const PROVINCES = [
@@ -34,4 +34,5 @@ export const PROVINCES = [
   "Holguin",
   "Isla de la Juventud",
   "Santic Spiritus",
+  "Ciego de Avila",
 ];

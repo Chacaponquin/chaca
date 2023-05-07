@@ -3,11 +3,11 @@ import {
   NotEnoughValuesForRefError,
   TryRefANoKeyFieldError,
 } from "../../../../../errors/ChacaError.js";
-import { FieldToRefObject } from "../../../Resolvers/RefFieldResolver/RefFieldResolver.js";
 import { SchemaResolver } from "../../../SchemaResolver.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
+import { FieldToRefObject } from "../../../RefField/RefField.js";
 
 export class RefValueNode extends ChacaTreeNode {
   private refFieldTreeRoute: Array<string>;
@@ -98,6 +98,7 @@ export class RefValueNode extends ChacaTreeNode {
           if (noTakenValues.length === 0) {
             throw new NotEnoughValuesForRefError(
               this.getNodeConfig().fieldTreeRoute,
+              this.refFieldTreeRoute
             );
           } else {
             const node = PrivateUtils.oneOfArray(noTakenValues);

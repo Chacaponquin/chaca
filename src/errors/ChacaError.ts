@@ -20,7 +20,11 @@ export class TryRefANoKeyFieldError extends ChacaError {
 }
 
 export class NotEnoughValuesForRefError extends ChacaError {
-  constructor(refFieldRoute: Array<string>) {
-    super(`Not enough values for the ref field ${refFieldRoute.join(".")}`);
+  constructor(refFieldRoute: Array<string>, keyFieldRoute: Array<any>) {
+    super(
+      `Not enough values of ${keyFieldRoute.join(
+        ".",
+      )} for the ref field ${refFieldRoute.join(".")}`,
+    );
   }
 }

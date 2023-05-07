@@ -199,7 +199,6 @@ export class SQLGenerator extends Generator {
       });
 
       // define primary and foreing keys
-
       if (primaryKeys.length) {
         code += `\tPRIMARY KEY (${primaryKeys
           .map((p) => p.columnName)
@@ -296,6 +295,15 @@ export class SQLGenerator extends Generator {
                     newType: new SQLPrimaryKey(new SQLNull()),
                   };
 
+                  if (fieldType.fieldType instanceof RefFieldResolver) {
+                    saveColumn.newType = new SQLPrimaryKey(
+                      new SQLForengKey(
+                        new SQLNull(),
+                        fieldType.fieldType.refField.refField,
+                      ),
+                    );
+                  }
+
                   if (rObj.posibleNull > 0) {
                     saveColumn.isNull = true;
                   }
@@ -304,7 +312,7 @@ export class SQLGenerator extends Generator {
                 }
 
                 if (fieldType instanceof RefFieldResolver) {
-                  const fieldToRef = fieldType.getFieldToRef().split(".");
+                  const fieldToRef = fieldType.refField.refField.split(".");
 
                   columnsToChange.push({
                     isNull: false,

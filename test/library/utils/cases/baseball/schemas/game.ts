@@ -4,7 +4,7 @@ export const GAME_SCHEMA = chaca.defineSchema({
   game_id: chaca.key(schemas.id.uuid()),
   team_home_club: chaca.ref("Team.team_id"),
   team_visitant: chaca.ref("Team.team_id"),
-  date: (fields, schemasStore) => {
+  game_date: (fields, schemasStore) => {
     const phases = schemasStore.getValue("Phase");
 
     const foundPhase = phases.find((p) => p.phase_id === fields.phase_id);

@@ -59,49 +59,68 @@ export class ChacaInputTree<T> {
   ): ChacaTreeNode {
     let returnNode: ChacaTreeNode;
 
-    if (object instanceof SequentialFieldResolver) {
-      returnNode = new SequentialValueNode(actualRoute, object.valuesArray);
-    } else if (object instanceof KeyFieldResolver) {
-      returnNode = new KeyValueNode(actualRoute, object.fieldFiunction);
-    } else {
-      const nodeConfig = {
-        fieldTreeRoute: actualRoute,
-        isArray: object.isArray,
-        posibleNull: object.posibleNull,
-      };
+    const nodeConfig = {
+      fieldTreeRoute: actualRoute,
+      isArray: object.isArray,
+      posibleNull: object.posibleNull,
+    };
 
-      if (object.type instanceof CustomFieldResolver) {
-        returnNode = new CustomValueNode(nodeConfig, object.type.fun);
-      } else if (object.type instanceof SchemaFieldResolver) {
-        returnNode = new SchemaValueNode(nodeConfig, object.type.schema);
-      } else if (object.type instanceof EnumFieldResolver) {
-        returnNode = new EnumValueNode(nodeConfig, object.type.array);
-      } else if (object.type instanceof MixedFieldResolver) {
-        returnNode = new MixedValueNode(nodeConfig);
-        this.createSubNodesOfMixedField(
-          actualRoute,
-          returnNode as MixedValueNode,
-          object.type.schema,
+    if (object.type instanceof CustomFieldResolver) {
+      returnNode = new CustomValueNode(nodeConfig, object.type.fun);
+    } else if (object.type instanceof SchemaFieldResolver) {
+      returnNode = new SchemaValueNode(nodeConfig, object.type.schema);
+    } else if (object.type instanceof EnumFieldResolver) {
+      returnNode = new EnumValueNode(nodeConfig, object.type.array);
+    } else if (object.type instanceof MixedFieldResolver) {
+      returnNode = new MixedValueNode(nodeConfig);
+      this.createSubNodesOfMixedField(
+        actualRoute,
+        returnNode as MixedValueNode,
+        object.type.schema,
+      );
+    } else if (object.type instanceof RefFieldResolver) {
+      const newRefNode = new RefValueNode(
+        nodeConfig,
+        object.type.refField,
+        this.injectedSchemas,
+      );
+
+      // añadir a lo ref fields del tree
+      this.refToResolve.push(newRefNode);
+      returnNode = newRefNode;
+    } else if (object.type instanceof SequentialFieldResolver) {
+      returnNode = new SequentialValueNode(
+        actualRoute,
+        object.type.valuesArray,
+      );
+    } else if (object.type instanceof KeyFieldResolver) {
+      if (object.type.fieldType instanceof SchemaFieldResolver) {
+        const schemaValueNode = new SchemaValueNode(
+          {
+            fieldTreeRoute: actualRoute,
+            isArray: null,
+            posibleNull: 0,
+          },
+          object.type.fieldType.schema,
         );
-      } else if (object.type instanceof RefFieldResolver) {
-        const newRefNode = new RefValueNode(
-          nodeConfig,
-          object.type.getRefField(),
+
+        returnNode = new KeyValueNode(actualRoute, schemaValueNode);
+      } else {
+        const refValueNode = new RefValueNode(
+          { fieldTreeRoute: actualRoute, isArray: null, posibleNull: 0 },
+          object.type.fieldType.refField,
           this.injectedSchemas,
         );
 
-        this.refToResolve.push(newRefNode);
-        returnNode = newRefNode;
-      } else if (object.type instanceof SequentialFieldResolver) {
-        returnNode = new SequentialValueNode(
-          actualRoute,
-          object.type.valuesArray,
-        );
-      } else if (object.type instanceof KeyFieldResolver) {
-        returnNode = new KeyValueNode(actualRoute, object.type.fieldFiunction);
-      } else {
-        throw new ChacaError(`Dont exists that resolver`);
+        // añadir a lo ref fields del tree
+        this.refToResolve.push(refValueNode);
+
+        returnNode = new KeyValueNode(actualRoute, refValueNode);
       }
+    } else {
+      throw new ChacaError(
+        `The field ${actualRoute.join(".")} have an incorrect resolver`,
+      );
     }
     return returnNode;
   }

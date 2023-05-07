@@ -8,10 +8,13 @@ import {
   CommonSchema,
   CustomField,
   FieldSchemaConfig,
+  IResolver,
   SchemaInput,
   SchemaToResolve,
 } from "../../interfaces/schema.interface.js";
 import { KeyField } from "../KeyField/KeyField.js";
+import { RefField } from "../RefField/RefField.js";
+import { KeyFieldResolverProps } from "../Resolvers/KeyFieldResolver/KeyFieldResolver.js";
 import {
   CustomFieldResolver,
   EnumFieldResolver,
@@ -90,11 +93,11 @@ export class ChacaSchema<K = any, T = any> {
               ...defaultConfig,
             },
           };
-        } else if (schema instanceof RefFieldResolver) {
+        } else if (schema instanceof RefField) {
           schemaToSave = {
             ...schemaToSave,
             [key]: {
-              type: schema,
+              type: new RefFieldResolver(schema.getRefField()),
               ...defaultConfig,
             },
           };
@@ -112,9 +115,7 @@ export class ChacaSchema<K = any, T = any> {
           schemaToSave = {
             ...schemaToSave,
             [key]: {
-              type: new KeyFieldResolver(
-                (schema as KeyField).getFieldFunction(),
-              ),
+              type: this.validateKeyField(schema),
               ...defaultConfig,
             },
           };
@@ -130,14 +131,10 @@ export class ChacaSchema<K = any, T = any> {
                   },
                 };
               } else {
-                const type = this.validateType(key, schema.type);
                 schemaToSave = {
                   ...schemaToSave,
                   [key]: {
-                    type:
-                      type instanceof ChacaSchema
-                        ? new MixedFieldResolver(type)
-                        : new SchemaFieldResolver(type),
+                    type: this.validateType(key, schema.type),
                     ...defaultConfig,
                   },
                 };
@@ -162,18 +159,6 @@ export class ChacaSchema<K = any, T = any> {
                   ...defaultConfig,
                 },
               };
-            } else if (schema.ref) {
-              if (schema.ref instanceof RefFieldResolver) {
-                schemaToSave = {
-                  ...schemaToSave,
-                  [key]: {
-                    type: schema.ref,
-                    ...defaultConfig,
-                  },
-                };
-              } else {
-                throw new ChacaError("Incorrect type for the ref field");
-              }
             } else {
               throw new ChacaError(
                 `The field ${String(key)} dosen't have a resolve function`,
@@ -207,13 +192,34 @@ export class ChacaSchema<K = any, T = any> {
     }
   }
 
+  private validateKeyField(schema: KeyField): KeyFieldResolver {
+    const fieldType = schema.getFieldType();
+
+    let type: KeyFieldResolverProps;
+    if (fieldType instanceof SchemaField) {
+      type = new SchemaFieldResolver(fieldType);
+    } else if (fieldType instanceof RefField) {
+      type = new RefFieldResolver(fieldType.getRefField());
+    } else {
+      throw new ChacaError(`Incorrect type for the key schema`);
+    }
+
+    return new KeyFieldResolver(type);
+  }
+
   private validateType(
     key: keyof T,
-    type: ChacaSchema<T[keyof T]> | SchemaField<T[keyof T], any>,
-  ): ChacaSchema<T[keyof T]> | SchemaField<T[keyof T], any> {
-    if (type instanceof ChacaSchema || type instanceof SchemaField) {
-      return type;
-    } else throw new ChacaError(`Invalid type for key ${String(key)}`);
+    type: ChacaSchema<T[keyof T]> | SchemaField<T[keyof T], any> | RefField,
+  ): IResolver {
+    if (type instanceof ChacaSchema) {
+      return new MixedFieldResolver(type);
+    } else if (type instanceof RefField) {
+      return new RefFieldResolver(type.getRefField());
+    } else if (type instanceof SchemaField) {
+      return new SchemaFieldResolver(type);
+    } else {
+      throw new ChacaError(`Invalid type for key ${String(key)}`);
+    }
   }
 
   private validateEnum(key: keyof T, array: T[keyof T][]): T[keyof T][] {

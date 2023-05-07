@@ -29,12 +29,12 @@ import {
   FieldRefInputConfig,
   FieldToRef,
   FieldToRefObject,
+  RefField,
   RefFieldWhere,
-  RefFieldResolver,
-} from "./core/classes/Resolvers/RefFieldResolver/RefFieldResolver.js";
+} from "./core/classes/RefField/RefField.js";
 
 import { SequentialField } from "./core/classes/SequentialField/SequentialField.js";
-import { KeyField } from "./core/classes/KeyField/KeyField.js";
+import { KeyField, KeyFieldProps } from "./core/classes/KeyField/KeyField.js";
 
 import { ToSQL, ToSQLConfig } from "./core/helpers/ToSQL/ToSQL.js";
 
@@ -77,7 +77,7 @@ const Chaca = {
    * {field: chaca.ref('Schema.fieldToRef')}
    */
   ref(fieldToRef: FieldToRef, config?: FieldRefInputConfig) {
-    return new RefFieldResolver(fieldToRef, config);
+    return new RefField(fieldToRef, config);
   },
 
   /**
@@ -95,7 +95,7 @@ const Chaca = {
     return new SequentialField(valuesArray);
   },
 
-  key<A = any>(schemaField: SchemaField<string | number, A>) {
+  key<A = any>(schemaField: KeyFieldProps<A>) {
     return new KeyField<A>(schemaField);
   },
 
