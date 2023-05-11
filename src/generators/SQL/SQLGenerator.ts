@@ -17,12 +17,15 @@ import {
   SQLNull,
   SQLArray,
   SQLDocumentTree,
-  SQLTable,
   SQLType,
   SQLPrimaryKey,
   SQLForengKey,
-  SQLTableColumn,
-} from "./classes/index.js";
+} from "./classes/dataSQLTypes/index.js";
+import {
+  SQLForiegnKeyDefinition,
+  SQLPrimaryKeyDefinition,
+} from "./classes/definitionTypes/index.js";
+import { SQLTable, SQLTableColumn } from "./classes/table/index.js";
 import { ColumnVariation } from "./interfaces/sqlTable.interface.js";
 import { createPrimaryKeyNode } from "./utils/createPrimaryKey.js";
 import fs from "fs";
@@ -215,7 +218,7 @@ export class SQLGenerator extends Generator {
       if (foreingKeys.length) {
         foreingKeys.forEach((f, index) => {
           const [tableRef, columnRef] = (
-            f.getColumnType() as SQLForengKey
+            f.getColumnType() as SQLForiegnKeyDefinition
           ).refersTo.split(".");
 
           code += `\tFOREIGN KEY (${f.columnName}) REFERENCES ${tableRef} (${columnRef})`;
@@ -289,10 +292,10 @@ export class SQLGenerator extends Generator {
                 const fieldType = rObj.type;
 
                 if (fieldType instanceof KeyFieldResolver) {
-                  const saveColumn = {
+                  const saveColumn: ColumnVariation = {
                     isNull: false,
                     key: fieldName,
-                    newType: new SQLPrimaryKey(new SQLNull()),
+                    newType: new SQLPrimaryKeyDefinition(fieldType.fieldType),
                   };
 
                   if (fieldType.fieldType instanceof RefFieldResolver) {

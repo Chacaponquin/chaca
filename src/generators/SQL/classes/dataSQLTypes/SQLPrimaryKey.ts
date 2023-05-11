@@ -10,10 +10,6 @@ export class SQLPrimaryKey extends SQLTypeWithDefinition {
     return otherType instanceof SQLPrimaryKey;
   }
 
-  public getSQLDefinition(): string {
-    return `${this.value.getSQLDefinition()}`;
-  }
-
   public getSQLValue(): string {
     return `${this.value.getSQLValue()}`;
   }

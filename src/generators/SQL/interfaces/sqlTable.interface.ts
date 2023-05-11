@@ -1,7 +1,7 @@
-import { SQLTypeWithDefinition } from "../classes/SQLTypeWithDefinition.js";
+import { SQLDefinition } from "../classes/definitionTypes/index.js";
 
 export type ColumnVariation = {
   key: string;
-  newType: SQLTypeWithDefinition;
+  newType: SQLDefinition;
   isNull: boolean;
 };

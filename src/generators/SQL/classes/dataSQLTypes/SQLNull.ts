@@ -8,10 +8,6 @@ export class SQLNull extends SQLTypeWithDefinition {
     super();
   }
 
-  public getSQLDefinition(): string {
-    return "NULL";
-  }
-
   public equal(otherType: SQLType): boolean {
     return otherType instanceof SQLNull;
   }

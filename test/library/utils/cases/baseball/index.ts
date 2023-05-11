@@ -25,7 +25,7 @@ export const BASEBALL_SCHEMAS = [
   { name: "Stadium", documents: PROVINCES.length, schema: STADIUM_SCHEMA },
   { name: "Team", documents: PROVINCES.length, schema: TEAM_SCHEMA },
   { name: "TeamMember", documents: 3000, schema: TEAM_MEMBER_SCHEMA },
-  { name: "Player", documents: 3000, schema: PLAYER_SCHEMA },
+  { name: "Player", documents: 2500, schema: PLAYER_SCHEMA },
   { name: "Coach", documents: 100, schema: COACH_SCHEMA },
   { name: "Pitcher", documents: 200, schema: PITCHER_SCHEMA },
   { name: "Batter", documents: 1000, schema: BATTER_SCHEMA },

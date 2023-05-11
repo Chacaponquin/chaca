@@ -13,10 +13,6 @@ export class SQLForengKey extends SQLTypeWithDefinition {
     return otherType instanceof SQLForengKey;
   }
 
-  public getSQLDefinition(): string {
-    return `${this.value.getSQLDefinition()}`;
-  }
-
   public getSQLValue(): string {
     return `${this.value.getSQLValue()}`;
   }

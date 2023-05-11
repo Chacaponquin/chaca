@@ -8,11 +8,9 @@ import { SQLNode } from "./SQLNode.js";
 import { SQLType } from "./SQLType.js";
 import { SQLArray } from "./SQLArray.js";
 import { SQLDocumentTree } from "./SQLDocumentTree.js";
-import { SQLTable } from "./SQLTable.js";
-import { SQLTableColumn } from "./SQLTableColumn.js";
 import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
 import { SQLForengKey } from "./SQLForengKey.js";
-import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
+import { SQLTypeWithDefinition } from "../definitionTypes/SQLTypeWithDefinition.js";
 
 export {
   SQLObject,
@@ -25,8 +23,6 @@ export {
   SQLNull,
   SQLArray,
   SQLDocumentTree,
-  SQLTable,
-  SQLTableColumn,
   SQLPrimaryKey,
   SQLForengKey,
   SQLTypeWithDefinition,

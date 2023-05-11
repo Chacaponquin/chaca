@@ -10,10 +10,6 @@ export class SQLDate extends SQLTypeWithDefinition {
     return otherType instanceof SQLDate;
   }
 
-  public getSQLDefinition(): string {
-    return "DATE";
-  }
-
   public getSQLValue(): string {
     return `'${this.value.toISOString().slice(0, 10)}'`;
   }

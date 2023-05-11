@@ -10,14 +10,6 @@ export class SQLNumber extends SQLTypeWithDefinition {
     return otherType instanceof SQLNumber;
   }
 
-  public getSQLDefinition(): string {
-    if (Number.isInteger(this.value)) {
-      return "INT";
-    } else {
-      return "DOUBLE PRECISION";
-    }
-  }
-
   public getSQLValue(): string {
     return `${this.value}`;
   }

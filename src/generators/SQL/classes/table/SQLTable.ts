@@ -1,6 +1,6 @@
 import { SQLTableColumn } from "./SQLTableColumn.js";
-import { ColumnVariation } from "../interfaces/sqlTable.interface.js";
-import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
+import { ColumnVariation } from "../../interfaces/sqlTable.interface.js";
+import { SQLPrimaryKey } from "../dataSQLTypes/SQLPrimaryKey.js";
 
 export class SQLTable {
   private columns: Array<SQLTableColumn> = [];

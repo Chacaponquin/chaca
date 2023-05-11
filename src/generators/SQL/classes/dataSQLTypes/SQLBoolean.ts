@@ -10,10 +10,6 @@ export class SQLBoolean extends SQLTypeWithDefinition {
     return otherType instanceof SQLBoolean;
   }
 
-  public getSQLDefinition(): string {
-    return "BOOLEAN";
-  }
-
   public getSQLValue(): string {
     if (this.value) {
       return "TRUE";

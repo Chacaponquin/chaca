@@ -1,6 +1,6 @@
-import { ChacaError } from "../../../errors/ChacaError.js";
+import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SQLNode } from "./SQLNode.js";
-import { SQLTable } from "./SQLTable.js";
+import { SQLTable } from "../table/SQLTable.js";
 
 export class SQLDocumentTree {
   private nodes: Array<SQLNode> = [];

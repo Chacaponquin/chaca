@@ -1,6 +1,6 @@
 import { SQLNode } from "./SQLNode.js";
-import { SQLTable } from "./SQLTable.js";
-import { SQLTableColumn } from "./SQLTableColumn.js";
+import { SQLTable } from "../table/SQLTable.js";
+import { SQLTableColumn } from "../table/SQLTableColumn.js";
 import { SQLType } from "./SQLType.js";
 import { SQLArray } from "./SQLArray.js";
 

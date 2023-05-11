@@ -1,7 +1,7 @@
-import { createPrimaryKey } from "../utils/createPrimaryKey.js";
+import { createPrimaryKey } from "../../utils/createPrimaryKey.js";
 import { SQLNull } from "./SQLNull.js";
-import { SQLTable } from "./SQLTable.js";
-import { SQLTableColumn } from "./SQLTableColumn.js";
+import { SQLTable } from "../table/SQLTable.js";
+import { SQLTableColumn } from "../table/SQLTableColumn.js";
 import { SQLType } from "./SQLType.js";
 
 export class SQLArray extends SQLType {

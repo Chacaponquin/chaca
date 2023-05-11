@@ -10,11 +10,7 @@ export class SQLString extends SQLTypeWithDefinition {
     return otherType instanceof SQLString;
   }
 
-  public getSQLDefinition(): string {
-    return "VARCHAR(255)";
-  }
-
-  getSQLValue(): string {
+  public getSQLValue(): string {
     return `'${this.value}'`;
   }
 }
