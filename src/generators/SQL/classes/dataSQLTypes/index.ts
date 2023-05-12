@@ -10,7 +10,7 @@ import { SQLArray } from "./SQLArray.js";
 import { SQLDocumentTree } from "./SQLDocumentTree.js";
 import { SQLPrimaryKey } from "./SQLPrimaryKey.js";
 import { SQLForengKey } from "./SQLForengKey.js";
-import { SQLTypeWithDefinition } from "../definitionTypes/SQLTypeWithDefinition.js";
+import { SQLTypeWithDefinition } from "./SQLTypeWithDefinition.js";
 
 export {
   SQLObject,

@@ -2,8 +2,10 @@ import { ChacaError } from "../../../../errors/ChacaError.js";
 import {
   SQLBoolean,
   SQLDate,
+  SQLForengKey,
   SQLNull,
   SQLNumber,
+  SQLPrimaryKey,
   SQLString,
 } from "../dataSQLTypes/index.js";
 import { SQLTypeWithDefinition } from "../dataSQLTypes/SQLTypeWithDefinition.js";
@@ -28,8 +30,15 @@ export abstract class SQLDefinition {
       }
     } else if (value instanceof SQLBoolean) {
       return new SQLBooleanDefinition();
+    } else if (value instanceof SQLPrimaryKey) {
+      return new SQLPrimaryKeyDefinition(this.getTypeFromValue(value.value));
+    } else if (value instanceof SQLForengKey) {
+      return new SQLForiegnKeyDefinition(
+        this.getTypeFromValue(value.value),
+        value.refersTo,
+      );
     } else {
-      throw new ChacaError(`This has not sql definition`);
+      throw new ChacaError(`This value ${value} has not sql definition`);
     }
   }
 }
@@ -82,16 +91,19 @@ export class SQLPrimaryKeyDefinition extends SQLDefinition {
   }
 
   public getSQLDefinition(): string {
-    return `PRIMARY KEY`;
+    return `${this.fieldType.getSQLDefinition()}`;
   }
 }
 
 export class SQLForiegnKeyDefinition extends SQLDefinition {
-  constructor(private fieldType: SQLDefinition) {
+  constructor(
+    public readonly fieldType: SQLDefinition,
+    public readonly refersTo: string,
+  ) {
     super();
   }
 
   public getSQLDefinition(): string {
-    return `FOREIGN KEY`;
+    return `${this.fieldType.getSQLDefinition()}`;
   }
 }

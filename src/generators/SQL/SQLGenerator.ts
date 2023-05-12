@@ -1,6 +1,8 @@
+import { ChacaSchema } from "../../core/classes/ChacaSchema/ChacaSchema.js";
 import {
   KeyFieldResolver,
   RefFieldResolver,
+  SchemaFieldResolver,
 } from "../../core/classes/Resolvers/index.js";
 import { SchemaResolver } from "../../core/classes/SchemaResolver.js";
 import { FileConfig } from "../../core/interfaces/export.interface.js";
@@ -18,15 +20,12 @@ import {
   SQLArray,
   SQLDocumentTree,
   SQLType,
-  SQLPrimaryKey,
-  SQLForengKey,
 } from "./classes/dataSQLTypes/index.js";
 import {
   SQLForiegnKeyDefinition,
   SQLPrimaryKeyDefinition,
 } from "./classes/definitionTypes/index.js";
 import { SQLTable, SQLTableColumn } from "./classes/table/index.js";
-import { ColumnVariation } from "./interfaces/sqlTable.interface.js";
 import { createPrimaryKeyNode } from "./utils/createPrimaryKey.js";
 import fs from "fs";
 
@@ -178,9 +177,9 @@ export class SQLGenerator extends Generator {
       table.getColumns().forEach((column, index) => {
         const columnType = column.getColumnType();
 
-        if (columnType instanceof SQLPrimaryKey) {
+        if (columnType instanceof SQLPrimaryKeyDefinition) {
           primaryKeys.push(column);
-        } else if (columnType instanceof SQLForengKey) {
+        } else if (columnType instanceof SQLForiegnKeyDefinition) {
           foreingKeys.push(column);
         }
 
@@ -279,59 +278,70 @@ export class SQLGenerator extends Generator {
 
     Object.entries(data).forEach(([tableName, dataArray]) => {
       const documentTree = this.createData(tableName, dataArray, false);
+
+      // tablas pertenecientes a este schema
       const tables = this.createSQLTables(documentTree);
 
       resolvers.forEach((r) => {
         if (r.getSchemaName() === tableName) {
           const schemaToResolve = r.getSchemaToResolve();
-          const columnsToChange: Array<ColumnVariation> = [];
 
           Object.entries<ResolverObject>(schemaToResolve).forEach(
             ([fieldName, rObj]) => {
-              if (rObj.isArray === null) {
-                const fieldType = rObj.type;
+              if (
+                rObj.isArray === null &&
+                !(rObj.type instanceof ChacaSchema)
+              ) {
+                // buscar columna con ese nombre
+                const foundColumn = this.foundColumnByName(
+                  tables,
+                  tableName,
+                  fieldName,
+                );
 
-                if (fieldType instanceof KeyFieldResolver) {
-                  const saveColumn: ColumnVariation = {
-                    isNull: false,
-                    key: fieldName,
-                    newType: new SQLPrimaryKeyDefinition(fieldType.fieldType),
-                  };
+                if (foundColumn) {
+                  // tipo de dato declarado en el schema
+                  const fieldType = rObj.type;
 
-                  if (fieldType.fieldType instanceof RefFieldResolver) {
-                    saveColumn.newType = new SQLPrimaryKey(
-                      new SQLForengKey(
-                        new SQLNull(),
+                  // change if is a key field
+                  if (fieldType instanceof KeyFieldResolver) {
+                    if (fieldType.fieldType instanceof SchemaFieldResolver) {
+                      const newType = new SQLPrimaryKeyDefinition(
+                        foundColumn.getColumnType(),
+                      );
+
+                      foundColumn.changeColumnType(newType);
+                    } else if (
+                      fieldType.fieldType instanceof RefFieldResolver
+                    ) {
+                      const foreignKeyType = new SQLForiegnKeyDefinition(
+                        foundColumn.getColumnType(),
                         fieldType.fieldType.refField.refField,
-                      ),
+                      );
+
+                      const newType = new SQLPrimaryKeyDefinition(
+                        foreignKeyType,
+                      );
+
+                      foundColumn.changeColumnType(newType);
+                    }
+                  } else if (fieldType instanceof RefFieldResolver) {
+                    const foreignKeyType = new SQLForiegnKeyDefinition(
+                      foundColumn.getColumnType(),
+                      fieldType.refField.refField,
                     );
+
+                    foundColumn.changeColumnType(foreignKeyType);
                   }
 
+                  // change if is null
                   if (rObj.posibleNull > 0) {
-                    saveColumn.isNull = true;
+                    foundColumn.changeIsNull();
                   }
-
-                  columnsToChange.push(saveColumn);
-                }
-
-                if (fieldType instanceof RefFieldResolver) {
-                  const fieldToRef = fieldType.refField.refField.split(".");
-
-                  columnsToChange.push({
-                    isNull: false,
-                    key: fieldName,
-                    newType: new SQLForengKey(
-                      new SQLNull(),
-                      fieldToRef.slice(0, 2).join("."),
-                    ),
-                  });
                 }
               }
             },
           );
-
-          // change columns
-          tables.forEach((t) => t.changeColumnsTypes(columnsToChange));
         }
       });
 
@@ -346,5 +356,27 @@ export class SQLGenerator extends Generator {
     );
 
     return this.route;
+  }
+
+  private foundColumnByName(
+    tables: Array<SQLTable>,
+    tableName: string,
+    columnName: string,
+  ): SQLTableColumn | null {
+    let found: SQLTableColumn | null = null;
+
+    const foundTable = tables.find((t) => t.tableName === tableName);
+
+    if (foundTable) {
+      const foundColumn = foundTable
+        .getColumns()
+        .find((c) => c.columnName === columnName);
+
+      if (foundColumn) {
+        found = foundColumn;
+      }
+    }
+
+    return found;
   }
 }

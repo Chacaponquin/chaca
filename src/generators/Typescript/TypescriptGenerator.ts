@@ -35,6 +35,6 @@ export class TypescriptGenerator extends Generator {
   private createInterfaceCode(): string {
     return ObjectInterface.getObjectsToCreate()
       .map((i) => `${i.getInterfaceCode()}`)
-      .join("\n");
+      .join("\n\n");
   }
 }

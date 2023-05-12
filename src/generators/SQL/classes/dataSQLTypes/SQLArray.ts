@@ -50,7 +50,7 @@ export class SQLArray extends SQLType {
     });
 
     parentIDColumn.insertAllRowValues(
-      parentTable.getTablePrimaryKey().getRows(),
+      parentTable.getTablePrimaryKeyColumn().getRows(),
     );
 
     newArrayTable.insertColumn(idColumn);

@@ -2,7 +2,6 @@ import { SQLType } from "../dataSQLTypes/SQLType.js";
 import { SQLTypeWithDefinition } from "../dataSQLTypes/SQLTypeWithDefinition.js";
 import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SQLNull } from "../dataSQLTypes/SQLNull.js";
-import { ColumnVariation } from "../../interfaces/sqlTable.interface.js";
 import { SQLDefinition, SQLNullDefinition } from "../definitionTypes/index.js";
 
 export class SQLTableColumn {
@@ -30,29 +29,6 @@ export class SQLTableColumn {
 
   public changeColumnType(columnType: SQLDefinition) {
     this.columnType = columnType;
-  }
-
-  public changeColumnByVariation(variation: ColumnVariation): void {
-    if (variation.newType instanceof SQLPrimaryKey) {
-      const pkey = SQLDefinition.getTypeFromValue(this.values[0]);
-
-      const newType = new SQLPrimaryKey(
-        this.columnType as SQLTypeWithDefinitio,
-      );
-
-      this.changeColumnType(newType);
-    } else if (variation.newType instanceof SQLForengKey) {
-      const newType = new SQLForengKey(
-        this.columnType as SQLTypeWithDefinition,
-        variation.newType.refersTo,
-      );
-
-      this.changeColumnType(newType);
-    }
-
-    if (variation.isNull) {
-      this.changeIsNull();
-    }
   }
 
   public couldBeNull() {

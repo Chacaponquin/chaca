@@ -47,7 +47,7 @@ export class SQLObject extends SQLType {
       this.createForengColumnName(fieldName),
     );
 
-    const externalIDList = newTable.getTablePrimaryKey().getRows();
+    const externalIDList = newTable.getTablePrimaryKeyColumn().getRows();
     newForengKeyColumn.insertAllRowValues(externalIDList);
 
     return newForengKeyColumn;
