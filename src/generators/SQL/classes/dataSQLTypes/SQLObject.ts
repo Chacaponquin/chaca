@@ -33,7 +33,12 @@ export class SQLObject extends SQLType {
 
         newTable.insertColumn(newColumn);
       } else if (objectValueType instanceof SQLArray) {
-        objectValueType.createTableColumn(o.getFieldName(), newTable, tables);
+        objectValueType.createTableColumn(
+          o.getFieldName(),
+          newTable,
+          tables,
+          objectValueType.getValues() as Array<SQLArray>,
+        );
       } else {
         const newColumn = new SQLTableColumn(o.getFieldName());
         newTable.insertColumn(newColumn);

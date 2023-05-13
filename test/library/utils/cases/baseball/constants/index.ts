@@ -36,3 +36,6 @@ export const PROVINCES = [
   "Santic Spiritus",
   "Ciego de Avila",
 ];
+
+export const TOTAL_PLAYERS = 2500;
+export const TOTAL_COACHS = 1000;

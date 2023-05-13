@@ -1,4 +1,8 @@
 import { chaca, schemas } from "../../../../../../src";
+import { TOTAL_COACHS, TOTAL_PLAYERS } from "../constants";
+
+const ARRAY_PLAYERS = new Array(TOTAL_PLAYERS).fill(0).map(() => "P");
+const ARRAY_COACHS = new Array(TOTAL_COACHS).fill(0).map(() => "C");
 
 export const TEAM_MEMBER_SCHEMA = chaca.defineSchema({
   member_id: chaca.key(schemas.id.uuid()),
@@ -6,15 +10,30 @@ export const TEAM_MEMBER_SCHEMA = chaca.defineSchema({
   team_id: chaca.ref("Team.team_id"),
   member_number: schemas.dataType.int({ min: 1, max: 99 }),
   years_in_team: schemas.dataType.int({ min: 1, max: 20 }),
+  member_type: chaca.sequential([...ARRAY_PLAYERS, ...ARRAY_COACHS]),
 });
 
 export const PLAYER_SCHEMA = chaca.defineSchema({
-  member_id: chaca.key(chaca.ref("TeamMember.member_id", { unique: true })),
+  member_id: chaca.key(
+    chaca.ref("TeamMember.member_id", {
+      unique: true,
+      where: (fields) => {
+        return fields.member_type === "P";
+      },
+    }),
+  ),
   position_id: chaca.ref("Position.position_id"),
 });
 
 export const COACH_SCHEMA = chaca.defineSchema({
-  member_id: chaca.key(chaca.ref("TeamMember.member_id")),
+  member_id: chaca.key(
+    chaca.ref("TeamMember.member_id", {
+      unique: true,
+      where: (fields) => {
+        return fields.member_type === "C";
+      },
+    }),
+  ),
   experience_year: schemas.dataType.int({ min: 1, max: 15 }),
 });
 

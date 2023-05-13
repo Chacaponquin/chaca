@@ -4,6 +4,30 @@ export const GAME_SCHEMA = chaca.defineSchema({
   game_id: chaca.key(schemas.id.uuid()),
   team_home_club: chaca.ref("Team.team_id"),
   team_visitant: chaca.ref("Team.team_id"),
+  winner: (fields) => {
+    return chaca.utils.oneOfArray([
+      fields.team_home_club,
+      fields.team_visitant,
+    ]);
+  },
+  runs_home_club: (fields) => {
+    if (fields.winner === fields.team_home_club) {
+      return schemas.dataType.int().getValue({ min: 1, max: 15 });
+    } else {
+      return schemas.dataType.int().getValue({ min: 0, max: 5 });
+    }
+  },
+  runs_visitant: (fields) => {
+    if (fields.winner === fields.team_home_club) {
+      return schemas.dataType
+        .int()
+        .getValue({ min: 0, max: fields.runs_home_club });
+    } else {
+      return schemas.dataType
+        .int()
+        .getValue({ min: fields.runs_home_club, max: 15 });
+    }
+  },
   game_date: (fields, schemasStore) => {
     const phases = schemasStore.getValue("Phase");
 
@@ -17,12 +41,6 @@ export const GAME_SCHEMA = chaca.defineSchema({
     }
 
     return schemas.date.past().getValue();
-  },
-  winner: (fields) => {
-    return chaca.utils.oneOfArray([
-      fields.team_home_club,
-      fields.team_visitant,
-    ]);
   },
   phase_id: chaca.ref("Phase.phase_id"),
   total_audience: (fields, schemaStore) => {

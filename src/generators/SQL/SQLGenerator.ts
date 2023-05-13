@@ -175,6 +175,10 @@ export class SQLGenerator extends Generator {
 
       // create all values definition
       table.getColumns().forEach((column, index) => {
+        /*if (table.tableName === "directorsInf") {
+          console.log(table.getColumns().map((c) => c));
+        }*/
+
         const columnType = column.getColumnType();
 
         if (columnType instanceof SQLPrimaryKeyDefinition) {

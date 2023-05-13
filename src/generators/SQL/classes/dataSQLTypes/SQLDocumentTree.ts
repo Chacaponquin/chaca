@@ -30,7 +30,7 @@ export class SQLDocumentTree {
     });
   }
 
-  public searchAndPushValue(node: SQLNode): void {
+  private searchAndPushValue(node: SQLNode): void {
     let found: SQLNode | null = null;
 
     for (let i = 0; i < this.nodes.length && !found; i++) {

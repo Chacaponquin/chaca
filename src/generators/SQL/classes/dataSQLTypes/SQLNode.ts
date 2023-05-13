@@ -33,7 +33,12 @@ export class SQLNode {
       const newColumn = nodeType.createTableColumn(this.getFieldName(), tables);
       parentTable.insertColumn(newColumn);
     } else if (nodeType instanceof SQLArray) {
-      nodeType.createTableColumn(this.getFieldName(), parentTable, tables);
+      nodeType.createTableColumn(
+        this.getFieldName(),
+        parentTable,
+        tables,
+        this.values as Array<SQLArray>,
+      );
     } else {
       const newColumn = new SQLTableColumn(this.getFieldName());
       parentTable.insertColumn(newColumn);

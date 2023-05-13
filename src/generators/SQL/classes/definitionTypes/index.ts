@@ -12,10 +12,15 @@ import { SQLTypeWithDefinition } from "../dataSQLTypes/SQLTypeWithDefinition.js"
 
 export abstract class SQLDefinition {
   public abstract getSQLDefinition(): string;
+  public abstract equal(otherType: SQLDefinition): boolean;
 
   public static getTypeFromValue(value: SQLTypeWithDefinition): SQLDefinition {
     if (value instanceof SQLString) {
-      return new SQLStringDefinition();
+      if (value.value.length > 255) {
+        return new SQLTextDefinition();
+      } else {
+        return new SQLStringDefinition();
+      }
     } else if (value instanceof SQLDate) {
       return new SQLDateDefinition();
     } else if (value instanceof SQLNull) {
@@ -47,11 +52,19 @@ export class SQLStringDefinition extends SQLDefinition {
   public getSQLDefinition(): string {
     return "VARCHAR(255)";
   }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLStringDefinition;
+  }
 }
 
 export class SQLTextDefinition extends SQLDefinition {
   public getSQLDefinition(): string {
     return "TEXT";
+  }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLTextDefinition;
   }
 }
 
@@ -59,11 +72,19 @@ export class SQLIntegerDefinition extends SQLDefinition {
   public getSQLDefinition(): string {
     return "INTEGER";
   }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLIntegerDefinition;
+  }
 }
 
 export class SQLDoubleNumberDefinition extends SQLDefinition {
   public getSQLDefinition(): string {
     return "DOUBLE PRECISION";
+  }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLDoubleNumberDefinition;
   }
 }
 
@@ -71,11 +92,19 @@ export class SQLDateDefinition extends SQLDefinition {
   public getSQLDefinition(): string {
     return "DATE";
   }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLDateDefinition;
+  }
 }
 
 export class SQLBooleanDefinition extends SQLDefinition {
   public getSQLDefinition(): string {
     return "BOOLEAN";
+  }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLBooleanDefinition;
   }
 }
 
@@ -83,11 +112,19 @@ export class SQLNullDefinition extends SQLDefinition {
   public getSQLDefinition(): string {
     return "NULL";
   }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLNullDefinition;
+  }
 }
 
 export class SQLPrimaryKeyDefinition extends SQLDefinition {
   constructor(public readonly fieldType: SQLDefinition) {
     super();
+  }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLPrimaryKeyDefinition;
   }
 
   public getSQLDefinition(): string {
@@ -105,5 +142,9 @@ export class SQLForiegnKeyDefinition extends SQLDefinition {
 
   public getSQLDefinition(): string {
     return `${this.fieldType.getSQLDefinition()}`;
+  }
+
+  public equal(otherType: SQLDefinition): boolean {
+    return otherType instanceof SQLForiegnKeyDefinition;
   }
 }
