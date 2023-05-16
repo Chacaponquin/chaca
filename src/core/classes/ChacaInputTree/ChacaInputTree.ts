@@ -10,6 +10,7 @@ import {
   MixedFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
+  SequenceFieldResolver,
 } from "../Resolvers/index.js";
 import { ChacaSchema } from "../ChacaSchema/ChacaSchema.js";
 import {
@@ -20,6 +21,7 @@ import {
   MixedValueNode,
   RefValueNode,
   SchemaValueNode,
+  SequenceValueNode,
   SequentialValueNode,
 } from "./classes/index.js";
 import { orderFieldsByPriority } from "./utils/treeUtils.js";
@@ -93,6 +95,8 @@ export class ChacaInputTree<T> {
         actualRoute,
         object.type.valuesArray,
       );
+    } else if (object.type instanceof SequenceFieldResolver) {
+      returnNode = new SequenceValueNode(actualRoute, object.type.getConfig());
     } else if (object.type instanceof KeyFieldResolver) {
       if (object.type.fieldType instanceof SchemaFieldResolver) {
         const schemaValueNode = new SchemaValueNode(
@@ -102,6 +106,13 @@ export class ChacaInputTree<T> {
             posibleNull: 0,
           },
           object.type.fieldType.schema,
+        );
+
+        returnNode = new KeyValueNode(actualRoute, schemaValueNode);
+      } else if (object.type.fieldType instanceof SequenceFieldResolver) {
+        const schemaValueNode = new SequenceValueNode(
+          actualRoute,
+          object.type.fieldType.getConfig(),
         );
 
         returnNode = new KeyValueNode(actualRoute, schemaValueNode);
@@ -122,6 +133,7 @@ export class ChacaInputTree<T> {
         `The field ${actualRoute.join(".")} have an incorrect resolver`,
       );
     }
+
     return returnNode;
   }
 

@@ -4,9 +4,14 @@ import { SequentialField } from "../classes/SequentialField/SequentialField.js";
 import { KeyField } from "../classes/KeyField/KeyField.js";
 import { SchemaStore } from "../classes/SchemasStore/SchemaStore.js";
 import { RefField } from "../classes/RefField/RefField.js";
+import { SequenceField } from "../classes/SequenceField/SequenceField.js";
 
 export type SchemaInput<T> = {
-  [key in keyof T]: FieldSchemaConfig<T[key]> | SequentialField | KeyField;
+  [key in keyof T]:
+    | FieldSchemaConfig<T[key]>
+    | SequentialField
+    | KeyField
+    | SequenceField;
 };
 
 export type SchemaToResolve<T> = {

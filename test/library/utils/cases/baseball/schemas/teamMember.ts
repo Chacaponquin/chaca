@@ -5,7 +5,7 @@ const ARRAY_PLAYERS = new Array(TOTAL_PLAYERS).fill(0).map(() => "P");
 const ARRAY_COACHS = new Array(TOTAL_COACHS).fill(0).map(() => "C");
 
 export const TEAM_MEMBER_SCHEMA = chaca.defineSchema({
-  member_id: chaca.key(schemas.id.uuid()),
+  member_id: chaca.key(chaca.sequence()),
   member_name: schemas.person.fullName({ language: "es", sex: "male" }),
   team_id: chaca.ref("Team.team_id"),
   member_number: schemas.dataType.int({ min: 1, max: 99 }),

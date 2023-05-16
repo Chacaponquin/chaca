@@ -11,6 +11,7 @@ import {
   SchemaValueNode,
   KeyValueNode,
   SequentialValueNode,
+  SequenceValueNode,
 } from "./ChacaInputTree/classes/index.js";
 import { ChacaResultTree } from "./ChacaResultTree/ChacaResultTree.js";
 import {
@@ -281,7 +282,6 @@ export class SchemaResolver<K = any, T = any> {
       // en caso de ser un field sequential
       else if (field instanceof SequentialValueNode) {
         const value = field.getSequentialValue();
-
         return new SingleResultNode(field.getResultNodeConfig(), value);
       }
 
@@ -307,6 +307,14 @@ export class SchemaResolver<K = any, T = any> {
         return new SingleResultNode(
           field.getResultNodeConfig(),
           field.getValue(),
+        );
+      }
+
+      // en caso de ser un sequence
+      else if (field instanceof SequenceValueNode) {
+        return new SingleResultNode(
+          field.getResultNodeConfig(),
+          field.getNextValue(),
         );
       }
 

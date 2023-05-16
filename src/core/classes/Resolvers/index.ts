@@ -5,6 +5,7 @@ import { MixedFieldResolver } from "./MixedFieldResolver/MixedFieldResolver.js";
 import { RefFieldResolver } from "./RefFieldResolver/RefFieldResolver.js";
 import { SequentialFieldResolver } from "./SequentialFieldResolver/SequentialFieldResolver.js";
 import { KeyFieldResolver } from "./KeyFieldResolver/KeyFieldResolver.js";
+import { SequenceFieldResolver } from "./SequenceFieldResolver/SequenceFieldResolver.js";
 
 export {
   CustomFieldResolver,
@@ -14,4 +15,5 @@ export {
   RefFieldResolver,
   SequentialFieldResolver,
   KeyFieldResolver,
+  SequenceFieldResolver,
 };

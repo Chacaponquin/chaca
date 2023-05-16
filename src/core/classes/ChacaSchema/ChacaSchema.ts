@@ -22,9 +22,11 @@ import {
   MixedFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
+  SequenceFieldResolver,
   SequentialFieldResolver,
 } from "../Resolvers/index.js";
 import { SchemaResolver } from "../SchemaResolver.js";
+import { SequenceField } from "../SequenceField/SequenceField.js";
 import { SequentialField } from "../SequentialField/SequentialField.js";
 
 export class ChacaSchema<K = any, T = any> {
@@ -70,7 +72,8 @@ export class ChacaSchema<K = any, T = any> {
         const schema = obj[key] as
           | FieldSchemaConfig<T[keyof T]>
           | SequentialField
-          | KeyField;
+          | KeyField
+          | SequenceField;
 
         if (schema instanceof ChacaSchema) {
           schemaToSave = {
@@ -118,6 +121,11 @@ export class ChacaSchema<K = any, T = any> {
               type: this.validateKeyField(schema),
               ...defaultConfig,
             },
+          };
+        } else if (schema instanceof SequenceField) {
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: { type: new SequenceFieldResolver(schema.getConfig()) },
           };
         } else {
           if (typeof schema === "object" && schema !== null) {
@@ -200,6 +208,8 @@ export class ChacaSchema<K = any, T = any> {
       type = new SchemaFieldResolver(fieldType);
     } else if (fieldType instanceof RefField) {
       type = new RefFieldResolver(fieldType.getRefField());
+    } else if (fieldType instanceof SequenceField) {
+      type = new SequenceFieldResolver(fieldType.getConfig());
     } else {
       throw new ChacaError(`Incorrect type for the key schema`);
     }

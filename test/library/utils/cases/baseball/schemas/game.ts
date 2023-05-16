@@ -1,7 +1,7 @@
 import { chaca, schemas } from "../../../../../../src";
 
 export const GAME_SCHEMA = chaca.defineSchema({
-  game_id: chaca.key(schemas.id.uuid()),
+  game_id: chaca.key(chaca.sequence()),
   team_home_club: chaca.ref("Team.team_id"),
   team_visitant: chaca.ref("Team.team_id"),
   winner: (fields) => {

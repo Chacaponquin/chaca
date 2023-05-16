@@ -37,6 +37,7 @@ import { SequentialField } from "./core/classes/SequentialField/SequentialField.
 import { KeyField, KeyFieldProps } from "./core/classes/KeyField/KeyField.js";
 
 import { ToSQL, ToSQLConfig } from "./core/helpers/ToSQL/ToSQL.js";
+import { SequenceField } from "./core/classes/SequenceField/SequenceField.js";
 
 const Chaca = {
   Schema: ChacaSchema,
@@ -93,6 +94,10 @@ const Chaca = {
    */
   sequential<K = any>(valuesArray: Array<K>) {
     return new SequentialField(valuesArray);
+  },
+
+  sequence() {
+    return new SequenceField();
   },
 
   key<A = any>(schemaField: KeyFieldProps<A>) {
