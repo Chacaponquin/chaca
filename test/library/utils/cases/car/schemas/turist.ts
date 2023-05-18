@@ -1,7 +1,11 @@
 import { chaca, schemas } from "../../../../../../src";
 
+const passport = chaca.defineSchemaField("passport", () => {
+  return chaca.utils.replaceSymbols("???######");
+});
+
 export const TURIST_SCHEMA = chaca.defineSchema({
-  passport: chaca.key(schemas.id.mongodbID()),
+  passport: chaca.key(passport()),
   name: schemas.person.fullName(),
   age: schemas.dataType.int({ min: 15, max: 80 }),
   sex: { enum: ["Male", "Woman"] },

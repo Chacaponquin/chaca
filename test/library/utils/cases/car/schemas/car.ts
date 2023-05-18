@@ -1,9 +1,14 @@
 import { chaca, schemas } from "../../../../../../src";
 
+const placa = chaca.defineSchemaField("plate", () => {
+  return chaca.utils.replaceSymbols("T######");
+});
+
 export const CAR_SCHEMA = chaca.defineSchema({
-  plate: chaca.key(schemas.id.mongodbID()),
+  plate: chaca.key(placa()),
   model_id: chaca.ref("Model.id"),
-  color: schemas.word.preposition(),
+  color: { enum: ["rojo", "negro", "blanco", "amarillo"] },
   cant_km: schemas.dataType.int({ min: 0, max: 15000 }),
-  situation: { enum: ["AVAILABLE", "WORKSHOP", "RENTED"] },
+  situation: chaca.ref("Situation.id"),
+  brand_id: chaca.ref("Brand.id"),
 });

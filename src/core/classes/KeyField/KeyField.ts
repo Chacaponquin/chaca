@@ -4,7 +4,7 @@ import { RefField } from "../RefField/RefField.js";
 import { SequenceField } from "../SequenceField/SequenceField.js";
 
 export type KeyFieldProps<A> =
-  | SchemaField<string | number, A>
+  | SchemaField<string | number | Date, A>
   | RefField
   | SequenceField;
 

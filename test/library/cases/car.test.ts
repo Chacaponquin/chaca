@@ -1,5 +1,5 @@
 import { chaca } from "../../../src";
-import { CAR_CASE_DATA } from "../utils/cases/car";
+import { CAR_CASE_DATA, CASE_SCHEMAS } from "../utils/cases/car";
 
 const EXPORT_ROUTE = "./data/cases/car";
 const FILE_NAME = "caseCar";
@@ -41,6 +41,15 @@ describe("# Car Case Test", () => {
         location: EXPORT_ROUTE,
         fileName: FILE_NAME + "Typescript",
         format: "typescript",
+      })
+      .then((s) => expect(typeof s).toBe("string"));
+  });
+
+  it("Export baseball case in SQL", () => {
+    chaca
+      .toSQL(CASE_SCHEMAS, {
+        fileName: FILE_NAME,
+        location: EXPORT_ROUTE,
       })
       .then((s) => expect(typeof s).toBe("string"));
   });

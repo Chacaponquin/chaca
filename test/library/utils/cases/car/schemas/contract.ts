@@ -1,14 +1,76 @@
 import { chaca, schemas } from "../../../../../../src";
 
 export const CONTRACT_SCHEMA = chaca.defineSchema({
-  id: chaca.key(schemas.id.uuid()),
-  car_plate: chaca.ref("Car.plate"),
+  car_plate: chaca.key(chaca.ref("Car.plate")),
   tourist_passport: chaca.ref("Turist.passport"),
-  start_date: schemas.date.past(),
-  finish_date: (fields) => {
-    return schemas.date.future().getValue({ refDate: fields.start_date });
+  start_date: chaca.key(schemas.date.past()),
+  end_date: (fields) => {
+    return schemas.date
+      .between()
+      .getValue({ from: fields.start_date, to: new Date() });
   },
-  pay_method: { enum: ["CREDIT", "CASH"] },
-  extension: schemas.dataType.int({ min: 0, max: 100 }),
-  dni_chofer: { type: chaca.ref("Driver.dni"), posibleNull: 50 }, // puede ser null
+  delivery_date: (fields) => {
+    return schemas.date
+      .between()
+      .getValue({ from: fields.start_date, to: new Date() });
+  },
+  pay_method_id: chaca.ref("Pay_Method.id"),
+  driver_dni: { type: chaca.ref("Driver.dni"), posibleNull: 50 },
+  end_km: (fields, store) => {
+    const allCars = store.getValue("Car");
+    const allContracts = store.getValue("Contract");
+
+    let found = null;
+    for (let i = 0; i < allContracts.length && !found; i++) {
+      const contract = allContracts[i];
+
+      if (contract.car_plate === fields.car_plate) {
+        if (contract.end_date.getTime() > fields.end_date.getTime()) {
+          found = contract;
+        }
+      }
+    }
+
+    if (!found) {
+      const foundCar = allCars.find((c) => c.plate === fields.car_plate);
+
+      if (foundCar) {
+        return foundCar.cant_km;
+      } else {
+        return schemas.dataType.int({ min: 0, max: 3000 }).getValue();
+      }
+    } else {
+      return schemas.dataType.int({ min: 0, max: 3000 }).getValue();
+    }
+  },
+  start_km: (fields, store) => {
+    const allContracts = store.getValue("Contract");
+
+    let founds = [] as Array<any>;
+    for (let i = 0; i < allContracts.length; i++) {
+      const contract = allContracts[i];
+
+      if (contract.car_plate === fields.car_plate) {
+        if (contract.delivery_date.getTime() < fields.start_date.getTime()) {
+          founds.push(contract);
+        }
+      }
+    }
+
+    if (founds.length) {
+      let ref = founds[0];
+
+      for (let i = 1; i < founds.length; i++) {
+        if (founds[i].delivaery_date.getTime() > ref.delivery_date.getTime()) {
+          ref = founds[i];
+        }
+      }
+
+      return schemas.dataType
+        .int({ min: ref.end_km, max: fields.end_km })
+        .getValue();
+    } else {
+      return schemas.dataType.int({ min: 0, max: fields.end_km }).getValue();
+    }
+  },
 });
