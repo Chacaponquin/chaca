@@ -1,78 +1,41 @@
 import { SQLType } from "../dataSQLTypes/SQLType.js";
-import { SQLTypeWithDefinition } from "../dataSQLTypes/SQLTypeWithDefinition.js";
 import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SQLNull } from "../dataSQLTypes/SQLNull.js";
-import {
-  SQLDefinition,
-  SQLNullDefinition,
-  SQLStringDefinition,
-  SQLTextDefinition,
-} from "../definitionTypes/index.js";
 
 export class SQLTableColumn {
-  private values: Array<SQLTypeWithDefinition> = [];
-  private isNull = false;
-  private columnType: SQLDefinition = new SQLNullDefinition();
+  private rows: Array<SQLType> = [];
+  private columnConfig = {
+    primaryKey: false,
+    foreignKey: false,
+    posibleNull: false,
+  };
 
   constructor(public readonly columnName: string) {}
 
-  public insertRowValue(value: SQLType): void {
-    if (value instanceof SQLTypeWithDefinition) {
-      // añadir valor a la columna
-      this.values.push(value);
-
-      // cambiar el tipo de la columna
-      const newType = SQLDefinition.getTypeFromValue(value);
-      this.changeColumnType(newType);
-
-      if (value instanceof SQLNull) {
-        this.changeIsNull();
-      }
+  public insertValue(value: SQLType) {
+    if (this.rows.length === 0) {
+      this.rows.push(value);
     } else {
-      throw new ChacaError(`This value ${value} has not SQL Definition`);
+      const firstType = this.rows[0];
+
+      if (firstType.equal(value)) {
+        this.rows.push(value);
+      } else if (value instanceof SQLNull) {
+        this.rows.push(value);
+        this.columnConfig.posibleNull = true;
+      } else {
+        throw new ChacaError(`Incorrect type for column ${this.columnName}`);
+      }
     }
   }
 
-  public changeColumnType(columnType: SQLDefinition) {
-    if (
-      !(
-        this.columnType instanceof SQLTextDefinition &&
-        columnType instanceof SQLStringDefinition
-      )
-    ) {
-      this.columnType = columnType;
+  public concatValues(otherColumn: SQLTableColumn): void {
+    for (const v of otherColumn.rows) {
+      this.rows.push(v);
     }
   }
 
-  public couldBeNull() {
-    return this.isNull;
-  }
-
-  public changeIsNull() {
-    this.isNull = true;
-  }
-
-  public insertAllRowValues(values: Array<SQLType>): void {
-    values.forEach((v) => {
-      this.insertRowValue(v);
-    });
-  }
-
-  public getColumnType(): SQLDefinition {
-    return this.columnType;
-  }
-
-  public getCantDocuments() {
-    return this.values.length;
-  }
-
-  public getValueByIndex(index: number): string {
-    const value = this.values[index];
-
-    return value.getSQLValue();
-  }
-
-  public getRows() {
-    return this.values;
+  public getColumnLenght(): number {
+    return this.rows.length;
   }
 }
