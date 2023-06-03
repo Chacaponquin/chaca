@@ -10,23 +10,24 @@ import { ResolverObject } from "../../core/interfaces/schema.interface.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { Generator } from "../Generator.js";
 import {
-  SQLObject,
   SQLBoolean,
   SQLDate,
   SQLNumber,
   SQLString,
-  SQLNode,
   SQLNull,
-  SQLArray,
-  SQLDocumentTree,
-  SQLType,
-} from "./classes/dataSQLTypes/index.js";
-import {
-  SQLForiegnKeyDefinition,
-  SQLPrimaryKeyDefinition,
-} from "./classes/definitionTypes/index.js";
+} from "./classes/sqlTypes/index.js";
 import { SQLTable, SQLTableColumn } from "./classes/table/index.js";
-import { createPrimaryKeyNode } from "./utils/createPrimaryKey.js";
+import {
+  ArrayType,
+  BooleanType,
+  DataType,
+  DateType,
+  NullType,
+  NumberType,
+  ObjectType,
+  StringType,
+} from "./classes/types/index.js";
+import { SQLNode } from "./classes/sqlTypes/SQLNode.js";
 import fs from "fs";
 
 export class SQLGenerator extends Generator {
@@ -48,17 +49,41 @@ export class SQLGenerator extends Generator {
     documentNode: SQLNode,
     parentTable: SQLTable,
     fieldName: string | null,
-    value: any,
+    value: DataType,
   ): void {
-    if (typeof value === "string") {
-      const type = new SQLString(value);
+    if (value instanceof StringType) {
+      const type = new SQLString(value.value);
 
       if (fieldName) {
         parentTable.addColumnValue(fieldName, type);
       } else {
         parentTable.addColumnValue(parentTable.tableName, type);
       }
-    } else if (typeof value === "undefined") {
+    } else if (value instanceof NumberType) {
+      const type = new SQLNumber(value.value);
+
+      if (fieldName) {
+        parentTable.addColumnValue(fieldName, type);
+      } else {
+        parentTable.addColumnValue(parentTable.tableName, type);
+      }
+    } else if (value instanceof BooleanType) {
+      const type = new SQLBoolean(value.value);
+
+      if (fieldName) {
+        parentTable.addColumnValue(fieldName, type);
+      } else {
+        parentTable.addColumnValue(parentTable.tableName, type);
+      }
+    } else if (value instanceof DateType) {
+      const type = new SQLDate(value.value);
+
+      if (fieldName) {
+        parentTable.addColumnValue(fieldName, type);
+      } else {
+        parentTable.addColumnValue(parentTable.tableName, type);
+      }
+    } else if (value instanceof NullType) {
       const type = new SQLNull();
 
       if (fieldName) {
@@ -66,83 +91,51 @@ export class SQLGenerator extends Generator {
       } else {
         parentTable.addColumnValue(parentTable.tableName, type);
       }
-    } else if (typeof value === "number") {
-      const type = new SQLNumber(value);
-
+    } else if (value instanceof ArrayType) {
       if (fieldName) {
-        parentTable.addColumnValue(fieldName, type);
-      } else {
-        parentTable.addColumnValue(parentTable.tableName, type);
-      }
-    } else if (typeof value === "boolean") {
-      const type = new SQLBoolean(value);
+        const arrayTable = new SQLTable(
+          this.createTableNameByParent(parentTable, fieldName),
+        );
+        documentNode.addTable(arrayTable);
 
+        value.getValues().forEach((v) => {
+          this.filterTypeByValue(documentNode, arrayTable, null, v);
+        });
+
+        const parentIDColumnName =
+          this.createArrayTableForeignKeyColumnName(parentTable);
+
+        for (let row = 0; row < arrayTable.getTableLenght(); row++) {
+          arrayTable.addColumnValue(
+            parentIDColumnName,
+            parentTable.getLastID(),
+          );
+        }
+
+        // change column config to foreing key and primary
+        arrayTable.changeColumnToForeignKey(parentIDColumnName);
+      } else {
+        value.getValues().forEach((v) => {
+          this.filterTypeByValue(documentNode, parentTable, null, v);
+        });
+      }
+    } else if (value instanceof ObjectType) {
       if (fieldName) {
-        parentTable.addColumnValue(fieldName, type);
+        const newTable = new SQLTable(
+          this.createTableNameByParent(parentTable, fieldName),
+        );
+        documentNode.addTable(newTable);
+
+        value.getKeys().forEach((k) => {
+          this.filterTypeByValue(documentNode, parentTable, k.key, k.dataType);
+        });
+
+        parentTable.addColumn(fieldName);
+        parentTable.addColumnValue(fieldName, newTable.getLastID());
       } else {
-        parentTable.addColumnValue(parentTable.tableName, type);
-      }
-    } else {
-      if (value instanceof Date) {
-        const type = new SQLDate(value);
-
-        if (fieldName) {
-          parentTable.addColumnValue(fieldName, type);
-        } else {
-          parentTable.addColumnValue(parentTable.tableName, type);
-        }
-      } else if (value === null) {
-        const type = new SQLNull();
-
-        if (fieldName) {
-          parentTable.addColumnValue(fieldName, type);
-        } else {
-          parentTable.addColumnValue(parentTable.tableName, type);
-        }
-      } else if (Array.isArray(value)) {
-        if (fieldName) {
-          const arrayTable = new SQLTable(
-            this.createTableNameByParent(parentTable, fieldName),
-          );
-          documentNode.addTable(arrayTable);
-
-          value.forEach((v) => {
-            this.filterTypeByValue(documentNode, arrayTable, null, v);
-          });
-
-          const parentIDColumnName =
-            this.createArrayTableForeignKeyColumnName(parentTable);
-          arrayTable.addColumn(parentIDColumnName);
-
-          for (let row = 0; row < arrayTable.getTableLenght(); row++) {
-            arrayTable.addColumnValue(
-              parentIDColumnName,
-              parentTable.getLastID(),
-            );
-          }
-        } else {
-          value.forEach((v) => {
-            this.filterTypeByValue(documentNode, parentTable, null, v);
-          });
-        }
-      } else {
-        if (fieldName) {
-          const newTable = new SQLTable(
-            this.createTableNameByParent(parentTable, fieldName),
-          );
-          documentNode.addTable(newTable);
-
-          Object.entries(value).forEach(([key, keyValue]) => {
-            this.filterTypeByValue(documentNode, parentTable, key, keyValue);
-          });
-
-          parentTable.addColumn(fieldName);
-          parentTable.addColumnValue(fieldName, newTable.getLastID());
-        } else {
-          Object.entries(value).forEach(([key, keyValue]) => {
-            this.filterTypeByValue(documentNode, parentTable, key, keyValue);
-          });
-        }
+        value.getKeys().forEach((k) => {
+          this.filterTypeByValue(documentNode, parentTable, k.key, k.dataType);
+        });
       }
     }
   }
@@ -158,19 +151,11 @@ export class SQLGenerator extends Generator {
     return `${parentTable.tableName}_${fieldName}`;
   }
 
-  private createSQLTables(documentTree: SQLDocumentTree): Array<SQLTable> {
-    const tables = [] as Array<SQLTable>;
-    documentTree.createSQLTables(tables);
-    return tables;
-  }
-
-  private createData(
-    tableName: string,
-    data: any,
-    generateID: boolean,
-  ): Array<SQLNode> {
+  private createData(tableName: string, data: any): Array<SQLNode> {
     const dataNodes: Array<SQLNode> = [];
+    const objectTypes: Array<ObjectType> = [];
 
+    // create object types
     for (let i = 0; i < data.length; i++) {
       const objectData = data[i];
 
@@ -179,18 +164,34 @@ export class SQLGenerator extends Generator {
         objectData !== null &&
         !Array.isArray(objectData)
       ) {
-        const documentNode = new SQLNode();
-        const documentTable = new SQLTable(this.fileName);
-        documentNode.addTable(documentTable);
-
-        Object.entries(objectData).forEach(([key, value]) => {
-          this.filterTypeByValue(documentNode, documentTable, key, value);
-        });
-
-        dataNodes.push(documentNode);
+        const type = DataType.filterTypeByValue(objectData) as ObjectType;
+        objectTypes.push(type);
       } else {
-        throw new ChacaError("Your data must be an array of objects");
+        throw new ChacaError("Your data must be an array of equal objects");
       }
+    }
+
+    // validate objects are equal
+    if (objectTypes.length) {
+      const firstObject = objectTypes[0];
+
+      for (let i = 1; i < objectTypes.length; i++) {
+        if (!firstObject.equal(objectTypes[i])) {
+          throw new ChacaError(`Your data must be an array of equal objects`);
+        }
+      }
+    }
+
+    for (let i = 0; i < objectTypes.length; i++) {
+      const documentNode = new SQLNode();
+      const documentTable = new SQLTable(tableName);
+      documentNode.addTable(documentTable);
+
+      objectTypes[i].getKeys().forEach((f) => {
+        this.filterTypeByValue(documentNode, documentTable, f.key, f.dataType);
+      });
+
+      dataNodes.push(documentNode);
     }
 
     // concat tables
@@ -218,15 +219,15 @@ export class SQLGenerator extends Generator {
       table.getColumns().forEach((column, index) => {
         const columnType = column.getColumnType();
 
-        if (columnType instanceof SQLPrimaryKeyDefinition) {
+        if (column.getConfig().isPrimaryKey) {
           primaryKeys.push(column);
-        } else if (columnType instanceof SQLForiegnKeyDefinition) {
+        } else if (column.getConfig().isForeignKey) {
           foreingKeys.push(column);
         }
 
         code += `\t${column.columnName} ${columnType.getSQLDefinition()}`;
 
-        if (!column.couldBeNull()) {
+        if (!column.getConfig().posibleNull) {
           code += ` NOT NULL`;
         }
 

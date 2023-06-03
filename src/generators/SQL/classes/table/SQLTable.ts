@@ -1,7 +1,6 @@
 import { ChacaError } from "../../../../errors/ChacaError.js";
-import { SQLNumber } from "../dataSQLTypes/SQLNumber.js";
-import { SQLType } from "../dataSQLTypes/SQLType.js";
-import { SQLTableColumn } from "./SQLTableColumn.js";
+import { SQLType, SQLNumber } from "../sqlTypes/index.js";
+import { ColumnForeignKeyConfig, SQLTableColumn } from "./SQLTableColumn.js";
 
 export class SQLTable {
   private columns: Array<SQLTableColumn> = [];
@@ -16,7 +15,7 @@ export class SQLTable {
     return new SQLNumber(this.getTableLenght());
   }
 
-  public addColumn(columnName: string) {
+  private addColumn(columnName: string) {
     this.columns.push(new SQLTableColumn(columnName));
   }
 
@@ -37,6 +36,17 @@ export class SQLTable {
           `The column ${column.columnName} does not exists on all objects.`,
         );
       }
+    }
+  }
+
+  public changeColumnToForeignKey(
+    columnName: string,
+    config: ColumnForeignKeyConfig,
+  ) {
+    const foundColumn = this.columns.find((c) => c.columnName === columnName);
+
+    if (foundColumn) {
+      foundColumn.changeForeignKeyConfig(config);
     }
   }
 
