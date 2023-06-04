@@ -45,7 +45,7 @@ describe("# Car Case Test", () => {
       .then((s) => expect(typeof s).toBe("string"));
   });
 
-  it("Export baseball case in SQL", () => {
+  it("SQL", () => {
     chaca
       .toSQL(CASE_SCHEMAS, {
         fileName: FILE_NAME,

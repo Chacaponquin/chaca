@@ -8,7 +8,11 @@ interface ObjectTypeField {
 export abstract class DataType {
   protected abstract equalType(otherType: DataType): boolean;
   public equal(otherType: DataType): boolean {
-    return otherType instanceof NullType || this.equalType(otherType);
+    const areEqual =
+      otherType instanceof NullType ||
+      this instanceof NullType ||
+      this.equalType(otherType);
+    return areEqual;
   }
 
   public static filterTypeByValue(value: any): DataType {

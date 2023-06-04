@@ -98,7 +98,7 @@ export class RefValueNode extends ChacaTreeNode {
           if (noTakenValues.length === 0) {
             throw new NotEnoughValuesForRefError(
               this.getNodeConfig().fieldTreeRoute,
-              this.refFieldTreeRoute
+              this.refFieldTreeRoute,
             );
           } else {
             const node = PrivateUtils.oneOfArray(noTakenValues);

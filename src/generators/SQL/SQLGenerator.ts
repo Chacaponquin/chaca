@@ -2,7 +2,6 @@ import { ChacaSchema } from "../../core/classes/ChacaSchema/ChacaSchema.js";
 import {
   KeyFieldResolver,
   RefFieldResolver,
-  SchemaFieldResolver,
 } from "../../core/classes/Resolvers/index.js";
 import { SchemaResolver } from "../../core/classes/SchemaResolver.js";
 import { FileConfig } from "../../core/interfaces/export.interface.js";
@@ -27,13 +26,11 @@ import {
   ObjectType,
   StringType,
 } from "./classes/types/index.js";
-import { SQLNode } from "./classes/sqlTypes/SQLNode.js";
 import fs from "fs";
+import { ColumnForeignKeyConfig } from "./classes/table/SQLTableColumn.js";
 
 export class SQLGenerator extends Generator {
   private sqlData: Array<any> = [];
-
-  private readonly VALUE_ARRAY_COLUMN_NAME = "value";
 
   constructor(data: any, config: FileConfig) {
     super(data, "sql", config);
@@ -46,10 +43,10 @@ export class SQLGenerator extends Generator {
   }
 
   private filterTypeByValue(
-    documentNode: SQLNode,
     parentTable: SQLTable,
     fieldName: string | null,
     value: DataType,
+    sqlTables: Array<SQLTable>,
   ): void {
     if (value instanceof StringType) {
       const type = new SQLString(value.value);
@@ -58,6 +55,8 @@ export class SQLGenerator extends Generator {
         parentTable.addColumnValue(fieldName, type);
       } else {
         parentTable.addColumnValue(parentTable.tableName, type);
+        // add new id to array table
+        parentTable.addNewID();
       }
     } else if (value instanceof NumberType) {
       const type = new SQLNumber(value.value);
@@ -66,6 +65,8 @@ export class SQLGenerator extends Generator {
         parentTable.addColumnValue(fieldName, type);
       } else {
         parentTable.addColumnValue(parentTable.tableName, type);
+        // add new id to array table
+        parentTable.addNewID();
       }
     } else if (value instanceof BooleanType) {
       const type = new SQLBoolean(value.value);
@@ -74,6 +75,8 @@ export class SQLGenerator extends Generator {
         parentTable.addColumnValue(fieldName, type);
       } else {
         parentTable.addColumnValue(parentTable.tableName, type);
+        // add new id to array table
+        parentTable.addNewID();
       }
     } else if (value instanceof DateType) {
       const type = new SQLDate(value.value);
@@ -82,6 +85,8 @@ export class SQLGenerator extends Generator {
         parentTable.addColumnValue(fieldName, type);
       } else {
         parentTable.addColumnValue(parentTable.tableName, type);
+        // add new id to array table
+        parentTable.addNewID();
       }
     } else if (value instanceof NullType) {
       const type = new SQLNull();
@@ -90,16 +95,20 @@ export class SQLGenerator extends Generator {
         parentTable.addColumnValue(fieldName, type);
       } else {
         parentTable.addColumnValue(parentTable.tableName, type);
+        // add new id to array table
+        parentTable.addNewID();
       }
     } else if (value instanceof ArrayType) {
       if (fieldName) {
-        const arrayTable = new SQLTable(
-          this.createTableNameByParent(parentTable, fieldName),
+        const arrayTableName = this.createTableNameByParent(
+          parentTable,
+          fieldName,
         );
-        documentNode.addTable(arrayTable);
+
+        const arrayTable = this.createNewTable(arrayTableName, sqlTables);
 
         value.getValues().forEach((v) => {
-          this.filterTypeByValue(documentNode, arrayTable, null, v);
+          this.filterTypeByValue(arrayTable, null, v, sqlTables);
         });
 
         const parentIDColumnName =
@@ -113,35 +122,65 @@ export class SQLGenerator extends Generator {
         }
 
         // change column config to foreing key and primary
-        arrayTable.changeColumnToForeignKey(parentIDColumnName);
+        arrayTable.changeColumnToForeignKey(parentIDColumnName, {
+          column: parentTable.getPrimaryKeyColumn(),
+          table: parentTable,
+        });
       } else {
         value.getValues().forEach((v) => {
-          this.filterTypeByValue(documentNode, parentTable, null, v);
+          this.filterTypeByValue(parentTable, null, v, sqlTables);
         });
       }
     } else if (value instanceof ObjectType) {
       if (fieldName) {
-        const newTable = new SQLTable(
-          this.createTableNameByParent(parentTable, fieldName),
+        const objectTableName = this.createTableNameByParent(
+          parentTable,
+          fieldName,
         );
-        documentNode.addTable(newTable);
+
+        const objectTable = this.createNewTable(objectTableName, sqlTables);
+
+        // add new id in object table
+        objectTable.addNewID();
 
         value.getKeys().forEach((k) => {
-          this.filterTypeByValue(documentNode, parentTable, k.key, k.dataType);
+          this.filterTypeByValue(objectTable, k.key, k.dataType, sqlTables);
         });
 
-        parentTable.addColumn(fieldName);
-        parentTable.addColumnValue(fieldName, newTable.getLastID());
+        // add foreign key in parent table
+        parentTable.addColumnValue(fieldName, objectTable.getLastID());
+        parentTable.changeColumnToForeignKey(fieldName, {
+          table: objectTable,
+          column: objectTable.getPrimaryKeyColumn(),
+        });
       } else {
         value.getKeys().forEach((k) => {
-          this.filterTypeByValue(documentNode, parentTable, k.key, k.dataType);
+          this.filterTypeByValue(parentTable, k.key, k.dataType, sqlTables);
         });
+
+        // add new id to array table
+        parentTable.addNewID();
       }
     }
   }
 
+  private createNewTable(
+    tableName: string,
+    allTables: Array<SQLTable>,
+  ): SQLTable {
+    const foundTable = allTables.find((t) => t.tableName === tableName);
+
+    if (foundTable) {
+      return foundTable;
+    } else {
+      const newTable = new SQLTable(tableName);
+      allTables.push(newTable);
+      return newTable;
+    }
+  }
+
   private createArrayTableForeignKeyColumnName(parentTable: SQLTable): string {
-    return `${parentTable.tableName}_id`;
+    return `${parentTable.tableName}`;
   }
 
   private createTableNameByParent(
@@ -151,8 +190,9 @@ export class SQLGenerator extends Generator {
     return `${parentTable.tableName}_${fieldName}`;
   }
 
-  private createData(tableName: string, data: any): Array<SQLNode> {
-    const dataNodes: Array<SQLNode> = [];
+  private createData(tableName: string, data: any): Array<SQLTable> {
+    // create sql tables
+    const sqlTables: Array<SQLTable> = [];
     const objectTypes: Array<ObjectType> = [];
 
     // create object types
@@ -182,28 +222,31 @@ export class SQLGenerator extends Generator {
       }
     }
 
-    for (let i = 0; i < objectTypes.length; i++) {
-      const documentNode = new SQLNode();
-      const documentTable = new SQLTable(tableName);
-      documentNode.addTable(documentTable);
+    if (objectTypes.length) {
+      for (let i = 0; i < objectTypes.length; i++) {
+        const documentTable = this.createNewTable(tableName, sqlTables);
 
-      objectTypes[i].getKeys().forEach((f) => {
-        this.filterTypeByValue(documentNode, documentTable, f.key, f.dataType);
-      });
+        // add new id to document table
+        documentTable.addNewID();
 
-      dataNodes.push(documentNode);
-    }
-
-    // concat tables
-    if (dataNodes.length) {
-      const firstNode = dataNodes[0];
-
-      for (let i = 1; i < dataNodes.length; i++) {
-        firstNode.concatTables(dataNodes[i]);
+        objectTypes[i].getKeys().forEach((f) => {
+          this.filterTypeByValue(documentTable, f.key, f.dataType, sqlTables);
+        });
       }
     }
 
-    return dataNodes;
+    return sqlTables;
+  }
+
+  private findTableByName(
+    tables: Array<SQLTable>,
+    tableName: string,
+  ): SQLTable {
+    const foundTable = tables.find(
+      (t) => t.tableName === tableName,
+    ) as SQLTable;
+
+    return foundTable;
   }
 
   public createTablesString(tables: Array<SQLTable>): string {
@@ -219,15 +262,15 @@ export class SQLGenerator extends Generator {
       table.getColumns().forEach((column, index) => {
         const columnType = column.getColumnType();
 
-        if (column.getConfig().isPrimaryKey) {
+        if (column.isPrimaryKey()) {
           primaryKeys.push(column);
-        } else if (column.getConfig().isForeignKey) {
+        } else if (column.isForeignKey()) {
           foreingKeys.push(column);
         }
 
         code += `\t${column.columnName} ${columnType.getSQLDefinition()}`;
 
-        if (!column.getConfig().posibleNull) {
+        if (!column.posibleNull) {
           code += ` NOT NULL`;
         }
 
@@ -258,11 +301,9 @@ export class SQLGenerator extends Generator {
       // definir foreign keys
       if (foreingKeys.length) {
         foreingKeys.forEach((f, index) => {
-          const [tableRef, columnRef] = (
-            f.getColumnType() as SQLForiegnKeyDefinition
-          ).refersTo.split(".");
+          const fColumn = f.isForeignKey() as ColumnForeignKeyConfig;
 
-          code += `\tFOREIGN KEY (${f.columnName}) REFERENCES ${tableRef} (${columnRef})`;
+          code += `\tFOREIGN KEY (${f.columnName}) REFERENCES ${fColumn.table.tableName} (${fColumn.column.columnName})`;
 
           if (index === foreingKeys.length - 1) {
             code += "\n";
@@ -282,11 +323,11 @@ export class SQLGenerator extends Generator {
     let data = "";
 
     tables.forEach((table) => {
-      const tablesData = table.getColumnsData();
+      const tablesData = table.getTableMatrixData();
 
       tablesData.forEach((d) => {
         data += `INSERT INTO ${table.tableName} VALUES (`;
-        data += d.join(", ");
+        data += d.map((t) => t.getSQLValue()).join(", ");
         data += `);\n`;
       });
     });
@@ -295,13 +336,7 @@ export class SQLGenerator extends Generator {
   }
 
   public async generateFile(): Promise<string> {
-    const documentTree = this.createData(
-      this.config.fileName,
-      this.sqlData,
-      true,
-    );
-
-    const tables = this.createSQLTables(documentTree);
+    const tables = this.createData(this.config.fileName, this.sqlData);
 
     await fs.promises.writeFile(
       this.route,
@@ -318,14 +353,11 @@ export class SQLGenerator extends Generator {
   ): Promise<string> {
     let allTables = [] as Array<SQLTable>;
 
-    Object.entries(data).forEach(([tableName, dataArray]) => {
-      const documentTree = this.createData(tableName, dataArray, false);
-
-      // tablas pertenecientes a este schema
-      const tables = this.createSQLTables(documentTree);
+    Object.entries(data).forEach(([schemaName, dataArray]) => {
+      const currentTables = this.createData(schemaName, dataArray);
 
       resolvers.forEach((r) => {
-        if (r.getSchemaName() === tableName) {
+        if (r.getSchemaName() === schemaName) {
           const schemaToResolve = r.getSchemaToResolve();
 
           Object.entries<ResolverObject>(schemaToResolve).forEach(
@@ -336,8 +368,8 @@ export class SQLGenerator extends Generator {
               ) {
                 // buscar columna con ese nombre
                 const foundColumn = this.foundColumnByName(
-                  tables,
-                  tableName,
+                  currentTables,
+                  schemaName,
                   fieldName,
                 );
 
@@ -347,38 +379,29 @@ export class SQLGenerator extends Generator {
 
                   // change if is a key field
                   if (fieldType instanceof KeyFieldResolver) {
-                    if (fieldType.fieldType instanceof SchemaFieldResolver) {
-                      const newType = new SQLPrimaryKeyDefinition(
-                        foundColumn.getColumnType(),
-                      );
+                    // change to primary key column
+                    foundColumn.changeToPrimaryKey();
 
-                      foundColumn.changeColumnType(newType);
-                    } else if (
-                      fieldType.fieldType instanceof RefFieldResolver
-                    ) {
-                      const foreignKeyType = new SQLForiegnKeyDefinition(
-                        foundColumn.getColumnType(),
-                        fieldType.fieldType.refField.refField,
+                    if (fieldType.fieldType instanceof RefFieldResolver) {
+                      foundColumn.changeForeignKeyConfig(
+                        this.tranformRefFieldToForeignKey(
+                          fieldType.fieldType.refField.refField,
+                          allTables,
+                        ),
                       );
-
-                      const newType = new SQLPrimaryKeyDefinition(
-                        foreignKeyType,
-                      );
-
-                      foundColumn.changeColumnType(newType);
                     }
                   } else if (fieldType instanceof RefFieldResolver) {
-                    const foreignKeyType = new SQLForiegnKeyDefinition(
-                      foundColumn.getColumnType(),
-                      fieldType.refField.refField,
+                    foundColumn.changeForeignKeyConfig(
+                      this.tranformRefFieldToForeignKey(
+                        fieldType.refField.refField,
+                        allTables,
+                      ),
                     );
-
-                    foundColumn.changeColumnType(foreignKeyType);
                   }
 
                   // change if is null
                   if (rObj.posibleNull > 0) {
-                    foundColumn.changeIsNull();
+                    foundColumn.changeToPosibleNull();
                   }
                 }
               }
@@ -387,7 +410,7 @@ export class SQLGenerator extends Generator {
         }
       });
 
-      allTables = [...allTables, ...tables];
+      allTables = [...allTables, ...currentTables];
     });
 
     await fs.promises.writeFile(
@@ -398,6 +421,25 @@ export class SQLGenerator extends Generator {
     );
 
     return this.route;
+  }
+
+  public tranformRefFieldToForeignKey(
+    refField: string,
+    tables: Array<SQLTable>,
+  ): ColumnForeignKeyConfig {
+    const arrayLocation = refField.split(".");
+
+    const columnToRef = arrayLocation.pop() as string;
+    const tableToRef = arrayLocation.join("_");
+
+    const foundTable = this.findTableByName(tables, tableToRef);
+    const foundColumn = foundTable.findColumnByName(columnToRef);
+
+    if (foundColumn) {
+      return { table: foundTable, column: foundColumn };
+    } else {
+      throw new ChacaError(`Not found table '${tableToRef}'`);
+    }
   }
 
   private foundColumnByName(

@@ -21,20 +21,18 @@ export const COMPLETE_SCHEMA = chaca.defineSchema({
     ],
   },
   adultMovie: (docFields) => {
-    if (
+    return (
       docFields.category === "Horror" ||
       docFields.category === "War" ||
       docFields.category === "Action"
-    ) {
-      return true;
-    } else return false;
+    );
   },
   directorsInf: {
-    type: new chaca.Schema({
+    type: chaca.defineSchema({
       name: schemas.person.fullName({}),
       age: schemas.dataType.int({ min: 18, max: 85 }),
       currentMovie: {
-        type: new chaca.Schema({
+        type: chaca.defineSchema({
           movieName: schemas.person.firstName(),
           image: schemas.image.event(),
         }),

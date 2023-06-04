@@ -30,6 +30,30 @@ export class SQLTableColumn {
     }
   }
 
+  public getRows() {
+    return this.rows;
+  }
+
+  public getValueByRowIndex(index: number): SQLType {
+    return this.rows[index];
+  }
+
+  public changeToPosibleNull(): void {
+    this.columnConfig.posibleNull = true;
+  }
+
+  public isPrimaryKey() {
+    return this.columnConfig.isPrimaryKey;
+  }
+
+  public isForeignKey() {
+    return this.columnConfig.isForeignKey;
+  }
+
+  public posibleNull() {
+    return this.columnConfig.posibleNull;
+  }
+
   public changeForeignKeyConfig(config: ColumnForeignKeyConfig) {
     this.columnConfig.isForeignKey = config;
   }
@@ -38,17 +62,15 @@ export class SQLTableColumn {
     return this.rows[0];
   }
 
-  public getConfig() {
-    return this.columnConfig;
-  }
-
-  public concatValues(otherColumn: SQLTableColumn): void {
-    for (const v of otherColumn.rows) {
-      this.rows.push(v);
-    }
+  public changeToPrimaryKey(): void {
+    this.columnConfig.isPrimaryKey = true;
   }
 
   public getColumnLenght(): number {
     return this.rows.length;
+  }
+
+  public getLastRow() {
+    return this.rows[this.rows.length - 1];
   }
 }

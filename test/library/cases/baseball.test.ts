@@ -17,7 +17,7 @@ describe("# Test Case Baseball", () => {
     expect(BASEBALL_CASE_DATA).toHaveProperty("Batter");
   });
 
-  it("Export baseball case in SQL", () => {
+  it("SQL", () => {
     chaca
       .toSQL(BASEBALL_SCHEMAS, {
         fileName: FILE_NAME,
@@ -26,7 +26,7 @@ describe("# Test Case Baseball", () => {
       .then((s) => expect(typeof s).toBe("string"));
   });
 
-  it("Export baseball case in JSON", () => {
+  it("JSON", () => {
     chaca
       .export(BASEBALL_CASE_DATA, {
         fileName: FILE_NAME,
@@ -36,7 +36,7 @@ describe("# Test Case Baseball", () => {
       .then((s) => expect(typeof s).toBe("string"));
   });
 
-  it("Export baseball case in Typescript", () => {
+  it("Typescript", () => {
     chaca
       .export(BASEBALL_CASE_DATA, {
         fileName: FILE_NAME,
@@ -46,7 +46,7 @@ describe("# Test Case Baseball", () => {
       .then((s) => expect(typeof s).toBe("string"));
   });
 
-  it("Export baseball case in Javascript", () => {
+  it("Javascript", () => {
     chaca
       .export(BASEBALL_CASE_DATA, {
         fileName: FILE_NAME,

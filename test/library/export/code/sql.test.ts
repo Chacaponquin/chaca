@@ -6,7 +6,6 @@ import {
   SIMPLE_SCHEMA_DATA,
 } from "../../utils/data";
 
-const objectFileName = "SqlExport";
 const ROOT = "./data/sql";
 
 describe("# SQL Export Test", () => {
@@ -14,7 +13,7 @@ describe("# SQL Export Test", () => {
     it("Export Simple Schema Array", () => {
       chaca
         .export(SIMPLE_SCHEMA_DATA, {
-          fileName: "simpleSchema" + objectFileName,
+          fileName: "simpleSchema",
           location: ROOT,
           format: "sql",
         })
@@ -24,7 +23,7 @@ describe("# SQL Export Test", () => {
     it("Export Nested Object Schema Array", () => {
       chaca
         .export(NESTED_OBJECTS_DATA, {
-          fileName: "nestedObjectSchema" + objectFileName,
+          fileName: "nestedObjectSchema",
           location: ROOT,
           format: "sql",
         })
@@ -34,21 +33,21 @@ describe("# SQL Export Test", () => {
     it("Export Array Fields Schema Array", () => {
       chaca
         .export(ARRAY_FIELDS_DATA, {
-          fileName: "arrayFieldsSchema" + objectFileName,
+          fileName: "arrayFieldsSchema",
           location: ROOT,
           format: "sql",
         })
         .then((s) => expect(typeof s).toBe("string"));
     });
 
-    /*  it("Export Complete Schema Array", () => {
+    it("Export Complete Schema Array", () => {
       chaca
         .export(COMPLETE_SCHEMA_DATA, {
-          fileName: "completeSchema" + objectFileName,
+          fileName: "completeSchema",
           location: ROOT,
           format: "sql",
         })
         .then((s) => expect(typeof s).toBe("string"));
-    });*/
+    });
   });
 });
