@@ -12,6 +12,20 @@ export class SQLTable {
     this.columns.push(idColumn);
   }
 
+  public updateIdColumnName(): void {
+    const newName = this.tableName + "_id";
+
+    const foundSameName = this.columns.some(
+      (c) => c.getColumnName() === newName,
+    );
+
+    if (foundSameName) {
+      this.columns[0].changeColumnName(newName + "_1");
+    } else {
+      this.columns[0].changeColumnName(newName);
+    }
+  }
+
   public getColumns() {
     return this.columns;
   }
@@ -21,7 +35,7 @@ export class SQLTable {
   }
 
   public findColumnByName(columnName: string): SQLTableColumn | null {
-    return this.columns.find((c) => c.columnName === columnName) || null;
+    return this.columns.find((c) => c.getColumnName() === columnName) || null;
   }
 
   public getTableMatrixData(): Array<Array<SQLType>> {
@@ -51,7 +65,9 @@ export class SQLTable {
     columnName: string,
     config: ColumnForeignKeyConfig,
   ) {
-    const foundColumn = this.columns.find((c) => c.columnName === columnName);
+    const foundColumn = this.columns.find(
+      (c) => c.getColumnName() === columnName,
+    );
 
     if (foundColumn) {
       foundColumn.changeForeignKeyConfig(config);
@@ -59,7 +75,9 @@ export class SQLTable {
   }
 
   public addColumnValue(columnName: string, value: SQLType): void {
-    const foundColumn = this.columns.find((c) => c.columnName === columnName);
+    const foundColumn = this.columns.find(
+      (c) => c.getColumnName() === columnName,
+    );
 
     if (foundColumn) {
       foundColumn.insertValue(value);

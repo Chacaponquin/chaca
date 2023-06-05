@@ -194,7 +194,7 @@ export class SQLGenerator extends Generator {
   }
 
   private createArrayTableForeignKeyColumnName(parentTable: SQLTable): string {
-    return `${parentTable.tableName}`;
+    return `${parentTable.tableName}_id`;
   }
 
   private createTableNameByParent(
@@ -249,6 +249,11 @@ export class SQLGenerator extends Generator {
       }
     }
 
+    // change tables id columns
+    sqlTables.forEach((t) => {
+      t.updateIdColumnName();
+    });
+
     return sqlTables;
   }
 
@@ -282,7 +287,7 @@ export class SQLGenerator extends Generator {
           foreingKeys.push(column);
         }
 
-        code += `\t${column.columnName} ${columnType.getSQLDefinition()}`;
+        code += `\t${column.getColumnName()} ${columnType.getSQLDefinition()}`;
 
         if (!column.posibleNull) {
           code += ` NOT NULL`;
@@ -302,7 +307,7 @@ export class SQLGenerator extends Generator {
       // define primary and foreing keys
       if (primaryKeys.length) {
         code += `\tPRIMARY KEY (${primaryKeys
-          .map((p) => p.columnName)
+          .map((p) => p.getColumnName())
           .join(", ")})`;
 
         if (foreingKeys.length === 0) {
@@ -317,7 +322,9 @@ export class SQLGenerator extends Generator {
         foreingKeys.forEach((f, index) => {
           const fColumn = f.isForeignKey() as ColumnForeignKeyConfig;
 
-          code += `\tFOREIGN KEY (${f.columnName}) REFERENCES ${fColumn.table.tableName} (${fColumn.column.columnName})`;
+          code += `\tFOREIGN KEY (${f.getColumnName()}) REFERENCES ${
+            fColumn.table.tableName
+          } (${fColumn.column.getColumnName()})`;
 
           if (index === foreingKeys.length - 1) {
             code += "\n";
@@ -468,7 +475,7 @@ export class SQLGenerator extends Generator {
     if (foundTable) {
       const foundColumn = foundTable
         .getColumns()
-        .find((c) => c.columnName === columnName);
+        .find((c) => c.getColumnName() === columnName);
 
       if (foundColumn) {
         found = foundColumn;

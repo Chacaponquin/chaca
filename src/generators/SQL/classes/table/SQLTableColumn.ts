@@ -20,6 +20,7 @@ export interface ColumnForeignKeyConfig {
 }
 
 export class SQLTableColumn {
+  private columnName: string;
   private rows: Array<SQLType> = [];
   private columnConfig: ColumnConfig = {
     isPrimaryKey: false,
@@ -27,7 +28,17 @@ export class SQLTableColumn {
     posibleNull: false,
   };
 
-  constructor(public readonly columnName: string) {}
+  constructor(columnName: string) {
+    this.columnName = columnName;
+  }
+
+  public getColumnName(): string {
+    return this.columnName;
+  }
+
+  public changeColumnName(newColumnName: string): void {
+    this.columnName = newColumnName;
+  }
 
   public insertValue(value: SQLType) {
     this.rows.push(value);
