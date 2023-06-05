@@ -1,5 +1,5 @@
 import { PrivateUtils } from "../../../../core/helpers/PrivateUtils.js";
-import { SQLType, SQLNumber } from "../sqlTypes/index.js";
+import { SQLType, SQLNumber, SQLIntegerNumber } from "../sqlTypes/index.js";
 import { ColumnForeignKeyConfig, SQLTableColumn } from "./SQLTableColumn.js";
 
 export class SQLTable {
@@ -71,10 +71,10 @@ export class SQLTable {
 
   public addNewID(): void {
     if (this.columns[0].getColumnLenght()) {
-      const newID = new SQLNumber(this.getLastID().value + 1);
+      const newID = new SQLIntegerNumber(this.getLastID().value + 1);
       this.columns[0].insertValue(newID);
     } else {
-      const newID = new SQLNumber(1);
+      const newID = new SQLIntegerNumber(1);
       this.columns[0].insertValue(newID);
     }
   }

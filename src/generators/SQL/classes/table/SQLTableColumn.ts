@@ -1,4 +1,11 @@
-import { SQLNull, SQLType } from "../sqlTypes/index.js";
+import {
+  SQLFloatNumber,
+  SQLNull,
+  SQLNumber,
+  SQLString,
+  SQLTextString,
+  SQLType,
+} from "../sqlTypes/index.js";
 import { SQLTable } from "./SQLTable.js";
 
 interface ColumnConfig {
@@ -58,8 +65,38 @@ export class SQLTableColumn {
     this.columnConfig.isForeignKey = config;
   }
 
-  public getColumnType() {
-    return this.rows[0];
+  public getColumnType(): SQLType {
+    const notNullTypes = this.rows.filter((r) => !(r instanceof SQLNull));
+
+    if (notNullTypes.length === 0) {
+      return new SQLNull();
+    } else {
+      const firstType = notNullTypes[0];
+
+      if (firstType instanceof SQLString) {
+        const textTypes = notNullTypes.filter(
+          (t) => t instanceof SQLTextString,
+        );
+
+        if (textTypes.length === 0) {
+          return firstType;
+        } else {
+          return textTypes[0];
+        }
+      } else if (firstType instanceof SQLNumber) {
+        const doublePrecisionTypes = notNullTypes.filter(
+          (t) => t instanceof SQLFloatNumber,
+        );
+
+        if (doublePrecisionTypes.length === 0) {
+          return firstType;
+        } else {
+          return doublePrecisionTypes[0];
+        }
+      } else {
+        return firstType;
+      }
+    }
   }
 
   public changeToPrimaryKey(): void {

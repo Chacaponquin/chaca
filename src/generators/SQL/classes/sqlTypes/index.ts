@@ -51,13 +51,9 @@ export class SQLNull extends SQLType {
   }
 }
 
-export class SQLNumber extends SQLType {
+export abstract class SQLNumber extends SQLType {
   constructor(public readonly value: number) {
     super();
-  }
-
-  public getSQLDefinition(): string {
-    return "DOUBLE PRECISION";
   }
 
   public getSQLValue(): string {
@@ -65,16 +61,52 @@ export class SQLNumber extends SQLType {
   }
 }
 
-export class SQLString extends SQLType {
+export class SQLIntegerNumber extends SQLNumber {
+  constructor(value: number) {
+    super(value);
+  }
+
+  public getSQLDefinition(): string {
+    return "INTEGER";
+  }
+}
+
+export class SQLFloatNumber extends SQLNumber {
+  constructor(value: number) {
+    super(value);
+  }
+
+  public getSQLDefinition(): string {
+    return "DOUBLE PRECISION";
+  }
+}
+
+export abstract class SQLString extends SQLType {
   constructor(public readonly value: string) {
     super();
   }
 
-  public getSQLDefinition(): string {
-    return "VARCHAR(255)";
-  }
-
   public getSQLValue(): string {
     return `'${this.value}'`;
+  }
+}
+
+export class SQLTextString extends SQLString {
+  constructor(value: string) {
+    super(value);
+  }
+
+  public getSQLDefinition(): string {
+    return "TEXT";
+  }
+}
+
+export class SQLVarcharString extends SQLString {
+  constructor(value: string) {
+    super(value);
+  }
+
+  public getSQLDefinition(): string {
+    return "VARCHAR(255)";
   }
 }

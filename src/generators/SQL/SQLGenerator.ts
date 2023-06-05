@@ -14,6 +14,10 @@ import {
   SQLNumber,
   SQLString,
   SQLNull,
+  SQLTextString,
+  SQLVarcharString,
+  SQLFloatNumber,
+  SQLIntegerNumber,
 } from "./classes/sqlTypes/index.js";
 import { SQLTable, SQLTableColumn } from "./classes/table/index.js";
 import {
@@ -49,7 +53,12 @@ export class SQLGenerator extends Generator {
     sqlTables: Array<SQLTable>,
   ): void {
     if (value instanceof StringType) {
-      const type = new SQLString(value.value);
+      let type: SQLString;
+      if (value.value.length > 255) {
+        type = new SQLTextString(value.value);
+      } else {
+        type = new SQLVarcharString(value.value);
+      }
 
       if (fieldName) {
         parentTable.addColumnValue(fieldName, type);
@@ -59,7 +68,12 @@ export class SQLGenerator extends Generator {
         parentTable.addNewID();
       }
     } else if (value instanceof NumberType) {
-      const type = new SQLNumber(value.value);
+      let type: SQLNumber;
+      if (Number.isInteger(value.value)) {
+        type = new SQLIntegerNumber(value.value);
+      } else {
+        type = new SQLFloatNumber(value.value);
+      }
 
       if (fieldName) {
         parentTable.addColumnValue(fieldName, type);
