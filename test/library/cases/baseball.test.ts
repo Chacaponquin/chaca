@@ -46,6 +46,16 @@ describe("# Test Case Baseball", () => {
       .then((s) => expect(typeof s).toBe("string"));
   });
 
+  it("Java", () => {
+    chaca
+      .export(BASEBALL_CASE_DATA, {
+        fileName: FILE_NAME,
+        format: "java",
+        location: EXPORT_ROUTE,
+      })
+      .then((s) => expect(typeof s).toBe("string"));
+  });
+
   it("Javascript", () => {
     chaca
       .export(BASEBALL_CASE_DATA, {

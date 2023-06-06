@@ -5,208 +5,230 @@ import fs from "fs";
 import path from "path";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import {
+  ArrayType,
+  BooleanType,
+  DataType,
+  DateType,
+  FloatType,
+  IntegerType,
+  NullType,
+  NumberType,
+  ObjectType,
+  StringType,
+} from "./classes/types/index.js";
+
+interface JavaClassCreated {
+  className: string;
+  classType: ObjectType;
+}
 
 export class JavaGenerator extends Generator {
+  private classesCreated: Array<JavaClassCreated> = [];
+
   constructor(data: any, config: FileConfig) {
     super(data, "java", config);
   }
 
-  public async generateFile(): Promise<string> {
-    await this.generateClass({
-      name: PrivateUtils.capitalizeCamelCase(this.config.fileName),
-      docExample: Array.isArray(this.data) ? this.data[0] : this.data,
-    });
-
-    const zp = new AdmZip();
-    const zipName = `${this.config.fileName}.zip`;
-    const zipPath = path.join(this.baseLocation, zipName);
-
-    await this.generateMainFile(
-      PrivateUtils.capitalizeCamelCase(this.config.fileName),
-      this.data,
-    );
-
-    try {
-      zp.addLocalFile(this.generateRoute(this.config.fileName));
-      zp.addLocalFile(this.generateRoute("Main"));
-      zp.writeZip(zipPath);
-    } catch (error) {
-      throw new ChacaError("Error export zip File");
-    }
-
-    return zipPath;
+  private createDataTypes(): DataType {
+    const dType = DataType.filterTypeByValue(this.data);
+    return dType;
   }
 
-  private async generateMainFile(
-    className: string,
-    docs: any[],
-  ): Promise<void> {
-    let classString = "";
-    classString += `public class Main {\n`;
-    classString += `\tpublic static void main(String[] args){\n\t`;
+  public generateMainContent(dataType: DataType): string {
+    const fileName = this.config.fileName;
 
-    const arrayName = `${PrivateUtils.camelCaseText(className)}`;
-    classString += `ArrayList< ${className} > ${arrayName} =  new ArrayList< ${className} >();\n\t`;
+    let mainContent = "";
+    mainContent += `public class Main {\n`;
+    mainContent += `\tpublic static void main(String[] args){\n\t`;
 
-    for (let i = 0; i < docs.length; i++) {
-      const variableName = `${PrivateUtils.camelCaseText(className)}${i}`;
+    if (dataType instanceof ArrayType) {
+      const arrayType = this.getArrayType(dataType);
+      mainContent +=
+        `\t\tList<` + `${arrayType}` + `> ${fileName} = LinkedList<` + `>();\n`;
 
-      classString += `${className} ${variableName} = new ${className}(${await this.createParameters(
-        docs[i],
-      )});\n\n\t`;
+      dataType.getValues().forEach((v, index) => {
+        mainContent += `\t\t${arrayType} ${fileName}${
+          index + 1
+        } = ${this.createValueByType(v)};\n`;
+      });
 
-      classString += `${arrayName}.add(${variableName});\n\n\t`;
-    }
-
-    classString += "}\n";
-    classString += "}";
-
-    await fs.promises.writeFile(
-      this.generateRoute("Main"),
-      classString,
-      "utf-8",
-    );
-  }
-
-  private generateClassName(docEx: any): string {
-    let name = `Object`;
-    const keys = Object.keys(docEx);
-    for (const key of keys) name += key;
-    return name;
-  }
-
-  private async generateClass({
-    name,
-    docExample,
-  }: {
-    name: string;
-    docExample: any;
-  }): Promise<string> {
-    let classCode = "public class ";
-    classCode += name + "{\n";
-
-    for (const [key, value] of Object.entries(docExample)) {
-      classCode += `\tpublic ${await this.filterParentType(value)} ${key};\n`;
-    }
-    classCode += await this.generateConstructor(name, docExample);
-    classCode += "}";
-
-    await fs.promises.writeFile(this.generateRoute(name), classCode, "utf-8");
-
-    return name;
-  }
-
-  private createParameters = async (values: {
-    [path: string]: any;
-  }): Promise<string> => {
-    let returnVal = "";
-    const keys: string[] = Object.keys(values);
-
-    for (let i = 0; i < keys.length; i++) {
-      returnVal +=
-        `${await this.filterTypeValue(values[keys[i]])}` +
-        (i === keys.length - 1 ? "" : ", ");
-    }
-
-    return returnVal;
-  };
-
-  private async filterTypeValue(value: any): Promise<string> {
-    let returnString = "null";
-
-    if (typeof value === "number") returnString = `${value}`;
-    else if (typeof value === "string") returnString = `"${value}"`;
-    else if (typeof value === "boolean") returnString = `${value}`;
-    else if (typeof value === "object") {
-      if (Array.isArray(value)) {
-        const type = await this.filterParentType(value[0]);
-
-        let params = "";
-        for (let i = 0; i < value.length; i++) {
-          if (i !== value.length - 1) {
-            params += `${await this.filterTypeValue(value[i])}, `;
-          } else {
-            params += `${await this.filterTypeValue(value[i])}`;
-          }
-        }
-
-        returnString = `new ArrayList< ${type} >().toArray(new ${type}[]{${params}})`;
-      } else if (value === null) returnString = "null";
-      else if (value instanceof Date) returnString = `"${value.toString()}"`;
-      else {
-        const className = await this.generateClass({
-          docExample: value,
-          name: this.generateClassName(value),
-        });
-
-        returnString = `new ${className}(${await this.createParameters(
-          value,
-        )})`;
+      for (let i = 0; i < dataType.getValues().length; i++) {
+        mainContent += `\t\t${fileName}.add(${fileName}${i + 1});\n`;
       }
+    } else {
+      mainContent += `\t\t${this.filterTypeByValue(
+        dataType,
+      )} ${fileName} = ${this.createValueByType(dataType)};\n`;
     }
 
-    return returnString;
+    mainContent += "\t}\n}\n";
+
+    return mainContent;
   }
 
-  private async filterParentType(value: any): Promise<string> {
-    let returnValue = "Object";
+  public createValueByType(value: DataType): string {
+    let returnValue: string;
 
-    if (typeof value === "number") {
-      if (Number.isInteger(value)) returnValue = "Integer";
-      else returnValue = "Float";
-    } else if (typeof value === "string") returnValue = "String";
-    else if (typeof value === "boolean") returnValue = `boolean`;
-    else if (typeof value === "object") {
-      if (Array.isArray(value))
-        returnValue = `ArrayList< ${await this.filterParentType(value[0])} >`;
-      else if (value === null) returnValue = "Object";
-      else if (value instanceof Date) returnValue = "String";
-      else returnValue += `${this.generateClassName(value)}`;
+    if (value instanceof StringType) {
+      returnValue = `"${value.value}"`;
+    } else if (value instanceof NumberType) {
+      returnValue = `${value.value}`;
+    } else if (value instanceof BooleanType) {
+      returnValue = `${value.value}`;
+    } else if (value instanceof NullType) {
+      returnValue = "null";
+    } else if (value instanceof DateType) {
+      returnValue = `new Date("${value.value.toDateString()}")`;
+    } else if (value instanceof ArrayType) {
+      returnValue = `Arrays.asList(new ${this.getArrayType(value)}[]{`;
+      returnValue += value
+        .getValues()
+        .map((v) => this.createValueByType(v))
+        .join(", ");
+      returnValue += "})";
+    } else {
+      const object = value as ObjectType;
+      const foundClass = this.createObjectClass(object);
+
+      const objectArguments = foundClass.classType
+        .getKeys()
+        .map((k) => this.createValueByType(k.dataType))
+        .join(", ");
+      returnValue = `new ${foundClass.className}(${objectArguments})`;
     }
 
     return returnValue;
   }
 
-  private async generateConstructor(
-    className: string,
-    doc: any,
-  ): Promise<string> {
-    const initializeVar = (): string => {
-      let returnVal = "";
+  public filterTypeByValue(value: DataType): string {
+    let returnType: string;
 
-      const keys: string[] = Object.keys(doc);
-      for (let i = 0; i < keys.length; i++) {
-        returnVal += `\tthis.${keys[i]} = ${keys[i]};\n`;
+    if (value instanceof StringType) {
+      returnType = "String";
+    } else if (value instanceof FloatType) {
+      returnType = "Float";
+    } else if (value instanceof IntegerType) {
+      returnType = "Integer";
+    } else if (value instanceof BooleanType) {
+      returnType = "Boolean";
+    } else if (value instanceof DateType) {
+      returnType = "Date";
+    } else if (value instanceof NullType) {
+      returnType = "Object";
+    } else if (value instanceof ArrayType) {
+      returnType = `List<` + `${this.getArrayType(value)}` + `>`;
+    } else {
+      returnType = this.createObjectClass(value as ObjectType).className;
+    }
+
+    return returnType;
+  }
+
+  private getArrayType(array: ArrayType): string {
+    const arrayType = array.getArrayType();
+    return arrayType ? this.filterTypeByValue(arrayType) : "Object";
+  }
+
+  private createObjectClass(object: ObjectType): JavaClassCreated {
+    const foundClass = this.classesCreated.find((c) =>
+      c.classType.equal(object),
+    );
+
+    if (foundClass) {
+      return foundClass;
+    } else {
+      const className = `Object${PrivateUtils.id()}`;
+
+      const newClass = {
+        className,
+        classType: object,
+      };
+
+      this.classesCreated.push(newClass);
+
+      return newClass;
+    }
+  }
+
+  public createClassFileContent(classInf: JavaClassCreated): string {
+    let classContent = "";
+
+    classContent += `public class ${classInf.className}{\n`;
+
+    classInf.classType.getKeys().forEach((k) => {
+      classContent += `\tprivate ${this.filterTypeByValue(k.dataType)} ${
+        k.key
+      };\n`;
+    });
+
+    const constructorArguments = classInf.classType
+      .getKeys()
+      .map((k) => `${this.filterTypeByValue(k.dataType)} ${k.key}`)
+      .join(", ");
+    classContent += `\tpublic ${classInf.className}(${constructorArguments}){\n`;
+    classInf.classType.getKeys().forEach((c) => {
+      classContent += `\t\tthis.${c.key} = ${c.key};\n`;
+    });
+    classContent += "\t}";
+
+    classContent += `}\n`;
+
+    return classContent;
+  }
+
+  private buildClassFileName(className: string): string {
+    return path.join(this.baseLocation, `${className}.java`);
+  }
+
+  public async generateFile(): Promise<string> {
+    const dataTypes = this.createDataTypes();
+    const mainContent = this.generateMainContent(dataTypes);
+
+    const classesContents = [mainContent];
+    const filesRoutes = [];
+
+    this.classesCreated.forEach((c) => {
+      classesContents.push(this.createClassFileContent(c));
+    });
+
+    try {
+      for (let i = 0; i < classesContents.length; i++) {
+        if (i === 0) {
+          const mainRoute = this.buildClassFileName("Main");
+          await fs.promises.writeFile(mainRoute, classesContents[i], "utf-8");
+
+          filesRoutes.push(mainRoute);
+        } else {
+          const objectClassRoute = this.buildClassFileName(
+            this.classesCreated[i - 1].className,
+          );
+
+          await fs.promises.writeFile(
+            objectClassRoute,
+            classesContents[i],
+            "utf-8",
+          );
+
+          filesRoutes.push(objectClassRoute);
+        }
       }
 
-      return returnVal;
-    };
+      const zp = new AdmZip();
+      const zipName = `${this.config.fileName}.zip`;
+      const zipPath = path.join(this.baseLocation, zipName);
 
-    const generateConstructorParameters = async (values: {
-      [path: string]: any;
-    }): Promise<string> => {
-      let returnString = "";
-      const keys: string[] = Object.keys(values);
-
-      for (let i = 0; i < keys.length; i++) {
-        const key = keys[i];
-        const val = values[key];
-
-        returnString +=
-          `${await this.filterParentType(val)} ${key}` +
-          (i === keys.length - 1 ? "" : ", ");
+      for (let i = 0; i < filesRoutes.length; i++) {
+        const r = filesRoutes[i];
+        zp.addLocalFile(r);
+        await fs.promises.unlink(r);
       }
 
-      return returnString;
-    };
+      zp.writeZip(zipPath);
 
-    let returnString = "";
-    returnString += `\tpublic ${className}(${await generateConstructorParameters(
-      doc,
-    )}){\n\t`;
-    returnString += `${initializeVar()}`;
-    returnString += "\t}\n";
-
-    return returnString;
+      return zipPath;
+    } catch (error) {
+      throw new ChacaError("Error export zip File");
+    }
   }
 }

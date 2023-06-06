@@ -9,7 +9,7 @@ describe("# Car Case Test", () => {
     chaca
       .export(CAR_CASE_DATA, {
         location: EXPORT_ROUTE,
-        fileName: FILE_NAME + "Json",
+        fileName: FILE_NAME,
         format: "json",
       })
       .then((s) => expect(typeof s).toBe("string"));
@@ -19,7 +19,7 @@ describe("# Car Case Test", () => {
     chaca
       .export(CAR_CASE_DATA, {
         location: EXPORT_ROUTE,
-        fileName: FILE_NAME + "Javascript",
+        fileName: FILE_NAME,
         format: "javascript",
       })
       .then((s) => expect(typeof s).toBe("string"));
@@ -29,7 +29,7 @@ describe("# Car Case Test", () => {
     chaca
       .export(CAR_CASE_DATA, {
         location: EXPORT_ROUTE,
-        fileName: FILE_NAME + "Yaml",
+        fileName: FILE_NAME,
         format: "yaml",
       })
       .then((s) => expect(typeof s).toBe("string"));
@@ -39,8 +39,18 @@ describe("# Car Case Test", () => {
     chaca
       .export(CAR_CASE_DATA, {
         location: EXPORT_ROUTE,
-        fileName: FILE_NAME + "Typescript",
+        fileName: FILE_NAME,
         format: "typescript",
+      })
+      .then((s) => expect(typeof s).toBe("string"));
+  });
+
+  it("Java", () => {
+    chaca
+      .export(CAR_CASE_DATA, {
+        location: EXPORT_ROUTE,
+        fileName: FILE_NAME,
+        format: "java",
       })
       .then((s) => expect(typeof s).toBe("string"));
   });
