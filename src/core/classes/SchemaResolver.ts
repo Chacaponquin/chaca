@@ -23,6 +23,7 @@ import {
 } from "./ChacaResultTree/classes/index.js";
 import { SchemaStore } from "./SchemasStore/SchemaStore.js";
 import { GetStoreValueConfig } from "./SchemasStore/interfaces/store.interface.js";
+import { DatasetStore } from "./DatasetStore/DatasetStore.js";
 
 export class SchemaResolver<K = any, T = any> {
   private inputTree: ChacaInputTree<K> | null = null;
@@ -306,10 +307,12 @@ export class SchemaResolver<K = any, T = any> {
 
       // en caso de ser un custom field
       else if (field instanceof CustomValueNode) {
+        const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
+
         // obtener el valor de la funcion pasando como parametro el documento actual del ciclo
         const value = field.getValue(
-          this.resultTree.getDocumentByIndex(indexDoc).getDocumentObject(),
-          this.schemasStore,
+          currentDocument.getDocumentObject(),
+          new DatasetStore(this.schemasStore, currentDocument),
         );
 
         return new SingleResultNode(field.getResultNodeConfig(), value);
@@ -323,11 +326,13 @@ export class SchemaResolver<K = any, T = any> {
 
       // en caso de ser un key field
       else if (field instanceof KeyValueNode) {
+        const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
+
         return new SingleResultNode(
           field.getResultNodeConfig(),
           field.getValue(
-            this.resultTree.getDocumentByIndex(indexDoc).getDocumentObject(),
-            this.schemasStore,
+            currentDocument.getDocumentObject(),
+            new DatasetStore(this.schemasStore, currentDocument),
           ),
         );
       }

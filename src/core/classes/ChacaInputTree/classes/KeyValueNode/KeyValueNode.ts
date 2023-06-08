@@ -1,4 +1,4 @@
-import { SchemaStore } from "../../../SchemasStore/SchemaStore.js";
+import { DatasetStore } from "../../../DatasetStore/DatasetStore.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { CustomValueNode } from "../CustomValueNode/CustomValueNode.js";
 import { RefValueNode } from "../RefValueNode/RefValueNode.js";
@@ -30,7 +30,7 @@ export class KeyValueNode extends ChacaTreeNode {
     return fieldTreeRoute.length === 0;
   }
 
-  public getValue(fields: any, store: SchemaStore) {
+  public getValue(fields: any, store: DatasetStore) {
     if (this.fieldNode instanceof RefValueNode) {
       return this.fieldNode.getValue();
     } else if (this.fieldNode instanceof SchemaValueNode) {

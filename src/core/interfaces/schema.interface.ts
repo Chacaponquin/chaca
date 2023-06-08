@@ -2,9 +2,9 @@ import { SchemaField } from "../../schemas/SchemaField.js";
 import { ChacaSchema } from "../classes/ChacaSchema/ChacaSchema.js";
 import { SequentialField } from "../classes/SequentialField/SequentialField.js";
 import { KeyField } from "../classes/KeyField/KeyField.js";
-import { SchemaStore } from "../classes/SchemasStore/SchemaStore.js";
 import { RefField } from "../classes/RefField/RefField.js";
 import { SequenceField } from "../classes/SequenceField/SequenceField.js";
+import { DatasetStore } from "../classes/DatasetStore/DatasetStore.js";
 
 export type SchemaInput<T> = {
   [key in keyof T]:
@@ -39,7 +39,7 @@ type FieldObjectInput<R> = {
   enum?: R[];
 };
 
-export type CustomField<C, R> = (docFields: C, schemas: SchemaStore) => R;
+export type CustomField<C, R> = (docFields: C, store: DatasetStore) => R;
 
 export interface CommonSchema {
   isArray: FieldIsArrayConfig;

@@ -44,6 +44,7 @@ import {
 
 import { ToSQL, ToSQLConfig } from "./core/helpers/ToSQL/ToSQL.js";
 import { SequenceField } from "./core/classes/SequenceField/SequenceField.js";
+import { DatasetStore } from "./core/classes/DatasetStore/DatasetStore.js";
 
 const Chaca = {
   utils: ChacaUtils,
@@ -161,6 +162,7 @@ export {
   KeyField,
   NotEnoughValuesForRefError,
   SchemaStore,
+  DatasetStore,
 };
 
 export type {

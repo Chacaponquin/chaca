@@ -60,7 +60,19 @@ export const SUBJECT_SCHEMA = chaca.defineSchema({
 });
 
 export const STUDENT_SUBJECT_GRADE = chaca.defineSchema({
-  student: chaca.key(chaca.ref("Student.id")),
+  student: chaca.key(
+    chaca.ref("Student.id", {
+      where: (studentFields, store) => {
+        const foundGroup = store.getValue("Group", {
+          where: (fields) => {
+            return fields.group_number === studentFields.group;
+          },
+        });
+
+        return true;
+      },
+    }),
+  ),
   subject: chaca.key(chaca.ref("Subject.id")),
   grade: chaca.ref("Grade.id"),
 });
