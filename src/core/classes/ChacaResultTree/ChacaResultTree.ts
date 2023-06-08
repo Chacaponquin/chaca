@@ -1,5 +1,6 @@
 import { RefValueNode } from "../ChacaInputTree/classes/index.js";
 import { SchemaStore } from "../SchemasStore/SchemaStore.js";
+import { GetStoreValueConfig } from "../SchemasStore/interfaces/store.interface.js";
 import { DocumentTree, FieldNode, SingleResultNode } from "./classes/index.js";
 
 export class ChacaResultTree<D> {
@@ -20,10 +21,20 @@ export class ChacaResultTree<D> {
 
   public getAllValuesByNodeRoute(
     fieldTreeRoute: Array<string>,
+    config: GetStoreValueConfig,
   ): Array<FieldNode> {
+    const whereFunction = config.where;
+
+    const filterDocuemnts = whereFunction
+      ? this.documents.filter((d) => {
+          const isValid = whereFunction(d.getDocumentObject());
+          return isValid;
+        })
+      : this.documents;
+
     const allNodes = [] as Array<FieldNode>;
 
-    this.documents.forEach((d) => {
+    filterDocuemnts.forEach((d) => {
       const foundNode = d.getNodeByNodeRoute(fieldTreeRoute);
       allNodes.push(foundNode);
     });
@@ -60,5 +71,9 @@ export class ChacaResultTree<D> {
 
   public getDocumentsArray(): Array<D> {
     return this.documents.map((d) => d.getDocumentObject());
+  }
+
+  public getDocuments(): Array<DocumentTree<D>> {
+    return this.documents;
   }
 }

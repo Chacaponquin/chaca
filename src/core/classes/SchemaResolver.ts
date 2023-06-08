@@ -22,6 +22,7 @@ import {
   SingleResultNode,
 } from "./ChacaResultTree/classes/index.js";
 import { SchemaStore } from "./SchemasStore/SchemaStore.js";
+import { GetStoreValueConfig } from "./SchemasStore/interfaces/store.interface.js";
 
 export class SchemaResolver<K = any, T = any> {
   private inputTree: ChacaInputTree<K> | null = null;
@@ -111,7 +112,7 @@ export class SchemaResolver<K = any, T = any> {
 
   public setInjectedSchemas(array: Array<SchemaResolver>): void {
     this.injectedSchemas = array;
-    this.schemasStore.setInjectedSchemas(array);
+    this.schemasStore.setInjectedSchemas([...array, this]);
   }
 
   public getInputTree() {
@@ -122,11 +123,29 @@ export class SchemaResolver<K = any, T = any> {
     return this.resultTree;
   }
 
-  public getAllValuesByRoute(fieldToGet: Array<string>): Array<unknown> {
+  public getAllValuesByRoute(
+    fieldToGet: Array<string>,
+    config: GetStoreValueConfig,
+  ): Array<unknown> {
     if (fieldToGet.length === 0) {
-      return this.resultTree.getDocumentsArray();
+      const whereFunction = config.where;
+
+      if (whereFunction) {
+        const filterDocuments = this.resultTree
+          .getDocumentsArray()
+          .filter((d) => whereFunction(d));
+
+        return filterDocuments;
+      } else {
+        const filterDocuments = this.resultTree.getDocumentsArray();
+        return filterDocuments;
+      }
     } else {
-      const allNodes = this.resultTree.getAllValuesByNodeRoute(fieldToGet);
+      const allNodes = this.resultTree.getAllValuesByNodeRoute(
+        fieldToGet,
+        config,
+      );
+
       return allNodes.map((n) => n.getRealValue());
     }
   }
@@ -306,7 +325,10 @@ export class SchemaResolver<K = any, T = any> {
       else if (field instanceof KeyValueNode) {
         return new SingleResultNode(
           field.getResultNodeConfig(),
-          field.getValue(),
+          field.getValue(
+            this.resultTree.getDocumentByIndex(indexDoc).getDocumentObject(),
+            this.schemasStore,
+          ),
         );
       }
 

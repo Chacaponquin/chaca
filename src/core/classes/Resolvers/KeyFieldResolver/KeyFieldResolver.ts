@@ -1,4 +1,5 @@
 import { IResolver } from "../../../interfaces/schema.interface.js";
+import { CustomFieldResolver } from "../CustomFieldResolver/CustomFieldResolver.js";
 import { RefFieldResolver } from "../RefFieldResolver/RefFieldResolver.js";
 import { SchemaFieldResolver } from "../SchemaFieldResolver/SchemaFieldResolver.js";
 import { SequenceFieldResolver } from "../SequenceFieldResolver/SequenceFieldResolver.js";
@@ -6,7 +7,8 @@ import { SequenceFieldResolver } from "../SequenceFieldResolver/SequenceFieldRes
 export type KeyFieldResolverProps =
   | SchemaFieldResolver
   | RefFieldResolver
-  | SequenceFieldResolver;
+  | SequenceFieldResolver
+  | CustomFieldResolver<any, any>;
 
 export class KeyFieldResolver extends IResolver {
   constructor(public readonly fieldType: KeyFieldResolverProps) {

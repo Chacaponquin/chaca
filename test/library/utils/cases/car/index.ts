@@ -24,5 +24,3 @@ export const CASE_SCHEMAS = [
   { documents: DOCS, name: "Turist", schema: TURIST_SCHEMA },
   { documents: DOCS, name: "Contract", schema: CONTRACT_SCHEMA },
 ];
-
-export const CAR_CASE_DATA = chaca.multiGenerate(CASE_SCHEMAS);

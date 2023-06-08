@@ -39,7 +39,7 @@ type FieldObjectInput<R> = {
   enum?: R[];
 };
 
-export type CustomField<C, V> = (docFields: C, schemas: SchemaStore) => V;
+export type CustomField<C, R> = (docFields: C, schemas: SchemaStore) => R;
 
 export interface CommonSchema {
   isArray: FieldIsArrayConfig;

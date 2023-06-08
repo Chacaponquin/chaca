@@ -69,7 +69,7 @@ export class RefValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.getNodeName());
+      throw new TryRefANoKeyFieldError(this.getNodeConfig().fieldTreeRoute);
     } else {
       return false;
     }

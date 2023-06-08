@@ -1,5 +1,6 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { SchemaResolver } from "../SchemaResolver.js";
+import { GetStoreValueConfig } from "./interfaces/store.interface.js";
 
 export class SchemaStore {
   private schemas: Array<SchemaResolver>;
@@ -23,18 +24,35 @@ export class SchemaStore {
     this.schemas = array;
   }
 
-  public getValue<R = any>(fieldToGet: string): Array<R> {
+  private validateGetValueConfig(
+    config?: GetStoreValueConfig,
+  ): GetStoreValueConfig {
+    let returnConfig: GetStoreValueConfig = {};
+
+    if (config && typeof config === "object" && config !== null) {
+      if (typeof config.where === "function") {
+        const whereFunction = config.where;
+        returnConfig = { ...config };
+        returnConfig.where = whereFunction;
+      }
+    }
+
+    return returnConfig;
+  }
+
+  public getValue<R = any>(
+    fieldToGet: string,
+    config?: GetStoreValueConfig,
+  ): Array<R> {
+    const getValueConfig = this.validateGetValueConfig(config);
     const fieldToGetArray = this.validateFieldToGet(fieldToGet);
 
     let values = [] as Array<R>;
-
     for (let i = 0; i < this.schemas.length; i++) {
-      // build tree if not created yet
-      // this.schemas[i].buildTrees();
-
       if (this.schemas[i].getSchemaName() === fieldToGetArray[0]) {
         values = this.schemas[i].getAllValuesByRoute(
           fieldToGetArray.slice(1),
+          getValueConfig,
         ) as Array<R>;
       }
     }

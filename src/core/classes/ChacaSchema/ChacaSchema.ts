@@ -210,6 +210,8 @@ export class ChacaSchema<K = any, T = any> {
       type = new RefFieldResolver(fieldType.getRefField());
     } else if (fieldType instanceof SequenceField) {
       type = new SequenceFieldResolver(fieldType.getConfig());
+    } else if (typeof fieldType === "function") {
+      type = new CustomFieldResolver(fieldType);
     } else {
       throw new ChacaError(`Incorrect type for the key schema`);
     }

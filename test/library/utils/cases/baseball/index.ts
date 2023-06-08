@@ -37,9 +37,7 @@ export const BASEBALL_SCHEMAS = [
   },
   { name: "Player", documents: TOTAL_PLAYERS, schema: PLAYER_SCHEMA },
   { name: "Coach", documents: TOTAL_COACHS, schema: COACH_SCHEMA },
-  { name: "Pitcher", documents: 200, schema: PITCHER_SCHEMA },
-  { name: "Batter", documents: 1000, schema: BATTER_SCHEMA },
-  { name: "Game", documents: 500, schema: GAME_SCHEMA },
+  { name: "Pitcher", documents: 20, schema: PITCHER_SCHEMA },
+  { name: "Batter", documents: 800, schema: BATTER_SCHEMA },
+  { name: "Game", documents: 300, schema: GAME_SCHEMA },
 ];
-
-export const BASEBALL_CASE_DATA = chaca.multiGenerate(BASEBALL_SCHEMAS);

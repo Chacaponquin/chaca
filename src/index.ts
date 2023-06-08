@@ -20,6 +20,8 @@ import {
   NotEnoughValuesForRefError,
 } from "./errors/ChacaError.js";
 
+import { GetStoreValueConfig } from "./core/classes/SchemasStore/interfaces/store.interface.js";
+
 import {
   MultiGenerate,
   MultiGenerateSchema,
@@ -34,13 +36,16 @@ import {
 } from "./core/classes/RefField/RefField.js";
 
 import { SequentialField } from "./core/classes/SequentialField/SequentialField.js";
-import { KeyField, KeyFieldProps } from "./core/classes/KeyField/KeyField.js";
+import {
+  KeyField,
+  KeyFieldProps,
+  KeyAllowDataTypes,
+} from "./core/classes/KeyField/KeyField.js";
 
 import { ToSQL, ToSQLConfig } from "./core/helpers/ToSQL/ToSQL.js";
 import { SequenceField } from "./core/classes/SequenceField/SequenceField.js";
 
 const Chaca = {
-  Schema: ChacaSchema,
   utils: ChacaUtils,
 
   /**
@@ -100,7 +105,7 @@ const Chaca = {
     return new SequenceField();
   },
 
-  key<A = any>(schemaField: KeyFieldProps<A>) {
+  key<A = any, C = any>(schemaField: KeyFieldProps<A, C>) {
     return new KeyField<A>(schemaField);
   },
 
@@ -167,4 +172,6 @@ export type {
   FieldToRefObject,
   ToSQLConfig,
   RefFieldWhere,
+  GetStoreValueConfig,
+  KeyAllowDataTypes,
 };

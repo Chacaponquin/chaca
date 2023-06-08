@@ -61,7 +61,7 @@ export const CONTRACT_SCHEMA = chaca.defineSchema({
       let ref = founds[0];
 
       for (let i = 1; i < founds.length; i++) {
-        if (founds[i].delivaery_date.getTime() > ref.delivery_date.getTime()) {
+        if (founds[i].delivery_date.getTime() > ref.delivery_date.getTime()) {
           ref = founds[i];
         }
       }

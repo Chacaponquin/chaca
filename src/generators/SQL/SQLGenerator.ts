@@ -372,11 +372,17 @@ export class SQLGenerator extends Generator {
     data: any,
     resolvers: Array<SchemaResolver>,
   ): Promise<string> {
-    let allTables = [] as Array<SQLTable>;
+    const allTables = [] as Array<SQLTable>;
 
     Object.entries(data).forEach(([schemaName, dataArray]) => {
       const currentTables = this.createData(schemaName, dataArray);
 
+      for (const t of currentTables) {
+        allTables.push(t);
+      }
+    });
+
+    Object.keys(data).forEach((schemaName) => {
       resolvers.forEach((r) => {
         if (r.getSchemaName() === schemaName) {
           const schemaToResolve = r.getSchemaToResolve();
@@ -389,7 +395,7 @@ export class SQLGenerator extends Generator {
               ) {
                 // buscar columna con ese nombre
                 const foundColumn = this.foundColumnByName(
-                  currentTables,
+                  allTables,
                   schemaName,
                   fieldName,
                 );
@@ -430,8 +436,6 @@ export class SQLGenerator extends Generator {
           );
         }
       });
-
-      allTables = [...allTables, ...currentTables];
     });
 
     await fs.promises.writeFile(
@@ -454,10 +458,17 @@ export class SQLGenerator extends Generator {
     const tableToRef = arrayLocation.join("_");
 
     const foundTable = this.findTableByName(tables, tableToRef);
-    const foundColumn = foundTable.findColumnByName(columnToRef);
 
-    if (foundColumn) {
-      return { table: foundTable, column: foundColumn };
+    if (foundTable) {
+      const foundColumn = foundTable.findColumnByName(columnToRef);
+
+      if (foundColumn) {
+        return { table: foundTable, column: foundColumn };
+      } else {
+        throw new ChacaError(
+          `Not found column ${columnToRef} in table ${tableToRef}`,
+        );
+      }
     } else {
       throw new ChacaError(`Not found table '${tableToRef}'`);
     }

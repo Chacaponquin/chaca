@@ -116,6 +116,13 @@ export class ChacaInputTree<T> {
         );
 
         returnNode = new KeyValueNode(actualRoute, schemaValueNode);
+      } else if (object.type.fieldType instanceof CustomFieldResolver) {
+        const customNode = new CustomValueNode(
+          { fieldTreeRoute: actualRoute, isArray: null, posibleNull: 0 },
+          object.type.fieldType.fun,
+        );
+
+        returnNode = new KeyValueNode(actualRoute, customNode);
       } else {
         const refValueNode = new RefValueNode(
           { fieldTreeRoute: actualRoute, isArray: null, posibleNull: 0 },

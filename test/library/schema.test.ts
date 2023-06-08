@@ -18,7 +18,7 @@ describe("#Schema Creation Test", () => {
         return "a";
       });
 
-      const dataSchema = new chaca.Schema({
+      const dataSchema = chaca.defineSchema({
         id: schemas.id.numberRow(),
         test: schema(),
       });
@@ -34,7 +34,7 @@ describe("#Schema Creation Test", () => {
         },
       );
 
-      const dataSchema = new chaca.Schema({
+      const dataSchema = chaca.defineSchema({
         id: schemas.id.numberRow(),
         test: schema({ a: 5, b: 5 }),
       });
@@ -45,7 +45,7 @@ describe("#Schema Creation Test", () => {
 
   describe("create schema documents", () => {
     describe("simple schema", () => {
-      const schema = new chaca.Schema({
+      const schema = chaca.defineSchema({
         id: { type: schemas.id.mongodbID() },
         image: { type: schemas.image.film() },
         name: { type: schemas.person.firstName({ language: "es" }) },
@@ -70,7 +70,7 @@ describe("#Schema Creation Test", () => {
 
     describe("schema with array field", () => {
       it("passing a number as argument. Should return an array of documents with the id property with that number as length", () => {
-        const schema = new chaca.Schema({
+        const schema = chaca.defineSchema({
           id: { type: schemas.id.mongodbID(), isArray: 20 },
           name: schemas.person.firstName(),
         });
@@ -81,7 +81,7 @@ describe("#Schema Creation Test", () => {
 
       describe("passing a object as parameter", () => {
         it("passing an empty object. Should return an array with length between 1 and 10", () => {
-          const schema = new chaca.Schema({
+          const schema = chaca.defineSchema({
             id: { type: schemas.id.mongodbID(), isArray: {} as any },
           });
           const docs = schema.generate(10);
@@ -91,7 +91,7 @@ describe("#Schema Creation Test", () => {
         });
 
         it("passing only max parameter. Should return an array with length <= max parameter", () => {
-          const schema = new chaca.Schema({
+          const schema = chaca.defineSchema({
             id: { type: schemas.id.mongodbID(), isArray: { max: 2 } },
           });
           const docs = schema.generate(10);
@@ -101,7 +101,7 @@ describe("#Schema Creation Test", () => {
         });
 
         it("passing only min parameter. Should return an array with length >= min parameter", () => {
-          const schema = new chaca.Schema({
+          const schema = chaca.defineSchema({
             id: { type: schemas.id.mongodbID(), isArray: { min: 3 } },
           });
           const docs = schema.generate(10);
@@ -111,7 +111,7 @@ describe("#Schema Creation Test", () => {
         });
 
         it("passing min and max parameters. Should return an array with length betwwen min and max parameters", () => {
-          const schema = new chaca.Schema({
+          const schema = chaca.defineSchema({
             id: {
               type: schemas.id.mongodbID(),
               isArray: { min: 3, max: 10 },
@@ -127,7 +127,7 @@ describe("#Schema Creation Test", () => {
 
     describe("schema with custom field", () => {
       it("custom function return a string", () => {
-        const schema = new chaca.Schema({
+        const schema = chaca.defineSchema({
           id: { type: schemas.id.numberRow() },
           custom: {
             custom: () => {
@@ -141,7 +141,7 @@ describe("#Schema Creation Test", () => {
       });
 
       it("custom function return undefined. Should return null as value", () => {
-        const schema = new chaca.Schema({
+        const schema = chaca.defineSchema({
           id: { type: schemas.id.numberRow() },
           custom: {
             custom: () => undefined,
@@ -153,7 +153,7 @@ describe("#Schema Creation Test", () => {
       });
 
       it("custom function access to this property", () => {
-        const schema = new chaca.Schema({
+        const schema = chaca.defineSchema({
           id: { type: schemas.id.numberRow() },
           custom: {
             custom(fields) {
@@ -168,9 +168,9 @@ describe("#Schema Creation Test", () => {
       });
 
       it("custom function in a nested schema", () => {
-        const schema = new chaca.Schema({
+        const schema = chaca.defineSchema({
           id: schemas.id.mongodbID(),
-          user: new chaca.Schema({
+          user: chaca.defineSchema({
             image: schemas.science.unit(),
             followersInf: {
               custom: (a) => {
@@ -187,12 +187,12 @@ describe("#Schema Creation Test", () => {
       });
 
       it("custom function in a nested schema inside an other nested schema", () => {
-        const schema2 = new chaca.Schema({
+        const schema2 = chaca.defineSchema({
           id: schemas.id.mongodbID(),
-          user: new chaca.Schema({
+          user: chaca.defineSchema({
             image: schemas.science.unit(),
             custom: (h) => h.id,
-            followerInf: new chaca.Schema({
+            followerInf: chaca.defineSchema({
               name: schemas.person.firstName(),
               hola: (a) => {
                 return a.user.image;
@@ -210,7 +210,7 @@ describe("#Schema Creation Test", () => {
     describe("schema with enum field", () => {
       it("with an array [1, 2, 3, 4, 5]. Should return one of this elements", () => {
         const array = [1, 2, 3, 4, 5];
-        const schema = new chaca.Schema({
+        const schema = chaca.defineSchema({
           id: { enum: array },
         });
 
@@ -228,10 +228,10 @@ describe("#Schema Creation Test", () => {
           user: { userName: string; image: string; custom: string };
         };
 
-        const schema = new chaca.Schema<Schema>({
+        const schema = chaca.defineSchema<Schema>({
           id: schemas.id.mongodbID(),
           image: schemas.image.people(),
-          user: new chaca.Schema({
+          user: chaca.defineSchema({
             userName: schemas.internet.userName(),
             image: schemas.image.fashion(),
             custom: (a) => {},
@@ -245,10 +245,10 @@ describe("#Schema Creation Test", () => {
       });
 
       it("should return an object with a user field with the image field as array of string", () => {
-        const schema = new chaca.Schema({
+        const schema = chaca.defineSchema({
           id: schemas.id.mongodbID(),
           image: schemas.image.people(),
-          user: new chaca.Schema({
+          user: chaca.defineSchema({
             userName: schemas.internet.userName(),
             images: { type: schemas.image.fashion(), isArray: 10 },
           }),
@@ -260,12 +260,12 @@ describe("#Schema Creation Test", () => {
       });
 
       it("should return an object with a user field as an array of objects with image and userName property", () => {
-        const schema = new chaca.Schema<{
+        const schema = chaca.defineSchema<{
           user: { userName: string; image: string }[];
           custom: string;
         }>({
           user: {
-            type: new chaca.Schema({
+            type: chaca.defineSchema({
               userName: schemas.person.firstName(),
               image: schemas.image.food(),
             }),
@@ -285,11 +285,9 @@ describe("#Schema Creation Test", () => {
   });
 
   describe("schema with incorrect arguments", () => {
- 
-
     it("passing invalid empty schema object. Should throw an error", () => {
       try {
-        chaca.defineSchema( {});
+        chaca.defineSchema({});
       } catch (error) {
         expect(error instanceof ChacaError).toBe(true);
       }
@@ -297,7 +295,7 @@ describe("#Schema Creation Test", () => {
 
     it("schema object with custom and type property", () => {
       try {
-        chaca.defineSchema( {
+        chaca.defineSchema({
           id: {
             type: schemas.id.mongodbID(),
             custom: () => {
@@ -312,7 +310,7 @@ describe("#Schema Creation Test", () => {
 
     it("with empty array as argument. Should throw an error", () => {
       try {
-        chaca.defineSchema( { id: { enum: [] } });
+        chaca.defineSchema({ id: { enum: [] } });
       } catch (error) {
         expect(error instanceof ChacaError).toBe(true);
       }

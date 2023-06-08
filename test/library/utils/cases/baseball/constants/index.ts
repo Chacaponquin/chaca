@@ -37,5 +37,5 @@ export const PROVINCES = [
   "Ciego de Avila",
 ];
 
-export const TOTAL_PLAYERS = 2500;
-export const TOTAL_COACHS = 1000;
+export const TOTAL_PLAYERS = 1000;
+export const TOTAL_COACHS = 100;

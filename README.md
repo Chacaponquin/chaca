@@ -57,7 +57,7 @@ const postSchema = chaca.defineSchema<MoviePost>({
       return true;
     } else return false;
   },
-  directorInf: new chaca.Schema({
+  directorInf: chaca.defineSchema({
     name: schemas.person.fullName(),
     age: schemas.dataType.int({ min: 18, max: 85 }),
   }),
@@ -121,7 +121,7 @@ const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
 {
   name: schemas.person.firstName(),
   age: schemas.dataType.int({ min: 18, max:90}),
-  userInf: new chaca.Schema({
+  userInf: chaca.defineSchema({
     firstName: schemas.person.firstName(),
     favoriteCats: {
       type: schemas.animal.cat(),
@@ -489,7 +489,7 @@ const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
 });
 
 // Usage
-const mySchema = new chaca.Schema({
+const mySchema = chaca.defineSchema({
   sum: mySchemaField({ a: 5, b: 10 }), // In all the generated objects the sum field is 15
 });
 ```
@@ -513,7 +513,7 @@ const mySchemaField = chaca.defineSchemaField<SchemaArguments>(
 );
 
 // Usage
-const mySchema = new chaca.Schema({
+const mySchema = chaca.defineSchema({
   sum: mySchemaField({ a: 5, b: 10 }), // In all the generated objects the sum field is 15
 });
 ```
@@ -545,7 +545,7 @@ const fileLocation = await chaca.export(data, {
 ### `schema.generateAndExport`
 
 ```ts
-const schema = new chaca.Schema({
+const schema = chaca.defineSchema({
   id: schemas.id.mongodbID(),
   image: schemas.image.film(),
   name: schemas.person.firstName({ language: "es" }),

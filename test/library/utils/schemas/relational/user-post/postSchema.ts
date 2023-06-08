@@ -1,6 +1,6 @@
 import { chaca, schemas } from "../../../../../../src";
 
-export const POST_SCHEMA = new chaca.Schema({
+export const POST_SCHEMA = chaca.defineSchema({
   id: chaca.key(schemas.id.mongodbID()),
   title: schemas.word.noun(),
   likes: schemas.dataType.int({ min: 0 }),

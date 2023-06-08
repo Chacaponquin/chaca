@@ -6,21 +6,27 @@ export class ChacaError extends Error {
 }
 
 export class EmptySequentialValuesError extends ChacaError {
-  constructor(key: string) {
-    super(`There are no more sequential values for the field ${key}`);
+  constructor(fieldRoute: Array<string>) {
+    super(
+      `There are no more sequential values for the field ${fieldRoute.join(
+        ".",
+      )}`,
+    );
   }
 }
 
 export class TryRefANoKeyFieldError extends ChacaError {
-  constructor(fieldName: string) {
+  constructor(fieldRoute: Array<string>) {
     super(
-      `The field '${fieldName}' is not a key field, so you can't reference this one`,
+      `The field '${fieldRoute.join(
+        ".",
+      )}' is not a key field, so you can't reference this one`,
     );
   }
 }
 
 export class NotEnoughValuesForRefError extends ChacaError {
-  constructor(refFieldRoute: Array<string>, keyFieldRoute: Array<any>) {
+  constructor(refFieldRoute: Array<string>, keyFieldRoute: Array<string>) {
     super(
       `Not enough values of ${keyFieldRoute.join(
         ".",
