@@ -19,7 +19,7 @@ export class SequenceValueNode extends ChacaTreeNode {
 
   public getNextValue() {
     const returnValue = this.actualValue;
-    this.actualValue++;
+    this.actualValue += this.config.step;
 
     return returnValue;
   }
