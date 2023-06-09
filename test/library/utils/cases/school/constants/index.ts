@@ -3,6 +3,13 @@ export const YEARS_FINISH = [2020, 2021, 2022, 2023];
 
 export const EVALUATIONS = ["Excelente", "Bien", "Aprobado", "Desaprobado"];
 
+export const DOWN_REASONS = [
+  "Enfermedad",
+  "Traslado",
+  "Culminacion",
+  "Desaprobado",
+];
+
 export const SUBJECTS = [
   "Calculo",
   "Calculo 2",

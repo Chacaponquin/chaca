@@ -19,11 +19,11 @@ describe("#Schema Creation Test", () => {
       });
 
       const dataSchema = chaca.defineSchema({
-        id: schemas.id.numberRow(),
+        id: schemas.id.mongodbID(),
         test: schema(),
       });
 
-      expect(dataSchema.generate(10)[5]["test"] === "a").toBe(true);
+      expect(dataSchema.generateObject()["test"] === "a").toBe(true);
     });
 
     it("create an schema with arguments and the function sum the both", () => {
@@ -35,11 +35,11 @@ describe("#Schema Creation Test", () => {
       );
 
       const dataSchema = chaca.defineSchema({
-        id: schemas.id.numberRow(),
+        id: schemas.id.mongodbID(),
         test: schema({ a: 5, b: 5 }),
       });
 
-      expect(dataSchema.generate(10)[5]["test"] === 10).toBe(true);
+      expect(dataSchema.generateObject()["test"] === 10).toBe(true);
     });
   });
 
@@ -51,7 +51,7 @@ describe("#Schema Creation Test", () => {
         name: { type: schemas.person.firstName({ language: "es" }) },
       });
 
-      const doc = schema.generate(1)[0];
+      const doc = schema.generateObject();
 
       it("should return a define schema object with image, id and name fields", async () => {
         expect(doc).toHaveProperty("id");
@@ -75,8 +75,8 @@ describe("#Schema Creation Test", () => {
           name: schemas.person.firstName(),
         });
 
-        const docs = schema.generate(10);
-        expect(docs[0]["id"].length).toBe(20);
+        const docs = schema.generateObject();
+        expect(docs["id"].length).toBe(20);
       });
 
       describe("passing a object as parameter", () => {
@@ -84,8 +84,8 @@ describe("#Schema Creation Test", () => {
           const schema = chaca.defineSchema({
             id: { type: schemas.id.mongodbID(), isArray: {} as any },
           });
-          const docs = schema.generate(10);
-          const id = docs[0]["id"] as Array<string>;
+          const docs = schema.generateObject();
+          const id = docs["id"] as Array<string>;
 
           expect(id.length >= 1 && id.length <= 10).toBe(true);
         });
@@ -94,8 +94,8 @@ describe("#Schema Creation Test", () => {
           const schema = chaca.defineSchema({
             id: { type: schemas.id.mongodbID(), isArray: { max: 2 } },
           });
-          const docs = schema.generate(10);
-          const id = docs[0]["id"] as Array<String>;
+          const docs = schema.generateObject();
+          const id = docs["id"] as Array<String>;
 
           expect(id.length <= 2).toBe(true);
         });
@@ -104,8 +104,8 @@ describe("#Schema Creation Test", () => {
           const schema = chaca.defineSchema({
             id: { type: schemas.id.mongodbID(), isArray: { min: 3 } },
           });
-          const docs = schema.generate(10);
-          const id = docs[0]["id"] as Array<String>;
+          const docs = schema.generateObject();
+          const id = docs["id"] as Array<String>;
 
           expect(id.length >= 3).toBe(true);
         });
@@ -117,8 +117,8 @@ describe("#Schema Creation Test", () => {
               isArray: { min: 3, max: 10 },
             },
           });
-          const docs = schema.generate(10);
-          const id = docs[0]["id"] as Array<String>;
+          const docs = schema.generateObject();
+          const id = docs["id"] as Array<String>;
 
           expect(id.length >= 3 && id.length <= 10).toBe(true);
         });
@@ -128,7 +128,7 @@ describe("#Schema Creation Test", () => {
     describe("schema with custom field", () => {
       it("custom function return a string", () => {
         const schema = chaca.defineSchema({
-          id: { type: schemas.id.numberRow() },
+          id: { type: schemas.id.mongodbID() },
           custom: {
             type: () => "Buenas",
           },
@@ -140,7 +140,7 @@ describe("#Schema Creation Test", () => {
 
       it("custom function return undefined. Should return null as value", () => {
         const schema = chaca.defineSchema({
-          id: { type: schemas.id.numberRow() },
+          id: { type: schemas.id.mongodbID() },
           custom: {
             type: () => undefined,
           },
@@ -152,7 +152,7 @@ describe("#Schema Creation Test", () => {
 
       it("custom function access to this property", () => {
         const schema = chaca.defineSchema({
-          id: { type: schemas.id.numberRow() },
+          id: { type: schemas.id.mongodbID() },
           custom: {
             type(fields) {
               return fields.id;
@@ -160,9 +160,9 @@ describe("#Schema Creation Test", () => {
           },
         });
 
-        const docs = schema.generate(10);
+        const docs = schema.generateObject();
 
-        expect(docs[0]["custom"] === docs[0]["id"]).toBe(true);
+        expect(docs["custom"] === docs["id"]).toBe(true);
       });
 
       it("custom function in a nested schema", () => {
@@ -199,7 +199,7 @@ describe("#Schema Creation Test", () => {
           }),
         });
 
-        const doc = schema2.generate(20)[0];
+        const doc = schema2.generateObject();
 
         expect(doc["user"]["followerInf"]["hola"]).toBe(doc["user"]["image"]);
       });
@@ -212,9 +212,9 @@ describe("#Schema Creation Test", () => {
           id: { enum: array },
         });
 
-        const docs = schema.generate(50);
+        const docs = schema.generateObject();
 
-        expect(Boolean(array.find((el) => el === docs[0]["id"]))).toBe(true);
+        expect(array.some((el) => el === docs["id"])).toBe(true);
       });
     });
 
@@ -252,7 +252,7 @@ describe("#Schema Creation Test", () => {
           }),
         });
 
-        const doc = schema.generate(5)[0]["user"];
+        const doc = schema.generateObject()["user"];
 
         expect(doc.images.length).toBe(10);
       });

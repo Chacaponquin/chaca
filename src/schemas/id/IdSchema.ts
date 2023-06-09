@@ -4,19 +4,6 @@ import { Schemas } from "../index.js";
 
 export class IdSchema {
   /**
-   * Generates a unique number
-   *
-   * @example schemas.id.numberRow() // Schema
-   * @example
-   * schemas.id.numberRow().getValue() //1664755445878
-   *
-   * @returns string
-   */
-  public numberRow() {
-    return new SchemaField<number>("numberRow", () => Date.now(), {});
-  }
-
-  /**
    * Returns a MongoDB [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/) string.
    *
    * @example schemas.id.mongodbId() // Schema
