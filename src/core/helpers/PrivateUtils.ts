@@ -1,6 +1,7 @@
 import { ChacaError } from "../../errors/ChacaError.js";
 import { Schemas } from "../../schemas/index.js";
 
+type TimeUnits = "years" | "seconds" | "minutes" | "days" | "hours" | "months";
 export class PrivateUtils {
   static boolean(): boolean {
     return this.oneOfArray([true, false]);
@@ -9,15 +10,6 @@ export class PrivateUtils {
   static id() {
     return Schemas.id.mongodbID().getValue();
   }
-
-  /*static equalArray(array1: Array<string | number>, array2: Array<string | number>): boolean{
-const topLength = array1.length >= array2.length ?  array1.length : array2.length
-
-let equal = true
-for(let i = 0; i < topLength && equal; i++) {
-  if()
-}
-  }*/
 
   static joinWords(words: string[] | string, sep?: string): string {
     const separator = typeof sep === "string" ? sep : "_";
@@ -241,5 +233,32 @@ for(let i = 0; i < topLength && equal; i++) {
     } else ret = false;
 
     return ret;
+  }
+
+  static sumDateRange(date: Date, value: number, range: TimeUnits): Date {
+    switch (range) {
+      case "years":
+        date.setFullYear(date.getFullYear() + value);
+        break;
+      case "months":
+        date.setMonth(date.getMonth() + value);
+        break;
+      case "days":
+        date.setDate(date.getDate() + value);
+        break;
+      case "hours":
+        date.setHours(date.getHours() + value);
+        break;
+      case "minutes":
+        date.setMinutes(date.getMinutes() + value);
+        break;
+      case "seconds":
+        date.setSeconds(date.getSeconds() + value);
+        break;
+      default:
+        throw new ChacaError("Invalid range");
+    }
+
+    return date;
   }
 }

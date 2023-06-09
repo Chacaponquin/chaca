@@ -43,7 +43,10 @@ import {
 } from "./core/classes/KeyField/KeyField.js";
 
 import { ToSQL, ToSQLConfig } from "./core/helpers/ToSQL/ToSQL.js";
-import { SequenceField } from "./core/classes/SequenceField/SequenceField.js";
+import {
+  SequenceField,
+  SequenceFieldProps,
+} from "./core/classes/SequenceField/SequenceField.js";
 import { DatasetStore } from "./core/classes/DatasetStore/DatasetStore.js";
 
 const Chaca = {
@@ -102,8 +105,8 @@ const Chaca = {
     return new SequentialField(valuesArray);
   },
 
-  sequence() {
-    return new SequenceField();
+  sequence(config?: Partial<SequenceFieldProps>) {
+    return new SequenceField(config);
   },
 
   key<A = any, C = any>(schemaField: KeyFieldProps<A, C>) {

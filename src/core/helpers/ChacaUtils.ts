@@ -93,4 +93,6 @@ export const ChacaUtils = {
    * @returns boolean
    */
   isSimilarObjects: PrivateUtils.isSimilarObjects,
+
+  sumDateRange: PrivateUtils.sumDateRange,
 };
