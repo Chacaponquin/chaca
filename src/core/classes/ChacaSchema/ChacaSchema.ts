@@ -8,6 +8,7 @@ import {
   CommonSchema,
   CustomField,
   FieldSchemaConfig,
+  FieldTypeInput,
   IResolver,
   SchemaInput,
   SchemaToResolve,
@@ -157,16 +158,6 @@ export class ChacaSchema<K = any, T = any> {
                   ...defaultConfig,
                 },
               };
-            } else if (schema.custom) {
-              schemaToSave = {
-                ...schemaToSave,
-                [key]: {
-                  type: new CustomFieldResolver<K, T[keyof T]>(
-                    this.validateCustom(key, schema.custom),
-                  ),
-                  ...defaultConfig,
-                },
-              };
             } else {
               throw new ChacaError(
                 `The field ${String(key)} dosen't have a resolve function`,
@@ -221,7 +212,7 @@ export class ChacaSchema<K = any, T = any> {
 
   private validateType(
     key: keyof T,
-    type: ChacaSchema<T[keyof T]> | SchemaField<T[keyof T], any> | RefField,
+    type: FieldTypeInput<T[keyof T]>,
   ): IResolver {
     if (type instanceof ChacaSchema) {
       return new MixedFieldResolver(type);
@@ -229,6 +220,8 @@ export class ChacaSchema<K = any, T = any> {
       return new RefFieldResolver(type.getRefField());
     } else if (type instanceof SchemaField) {
       return new SchemaFieldResolver(type);
+    } else if (typeof type === "function") {
+      return new CustomFieldResolver(type);
     } else {
       throw new ChacaError(`Invalid type for key ${String(key)}`);
     }

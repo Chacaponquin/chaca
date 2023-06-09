@@ -11,16 +11,18 @@ describe("# Baseball Case Test", () => {
     BASEBALL_CASE_DATA = chaca.multiGenerate(BASEBALL_SCHEMAS);
   });
 
-  it("Baseball case creation", () => {
-    expect(BASEBALL_CASE_DATA).toHaveProperty("Game");
-    expect(BASEBALL_CASE_DATA).toHaveProperty("Phase");
-    expect(BASEBALL_CASE_DATA).toHaveProperty("Stadium");
-    expect(BASEBALL_CASE_DATA).toHaveProperty("Team");
-    expect(BASEBALL_CASE_DATA).toHaveProperty("TeamMember");
-    expect(BASEBALL_CASE_DATA).toHaveProperty("Player");
-    expect(BASEBALL_CASE_DATA).toHaveProperty("Coach");
-    expect(BASEBALL_CASE_DATA).toHaveProperty("Pitcher");
-    expect(BASEBALL_CASE_DATA).toHaveProperty("Batter");
+  it("Creation", () => {
+    const DATA = chaca.multiGenerate(BASEBALL_SCHEMAS);
+
+    expect(DATA).toHaveProperty("Game");
+    expect(DATA).toHaveProperty("Phase");
+    expect(DATA).toHaveProperty("Stadium");
+    expect(DATA).toHaveProperty("Team");
+    expect(DATA).toHaveProperty("TeamMember");
+    expect(DATA).toHaveProperty("Player");
+    expect(DATA).toHaveProperty("Coach");
+    expect(DATA).toHaveProperty("Pitcher");
+    expect(DATA).toHaveProperty("Batter");
   });
 
   /* it("SQL", async () => {

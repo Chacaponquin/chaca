@@ -8,6 +8,7 @@ import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
 import { FieldToRefObject } from "../../../RefField/RefField.js";
+import { DocumentTree } from "../../../ChacaResultTree/classes/index.js";
 
 export class RefValueNode extends ChacaTreeNode {
   private refFieldTreeRoute: Array<string>;
@@ -75,7 +76,9 @@ export class RefValueNode extends ChacaTreeNode {
     }
   }
 
-  public getValue(): unknown | Array<unknown> {
+  public getValue<D>(
+    currentDocument: DocumentTree<D>,
+  ): unknown | Array<unknown> {
     if (this.schemaRef) {
       if (
         (!this.schemaRef.isBuildingTrees() &&
@@ -86,6 +89,7 @@ export class RefValueNode extends ChacaTreeNode {
         this.schemaRef.buildTrees();
 
         const allValues = this.schemaRef.getAllRefValuesByNodeRoute(
+          currentDocument,
           this.refFieldTreeRoute,
           this,
         );
@@ -103,9 +107,17 @@ export class RefValueNode extends ChacaTreeNode {
           } else {
             const node = PrivateUtils.oneOfArray(noTakenValues);
             node.changeIsTaken(this.getNodeConfig().fieldTreeRoute);
+
             return node.getRealValue();
           }
         } else {
+          if (allValues.length === 0) {
+            throw new NotEnoughValuesForRefError(
+              this.getNodeConfig().fieldTreeRoute,
+              this.refFieldTreeRoute,
+            );
+          }
+
           return PrivateUtils.oneOfArray(allValues).getRealValue();
         }
       } else {

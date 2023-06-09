@@ -1,4 +1,5 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
+import { DocumentTree, FieldNode } from "../ChacaResultTree/classes/index.js";
 import { SchemaResolver } from "../SchemaResolver.js";
 import { GetStoreValueConfig } from "./interfaces/store.interface.js";
 
@@ -40,20 +41,23 @@ export class SchemaStore {
     return returnConfig;
   }
 
-  public getValue<R = any>(
+  public getValue<D = any>(
     fieldToGet: string,
     config?: GetStoreValueConfig,
-  ): Array<R> {
+  ): Array<FieldNode | DocumentTree<D>> {
     const getValueConfig = this.validateGetValueConfig(config);
     const fieldToGetArray = this.validateFieldToGet(fieldToGet);
 
-    let values = [] as Array<R>;
-    for (let i = 0; i < this.schemas.length; i++) {
+    let foundSchema = false;
+    let values = [] as Array<FieldNode | DocumentTree<D>>;
+    for (let i = 0; i < this.schemas.length && !foundSchema; i++) {
       if (this.schemas[i].getSchemaName() === fieldToGetArray[0]) {
         values = this.schemas[i].getAllValuesByRoute(
           fieldToGetArray.slice(1),
           getValueConfig,
-        ) as Array<R>;
+        );
+
+        foundSchema = true;
       }
     }
 

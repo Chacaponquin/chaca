@@ -130,33 +130,31 @@ describe("#Schema Creation Test", () => {
         const schema = chaca.defineSchema({
           id: { type: schemas.id.numberRow() },
           custom: {
-            custom: () => {
-              return "Buenas";
-            },
+            type: () => "Buenas",
           },
         });
 
-        const docs = schema.generate(10);
-        expect(docs[0]["custom"]).toBe("Buenas");
+        const docs = schema.generateObject();
+        expect(docs["custom"]).toBe("Buenas");
       });
 
       it("custom function return undefined. Should return null as value", () => {
         const schema = chaca.defineSchema({
           id: { type: schemas.id.numberRow() },
           custom: {
-            custom: () => undefined,
+            type: () => undefined,
           },
         });
 
-        const docs = schema.generate(10);
-        expect(docs[0]["custom"]).toBe(null);
+        const docs = schema.generateObject();
+        expect(docs["custom"]).toBe(null);
       });
 
       it("custom function access to this property", () => {
         const schema = chaca.defineSchema({
           id: { type: schemas.id.numberRow() },
           custom: {
-            custom(fields) {
+            type(fields) {
               return fields.id;
             },
           },
@@ -173,7 +171,7 @@ describe("#Schema Creation Test", () => {
           user: chaca.defineSchema({
             image: schemas.science.unit(),
             followersInf: {
-              custom: (a) => {
+              type: (a) => {
                 return a.id;
               },
               isArray: 20,
@@ -181,7 +179,7 @@ describe("#Schema Creation Test", () => {
           }),
         });
 
-        const doc = schema.generate(20)[0];
+        const doc = schema.generateObject();
 
         expect(doc["user"]["followersInf"][0]).toBe(doc["id"]);
       });
@@ -238,7 +236,7 @@ describe("#Schema Creation Test", () => {
           }),
         });
 
-        const doc = schema.generate(2)[0];
+        const doc = schema.generateObject();
 
         expect(doc["user"]).toHaveProperty("userName");
         expect(doc["user"]).toHaveProperty("image");
@@ -277,9 +275,10 @@ describe("#Schema Creation Test", () => {
           },
         });
 
-        const doc = schema.generate(5)[0];
+        const doc = schema.generateObject();
 
         expect(doc["user"].length).toBe(20);
+        expect(doc["custom"]).toBe("Hola");
       });
     });
   });
@@ -288,21 +287,6 @@ describe("#Schema Creation Test", () => {
     it("passing invalid empty schema object. Should throw an error", () => {
       try {
         chaca.defineSchema({});
-      } catch (error) {
-        expect(error instanceof ChacaError).toBe(true);
-      }
-    });
-
-    it("schema object with custom and type property", () => {
-      try {
-        chaca.defineSchema({
-          id: {
-            type: schemas.id.mongodbID(),
-            custom: () => {
-              return "";
-            },
-          },
-        });
       } catch (error) {
         expect(error instanceof ChacaError).toBe(true);
       }

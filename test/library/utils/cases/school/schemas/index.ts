@@ -23,18 +23,21 @@ export const STUDENT_SCHEMA = chaca.defineSchema({
   sex: { enum: ["Male", "Woman"] },
   municipality_id: chaca.ref("Municipality.id"),
   group: chaca.ref("Group.group_number"),
+  year: chaca.ref("Group.year", {
+    where: ({ currentFields, refFields }) => {
+      return currentFields.group === refFields.group_number;
+    },
+  }),
 });
 
 export const GROUP_SCHEMA = chaca.defineSchema({
-  year_id: chaca.key(chaca.ref("Year.year_id")),
+  year: chaca.key(chaca.ref("Year.year_id")),
   group_number: chaca.key((ownFields, store) => {
     const allGroupsWithSameYear = store.getValue("Group", {
       where: (fields) => {
-        return fields.year_id === ownFields.year_id;
+        return fields.year === ownFields.year;
       },
     });
-
-    console.log(allGroupsWithSameYear);
 
     if (allGroupsWithSameYear.length === 0) {
       return 1;
@@ -54,25 +57,25 @@ export const YEAR_SCHEMA = chaca.defineSchema({
 
 export const SUBJECT_SCHEMA = chaca.defineSchema({
   id: chaca.key(chaca.sequence()),
-  year_id: chaca.key(chaca.ref("Year.year_id")),
+  year: chaca.key(chaca.ref("Year.year_id")),
   subject_name: chaca.sequential(SUBJECTS),
   count_hours: schemas.dataType.int({ min: 30, max: 90 }),
 });
 
 export const STUDENT_SUBJECT_GRADE = chaca.defineSchema({
+  subject_id: chaca.key(chaca.ref("Subject.id")),
   student: chaca.key(
     chaca.ref("Student.id", {
-      where: (studentFields, store) => {
-        const foundGroup = store.getValue("Group", {
-          where: (fields) => {
-            return fields.group_number === studentFields.group;
+      where: ({ currentFields, refFields: studentFields, store }) => {
+        const foundSubject = store.getValue("Subject", {
+          where(fields) {
+            return fields.id === currentFields.subject_id;
           },
         });
 
-        return true;
+        return studentFields.year === foundSubject[0].year;
       },
     }),
   ),
-  subject: chaca.key(chaca.ref("Subject.id")),
   grade: chaca.ref("Grade.id"),
 });

@@ -1,4 +1,5 @@
 import { RefValueNode } from "../ChacaInputTree/classes/index.js";
+import { DatasetStore } from "../DatasetStore/DatasetStore.js";
 import { SchemaStore } from "../SchemasStore/SchemaStore.js";
 import { GetStoreValueConfig } from "../SchemasStore/interfaces/store.interface.js";
 import { DocumentTree, FieldNode, SingleResultNode } from "./classes/index.js";
@@ -43,6 +44,7 @@ export class ChacaResultTree<D> {
   }
 
   public getAllRefValuesByNodeRoute(
+    currentDocument: DocumentTree<D>,
     fieldTreeRoute: Array<string>,
     refFieldWhoCalls: RefValueNode,
   ): Array<SingleResultNode> {
@@ -53,10 +55,11 @@ export class ChacaResultTree<D> {
       const foundValue = d.getRefValueByNodeRoute(fieldTreeRoute.slice(1));
 
       if (refFieldWhoCalls.refField.where) {
-        const isAccepted = refFieldWhoCalls.refField.where(
-          d.getDocumentObject(),
-          this.schemasStore,
-        );
+        const isAccepted = refFieldWhoCalls.refField.where({
+          store: new DatasetStore(this.schemasStore, d),
+          refFields: d.getDocumentObject(),
+          currentFields: currentDocument.getDocumentObject(),
+        });
 
         if (isAccepted) {
           allValues.push(foundValue);

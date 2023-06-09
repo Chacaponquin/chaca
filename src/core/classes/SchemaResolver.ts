@@ -127,18 +127,18 @@ export class SchemaResolver<K = any, T = any> {
   public getAllValuesByRoute(
     fieldToGet: Array<string>,
     config: GetStoreValueConfig,
-  ): Array<unknown> {
+  ): Array<DocumentTree<K> | FieldNode> {
     if (fieldToGet.length === 0) {
       const whereFunction = config.where;
 
       if (whereFunction) {
         const filterDocuments = this.resultTree
-          .getDocumentsArray()
-          .filter((d) => whereFunction(d));
+          .getDocuments()
+          .filter((d) => whereFunction(d.getDocumentObject()));
 
         return filterDocuments;
       } else {
-        const filterDocuments = this.resultTree.getDocumentsArray();
+        const filterDocuments = this.resultTree.getDocuments();
         return filterDocuments;
       }
     } else {
@@ -147,15 +147,17 @@ export class SchemaResolver<K = any, T = any> {
         config,
       );
 
-      return allNodes.map((n) => n.getRealValue());
+      return allNodes;
     }
   }
 
   public getAllRefValuesByNodeRoute(
+    currentDocument: DocumentTree<K>,
     fieldTreeRoute: Array<string>,
     refFieldWhoCalls: RefValueNode,
   ): Array<SingleResultNode> {
     const allValues = this.resultTree.getAllRefValuesByNodeRoute(
+      currentDocument,
       fieldTreeRoute,
       refFieldWhoCalls,
     );
@@ -320,7 +322,9 @@ export class SchemaResolver<K = any, T = any> {
 
       // en caso de ser un ref field
       else if (field instanceof RefValueNode) {
-        const refValue = field.getValue();
+        const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
+
+        const refValue = field.getValue(currentDocument);
         return new SingleResultNode(field.getResultNodeConfig(), refValue);
       }
 
@@ -331,7 +335,7 @@ export class SchemaResolver<K = any, T = any> {
         return new SingleResultNode(
           field.getResultNodeConfig(),
           field.getValue(
-            currentDocument.getDocumentObject(),
+            currentDocument,
             new DatasetStore(this.schemasStore, currentDocument),
           ),
         );

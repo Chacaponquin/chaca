@@ -11,6 +11,17 @@ describe("# School Case Test", () => {
     CASE_DATA = chaca.multiGenerate(SCHOOL_SCHEMAS);
   });
 
+  it("Creation", () => {
+    const DATA = chaca.multiGenerate(SCHOOL_SCHEMAS);
+    expect(DATA).toHaveProperty("Municipality");
+    expect(DATA).toHaveProperty("Group");
+    expect(DATA).toHaveProperty("Grade");
+    expect(DATA).toHaveProperty("Student");
+    expect(DATA).toHaveProperty("Year");
+    expect(DATA).toHaveProperty("Subject");
+    expect(DATA).toHaveProperty("Subject_Student");
+  });
+
   it("SQL", async () => {
     await chaca
       .toSQL(SCHOOL_SCHEMAS, {

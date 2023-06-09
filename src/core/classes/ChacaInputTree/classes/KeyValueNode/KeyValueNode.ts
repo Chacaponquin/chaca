@@ -4,6 +4,7 @@ import { CustomValueNode } from "../CustomValueNode/CustomValueNode.js";
 import { RefValueNode } from "../RefValueNode/RefValueNode.js";
 import { SchemaValueNode } from "../SchemaValueNode/SchemaValueNode.js";
 import { SequenceValueNode } from "../SequenceValueNode/SequenceValueNode.js";
+import { DocumentTree } from "../../../ChacaResultTree/classes/DocumentTree/DocumentTree.js";
 
 export type KeyValueNodeProps =
   | RefValueNode
@@ -30,13 +31,16 @@ export class KeyValueNode extends ChacaTreeNode {
     return fieldTreeRoute.length === 0;
   }
 
-  public getValue(fields: any, store: DatasetStore) {
+  public getValue<D>(currentDocument: DocumentTree<D>, store: DatasetStore) {
     if (this.fieldNode instanceof RefValueNode) {
-      return this.fieldNode.getValue();
+      return this.fieldNode.getValue(currentDocument);
     } else if (this.fieldNode instanceof SchemaValueNode) {
       return this.fieldNode.getValue();
     } else if (this.fieldNode instanceof CustomValueNode) {
-      return this.fieldNode.getValue(fields, store);
+      return this.fieldNode.getValue(
+        currentDocument.getDocumentObject(),
+        store,
+      );
     } else {
       return this.fieldNode.getNextValue();
     }

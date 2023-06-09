@@ -11,6 +11,20 @@ describe("# Car Case Test", () => {
     CAR_CASE_DATA = chaca.multiGenerate(CASE_SCHEMAS);
   });
 
+  it("Creation", () => {
+    const DATA = chaca.multiGenerate(CASE_SCHEMAS);
+    expect(DATA).toHaveProperty('Pay_Method')
+    expect(DATA).toHaveProperty('Situation')
+    expect(DATA).toHaveProperty('Category')
+    expect(DATA).toHaveProperty('Country')
+    expect(DATA).toHaveProperty('Brand')
+    expect(DATA).toHaveProperty('Model')
+    expect(DATA).toHaveProperty('Car')
+    expect(DATA).toHaveProperty('Driver')
+    expect(DATA).toHaveProperty('Turist')
+    expect(DATA).toHaveProperty('Contract')
+  });
+
   it("JSON", () => {
     chaca
       .export(CAR_CASE_DATA, {

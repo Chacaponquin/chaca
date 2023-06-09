@@ -17,8 +17,8 @@ export const PLAYER_SCHEMA = chaca.defineSchema({
   member_id: chaca.key(
     chaca.ref("TeamMember.member_id", {
       unique: true,
-      where: (fields) => {
-        return fields.member_type === "P";
+      where: ({ refFields }) => {
+        return refFields.member_type === "P";
       },
     }),
   ),
@@ -29,8 +29,8 @@ export const COACH_SCHEMA = chaca.defineSchema({
   member_id: chaca.key(
     chaca.ref("TeamMember.member_id", {
       unique: true,
-      where: (fields) => {
-        return fields.member_type === "C";
+      where: ({ refFields }) => {
+        return refFields.member_type === "C";
       },
     }),
   ),
@@ -41,14 +41,14 @@ export const PITCHER_SCHEMA = chaca.defineSchema({
   member_id: chaca.key(
     chaca.ref("Player.member_id", {
       unique: true,
-      where: (fields, schemas) => {
+      where: ({ refFields, store }) => {
         let valid = false;
 
-        const allPositions = schemas.getValue("Position");
+        const allPositions = store.getValue("Position");
 
         for (let i = 0; i < allPositions.length && !valid; i++) {
           if (
-            fields.position_id === allPositions[i].position_id &&
+            refFields.position_id === allPositions[i].position_id &&
             allPositions[i].position_name === "P"
           ) {
             valid = true;
@@ -67,14 +67,14 @@ export const BATTER_SCHEMA = chaca.defineSchema({
   member_id: chaca.key(
     chaca.ref("Player.member_id", {
       unique: true,
-      where: (fields, schemas) => {
+      where: ({ refFields, store }) => {
         let valid = false;
 
-        const allPositions = schemas.getValue("Position");
+        const allPositions = store.getValue("Position");
 
         for (let i = 0; i < allPositions.length && !valid; i++) {
           if (
-            fields.position_id === allPositions[i].position_id &&
+            refFields.position_id === allPositions[i].position_id &&
             allPositions[i].position_name !== "P"
           ) {
             valid = true;

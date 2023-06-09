@@ -31,11 +31,16 @@ export type FieldSchemaConfig<R> =
   | ChacaSchema<R>
   | RefField;
 
+export type FieldTypeInput<R> =
+  | SchemaField<R, any>
+  | ChacaSchema<R>
+  | RefField
+  | CustomField<any, R>;
+
 type FieldObjectInput<R> = {
-  type?: SchemaField<R, any> | ChacaSchema<R> | RefField;
+  type?: FieldTypeInput<R>;
   isArray?: boolean | number | { min?: number; max?: number };
   posibleNull?: boolean | number;
-  custom?: CustomField<any, R>;
   enum?: R[];
 };
 
