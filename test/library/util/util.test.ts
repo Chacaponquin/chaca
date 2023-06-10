@@ -75,21 +75,4 @@ describe("#Util Tests", () => {
       expect(val === " HelloWorld").toBe(true);
     });
   });
-
-  describe("isSimilarObjects test", () => {
-    it("test 1", () => {
-      expect(
-        chaca.utils.isSimilarObjects(
-          { id: "", hola: "" },
-          { id: "", hola: "" },
-        ),
-      ).toBe(true);
-    });
-
-    it("test 2", () => {
-      expect(
-        chaca.utils.isSimilarObjects({ id: "", hola: "" }, { id: "" }),
-      ).toBe(false);
-    });
-  });
 });

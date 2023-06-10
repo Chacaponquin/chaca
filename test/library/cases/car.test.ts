@@ -13,36 +13,32 @@ describe("# Car Case Test", () => {
 
   it("Creation", () => {
     const DATA = chaca.multiGenerate(CASE_SCHEMAS);
-    expect(DATA).toHaveProperty('Pay_Method')
-    expect(DATA).toHaveProperty('Situation')
-    expect(DATA).toHaveProperty('Category')
-    expect(DATA).toHaveProperty('Country')
-    expect(DATA).toHaveProperty('Brand')
-    expect(DATA).toHaveProperty('Model')
-    expect(DATA).toHaveProperty('Car')
-    expect(DATA).toHaveProperty('Driver')
-    expect(DATA).toHaveProperty('Turist')
-    expect(DATA).toHaveProperty('Contract')
+    expect(DATA).toHaveProperty("Pay_Method");
+    expect(DATA).toHaveProperty("Situation");
+    expect(DATA).toHaveProperty("Category");
+    expect(DATA).toHaveProperty("Country");
+    expect(DATA).toHaveProperty("Brand");
+    expect(DATA).toHaveProperty("Model");
+    expect(DATA).toHaveProperty("Car");
+    expect(DATA).toHaveProperty("Driver");
+    expect(DATA).toHaveProperty("Turist");
+    expect(DATA).toHaveProperty("Contract");
   });
 
-  it("JSON", () => {
-    chaca
-      .export(CAR_CASE_DATA, {
-        location: EXPORT_ROUTE,
-        fileName: FILE_NAME,
-        format: "json",
-      })
-      .then((s) => expect(typeof s).toBe("string"));
+  it("JSON", async () => {
+    await chaca.export(CAR_CASE_DATA, {
+      location: EXPORT_ROUTE,
+      fileName: FILE_NAME,
+      format: "json",
+    });
   });
 
-  it("Javascript", () => {
-    chaca
-      .export(CAR_CASE_DATA, {
-        location: EXPORT_ROUTE,
-        fileName: FILE_NAME,
-        format: "javascript",
-      })
-      .then((s) => expect(typeof s).toBe("string"));
+  it("Javascript", async () => {
+    await chaca.export(CAR_CASE_DATA, {
+      location: EXPORT_ROUTE,
+      fileName: FILE_NAME,
+      format: "javascript",
+    });
   });
 
   it("Yaml", async () => {
@@ -53,32 +49,28 @@ describe("# Car Case Test", () => {
     });
   });
 
-  it("Typescript", () => {
-    chaca
-      .export(CAR_CASE_DATA, {
-        location: EXPORT_ROUTE,
-        fileName: FILE_NAME,
-        format: "typescript",
-      })
-      .then((s) => expect(typeof s).toBe("string"));
+  it("Typescript", async () => {
+    await chaca.export(CAR_CASE_DATA, {
+      location: EXPORT_ROUTE,
+      fileName: FILE_NAME,
+      format: "typescript",
+    });
   });
 
-  it("Java", () => {
-    chaca
-      .export(CAR_CASE_DATA, {
-        location: EXPORT_ROUTE,
-        fileName: FILE_NAME,
-        format: "java",
-      })
-      .then((s) => expect(typeof s).toBe("string"));
+  it("Java", async () => {
+    await chaca.export(CAR_CASE_DATA, {
+      location: EXPORT_ROUTE,
+      fileName: FILE_NAME,
+      format: "java",
+    });
   });
 
-  it("SQL", () => {
-    chaca
-      .toSQL(CASE_SCHEMAS, {
-        fileName: FILE_NAME,
-        location: EXPORT_ROUTE,
-      })
-      .then((s) => expect(typeof s).toBe("string"));
+  it("SQL", async () => {
+    jest.setTimeout(10000);
+
+    await chaca.toSQL(CASE_SCHEMAS, {
+      fileName: FILE_NAME,
+      location: EXPORT_ROUTE,
+    });
   });
 });

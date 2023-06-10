@@ -48,18 +48,18 @@ export class JavascriptGenerator extends Generator {
     let returnValue = "undefined";
 
     if (typeof value === "string") {
-      returnValue = `"${value}"`;
+      returnValue = `${JSON.stringify(value)}`;
     } else if (typeof value === "number" || typeof value === "boolean") {
       returnValue = `${value}`;
     } else if (typeof value === "object") {
-      if (Array.isArray(value)) returnValue = this.generateArray(value);
-      else {
-        if (value === null) returnValue = "null";
-        else if (value instanceof Date) {
-          returnValue = `new Date("${value.toISOString()}")`;
-        } else {
-          returnValue = this.generateObject(value);
-        }
+      if (Array.isArray(value)) {
+        returnValue = this.generateArray(value);
+      } else if (value === null) {
+        returnValue = "null";
+      } else if (value instanceof Date) {
+        returnValue = `new Date("${value.toISOString()}")`;
+      } else {
+        returnValue = this.generateObject(value);
       }
     }
 

@@ -20,7 +20,7 @@ export const COMPLETE_SCHEMA = chaca.defineSchema({
       "Musical",
     ],
   },
-  adultMovie: (docFields) => {
+  adultMovie: ({ currentFields: docFields }) => {
     return (
       docFields.category === "Horror" ||
       docFields.category === "War" ||

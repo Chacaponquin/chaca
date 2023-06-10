@@ -1,5 +1,6 @@
 import {
   ChacaError,
+  CyclicAccessDataError,
   NotEnoughValuesForRefError,
   TryRefANoKeyFieldError,
 } from "../../../../../errors/ChacaError.js";
@@ -78,20 +79,17 @@ export class RefValueNode extends ChacaTreeNode {
 
   public getValue<D>(
     currentDocument: DocumentTree<D>,
+    currentSchemaResolver: SchemaResolver,
   ): unknown | Array<unknown> {
     if (this.schemaRef) {
-      if (
-        (!this.schemaRef.isBuildingTrees() &&
-          this.schemaRef.isFinishBuilding()) ||
-        (!this.schemaRef.isBuildingTrees() &&
-          !this.schemaRef.isFinishBuilding())
-      ) {
+      if (!this.schemaRef.dangerCyclic()) {
         this.schemaRef.buildTrees();
 
         const allValues = this.schemaRef.getAllRefValuesByNodeRoute(
           currentDocument,
           this.refFieldTreeRoute,
           this,
+          currentSchemaResolver,
         );
 
         if (this.refField.unique) {
@@ -121,14 +119,11 @@ export class RefValueNode extends ChacaTreeNode {
           return PrivateUtils.oneOfArray(allValues).getRealValue();
         }
       } else {
-        throw new ChacaError(
-          `You are trying to access ${
-            this.refField.refField
-          } when the data in ${this.schemaRef.getSchemaName()} is not finish`,
+        const refFieldName = this.refFieldTreeRoute.join(".");
+        throw new CyclicAccessDataError(
+          `The field ${this.getFieldRouteString()} is trying to access ${refFieldName}, and it uses that field to create itself`,
         );
       }
-    } else {
-      return null;
     }
   }
 

@@ -80,19 +80,6 @@ export const ChacaUtils = {
    * @returns string
    */
   capitalizeText: PrivateUtils.capitalizeText,
-  /**
-   * Compare two objects by the property keys and returns `true` if has the same keys
-   *
-   * @param obj1 First Object
-   * @param obj2 Second Object
-   *
-   * @example
-   * chaca.utils.isSimilarObjects({id: '', hi: ''}, {id: '', hi: ''}) // true
-   * chaca.utils.isSimilarObjects({id: '', hi: ''}, {id: ''}) // false
-   *
-   * @returns boolean
-   */
-  isSimilarObjects: PrivateUtils.isSimilarObjects,
 
   sumDateRange: PrivateUtils.sumDateRange,
 };

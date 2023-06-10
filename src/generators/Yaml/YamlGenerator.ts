@@ -69,7 +69,7 @@ export class YamlGenerator extends Generator {
   private generateValue(value: any, onArray: boolean): string {
     let returnValue = "null";
 
-    if (typeof value === "string") returnValue = `"${value}"`;
+    if (typeof value === "string") returnValue = `${JSON.stringify(value)}`;
     else if (typeof value === "number" || typeof value === "boolean") {
       returnValue = `${value}`;
     } else if (typeof value === "object") {

@@ -18,9 +18,13 @@ import {
   EmptySequentialValuesError,
   TryRefANoKeyFieldError,
   NotEnoughValuesForRefError,
+  CyclicAccessDataError,
 } from "./errors/ChacaError.js";
 
-import { GetStoreValueConfig } from "./core/classes/SchemasStore/interfaces/store.interface.js";
+import {
+  GetStoreValueConfig,
+  GetStoreValueInput,
+} from "./core/classes/SchemasStore/interfaces/store.interface.js";
 
 import {
   MultiGenerate,
@@ -166,6 +170,7 @@ export {
   NotEnoughValuesForRefError,
   SchemaStore,
   DatasetStore,
+  CyclicAccessDataError,
 };
 
 export type {
@@ -179,4 +184,5 @@ export type {
   RefFieldWhere,
   GetStoreValueConfig,
   KeyAllowDataTypes,
+  GetStoreValueInput,
 };

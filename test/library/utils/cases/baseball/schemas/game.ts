@@ -4,20 +4,20 @@ export const GAME_SCHEMA = chaca.defineSchema({
   game_id: chaca.key(chaca.sequence()),
   team_home_club: chaca.ref("Team.team_id"),
   team_visitant: chaca.ref("Team.team_id"),
-  winner: (fields) => {
+  winner: ({ currentFields: fields }) => {
     return chaca.utils.oneOfArray([
       fields.team_home_club,
       fields.team_visitant,
     ]);
   },
-  runs_home_club: (fields) => {
+  runs_home_club: ({ currentFields: fields }) => {
     if (fields.winner === fields.team_home_club) {
       return schemas.dataType.int().getValue({ min: 1, max: 15 });
     } else {
       return schemas.dataType.int().getValue({ min: 0, max: 5 });
     }
   },
-  runs_visitant: (fields) => {
+  runs_visitant: ({ currentFields: fields }) => {
     if (fields.winner === fields.team_home_club) {
       return schemas.dataType
         .int()
@@ -28,8 +28,8 @@ export const GAME_SCHEMA = chaca.defineSchema({
         .getValue({ min: fields.runs_home_club, max: 15 });
     }
   },
-  game_date: (fields, schemasStore) => {
-    const phases = schemasStore.getValue("Phase");
+  game_date: ({ currentFields: fields, store }) => {
+    const phases = store.getValue("Phase");
 
     const foundPhase = phases.find((p) => p.phase_id === fields.phase_id);
 
@@ -43,11 +43,11 @@ export const GAME_SCHEMA = chaca.defineSchema({
     return schemas.date.past().getValue();
   },
   phase_id: chaca.ref("Phase.phase_id"),
-  total_audience: (fields, schemaStore) => {
+  total_audience: ({ currentFields: fields, store }) => {
     let foundStadium = null as any;
 
-    const stadiums = schemaStore.getValue("Stadium");
-    const teams = schemaStore.getValue("Team");
+    const stadiums = store.getValue("Stadium");
+    const teams = store.getValue("Team");
 
     const foundHomeClubTeam = teams.find(
       (t) => t.team_id === fields.team_home_club,

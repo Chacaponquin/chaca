@@ -1,37 +1,36 @@
 import { chaca } from "../../../src";
-import { SCHOOL_SCHEMAS } from "../utils/cases/school";
+import { LIBRARY_CASE_SCHEMA } from "../utils/cases/library";
 
-const EXPORT_ROUTE = "./data/cases/school";
-const FILE_NAME = "caseSchool";
+const EXPORT_ROUTE = "./data/cases/library";
+const FILE_NAME = "caseLibrary";
 
-describe("# School Case Test", () => {
+describe("# Library Case Test", () => {
   let CASE_DATA: any;
 
   beforeAll(() => {
-    CASE_DATA = chaca.multiGenerate(SCHOOL_SCHEMAS);
+    CASE_DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA);
   });
 
   it("Creation", () => {
-    const DATA = chaca.multiGenerate(SCHOOL_SCHEMAS);
-    expect(DATA).toHaveProperty("Municipality");
-    expect(DATA).toHaveProperty("Group");
-    expect(DATA).toHaveProperty("Grade");
-    expect(DATA).toHaveProperty("Student");
-    expect(DATA).toHaveProperty("Year");
-    expect(DATA).toHaveProperty("Subject");
-    expect(DATA).toHaveProperty("Subject_Student");
+    const DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA);
+    expect(DATA).toHaveProperty("Book_Topic");
+    expect(DATA).toHaveProperty("Book");
+    expect(DATA).toHaveProperty("Author");
+    expect(DATA).toHaveProperty("User");
+    expect(DATA).toHaveProperty("User_Sanction");
+    expect(DATA).toHaveProperty("Book_Loan");
   });
 
   it("SQL", async () => {
-    await chaca.toSQL(SCHOOL_SCHEMAS, {
+    jest.setTimeout(10000);
+
+    await chaca.toSQL(LIBRARY_CASE_SCHEMA, {
       fileName: FILE_NAME,
       location: EXPORT_ROUTE,
     });
   });
 
   it("JSON", async () => {
-    jest.setTimeout(10000);
-
     await chaca.export(CASE_DATA, {
       fileName: FILE_NAME,
       format: "json",

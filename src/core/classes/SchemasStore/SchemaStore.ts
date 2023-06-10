@@ -1,4 +1,7 @@
-import { ChacaError } from "../../../errors/ChacaError.js";
+import {
+  ChacaError,
+  CyclicAccessDataError,
+} from "../../../errors/ChacaError.js";
 import { DocumentTree, FieldNode } from "../ChacaResultTree/classes/index.js";
 import { SchemaResolver } from "../SchemaResolver.js";
 import { GetStoreValueConfig } from "./interfaces/store.interface.js";
@@ -25,36 +28,30 @@ export class SchemaStore {
     this.schemas = array;
   }
 
-  private validateGetValueConfig(
-    config?: GetStoreValueConfig,
-  ): GetStoreValueConfig {
-    let returnConfig: GetStoreValueConfig = {};
-
-    if (config && typeof config === "object" && config !== null) {
-      if (typeof config.where === "function") {
-        const whereFunction = config.where;
-        returnConfig = { ...config };
-        returnConfig.where = whereFunction;
-      }
-    }
-
-    return returnConfig;
-  }
-
   public getValue<D = any>(
     fieldToGet: string,
-    config?: GetStoreValueConfig,
+    config: GetStoreValueConfig,
   ): Array<FieldNode | DocumentTree<D>> {
-    const getValueConfig = this.validateGetValueConfig(config);
     const fieldToGetArray = this.validateFieldToGet(fieldToGet);
 
     let foundSchema = false;
     let values = [] as Array<FieldNode | DocumentTree<D>>;
+
     for (let i = 0; i < this.schemas.length && !foundSchema; i++) {
-      if (this.schemas[i].getSchemaName() === fieldToGetArray[0]) {
-        values = this.schemas[i].getAllValuesByRoute(
+      const currentSchema = this.schemas[i];
+
+      if (currentSchema.getSchemaName() === fieldToGetArray[0]) {
+        if (!currentSchema.dangerCyclic()) {
+          currentSchema.buildTrees();
+        } else {
+          throw new CyclicAccessDataError(
+            `You are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
+          );
+        }
+
+        values = currentSchema.getAllValuesByRoute(
           fieldToGetArray.slice(1),
-          getValueConfig,
+          config,
         );
 
         foundSchema = true;

@@ -1,4 +1,4 @@
-import { ChacaError } from "../../errors/ChacaError.js";
+import { ChacaError, CyclicAccessDataError } from "../../errors/ChacaError.js";
 import { PrivateUtils } from "../helpers/PrivateUtils.js";
 import { SchemaToResolve } from "../interfaces/schema.interface.js";
 import { ChacaInputTree } from "./ChacaInputTree/ChacaInputTree.js";
@@ -155,11 +155,13 @@ export class SchemaResolver<K = any, T = any> {
     currentDocument: DocumentTree<K>,
     fieldTreeRoute: Array<string>,
     refFieldWhoCalls: RefValueNode,
+    currentSchemaResolver: SchemaResolver,
   ): Array<SingleResultNode> {
     const allValues = this.resultTree.getAllRefValuesByNodeRoute(
       currentDocument,
       fieldTreeRoute,
       refFieldWhoCalls,
+      currentSchemaResolver.documentsWithOutCurrentDocument(currentDocument),
     );
 
     return allValues;
@@ -171,41 +173,59 @@ export class SchemaResolver<K = any, T = any> {
     }
   }
 
+  public dangerCyclic(): boolean {
+    if (!this.finishBuilding && this.isBuilding) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public buildTrees(): void {
     if (!this.finishBuilding) {
-      if (this.inputTree) {
-        // cambiar isBuilding a true
-        this.isBuilding = true;
+      if (!this.isBuilding) {
+        if (this.inputTree) {
+          // cambiar isBuilding a true
+          this.isBuilding = true;
 
-        for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
-          const newDoc = new DocumentTree<K>();
+          for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
+            const newDoc = new DocumentTree<K>(this.schemaName);
 
-          // insert new document
-          this.resultTree.insertDocument(newDoc);
+            // insert new document
+            this.resultTree.insertDocument(newDoc);
 
-          // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
-          for (const datField of this.inputTree.getFields()) {
-            const fieldSolutionNode = this.createSolutionNodeByType(
-              datField,
-              indexDoc,
-            );
+            // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
+            for (const datField of this.inputTree.getFields()) {
+              const fieldSolutionNode = this.createSolutionNodeByType(
+                datField,
+                indexDoc,
+              );
 
-            // insertar la solucion del field en el documento
-            newDoc.insertField(fieldSolutionNode);
+              // insertar la solucion del field en el documento
+              newDoc.insertField(fieldSolutionNode);
 
-            // resolver el field actual en caso de ser un array o un mixed
-            this.resolveArrayAndMixedFields(
-              datField,
-              fieldSolutionNode,
-              indexDoc,
-            );
+              // resolver el field actual en caso de ser un array o un mixed
+              this.resolveArrayAndMixedFields(
+                datField,
+                fieldSolutionNode,
+                indexDoc,
+              );
+            }
           }
-        }
 
-        // indicar que se acabo de construir
-        this.isBuilding = false;
-        // indicar que ha acabado de crear los result trees
-        this.finishBuilding = true;
+          // indicar que se acabo de construir
+          this.isBuilding = false;
+          // indicar que ha acabado de crear los result trees
+          this.finishBuilding = true;
+        } else {
+          throw new ChacaError(
+            `It's imposible create the result trees for the schema ${this.schemaName}, because the input tree was not created yet.`,
+          );
+        }
+      } else {
+        throw new CyclicAccessDataError(
+          `You are trying to access ${this.schemaName} when this one is being created`,
+        );
       }
     }
   }
@@ -267,10 +287,11 @@ export class SchemaResolver<K = any, T = any> {
 
   private createMixedSubFields(
     solutionMixedNode: MixedFieldNode,
-    field: MixedValueNode,
+    mixedField: MixedValueNode,
     indexDoc: number,
   ): void {
-    for (const f of field.getFields()) {
+    const subFields = mixedField.getFields();
+    for (const f of subFields) {
       // filtrar el subField segun su tipo
       const subFieldSolutionNode = this.createSolutionNodeByType(f, indexDoc);
 
@@ -280,6 +301,12 @@ export class SchemaResolver<K = any, T = any> {
       // resolver el subField en caso de ser un array o un mixed field
       this.resolveArrayAndMixedFields(f, subFieldSolutionNode, indexDoc);
     }
+  }
+
+  private documentsWithOutCurrentDocument(
+    omitDocument: DocumentTree<K>,
+  ): Array<DocumentTree<K>> {
+    return this.resultTree.getDocuments().filter((d) => d !== omitDocument);
   }
 
   private createSolutionNodeByType(
@@ -315,6 +342,7 @@ export class SchemaResolver<K = any, T = any> {
         const value = field.getValue(
           currentDocument.getDocumentObject(),
           new DatasetStore(this.schemasStore, currentDocument),
+          this.documentsWithOutCurrentDocument(currentDocument),
         );
 
         return new SingleResultNode(field.getResultNodeConfig(), value);
@@ -324,7 +352,7 @@ export class SchemaResolver<K = any, T = any> {
       else if (field instanceof RefValueNode) {
         const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
 
-        const refValue = field.getValue(currentDocument);
+        const refValue = field.getValue(currentDocument, this);
         return new SingleResultNode(field.getResultNodeConfig(), refValue);
       }
 
@@ -337,6 +365,8 @@ export class SchemaResolver<K = any, T = any> {
           field.getValue(
             currentDocument,
             new DatasetStore(this.schemasStore, currentDocument),
+            this.documentsWithOutCurrentDocument(currentDocument),
+            this,
           ),
         );
       }

@@ -5,6 +5,7 @@ import { KeyField } from "../classes/KeyField/KeyField.js";
 import { RefField } from "../classes/RefField/RefField.js";
 import { SequenceField } from "../classes/SequenceField/SequenceField.js";
 import { DatasetStore } from "../classes/DatasetStore/DatasetStore.js";
+import { SchemaData } from "../classes/SchemaData/SchemaData.js";
 
 export type SchemaInput<T> = {
   [key in keyof T]:
@@ -44,7 +45,11 @@ type FieldObjectInput<R> = {
   enum?: R[];
 };
 
-export type CustomField<C, R> = (docFields: C, store: DatasetStore) => R;
+export type CustomField<C, R> = (args: {
+  currentFields: C;
+  store: DatasetStore;
+  schemaRestDocuments: SchemaData<C>;
+}) => R;
 
 export interface CommonSchema {
   isArray: FieldIsArrayConfig;

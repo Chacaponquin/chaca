@@ -154,7 +154,7 @@ describe("#Schema Creation Test", () => {
         const schema = chaca.defineSchema({
           id: { type: schemas.id.mongodbID() },
           custom: {
-            type(fields) {
+            type({ currentFields: fields }) {
               return fields.id;
             },
           },
@@ -171,7 +171,7 @@ describe("#Schema Creation Test", () => {
           user: chaca.defineSchema({
             image: schemas.science.unit(),
             followersInf: {
-              type: (a) => {
+              type: ({ currentFields: a }) => {
                 return a.id;
               },
               isArray: 20,
@@ -189,10 +189,10 @@ describe("#Schema Creation Test", () => {
           id: schemas.id.mongodbID(),
           user: chaca.defineSchema({
             image: schemas.science.unit(),
-            custom: (h) => h.id,
+            custom: ({ currentFields: h }) => h.id,
             followerInf: chaca.defineSchema({
               name: schemas.person.firstName(),
-              hola: (a) => {
+              hola: ({ currentFields: a }) => {
                 return a.user.image;
               },
             }),

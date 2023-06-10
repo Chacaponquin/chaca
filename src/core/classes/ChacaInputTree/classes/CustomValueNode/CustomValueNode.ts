@@ -1,6 +1,8 @@
 import { TryRefANoKeyFieldError } from "../../../../../errors/ChacaError.js";
 import { CustomField } from "../../../../interfaces/schema.interface.js";
+import { DocumentTree } from "../../../ChacaResultTree/classes/index.js";
 import { DatasetStore } from "../../../DatasetStore/DatasetStore.js";
+import { SchemaData } from "../../../SchemaData/SchemaData.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 
@@ -19,8 +21,16 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
     );
   }
 
-  public getValue(fields: C, datasetStore: DatasetStore): R {
-    const value = this.valueFunction(fields, datasetStore);
+  public getValue(
+    fields: C,
+    datasetStore: DatasetStore,
+    restDocuments: Array<DocumentTree<C>>,
+  ): R {
+    const value = this.valueFunction({
+      store: datasetStore,
+      currentFields: fields,
+      schemaRestDocuments: new SchemaData(restDocuments),
+    });
 
     if (value === undefined) {
       return null as R;

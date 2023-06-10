@@ -3,6 +3,8 @@ import { FieldNode } from "../FieldNode/FieldNode.js";
 import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
 
 export class DocumentTree<D> {
+  constructor(public readonly schemaName: string) {}
+
   private nodes: Array<FieldNode> = [];
 
   public insertField(newField: FieldNode) {

@@ -33,21 +33,22 @@ export const STUDENT_SCHEMA = chaca.defineSchema({
 
 export const GROUP_SCHEMA = chaca.defineSchema({
   year: chaca.key(chaca.ref("Year.year_id")),
-  group_number: chaca.key((ownFields, store) => {
-    const allGroupsWithSameYear = store.getValue("Group", {
-      where: (fields) => {
-        return fields.year === ownFields.year;
-      },
-    });
+  group_number: chaca.key(
+    ({ currentFields: ownFields, schemaRestDocuments }) => {
+      const allGroupsWithSameYear = schemaRestDocuments
+        .getDocuments()
+        .filter((g) => g.year === ownFields.year);
 
-    if (allGroupsWithSameYear.length === 0) {
-      return 1;
-    } else {
-      return (
-        allGroupsWithSameYear[allGroupsWithSameYear.length - 1].group_number + 1
-      );
-    }
-  }),
+      if (allGroupsWithSameYear.length === 0) {
+        return 1;
+      } else {
+        return (
+          allGroupsWithSameYear[allGroupsWithSameYear.length - 1].group_number +
+          1
+        );
+      }
+    },
+  ),
 });
 
 export const YEAR_SCHEMA = chaca.defineSchema({
@@ -68,7 +69,7 @@ export const DOWN_REASON_SCHEMA = chaca.defineSchema({
   name: chaca.sequential(DOWN_REASONS),
 });
 
-export const DOWN_STUDENTS = chaca.defineSchema({
+export const DOWN_STUDENTS_SCHEMA = chaca.defineSchema({
   reason_id: chaca.key(chaca.ref("Down_Reason.id")),
   student_id: chaca.key(chaca.ref("Student.id")),
 });

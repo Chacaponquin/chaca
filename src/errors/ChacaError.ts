@@ -8,9 +8,9 @@ export class ChacaError extends Error {
 export class EmptySequentialValuesError extends ChacaError {
   constructor(fieldRoute: Array<string>) {
     super(
-      `There are no more sequential values for the field ${fieldRoute.join(
+      `There are no more sequential values for the field '${fieldRoute.join(
         ".",
-      )}`,
+      )}'`,
     );
   }
 }
@@ -28,9 +28,11 @@ export class TryRefANoKeyFieldError extends ChacaError {
 export class NotEnoughValuesForRefError extends ChacaError {
   constructor(refFieldRoute: Array<string>, keyFieldRoute: Array<string>) {
     super(
-      `Not enough values of ${keyFieldRoute.join(
+      `Not enough values of '${keyFieldRoute.join(
         ".",
-      )} for the ref field ${refFieldRoute.join(".")}`,
+      )}' for the ref field '${refFieldRoute.join(".")}'`,
     );
   }
 }
+
+export class CyclicAccessDataError extends ChacaError {}

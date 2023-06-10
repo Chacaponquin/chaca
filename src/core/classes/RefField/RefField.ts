@@ -1,5 +1,6 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { DatasetStore } from "../DatasetStore/DatasetStore.js";
+import { SchemaData } from "../SchemaData/SchemaData.js";
 
 export type FieldToRef = string;
 
@@ -7,6 +8,7 @@ export type RefFieldWhere<C = any, R = any> = (args: {
   currentFields: C;
   refFields: R;
   store: DatasetStore;
+  schemaRestDocuments: SchemaData<C>;
 }) => boolean;
 
 export type FieldRefInputConfig = {

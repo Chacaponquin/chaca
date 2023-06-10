@@ -86,7 +86,7 @@ export const BATTER_SCHEMA = chaca.defineSchema({
     }),
   ),
   at_bats: schemas.dataType.int({ min: 0, max: 10000 }),
-  total_hits: (fields) => {
+  total_hits: ({ currentFields: fields }) => {
     return schemas.dataType.int().getValue({ min: 0, max: fields.at_bats });
   },
 });

@@ -216,25 +216,6 @@ export class PrivateUtils {
     return newResult;
   }
 
-  static isSimilarObjects(obj1: any, obj2: any): boolean {
-    let ret = true;
-
-    if (obj1 && obj2 && typeof obj1 === "object" && typeof obj2 === "object") {
-      const keys1 = Object.keys(obj1);
-      const keys2 = Object.keys(obj2);
-
-      if (keys1.length !== keys2.length) ret = false;
-
-      for (let i = 0; i < keys1.length && ret; i++) {
-        if (!keys2.find((el) => String(el) === String(keys1[i]))) {
-          ret = false;
-        }
-      }
-    } else ret = false;
-
-    return ret;
-  }
-
   static sumDateRange(date: Date, value: number, range: TimeUnits): Date {
     switch (range) {
       case "years":
