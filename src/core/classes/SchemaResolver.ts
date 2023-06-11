@@ -57,7 +57,7 @@ export class SchemaResolver<K = any, T = any> {
   }
 
   public buildInputTree(): void {
-    if (!this.inputTree) {
+    if (this.inputTree === null) {
       this.inputTree = new ChacaInputTree(
         this.schemaName,
         this.schemaObject,
@@ -189,7 +189,7 @@ export class SchemaResolver<K = any, T = any> {
           this.isBuilding = true;
 
           for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
-            const newDoc = new DocumentTree<K>(this.schemaName);
+            const newDoc = new DocumentTree<K>();
 
             // insert new document
             this.resultTree.insertDocument(newDoc);

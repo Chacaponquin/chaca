@@ -13,7 +13,7 @@ import { DocumentTree } from "../../../ChacaResultTree/classes/index.js";
 
 export class RefValueNode extends ChacaTreeNode {
   private refFieldTreeRoute: Array<string>;
-  private schemaRef: SchemaResolver | null;
+  private schemaRef: SchemaResolver | null = null;
 
   constructor(
     config: ChacaTreeNodeConfig,
@@ -25,8 +25,6 @@ export class RefValueNode extends ChacaTreeNode {
     this.refFieldTreeRoute = this.validateFieldTreeRoute(
       this.refField.refField,
     );
-
-    this.schemaRef = null;
   }
 
   public searchSchemaRef(): void {
@@ -124,14 +122,28 @@ export class RefValueNode extends ChacaTreeNode {
           `The field ${this.getFieldRouteString()} is trying to access ${refFieldName}, and it uses that field to create itself`,
         );
       }
+    } else {
+      throw new ChacaError(
+        `First find the schema resolver for the ref field '${this.getFieldRouteString()}'`,
+      );
     }
   }
 
+  public setSchemaRef(resolver: SchemaResolver): void {
+    this.schemaRef = resolver;
+  }
+
   public getNoArrayNode(): ChacaTreeNode {
-    return new RefValueNode(
+    const newRefNode = new RefValueNode(
       { ...this.getNodeConfig(), isArray: null },
       this.refField,
       this.injectedSchemas,
     );
+
+    if (this.schemaRef) {
+      newRefNode.setSchemaRef(this.schemaRef);
+    }
+
+    return newRefNode;
   }
 }

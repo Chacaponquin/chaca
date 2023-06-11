@@ -3,11 +3,11 @@ import { SchemaResolver } from "../../../classes/SchemaResolver.js";
 import { MultiGenerateSchema } from "../interfaces/multiGenerate.interface.js";
 
 export class MultiGenerateResolver<K> {
-  private resolversArray: Array<SchemaResolver>;
+  private resolversArray: Array<SchemaResolver> = [];
 
   constructor(schemas: Array<MultiGenerateSchema>) {
     this.validateNotRepeatSchemaNames(schemas);
-    this.resolversArray = this.createSchemaResolvers(schemas);
+    this.createSchemaResolvers(schemas);
     this.injectSchemas();
     this.buildInputTrees();
     this.buildRefFields();
@@ -36,10 +36,8 @@ export class MultiGenerateResolver<K> {
     this.resolversArray.forEach((r) => r.searchRefNodes());
   }
 
-  private createSchemaResolvers(
-    schemas: Array<MultiGenerateSchema>,
-  ): Array<SchemaResolver> {
-    return schemas.map((s) => {
+  private createSchemaResolvers(schemas: Array<MultiGenerateSchema>): void {
+    this.resolversArray = schemas.map((s) => {
       if (typeof s === "object" && s !== null) {
         return new SchemaResolver(
           s.name,

@@ -71,7 +71,7 @@ export class JavaGenerator extends Generator {
     let returnValue: string;
 
     if (value instanceof StringType) {
-      returnValue = `"${value.value}"`;
+      returnValue = `${JSON.stringify(value.value)}`;
     } else if (value instanceof NumberType) {
       returnValue = `${value.value}`;
     } else if (value instanceof BooleanType) {

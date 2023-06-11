@@ -137,7 +137,7 @@ export class ChacaInputTree<T> {
       }
     } else {
       throw new ChacaError(
-        `The field ${actualRoute.join(".")} have an incorrect resolver`,
+        `The field '${actualRoute.join(".")}' have an incorrect resolver`,
       );
     }
 
