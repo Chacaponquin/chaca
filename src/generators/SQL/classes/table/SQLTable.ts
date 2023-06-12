@@ -69,18 +69,21 @@ export class SQLTable {
 
   public updateIdColumnName(): void {
     if (this.hasGeneratedID) {
-      const newName = this.tableName + "_id";
+      this.checkAndChangeIDColumnName("id");
+    }
+  }
 
-      const foundSameName = this.columns.some(
-        (c) => c.getColumnName() === newName,
-      );
+  private checkAndChangeIDColumnName(newColumnName: string): void {
+    const newName = newColumnName;
 
-      if (foundSameName) {
-        this.columns[0].changeColumnName(newName + "_1");
-        this.updateIdColumnName();
-      } else {
-        this.columns[0].changeColumnName(newName);
-      }
+    const foundSameName = this.columns
+      .slice(1)
+      .some((c) => c.getColumnName() === newName);
+
+    if (foundSameName) {
+      this.checkAndChangeIDColumnName(newName + "_1");
+    } else {
+      this.columns[0].changeColumnName(newName);
     }
   }
 

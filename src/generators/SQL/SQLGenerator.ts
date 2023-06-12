@@ -310,7 +310,7 @@ export class SQLGenerator extends Generator {
     return `${parentTable.tableName}${this.NAMES_DIVISOR}${fieldName}`;
   }
 
-  private createData(tableName: string, data: any): Array<SQLTable> {
+  private createData(tableName: string, data: any) {
     const foundTable = this.allTables.find((t) => t.tableName === tableName);
 
     if (!foundTable || !foundTable.finish()) {
@@ -358,14 +358,7 @@ export class SQLGenerator extends Generator {
           documentTable.setFinishBuild();
         }
       }
-
-      // change tables id columns
-      this.allTables.forEach((t) => {
-        t.updateIdColumnName();
-      });
     }
-
-    return this.allTables;
   }
 
   private findTableByName(
@@ -381,6 +374,10 @@ export class SQLGenerator extends Generator {
 
   public async generateFile(): Promise<string> {
     this.createData(this.config.fileName, this.sqlData);
+    // change tables id columns
+    this.allTables.forEach((t) => {
+      t.updateIdColumnName();
+    });
 
     await fs.promises.writeFile(
       this.route,
@@ -407,6 +404,11 @@ export class SQLGenerator extends Generator {
 
     resolvers.forEach((r) => {
       this.createData(r.getSchemaName(), r.resolve());
+    });
+
+    // change tables id columns
+    this.allTables.forEach((t) => {
+      t.updateIdColumnName();
     });
 
     await fs.promises.writeFile(

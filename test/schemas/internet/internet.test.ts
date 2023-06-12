@@ -1,4 +1,4 @@
-import { schemas } from "../../src";
+import { schemas } from "../../../src";
 
 describe("#InternetSchema test", () => {
   describe("password tests", () => {
