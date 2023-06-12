@@ -14,6 +14,7 @@ import { VideoSchema } from "./video/VideoSchema.js";
 import { AnimalSchema } from "./animal/AnimalSchema.js";
 import { ScienceSchema } from "./science/ScienceSchema.js";
 import { WordSchema } from "./word/WordSchema.js";
+import { ColorSchema } from "./color/ColorSchema.js";
 
 export const Schemas = {
   internet: new InternetSchema(),
@@ -32,4 +33,5 @@ export const Schemas = {
   video: new VideoSchema(),
   animal: new AnimalSchema(),
   science: new ScienceSchema(),
+  color: new ColorSchema(),
 };

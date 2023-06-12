@@ -230,7 +230,7 @@ export class DataTypeSchema {
    * schemas.dataType.matriz().getValue() // [[1, 0, 5], [5, 10, 9]]
    * schemas.dataType.matriz().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
-  public matriz(args?: MatrizProps) {
+  public matrix(args?: MatrizProps) {
     return new SchemaField<number[][], MatrizProps>(
       "matriz",
       (a) => {
