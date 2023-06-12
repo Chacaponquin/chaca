@@ -3,6 +3,7 @@ import { SchemaInput } from "./core/interfaces/schema.interface.js";
 import {
   ExportFormat,
   FileConfig,
+  ExportSQLFormat,
 } from "./core/interfaces/export.interface.js";
 
 import { SchemaStore } from "./core/classes/SchemasStore/SchemaStore.js";
@@ -185,4 +186,5 @@ export type {
   GetStoreValueConfig,
   KeyAllowDataTypes,
   GetStoreValueInput,
+  ExportSQLFormat,
 };
