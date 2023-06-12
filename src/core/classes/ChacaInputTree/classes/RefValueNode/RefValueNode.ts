@@ -9,16 +9,16 @@ import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
 import { FieldToRefObject } from "../../../RefField/RefField.js";
-import { DocumentTree } from "../../../ChacaResultTree/classes/index.js";
+import { SchemaStore } from "../../../SchemasStore/SchemaStore.js";
 
 export class RefValueNode extends ChacaTreeNode {
   private refFieldTreeRoute: Array<string>;
-  private schemaRef: SchemaResolver | null = null;
+  private schemaRefIndex: number | null = null;
 
   constructor(
     config: ChacaTreeNodeConfig,
     public readonly refField: FieldToRefObject,
-    public readonly injectedSchemas: Array<SchemaResolver>,
+    public readonly schemasStore: SchemaStore,
   ) {
     super(config);
 
@@ -27,11 +27,16 @@ export class RefValueNode extends ChacaTreeNode {
     );
   }
 
+  public getRefFieldRoute() {
+    return this.refFieldTreeRoute;
+  }
+
   public searchSchemaRef(): void {
     let exists = -1;
 
-    for (let i = 0; i < this.injectedSchemas.length && exists === -1; i++) {
-      const inputTree = this.injectedSchemas[i].getInputTree();
+    const schemas = this.schemasStore.getSchemasResolvers();
+    for (let i = 0; i < schemas.length && exists === -1; i++) {
+      const inputTree = schemas[i].getInputTree();
 
       if (inputTree) {
         const found = inputTree.checkIfFieldExists(this.refFieldTreeRoute);
@@ -49,12 +54,16 @@ export class RefValueNode extends ChacaTreeNode {
         } does not exists`,
       );
     } else {
-      this.schemaRef = this.injectedSchemas[exists];
+      this.schemaRefIndex = exists;
     }
   }
 
-  public getSchemaRef() {
-    return this.schemaRef;
+  public getSchemaRef(): SchemaResolver | null {
+    if (this.schemaRefIndex === null) {
+      return null;
+    } else {
+      return this.schemasStore.getSchemasResolvers()[this.schemaRefIndex];
+    }
   }
 
   private validateFieldTreeRoute(route: string): Array<string> {
@@ -75,15 +84,16 @@ export class RefValueNode extends ChacaTreeNode {
     }
   }
 
-  public getValue<D>(
-    currentDocument: DocumentTree<D>,
-    currentSchemaResolver: SchemaResolver,
+  public getValue(
+    currentDocument: number,
+    currentSchemaResolver: number,
   ): unknown | Array<unknown> {
-    if (this.schemaRef) {
-      if (!this.schemaRef.dangerCyclic()) {
-        this.schemaRef.buildTrees();
+    const schemaRef = this.getSchemaRef();
+    if (schemaRef) {
+      if (!schemaRef.dangerCyclic()) {
+        schemaRef.buildTrees();
 
-        const allValues = this.schemaRef.getAllRefValuesByNodeRoute(
+        const allValues = schemaRef.getAllRefValuesByNodeRoute(
           currentDocument,
           this.refFieldTreeRoute,
           this,
@@ -129,19 +139,19 @@ export class RefValueNode extends ChacaTreeNode {
     }
   }
 
-  public setSchemaRef(resolver: SchemaResolver): void {
-    this.schemaRef = resolver;
+  public setSchemaRef(resolverIndex: number): void {
+    this.schemaRefIndex = resolverIndex;
   }
 
   public getNoArrayNode(): ChacaTreeNode {
     const newRefNode = new RefValueNode(
       { ...this.getNodeConfig(), isArray: null },
       this.refField,
-      this.injectedSchemas,
+      this.schemasStore,
     );
 
-    if (this.schemaRef) {
-      newRefNode.setSchemaRef(this.schemaRef);
+    if (this.schemaRefIndex) {
+      newRefNode.setSchemaRef(this.schemaRefIndex);
     }
 
     return newRefNode;

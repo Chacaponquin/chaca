@@ -63,8 +63,8 @@ export async function Export(data: any, config: FileConfig): Promise<string> {
       case "yaml":
         gen = new YamlGenerator(data, config);
         break;
-      case "sql":
-        gen = new SQLGenerator(data, config);
+      case "postgresql":
+        gen = new SQLGenerator(data, config, "postgresql");
         break;
       default:
         throw new ChacaError(`Format '${String(config.format)}' invalid`);

@@ -18,13 +18,17 @@ export class ToSQLResolver {
     const resolvers = multiResolver.getResolvers();
     const data = multiResolver.resolve();
 
-    const sqlGenerator = new SQLGenerator(data, {
-      fileName: this.config.fileName,
-      location: this.config.location,
-      format: "sql",
-    });
+    const sqlGenerator = new SQLGenerator(
+      data,
+      {
+        fileName: this.config.fileName,
+        location: this.config.location,
+        format: "postgresql",
+      },
+      "postgresql",
+    );
 
-    await sqlGenerator.generateRelationalDataFile(data, resolvers);
+    await sqlGenerator.generateRelationalDataFile(resolvers);
 
     return sqlGenerator.getRoute();
   }

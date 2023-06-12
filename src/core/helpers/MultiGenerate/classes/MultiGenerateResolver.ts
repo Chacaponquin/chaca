@@ -22,7 +22,8 @@ export class MultiGenerateResolver<K> {
   ): void {
     for (let i = 0; i < schemas.length; i++) {
       const notRepeat =
-        schemas.filter((s) => s.name === schemas[i].name).length === 1;
+        schemas.filter((s) => s.name.trim() === schemas[i].name.trim())
+          .length === 1;
 
       if (!notRepeat) {
         throw new ChacaError(
@@ -37,12 +38,13 @@ export class MultiGenerateResolver<K> {
   }
 
   private createSchemaResolvers(schemas: Array<MultiGenerateSchema>): void {
-    this.resolversArray = schemas.map((s) => {
+    this.resolversArray = schemas.map((s, index) => {
       if (typeof s === "object" && s !== null) {
         return new SchemaResolver(
           s.name,
           s.schema.getSchemaObject(),
           s.documents,
+          index,
         );
       } else {
         throw new ChacaError("You must provide a name for your schema");
@@ -53,8 +55,7 @@ export class MultiGenerateResolver<K> {
   private injectSchemas(): void {
     // inyectar los schema resolvers restantes a cada schema resolver
     for (const resolver of this.resolversArray) {
-      const otherResolvers = this.resolversArray.filter((r) => r !== resolver);
-      resolver.setInjectedSchemas(otherResolvers);
+      resolver.setInjectedSchemas(this.resolversArray);
     }
   }
 

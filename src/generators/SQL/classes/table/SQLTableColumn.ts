@@ -40,6 +40,10 @@ export class SQLTableColumn {
     this.columnName = newColumnName;
   }
 
+  public getSQLColumnName(): string {
+    return this.columnName.trim().replace(" ", "_");
+  }
+
   public insertValue(value: SQLType) {
     this.rows.push(value);
 

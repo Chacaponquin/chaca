@@ -29,15 +29,14 @@ export const USER_SCHEMA = chaca.defineSchema({
 });
 
 export const USER_SANCTION_SCHEMA = chaca.defineSchema({
-  user_id: chaca.key(
-    chaca.ref("User.id", {
-      where: ({ schemaRestDocuments, refFields: userFields }) => {
-        return !schemaRestDocuments
-          .getDocuments()
-          .some((s) => s.finish_date === null && userFields.id === s.user_id);
-      },
-    }),
-  ),
+  id: chaca.key(chaca.sequence()),
+  user_id: chaca.ref("Library_User.id", {
+    where: ({ schemaRestDocuments, refFields: userFields }) => {
+      return !schemaRestDocuments
+        .getDocuments()
+        .some((s) => s.finish_date === null && userFields.id === s.user_id);
+    },
+  }),
   init_date: schemas.date.past(),
   finish_date: ({ currentFields: fields }) => {
     return chaca.utils.oneOfArray([
@@ -60,7 +59,7 @@ export const BOOK_LOAN_SCHEMA = chaca.defineSchema({
     });
   },
   book_id: chaca.ref("Book.id"),
-  user_id: chaca.ref("User.id", {
+  user_id: chaca.ref("Library_User.id", {
     where: ({ store, currentFields }) => {
       const findSanctionsThatUser = store.getValue("User_Sanction", {
         where: (sanctionFields) => {

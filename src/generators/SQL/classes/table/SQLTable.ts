@@ -1,28 +1,86 @@
 import { PrivateUtils } from "../../../../core/helpers/PrivateUtils.js";
+import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SQLType, SQLNumber, SQLIntegerNumber } from "../sqlTypes/index.js";
 import { ColumnForeignKeyConfig, SQLTableColumn } from "./SQLTableColumn.js";
 
 export class SQLTable {
   private columns: Array<SQLTableColumn> = [];
+  private hasGeneratedID = false;
+  private finishBuild = false;
 
-  constructor(public readonly tableName: string) {
+  constructor(public readonly tableName: string) {}
+
+  public generateIDColumn(): void {
     const idColumn = new SQLTableColumn(PrivateUtils.id());
     idColumn.changeToPrimaryKey();
 
+    this.hasGeneratedID = true;
     this.columns.push(idColumn);
   }
 
-  public updateIdColumnName(): void {
-    const newName = this.tableName + "_id";
+  public getSQLTableName(): string {
+    return this.tableName.trim().replace(" ", "_");
+  }
 
-    const foundSameName = this.columns.some(
-      (c) => c.getColumnName() === newName,
+  public addForeignKey(
+    columnName: string,
+    config: ColumnForeignKeyConfig,
+  ): void {
+    const foundColumn = this.columns.find(
+      (c) => c.getColumnName() === columnName,
     );
 
-    if (foundSameName) {
-      this.columns[0].changeColumnName(newName + "_1");
+    if (foundColumn) {
+      foundColumn.changeForeignKeyConfig(config);
     } else {
-      this.columns[0].changeColumnName(newName);
+      const newColumn = new SQLTableColumn(columnName);
+      newColumn.changeForeignKeyConfig(config);
+
+      this.columns.push(newColumn);
+    }
+  }
+
+  public setInitBuild(): void {
+    this.finishBuild = false;
+  }
+
+  public setFinishBuild(): void {
+    this.finishBuild = true;
+  }
+
+  public finish() {
+    return this.finishBuild;
+  }
+
+  public addPrimaryColumn(columnName: string): void {
+    const foundColumn = this.columns.find(
+      (c) => c.getColumnName() === columnName,
+    );
+
+    if (foundColumn) {
+      foundColumn.changeToPrimaryKey();
+    } else {
+      const newColumn = new SQLTableColumn(columnName);
+      newColumn.changeToPrimaryKey();
+
+      this.columns.push(newColumn);
+    }
+  }
+
+  public updateIdColumnName(): void {
+    if (this.hasGeneratedID) {
+      const newName = this.tableName + "_id";
+
+      const foundSameName = this.columns.some(
+        (c) => c.getColumnName() === newName,
+      );
+
+      if (foundSameName) {
+        this.columns[0].changeColumnName(newName + "_1");
+        this.updateIdColumnName();
+      } else {
+        this.columns[0].changeColumnName(newName);
+      }
     }
   }
 
@@ -31,7 +89,7 @@ export class SQLTable {
   }
 
   public getLastID(): SQLNumber {
-    return this.columns[0].getLastRow() as SQLNumber;
+    return this.getPrimaryKeyColumn().getLastRow() as SQLNumber;
   }
 
   public findColumnByName(columnName: string): SQLTableColumn | null {
@@ -54,11 +112,23 @@ export class SQLTable {
   }
 
   public getTableLenght(): number {
-    return this.columns[0].getColumnLenght();
+    if (this.columns.length) {
+      return this.columns[0].getColumnLenght();
+    } else {
+      return 0;
+    }
   }
 
   public getPrimaryKeyColumn(): SQLTableColumn {
-    return this.columns[0];
+    const primaryColumn = this.columns.find((c) => c.isPrimaryKey());
+
+    if (primaryColumn) {
+      return primaryColumn;
+    } else {
+      throw new ChacaError(
+        `The table '${this.tableName}' not has primary key column`,
+      );
+    }
   }
 
   public changeColumnToForeignKey(
@@ -88,12 +158,14 @@ export class SQLTable {
   }
 
   public addNewID(): void {
-    if (this.columns[0].getColumnLenght()) {
-      const newID = new SQLIntegerNumber(this.getLastID().value + 1);
-      this.columns[0].insertValue(newID);
-    } else {
-      const newID = new SQLIntegerNumber(1);
-      this.columns[0].insertValue(newID);
+    if (this.hasGeneratedID) {
+      if (this.columns[0].getColumnLenght()) {
+        const newID = new SQLIntegerNumber(this.getLastID().value + 1);
+        this.columns[0].insertValue(newID);
+      } else {
+        const newID = new SQLIntegerNumber(1);
+        this.columns[0].insertValue(newID);
+      }
     }
   }
 }

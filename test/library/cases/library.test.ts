@@ -16,14 +16,12 @@ describe("# Library Case Test", () => {
     expect(DATA).toHaveProperty("Book_Topic");
     expect(DATA).toHaveProperty("Book");
     expect(DATA).toHaveProperty("Author");
-    expect(DATA).toHaveProperty("User");
+    expect(DATA).toHaveProperty("Library_User");
     expect(DATA).toHaveProperty("User_Sanction");
     expect(DATA).toHaveProperty("Book_Loan");
   });
 
   it("SQL", async () => {
-    jest.setTimeout(10000);
-
     await chaca.toSQL(LIBRARY_CASE_SCHEMA, {
       fileName: FILE_NAME,
       location: EXPORT_ROUTE,

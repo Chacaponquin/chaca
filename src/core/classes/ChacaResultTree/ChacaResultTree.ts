@@ -45,12 +45,20 @@ export class ChacaResultTree<D> {
   }
 
   public getAllRefValuesByNodeRoute(
-    currentDocument: DocumentTree<D>,
+    currentDocument: number,
     fieldTreeRoute: Array<string>,
     refFieldWhoCalls: RefValueNode,
-    restSchemaDocuments: Array<DocumentTree<D>>,
+    currentSchemaResolverIndex: number,
   ): Array<SingleResultNode> {
     const allValues: Array<SingleResultNode> = [];
+    const currentSchemaResolver =
+      this.schemasStore.getSchemasResolvers()[currentSchemaResolverIndex];
+    const restSchemaDocuments =
+      currentSchemaResolver.documentsWithOutCurrentDocument(currentDocument);
+    const currentFields = currentSchemaResolver
+      .getResultTree()
+      .getDocumentByIndex(currentDocument)
+      .getDocumentObject();
 
     this.documents.forEach((d) => {
       // quitar el primer elemento de la ruta pues pertenece al nombre del schema al que pertenece
@@ -60,7 +68,7 @@ export class ChacaResultTree<D> {
         const isAccepted = refFieldWhoCalls.refField.where({
           store: new DatasetStore(this.schemasStore, d),
           refFields: d.getDocumentObject(),
-          currentFields: currentDocument.getDocumentObject(),
+          currentFields,
           schemaRestDocuments: new SchemaData(restSchemaDocuments),
         });
 

@@ -6,7 +6,6 @@ import { PrivateUtils } from "../../helpers/PrivateUtils.js";
 import { FileConfig } from "../../interfaces/export.interface.js";
 import {
   CommonSchema,
-  CustomField,
   FieldSchemaConfig,
   FieldTypeInput,
   IResolver,
@@ -244,18 +243,6 @@ export class ChacaSchema<K = any, T = any> {
     }
   }
 
-  private validateCustom(
-    key: keyof T,
-    custom: CustomField<K, T[keyof T]>,
-  ): CustomField<K, T[keyof T]> {
-    if (typeof custom === "function") {
-      return custom;
-    } else
-      throw new ChacaError(
-        `For the field ${String(key)}. The custom field must be a function`,
-      );
-  }
-
   private validatePosibleNull(pos: boolean | number): number {
     let value: number;
 
@@ -317,7 +304,9 @@ export class ChacaSchema<K = any, T = any> {
       PrivateUtils.id(),
       this.schemaObj,
       1,
+      0,
     );
+
     return schemaToResolve.resolve()[0];
   }
 
@@ -330,6 +319,7 @@ export class ChacaSchema<K = any, T = any> {
       PrivateUtils.id(),
       this.schemaObj,
       cantDocuments,
+      0,
     );
 
     return schemaToResolve.resolve();

@@ -25,12 +25,12 @@ import {
   SequentialValueNode,
 } from "./classes/index.js";
 import { orderFieldsByPriority } from "./utils/treeUtils.js";
-import { SchemaResolver } from "../SchemaResolver.js";
 import { SequentialFieldResolver } from "../Resolvers/SequentialFieldResolver/SequentialFieldResolver.js";
+import { SchemaStore } from "../SchemasStore/SchemaStore.js";
 
 export class ChacaInputTree<T> {
   private nodes: Array<ChacaTreeNode> = [];
-  private injectedSchemas: Array<SchemaResolver>;
+  private schemasStore: SchemaStore;
   private schemaName: string;
 
   // ref nodes
@@ -39,9 +39,9 @@ export class ChacaInputTree<T> {
   constructor(
     schemaName: string,
     schemaToResolve: SchemaToResolve<T>,
-    injectedSchemas: Array<SchemaResolver>,
+    schemasStore: SchemaStore,
   ) {
-    this.injectedSchemas = injectedSchemas;
+    this.schemasStore = schemasStore;
     this.schemaName = schemaName;
 
     for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
@@ -49,6 +49,10 @@ export class ChacaInputTree<T> {
       const newNode = this.createNodeByType(fieldRoute, obj);
       this.insertNode(newNode);
     }
+  }
+
+  public getRefNodes(): Array<RefValueNode> {
+    return this.refToResolve;
   }
 
   public getFields() {
@@ -84,7 +88,7 @@ export class ChacaInputTree<T> {
       const newRefNode = new RefValueNode(
         nodeConfig,
         object.type.refField,
-        this.injectedSchemas,
+        this.schemasStore,
       );
 
       // añadir a lo ref fields del tree
@@ -127,7 +131,7 @@ export class ChacaInputTree<T> {
         const refValueNode = new RefValueNode(
           { fieldTreeRoute: actualRoute, isArray: null, posibleNull: 0 },
           object.type.fieldType.refField,
-          this.injectedSchemas,
+          this.schemasStore,
         );
 
         // añadir a lo ref fields del tree
@@ -190,5 +194,37 @@ export class ChacaInputTree<T> {
 
   public searchRefNodes(): void {
     this.refToResolve.forEach((r) => r.searchSchemaRef());
+  }
+
+  public getPosibleNullNodes(): Array<ChacaTreeNode> {
+    const nodes = [] as Array<ChacaTreeNode>;
+
+    this.nodes.forEach((n) => {
+      if (n.getPosibleNull() > 0) {
+        nodes.push(n);
+      }
+
+      if (n instanceof MixedValueNode) {
+        const subNodes = n.getPosibleNullNodes();
+        subNodes.forEach((s) => nodes.push(s));
+      }
+    });
+
+    return nodes;
+  }
+
+  public getKeyFields(): Array<KeyValueNode> {
+    const keys = [] as Array<KeyValueNode>;
+
+    this.nodes.forEach((n) => {
+      if (n instanceof KeyValueNode) {
+        keys.push(n);
+      } else if (n instanceof MixedValueNode) {
+        const subKeys = n.getKeyFields();
+        subKeys.forEach((k) => keys.push(k));
+      }
+    });
+
+    return keys;
   }
 }

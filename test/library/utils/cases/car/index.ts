@@ -1,4 +1,3 @@
-import { chaca } from "../../../../../src";
 import { BRAND_SCHEMA } from "./schemas/brand";
 import { CAR_SCHEMA } from "./schemas/car";
 import { CATEGORY_SCHEMA } from "./schemas/category";

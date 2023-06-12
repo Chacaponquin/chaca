@@ -23,8 +23,6 @@ describe("# School Case Test", () => {
   });
 
   it("SQL", async () => {
-    jest.setTimeout(10000);
-
     await chaca.toSQL(SCHOOL_SCHEMAS, {
       fileName: FILE_NAME,
       location: EXPORT_ROUTE,

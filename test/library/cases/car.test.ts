@@ -66,8 +66,6 @@ describe("# Car Case Test", () => {
   });
 
   it("SQL", async () => {
-    jest.setTimeout(10000);
-
     await chaca.toSQL(CASE_SCHEMAS, {
       fileName: FILE_NAME,
       location: EXPORT_ROUTE,

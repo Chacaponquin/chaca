@@ -28,10 +28,10 @@ import { DatasetStore } from "./DatasetStore/DatasetStore.js";
 export class SchemaResolver<K = any, T = any> {
   private inputTree: ChacaInputTree<K> | null = null;
   private resultTree: ChacaResultTree<K>;
-  private injectedSchemas: Array<SchemaResolver> = [];
   private schemaName: string;
   private countDoc: number;
   private schemaObject: SchemaToResolve<T>;
+  private schemaIndex: number;
 
   private isBuilding = false;
   private finishBuilding = false;
@@ -42,6 +42,7 @@ export class SchemaResolver<K = any, T = any> {
     schemaName: string,
     schemaObject: SchemaToResolve<T>,
     countDoc: number,
+    schemaIndex: number,
   ) {
     this.schemaName = this.validateSchemaName(schemaName);
     this.schemaObject = schemaObject;
@@ -50,6 +51,35 @@ export class SchemaResolver<K = any, T = any> {
       this.schemasStore,
     );
     this.countDoc = this.validateCountDoc(countDoc);
+    this.schemaIndex = schemaIndex;
+  }
+
+  public getKeyNodes(): Array<KeyValueNode> {
+    let keys = [] as Array<KeyValueNode>;
+
+    if (this.inputTree) {
+      keys = this.inputTree.getKeyFields();
+    }
+
+    return keys;
+  }
+
+  public getPosibleNullNodes(): Array<ChacaTreeNode> {
+    let nodes = [] as Array<ChacaTreeNode>;
+
+    if (this.inputTree) {
+      nodes = this.inputTree.getPosibleNullNodes();
+    }
+
+    return nodes;
+  }
+
+  public getRefNodes(): Array<RefValueNode> {
+    if (this.inputTree) {
+      return this.inputTree.getRefNodes();
+    } else {
+      return [];
+    }
   }
 
   public getSchemaToResolve() {
@@ -61,7 +91,7 @@ export class SchemaResolver<K = any, T = any> {
       this.inputTree = new ChacaInputTree(
         this.schemaName,
         this.schemaObject,
-        this.injectedSchemas,
+        this.schemasStore,
       );
     }
   }
@@ -112,8 +142,7 @@ export class SchemaResolver<K = any, T = any> {
   }
 
   public setInjectedSchemas(array: Array<SchemaResolver>): void {
-    this.injectedSchemas = array;
-    this.schemasStore.setInjectedSchemas([...array, this]);
+    this.schemasStore.setInjectedSchemas(array);
   }
 
   public getInputTree() {
@@ -152,16 +181,16 @@ export class SchemaResolver<K = any, T = any> {
   }
 
   public getAllRefValuesByNodeRoute(
-    currentDocument: DocumentTree<K>,
+    currentDocument: number,
     fieldTreeRoute: Array<string>,
     refFieldWhoCalls: RefValueNode,
-    currentSchemaResolver: SchemaResolver,
+    currentSchemaResolver: number,
   ): Array<SingleResultNode> {
     const allValues = this.resultTree.getAllRefValuesByNodeRoute(
       currentDocument,
       fieldTreeRoute,
       refFieldWhoCalls,
-      currentSchemaResolver.documentsWithOutCurrentDocument(currentDocument),
+      currentSchemaResolver,
     );
 
     return allValues;
@@ -303,10 +332,12 @@ export class SchemaResolver<K = any, T = any> {
     }
   }
 
-  private documentsWithOutCurrentDocument(
-    omitDocument: DocumentTree<K>,
+  public documentsWithOutCurrentDocument(
+    omitDocument: number,
   ): Array<DocumentTree<K>> {
-    return this.resultTree.getDocuments().filter((d) => d !== omitDocument);
+    return this.resultTree
+      .getDocuments()
+      .filter((_, index) => index !== omitDocument);
   }
 
   private createSolutionNodeByType(
@@ -342,7 +373,7 @@ export class SchemaResolver<K = any, T = any> {
         const value = field.getValue(
           currentDocument.getDocumentObject(),
           new DatasetStore(this.schemasStore, currentDocument),
-          this.documentsWithOutCurrentDocument(currentDocument),
+          this.documentsWithOutCurrentDocument(indexDoc),
         );
 
         return new SingleResultNode(field.getResultNodeConfig(), value);
@@ -350,9 +381,7 @@ export class SchemaResolver<K = any, T = any> {
 
       // en caso de ser un ref field
       else if (field instanceof RefValueNode) {
-        const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-
-        const refValue = field.getValue(currentDocument, this);
+        const refValue = field.getValue(indexDoc, this.schemaIndex);
         return new SingleResultNode(field.getResultNodeConfig(), refValue);
       }
 
@@ -363,10 +392,10 @@ export class SchemaResolver<K = any, T = any> {
         return new SingleResultNode(
           field.getResultNodeConfig(),
           field.getValue(
-            currentDocument,
+            indexDoc,
             new DatasetStore(this.schemasStore, currentDocument),
-            this.documentsWithOutCurrentDocument(currentDocument),
-            this,
+            this.documentsWithOutCurrentDocument(indexDoc),
+            this.schemaIndex,
           ),
         );
       }

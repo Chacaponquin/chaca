@@ -25,7 +25,19 @@ export abstract class ChacaTreeNode {
     return arrayRoute[arrayRoute.length - 1];
   }
 
+  public getFieldRoute() {
+    return this.nodeConfig.fieldTreeRoute;
+  }
+
+  public getIsArray() {
+    return this.nodeConfig.isArray;
+  }
+
   public getFieldRouteString() {
     return this.nodeConfig.fieldTreeRoute.join(".");
+  }
+
+  public getPosibleNull() {
+    return this.nodeConfig.posibleNull;
   }
 }

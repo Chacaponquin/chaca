@@ -28,6 +28,10 @@ export class SchemaStore {
     this.schemas = array;
   }
 
+  public getSchemasResolvers() {
+    return this.schemas;
+  }
+
   public getValue<D = any>(
     fieldToGet: string,
     config: GetStoreValueConfig,

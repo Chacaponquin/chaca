@@ -5,7 +5,9 @@ export type ExportFormat =
   | "csv"
   | "javascript"
   | "yaml"
-  | "sql";
+  | ExportSQLFormat;
+
+export type ExportSQLFormat = "postgresql";
 
 /**
  * Export File Configuration
