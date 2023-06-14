@@ -24,14 +24,15 @@
   ],
   "scripts": {
     "clean": "rm -rf ./lib",
-    "build": "npm run fix && npm run prettier-format && npm run build:lib",
+    "build": "npm run lint-fix && npm run prettier-format && npm run build:lib",
     "build:lib": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:types",
     "build:types": "tsc -p ./tsconfig.types.json",
     "build:esm": "tsc --p tsconfig.esm.json",
     "build:cjs": "tsc --p tsconfig.cjs.json",
     "test": "jest",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
-    "fix": "eslint --fix src/**/*.ts"
+    "lint-fix": "eslint --fix src/**/*.ts",
+    "lint": "eslint src/**/*.ts"
   },
   "repository": {
     "type": "git",
