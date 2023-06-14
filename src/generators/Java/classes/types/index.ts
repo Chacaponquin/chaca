@@ -20,6 +20,10 @@ export abstract class DataType {
 
     if (typeof value === "string") {
       returnType = new StringType(value);
+    } else if (typeof value === "symbol") {
+      throw new ChacaError(`You can not export a Symbol to a java file`);
+    } else if (typeof value === "function") {
+      throw new ChacaError(`You can not export a function to a java file`);
     } else if (typeof value === "number") {
       if (Number.isInteger(value)) {
         returnType = new IntegerType(value);
@@ -30,6 +34,8 @@ export abstract class DataType {
       returnType = new BooleanType(value);
     } else if (typeof value === "undefined") {
       returnType = new NullType();
+    } else if (typeof value === "bigint") {
+      returnType = new BigintType(value);
     } else {
       if (Array.isArray(value)) {
         returnType = new ArrayType(value);
@@ -43,6 +49,16 @@ export abstract class DataType {
     }
 
     return returnType;
+  }
+}
+
+export class BigintType extends DataType {
+  constructor(public readonly value: bigint) {
+    super();
+  }
+
+  protected equalType(otherType: DataType): boolean {
+    return otherType instanceof BigintType;
   }
 }
 

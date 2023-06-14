@@ -7,6 +7,7 @@ import { ChacaError } from "../../errors/ChacaError.js";
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import {
   ArrayType,
+  BigintType,
   BooleanType,
   DataType,
   DateType,
@@ -78,14 +79,24 @@ export class JavaGenerator extends Generator {
       returnValue = `${value.value}`;
     } else if (value instanceof NullType) {
       returnValue = "null";
+    } else if (value instanceof BigintType) {
+      returnValue = `new java.math.BigInteger(${value.value.toString()})`;
     } else if (value instanceof DateType) {
-      returnValue = `new Date("${value.value.toDateString()}")`;
+      const year = value.value.getFullYear().toString();
+      const month = (value.value.getMonth() + 1).toString().padStart(2, "0");
+      const day = value.value.getDate().toString().padStart(2, "0");
+
+      returnValue = `java.time.LocalDate.of(${year}, ${month}, ${day})`;
     } else if (value instanceof ArrayType) {
-      returnValue = `Arrays.asList(new ${this.getArrayType(value)}[]{`;
+      returnValue = `java.util.Arrays.asList(new ${this.getArrayType(
+        value,
+      )}[]{`;
+
       returnValue += value
         .getValues()
         .map((v) => this.createValueByType(v))
         .join(", ");
+
       returnValue += "})";
     } else {
       const object = value as ObjectType;
@@ -113,11 +124,13 @@ export class JavaGenerator extends Generator {
     } else if (value instanceof BooleanType) {
       returnType = "Boolean";
     } else if (value instanceof DateType) {
-      returnType = "Date";
+      returnType = "java.time.LocalDate";
     } else if (value instanceof NullType) {
       returnType = "Object";
     } else if (value instanceof ArrayType) {
-      returnType = `List<` + `${this.getArrayType(value)}` + `>`;
+      returnType = `java.util.List<` + `${this.getArrayType(value)}` + `>`;
+    } else if (value instanceof BigintType) {
+      returnType = `java.math.BigInteger`;
     } else {
       returnType = this.createObjectClass(value as ObjectType).className;
     }
