@@ -68,7 +68,7 @@ export class CSVGenerator extends Generator {
   private filterValue(value: any): string {
     let retString = "";
 
-    if (value == null) {
+    if (value === null) {
       retString = `NULL`;
     } else if (typeof value === "object" && !(value instanceof Date)) {
       throw new ChacaError(`Yo can not insert a nested object into a CSV File`);
