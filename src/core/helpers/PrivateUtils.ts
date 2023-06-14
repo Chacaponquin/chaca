@@ -101,7 +101,7 @@ export class PrivateUtils {
 
         for (let i = 0; i < text.length; i++) {
           if (
-            text[i] != " " &&
+            text[i] !== " " &&
             !PrivateUtils.specialCharacters().find((el) => el === text[i])
           ) {
             const isOnlyMayus: boolean =
@@ -149,10 +149,10 @@ export class PrivateUtils {
         }
         if (
           value[i] === " " ||
-          value[i] != "_" ||
-          value[i] != "-" ||
-          value[i] != "(" ||
-          value[i] != ")"
+          value[i] !== "_" ||
+          value[i] !== "-" ||
+          value[i] !== "(" ||
+          value[i] !== ")"
         ) {
           returnValue = false;
           break;
