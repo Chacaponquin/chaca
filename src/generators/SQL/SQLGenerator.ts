@@ -15,10 +15,12 @@ import {
   SQLVarcharString,
   SQLFloatNumber,
   SQLIntegerNumber,
+  SQLBigint,
 } from "./classes/sqlTypes/index.js";
 import { SQLTable } from "./classes/table/index.js";
 import {
   ArrayType,
+  BigintType,
   BooleanType,
   DataType,
   DateType,
@@ -71,6 +73,16 @@ export class SQLGenerator extends Generator {
         } else {
           type = new SQLVarcharString(value.value);
         }
+
+        if (fieldName) {
+          parentTable.addColumnValue(fieldName, type);
+        } else {
+          parentTable.addColumnValue(parentTable.tableName, type);
+          // add new id to array table
+          parentTable.addNewID();
+        }
+      } else if (value instanceof BigintType) {
+        const type = new SQLBigint(value.value);
 
         if (fieldName) {
           parentTable.addColumnValue(fieldName, type);

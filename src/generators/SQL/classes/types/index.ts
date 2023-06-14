@@ -26,6 +26,12 @@ export abstract class DataType {
       returnType = new BooleanType(value);
     } else if (typeof value === "undefined") {
       returnType = new NullType();
+    } else if (typeof value === "bigint") {
+      returnType = new BigintType(value);
+    } else if (typeof value === "symbol") {
+      throw new ChacaError(`You can not export a Symbol to a SQL file.`);
+    } else if (typeof value === "function") {
+      throw new ChacaError(`You can not export a function to a SQL file.`);
     } else {
       if (Array.isArray(value)) {
         returnType = new ArrayType(value);
@@ -59,6 +65,16 @@ export class NumberType extends DataType {
 
   public equalType(otherType: DataType): boolean {
     return otherType instanceof NumberType;
+  }
+}
+
+export class BigintType extends DataType {
+  constructor(public readonly value: bigint) {
+    super();
+  }
+
+  protected equalType(otherType: DataType): boolean {
+    return otherType instanceof BigintType;
   }
 }
 

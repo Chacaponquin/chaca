@@ -3,6 +3,20 @@ export abstract class SQLType {
   public abstract getSQLValue(): string;
 }
 
+export class SQLBigint extends SQLType {
+  constructor(public readonly value: bigint) {
+    super();
+  }
+
+  public getSQLDefinition(): string {
+    return "NUMERIC(20)";
+  }
+
+  public getSQLValue(): string {
+    return this.value.toString();
+  }
+}
+
 export class SQLBoolean extends SQLType {
   constructor(public readonly value: boolean) {
     super();
