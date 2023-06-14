@@ -1,4 +1,5 @@
 import { ExportSQLFormat } from "../../../../core/interfaces/export.interface.js";
+import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SQLTable } from "../table/SQLTable.js";
 import {
   ColumnForeignKeyConfig,
@@ -11,13 +12,17 @@ export class SQLDataGenerator {
     private readonly sqlTables: Array<SQLTable>,
   ) {}
 
-  public getData() {
-    const generator = new PostgreSQL();
+  public getData(): string {
+    if (this.sqlExtension === "postgresql") {
+      const generator = new PostgreSQL();
 
-    return (
-      generator.createTablesString(this.sqlTables) +
-      generator.createTableDataString(this.sqlTables)
-    );
+      return (
+        generator.createTablesString(this.sqlTables) +
+        generator.createTableDataString(this.sqlTables)
+      );
+    } else {
+      throw new ChacaError(`Not sql extension specified`);
+    }
   }
 }
 
