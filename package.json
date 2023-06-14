@@ -75,7 +75,6 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.9",
-    "json2csv": "^5.0.7",
     "lorem-ipsum": "^2.0.8"
   },
   "bugs": {
