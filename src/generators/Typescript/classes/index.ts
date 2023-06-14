@@ -1,4 +1,5 @@
 import { PrivateUtils } from "../../../core/helpers/PrivateUtils.js";
+import { ChacaError } from "../../../errors/ChacaError.js";
 
 interface ObjectKeys {
   keyName: string;
@@ -21,6 +22,14 @@ export abstract class TypescriptInterface {
       t = new PrimitiveInterface("boolean");
     } else if (typeof value === "undefined") {
       t = new PrimitiveInterface("undefined");
+    } else if (typeof value === "bigint") {
+      t = new PrimitiveInterface("bigint");
+    } else if (typeof value === "function") {
+      throw new ChacaError(
+        `You can not export a function to a typescript file.`,
+      );
+    } else if (typeof value === "symbol") {
+      throw new ChacaError(`You can not export a Symbol to a typescript file.`);
     } else if (typeof value === "object") {
       if (Array.isArray(value)) {
         t = new ArrayInterface(value);

@@ -68,7 +68,7 @@ export class JavascriptGenerator extends Generator {
       } else if (value === null) {
         returnValue = "null";
       } else if (value instanceof Date) {
-        returnValue = `new Date("${value.toISOString()}")`;
+        returnValue = `new Date("${JSON.stringify(value)}")`;
       } else {
         returnValue = this.generateObject(value);
       }

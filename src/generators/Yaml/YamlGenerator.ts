@@ -1,4 +1,5 @@
 import { FileConfig } from "../../core/interfaces/export.interface.js";
+import { ChacaError } from "../../errors/ChacaError.js";
 import { Generator } from "../Generator.js";
 import fs from "fs";
 
@@ -69,27 +70,34 @@ export class YamlGenerator extends Generator {
   private generateValue(value: any, onArray: boolean): string {
     let returnValue = "null";
 
-    if (typeof value === "string") returnValue = `${JSON.stringify(value)}`;
-    else if (typeof value === "number" || typeof value === "boolean") {
+    if (typeof value === "string") {
+      returnValue = `${JSON.stringify(value)}`;
+    } else if (typeof value === "number" || typeof value === "boolean") {
       returnValue = `${value}`;
+    } else if (typeof value === "undefined") {
+      returnValue = "null";
+    } else if (typeof value === "bigint") {
+      returnValue = `${value.toString()}`;
+    } else if (typeof value === "function") {
+      throw new ChacaError(`You can not export a function to a yaml file.`);
+    } else if (typeof value === "symbol") {
+      throw new ChacaError(`You can not export a Symbol to a yaml file.`);
     } else if (typeof value === "object") {
       if (Array.isArray(value)) {
         this.actualMargin++;
         returnValue = "\n" + this.generateArray(value);
         this.actualMargin--;
+      } else if (value === null) {
+        returnValue = "null";
+      } else if (value instanceof Date) {
+        returnValue = `"${JSON.stringify(value)}"`;
       } else {
-        if (value === null) {
-          returnValue = "null";
-        } else if (value instanceof Date) {
-          returnValue = `"${value.toISOString()}"`;
-        } else {
-          this.actualMargin++;
+        this.actualMargin++;
 
-          const objectCreated = this.generateObject(value, onArray);
-          returnValue = objectCreated;
+        const objectCreated = this.generateObject(value, onArray);
+        returnValue = objectCreated;
 
-          this.actualMargin--;
-        }
+        this.actualMargin--;
       }
     }
 
