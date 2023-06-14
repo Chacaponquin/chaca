@@ -23,6 +23,7 @@
     "CHANGELOG.md"
   ],
   "scripts": {
+    "prepare": "husky install",
     "clean": "rm -rf ./lib",
     "build": "npm run lint-fix && npm run prettier-format && npm run build:lib",
     "build:lib": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:types",
