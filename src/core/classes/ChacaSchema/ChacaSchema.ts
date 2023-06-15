@@ -6,12 +6,13 @@ import { PrivateUtils } from "../../helpers/PrivateUtils.js";
 import { FileConfig } from "../../interfaces/export.interface.js";
 import {
   CommonSchema,
-  FieldSchemaConfig,
   FieldTypeInput,
   IResolver,
   SchemaInput,
+  SchemaInputField,
   SchemaToResolve,
 } from "../../interfaces/schema.interface.js";
+import { EnumField } from "../EnumField/EnumField.js";
 import { KeyField } from "../KeyField/KeyField.js";
 import { RefField } from "../RefField/RefField.js";
 import { KeyFieldResolverProps } from "../Resolvers/KeyFieldResolver/KeyFieldResolver.js";
@@ -69,11 +70,7 @@ export class ChacaSchema<K = any, T = any> {
 
       for (const k of Object.keys(obj)) {
         const key = String(k) as keyof T;
-        const schema = obj[key] as
-          | FieldSchemaConfig<T[keyof T]>
-          | SequentialField
-          | KeyField
-          | SequenceField;
+        const schema = obj[key] as SchemaInputField<T[keyof T]>;
 
         if (schema instanceof ChacaSchema) {
           schemaToSave = {
@@ -127,6 +124,11 @@ export class ChacaSchema<K = any, T = any> {
             ...schemaToSave,
             [key]: { type: new SequenceFieldResolver(schema.getConfig()) },
           };
+        } else if (schema instanceof EnumField) {
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: { type: this.validateEnum(key, schema) },
+          };
         } else {
           if (typeof schema === "object" && schema !== null) {
             if (schema.type) {
@@ -147,16 +149,6 @@ export class ChacaSchema<K = any, T = any> {
                   },
                 };
               }
-            } else if (schema.enum) {
-              schemaToSave = {
-                ...schemaToSave,
-                [key]: {
-                  type: new EnumFieldResolver<T[keyof T]>(
-                    this.validateEnum(key, schema.enum),
-                  ),
-                  ...defaultConfig,
-                },
-              };
             } else {
               throw new ChacaError(
                 `The field ${String(key)} dosen't have a resolve function`,
@@ -219,6 +211,8 @@ export class ChacaSchema<K = any, T = any> {
       return new RefFieldResolver(type.getRefField());
     } else if (type instanceof SchemaField) {
       return new SchemaFieldResolver(type);
+    } else if (type instanceof EnumField) {
+      return this.validateEnum(key, type);
     } else if (typeof type === "function") {
       return new CustomFieldResolver(type);
     } else {
@@ -226,10 +220,13 @@ export class ChacaSchema<K = any, T = any> {
     }
   }
 
-  private validateEnum(key: keyof T, array: T[keyof T][]): T[keyof T][] {
-    if (Array.isArray(array)) {
-      if (array.length > 0) {
-        return array;
+  private validateEnum<R>(
+    key: keyof T,
+    enumField: EnumField<R>,
+  ): EnumFieldResolver<R> {
+    if (Array.isArray(enumField.valuesArray)) {
+      if (enumField.valuesArray.length > 0) {
+        return new EnumFieldResolver(enumField.valuesArray);
       } else
         throw new ChacaError(
           `For the field ${String(key)} you must provide some values to choce`,
@@ -277,7 +274,6 @@ export class ChacaSchema<K = any, T = any> {
       else value = null;
     } else if (
       typeof isArray === "object" &&
-      !(isArray instanceof Date) &&
       !Array.isArray(isArray) &&
       isArray !== null
     ) {

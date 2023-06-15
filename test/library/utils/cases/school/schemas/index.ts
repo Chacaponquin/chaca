@@ -21,7 +21,7 @@ export const GRADE_SCHEMA = chaca.defineSchema({
 export const STUDENT_SCHEMA = chaca.defineSchema({
   id: chaca.key(chaca.sequence()),
   student_name: schemas.person.fullName({ language: "es" }),
-  sex: { enum: ["Male", "Woman"] },
+  sex: chaca.enum(["Male", "Woman"]),
   municipality_id: chaca.ref("Municipality.id"),
   group: chaca.ref("Group.group_number"),
   year: chaca.ref("Group.year", {

@@ -8,18 +8,16 @@ export const COMPLETE_SCHEMA = chaca.defineSchema({
   },
   image: schemas.image.film(),
   likes: schemas.dataType.int({ min: 0, max: 500000 }),
-  category: {
-    enum: [
-      "Horror",
-      "War",
-      "History",
-      "Comedy",
-      "Mystery",
-      "Action",
-      "Animation",
-      "Musical",
-    ],
-  },
+  category: chaca.enum([
+    "Horror",
+    "War",
+    "History",
+    "Comedy",
+    "Mystery",
+    "Action",
+    "Animation",
+    "Musical",
+  ]),
   adultMovie: ({ currentFields: docFields }) => {
     return (
       docFields.category === "Horror" ||

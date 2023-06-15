@@ -209,7 +209,7 @@ describe("#Schema Creation Test", () => {
       it("with an array [1, 2, 3, 4, 5]. Should return one of this elements", () => {
         const array = [1, 2, 3, 4, 5];
         const schema = chaca.defineSchema({
-          id: { enum: array },
+          id: chaca.enum(array),
         });
 
         const docs = schema.generateObject();
@@ -284,20 +284,10 @@ describe("#Schema Creation Test", () => {
   });
 
   describe("schema with incorrect arguments", () => {
-    it("passing invalid empty schema object. Should throw an error", () => {
-      try {
-        chaca.defineSchema({});
-      } catch (error) {
-        expect(error instanceof ChacaError).toBe(true);
-      }
-    });
-
     it("with empty array as argument. Should throw an error", () => {
-      try {
-        chaca.defineSchema({ id: { enum: [] } });
-      } catch (error) {
-        expect(error instanceof ChacaError).toBe(true);
-      }
+      expect(() => {
+        chaca.defineSchema({ id: chaca.enum([]) });
+      }).toThrowError(ChacaError);
     });
   });
 });

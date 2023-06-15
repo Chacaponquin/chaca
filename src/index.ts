@@ -53,6 +53,7 @@ import {
   SequenceFieldProps,
 } from "./core/classes/SequenceField/SequenceField.js";
 import { DatasetStore } from "./core/classes/DatasetStore/DatasetStore.js";
+import { EnumField } from "./core/classes/EnumField/EnumField.js";
 
 const Chaca = {
   utils: ChacaUtils,
@@ -116,6 +117,10 @@ const Chaca = {
 
   key<A = any, C = any>(schemaField: KeyFieldProps<A, C>) {
     return new KeyField<A>(schemaField);
+  },
+
+  enum<R = any>(array: Array<R>) {
+    return new EnumField<R>(array);
   },
 
   toSQL: ToSQL,
