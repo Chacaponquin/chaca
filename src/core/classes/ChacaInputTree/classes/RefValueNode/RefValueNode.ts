@@ -10,10 +10,15 @@ import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
 import { FieldToRefObject } from "../../../RefField/RefField.js";
 import { SchemaStore } from "../../../SchemasStore/SchemaStore.js";
+import { SingleResultNode } from "../../../ChacaResultTree/classes/index.js";
+import { DatasetStore } from "../../../DatasetStore/DatasetStore.js";
+import { SchemaData } from "../../../SchemaData/SchemaData.js";
+import { SearchedRefValue } from "./interfaces/refNode.interface.js";
 
 export class RefValueNode extends ChacaTreeNode {
   private refFieldTreeRoute: Array<string>;
   private schemaRefIndex: number | null = null;
+  private allRefNodes: Array<SearchedRefValue> | null = null;
 
   constructor(
     config: ChacaTreeNodeConfig,
@@ -62,7 +67,7 @@ export class RefValueNode extends ChacaTreeNode {
     if (this.schemaRefIndex === null) {
       return null;
     } else {
-      return this.schemasStore.getSchemasResolvers()[this.schemaRefIndex];
+      return this.schemasStore.getResolverByIndex(this.schemaRefIndex);
     }
   }
 
@@ -78,10 +83,56 @@ export class RefValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.getNodeConfig().fieldTreeRoute);
+      throw new TryRefANoKeyFieldError(this.getFieldRoute());
     } else {
       return false;
     }
+  }
+
+  private filterRefNodesByConfig(
+    schemaRef: SchemaResolver,
+    currentDocumentIndex: number,
+    currentSchemaResolverIndex: number,
+  ): Array<SingleResultNode> {
+    const allValues = this.allRefNodes
+      ? this.allRefNodes
+      : schemaRef.getAllRefValuesByNodeRoute(this.refFieldTreeRoute);
+
+    if (!this.allRefNodes) {
+      this.allRefNodes = allValues;
+    }
+
+    const currentSchemaResolver = this.schemasStore.getResolverByIndex(
+      currentSchemaResolverIndex,
+    );
+    const restSchemaDocuments =
+      currentSchemaResolver.documentsWithOutCurrentDocument(
+        currentDocumentIndex,
+      );
+    const currentFields = currentSchemaResolver
+      .getResultTree()
+      .getDocumentByIndex(currentDocumentIndex)
+      .getDocumentObject();
+
+    const returnRefValues: Array<SingleResultNode> = [];
+    for (const refNode of allValues) {
+      if (this.refField.where) {
+        const isAccepted = this.refField.where({
+          store: new DatasetStore(this.schemasStore, refNode.document),
+          refFields: refNode.document.getDocumentObject(),
+          currentFields,
+          schemaRestDocuments: new SchemaData(restSchemaDocuments),
+        });
+
+        if (isAccepted) {
+          returnRefValues.push(refNode.resultNode);
+        }
+      } else {
+        returnRefValues.push(refNode.resultNode);
+      }
+    }
+
+    return returnRefValues;
   }
 
   public getValue(
@@ -91,28 +142,29 @@ export class RefValueNode extends ChacaTreeNode {
     const schemaRef = this.getSchemaRef();
     if (schemaRef) {
       if (!schemaRef.dangerCyclic()) {
+        // build schema ref trees
         schemaRef.buildTrees();
 
-        const allValues = schemaRef.getAllRefValuesByNodeRoute(
+        // get all fields nodes to ref
+        const allValues = this.filterRefNodesByConfig(
+          schemaRef,
           currentDocument,
-          this.refFieldTreeRoute,
-          this,
           currentSchemaResolver,
         );
 
         if (this.refField.unique) {
           const noTakenValues = allValues.filter(
-            (n) => !n.isTaken(this.getNodeConfig().fieldTreeRoute),
+            (n) => !n.isTaken(this.getFieldRoute()),
           );
 
           if (noTakenValues.length === 0) {
             throw new NotEnoughValuesForRefError(
-              this.getNodeConfig().fieldTreeRoute,
+              this.getFieldRoute(),
               this.refFieldTreeRoute,
             );
           } else {
             const node = PrivateUtils.oneOfArray(noTakenValues);
-            node.changeIsTaken(this.getNodeConfig().fieldTreeRoute);
+            node.changeIsTaken(this.getFieldRoute());
 
             return node.getRealValue();
           }

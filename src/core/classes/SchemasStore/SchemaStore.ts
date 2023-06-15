@@ -24,6 +24,10 @@ export class SchemaStore {
     }
   }
 
+  public getResolverByIndex(index: number) {
+    return this.schemas[index];
+  }
+
   public setInjectedSchemas(array: Array<SchemaResolver>): void {
     this.schemas = array;
   }

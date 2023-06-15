@@ -24,6 +24,7 @@ import {
 import { SchemaStore } from "./SchemasStore/SchemaStore.js";
 import { GetStoreValueConfig } from "./SchemasStore/interfaces/store.interface.js";
 import { DatasetStore } from "./DatasetStore/DatasetStore.js";
+import { SearchedRefValue } from "./ChacaInputTree/classes/RefValueNode/interfaces/refNode.interface.js";
 
 export class SchemaResolver<K = any, T = any> {
   private inputTree: ChacaInputTree<K> | null = null;
@@ -46,10 +47,7 @@ export class SchemaResolver<K = any, T = any> {
   ) {
     this.schemaName = this.validateSchemaName(schemaName);
     this.schemaObject = schemaObject;
-    this.resultTree = new ChacaResultTree<K>(
-      this.schemaName,
-      this.schemasStore,
-    );
+    this.resultTree = new ChacaResultTree<K>(this.schemaName);
     this.countDoc = this.validateCountDoc(countDoc);
     this.schemaIndex = schemaIndex;
   }
@@ -181,18 +179,10 @@ export class SchemaResolver<K = any, T = any> {
   }
 
   public getAllRefValuesByNodeRoute(
-    currentDocument: number,
     fieldTreeRoute: Array<string>,
-    refFieldWhoCalls: RefValueNode,
-    currentSchemaResolver: number,
-  ): Array<SingleResultNode> {
-    const allValues = this.resultTree.getAllRefValuesByNodeRoute(
-      currentDocument,
-      fieldTreeRoute,
-      refFieldWhoCalls,
-      currentSchemaResolver,
-    );
-
+  ): Array<SearchedRefValue> {
+    const allValues =
+      this.resultTree.getAllRefValuesByNodeRoute(fieldTreeRoute);
     return allValues;
   }
 

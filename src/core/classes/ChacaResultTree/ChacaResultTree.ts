@@ -1,15 +1,9 @@
-import { RefValueNode } from "../ChacaInputTree/classes/index.js";
-import { DatasetStore } from "../DatasetStore/DatasetStore.js";
-import { SchemaData } from "../SchemaData/SchemaData.js";
-import { SchemaStore } from "../SchemasStore/SchemaStore.js";
+import { SearchedRefValue } from "../ChacaInputTree/classes/RefValueNode/interfaces/refNode.interface.js";
 import { GetStoreValueConfig } from "../SchemasStore/interfaces/store.interface.js";
-import { DocumentTree, FieldNode, SingleResultNode } from "./classes/index.js";
+import { DocumentTree, FieldNode } from "./classes/index.js";
 
 export class ChacaResultTree<D> {
-  constructor(
-    public readonly schemaName: string,
-    private readonly schemasStore: SchemaStore,
-  ) {}
+  constructor(public readonly schemaName: string) {}
 
   private documents: Array<DocumentTree<D>> = [];
 
@@ -45,39 +39,15 @@ export class ChacaResultTree<D> {
   }
 
   public getAllRefValuesByNodeRoute(
-    currentDocument: number,
     fieldTreeRoute: Array<string>,
-    refFieldWhoCalls: RefValueNode,
-    currentSchemaResolverIndex: number,
-  ): Array<SingleResultNode> {
-    const allValues: Array<SingleResultNode> = [];
-    const currentSchemaResolver =
-      this.schemasStore.getSchemasResolvers()[currentSchemaResolverIndex];
-    const restSchemaDocuments =
-      currentSchemaResolver.documentsWithOutCurrentDocument(currentDocument);
-    const currentFields = currentSchemaResolver
-      .getResultTree()
-      .getDocumentByIndex(currentDocument)
-      .getDocumentObject();
+  ): Array<SearchedRefValue> {
+    const allValues: Array<SearchedRefValue> = [];
 
     this.documents.forEach((d) => {
       // quitar el primer elemento de la ruta pues pertenece al nombre del schema al que pertenece
       const foundValue = d.getRefValueByNodeRoute(fieldTreeRoute.slice(1));
 
-      if (refFieldWhoCalls.refField.where) {
-        const isAccepted = refFieldWhoCalls.refField.where({
-          store: new DatasetStore(this.schemasStore, d),
-          refFields: d.getDocumentObject(),
-          currentFields,
-          schemaRestDocuments: new SchemaData(restSchemaDocuments),
-        });
-
-        if (isAccepted) {
-          allValues.push(foundValue);
-        }
-      } else {
-        allValues.push(foundValue);
-      }
+      allValues.push({ resultNode: foundValue, document: d });
     });
 
     return allValues;

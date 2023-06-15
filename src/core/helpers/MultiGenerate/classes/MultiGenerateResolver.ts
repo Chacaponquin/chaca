@@ -38,13 +38,13 @@ export class MultiGenerateResolver<K> {
   }
 
   private createSchemaResolvers(schemas: Array<MultiGenerateSchema>): void {
-    this.resolversArray = schemas.map((s, index) => {
-      if (typeof s === "object" && s !== null) {
+    this.resolversArray = schemas.map((schema, schemaIndex) => {
+      if (typeof schema === "object" && schema !== null) {
         return new SchemaResolver(
-          s.name,
-          s.schema.getSchemaObject(),
-          s.documents,
-          index,
+          schema.name,
+          schema.schema.getSchemaObject(),
+          schema.documents,
+          schemaIndex,
         );
       } else {
         throw new ChacaError("You must provide a name for your schema");
