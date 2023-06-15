@@ -4,23 +4,22 @@ import { JavascriptGenerator } from "../Javascript/JavascriptGenerator.js";
 import fs from "fs";
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { ObjectInterface, TypescriptInterface } from "./classes/index.js";
+import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
 export class TypescriptGenerator extends Generator {
-  constructor(data: any, config: FileConfig) {
-    super(data, "ts", config);
+  constructor(config: FileConfig) {
+    super("ts", config);
   }
 
-  public async generateFile(): Promise<string> {
+  public async generateFile(data: any): Promise<string> {
     const variableName = PrivateUtils.camelCaseText(this.config.fileName);
 
-    const javascriptCode = new JavascriptGenerator(
-      this.data,
-      this.config,
-    ).filterTypeValue(this.data);
+    const javascriptCode = new JavascriptGenerator(this.config).filterTypeValue(
+      data,
+    );
 
-    const codeInterface = TypescriptInterface.filterInterface(
-      this.data,
-    ).getInterface();
+    const codeInterface =
+      TypescriptInterface.filterInterface(data).getInterface();
 
     const code = `const ${variableName}: ${codeInterface} = ${javascriptCode}`;
     const interfaceCode = this.createInterfaceCode();
@@ -30,6 +29,13 @@ export class TypescriptGenerator extends Generator {
     await fs.promises.writeFile(this.route, interfaceCode + code, "utf8");
 
     return this.route;
+  }
+
+  public async generateRelationalDataFile(
+    resolver: MultiGenerateResolver<any>,
+  ): Promise<string> {
+    const data = resolver.resolve();
+    return await this.generateFile(data);
   }
 
   private createInterfaceCode(): string {

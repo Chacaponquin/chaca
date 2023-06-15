@@ -18,6 +18,7 @@ import {
   ObjectType,
   StringType,
 } from "./classes/types/index.js";
+import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
 interface JavaClassCreated {
   className: string;
@@ -27,12 +28,70 @@ interface JavaClassCreated {
 export class JavaGenerator extends Generator {
   private classesCreated: Array<JavaClassCreated> = [];
 
-  constructor(data: any, config: FileConfig) {
-    super(data, "java", config);
+  constructor(config: FileConfig) {
+    super("java", config);
   }
 
-  private createDataTypes(): DataType {
-    const dType = DataType.filterTypeByValue(this.data);
+  public async generateRelationalDataFile(
+    resolver: MultiGenerateResolver<any>,
+  ): Promise<string> {
+    const data = resolver.resolve();
+    return await this.generateFile(data);
+  }
+
+  public async generateFile(data: any): Promise<string> {
+    const dataTypes = this.createDataTypes(data);
+    const mainContent = this.generateMainContent(dataTypes);
+
+    const classesContents = [mainContent];
+    const filesRoutes = [];
+
+    this.classesCreated.forEach((c) => {
+      classesContents.push(this.createClassFileContent(c));
+    });
+
+    try {
+      for (let i = 0; i < classesContents.length; i++) {
+        if (i === 0) {
+          const mainRoute = this.buildClassFileName("Main");
+          await fs.promises.writeFile(mainRoute, classesContents[i], "utf-8");
+
+          filesRoutes.push(mainRoute);
+        } else {
+          const objectClassRoute = this.buildClassFileName(
+            this.classesCreated[i - 1].className,
+          );
+
+          await fs.promises.writeFile(
+            objectClassRoute,
+            classesContents[i],
+            "utf-8",
+          );
+
+          filesRoutes.push(objectClassRoute);
+        }
+      }
+
+      const zp = new AdmZip();
+      const zipName = `${this.config.fileName}.zip`;
+      const zipPath = path.join(this.baseLocation, zipName);
+
+      for (let i = 0; i < filesRoutes.length; i++) {
+        const r = filesRoutes[i];
+        zp.addLocalFile(r);
+        await fs.promises.unlink(r);
+      }
+
+      zp.writeZip(zipPath);
+
+      return zipPath;
+    } catch (error) {
+      throw new ChacaError("Error export zip File");
+    }
+  }
+
+  private createDataTypes(data: any): DataType {
+    const dType = DataType.filterTypeByValue(data);
     return dType;
   }
 
@@ -200,56 +259,5 @@ export class JavaGenerator extends Generator {
 
   private buildClassFileName(className: string): string {
     return path.join(this.baseLocation, `${className}.java`);
-  }
-
-  public async generateFile(): Promise<string> {
-    const dataTypes = this.createDataTypes();
-    const mainContent = this.generateMainContent(dataTypes);
-
-    const classesContents = [mainContent];
-    const filesRoutes = [];
-
-    this.classesCreated.forEach((c) => {
-      classesContents.push(this.createClassFileContent(c));
-    });
-
-    try {
-      for (let i = 0; i < classesContents.length; i++) {
-        if (i === 0) {
-          const mainRoute = this.buildClassFileName("Main");
-          await fs.promises.writeFile(mainRoute, classesContents[i], "utf-8");
-
-          filesRoutes.push(mainRoute);
-        } else {
-          const objectClassRoute = this.buildClassFileName(
-            this.classesCreated[i - 1].className,
-          );
-
-          await fs.promises.writeFile(
-            objectClassRoute,
-            classesContents[i],
-            "utf-8",
-          );
-
-          filesRoutes.push(objectClassRoute);
-        }
-      }
-
-      const zp = new AdmZip();
-      const zipName = `${this.config.fileName}.zip`;
-      const zipPath = path.join(this.baseLocation, zipName);
-
-      for (let i = 0; i < filesRoutes.length; i++) {
-        const r = filesRoutes[i];
-        zp.addLocalFile(r);
-        await fs.promises.unlink(r);
-      }
-
-      zp.writeZip(zipPath);
-
-      return zipPath;
-    } catch (error) {
-      throw new ChacaError("Error export zip File");
-    }
   }
 }

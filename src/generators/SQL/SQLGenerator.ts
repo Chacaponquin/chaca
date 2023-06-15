@@ -37,9 +37,9 @@ import {
   RefValueNode,
 } from "../../core/classes/ChacaInputTree/classes/index.js";
 import { SQLDataGenerator } from "./classes/generators/index.js";
+import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
 export class SQLGenerator extends Generator {
-  private sqlData: Array<any> = [];
   private schemasPrimaryKeys: Array<KeyValueNode> = [];
   private schemasForeignKeys: Array<RefValueNode> = [];
   private schemasPosibleNull: Array<ChacaTreeNode> = [];
@@ -48,16 +48,37 @@ export class SQLGenerator extends Generator {
 
   private readonly NAMES_DIVISOR = "_";
 
-  constructor(data: any, config: FileConfig, sqlExtension: ExportSQLFormat) {
-    super(data, "sql", config);
+  constructor(config: FileConfig) {
+    super("sql", config);
 
-    if (Array.isArray(this.data)) {
-      this.sqlData = this.data;
+    this.dataGenerator = new SQLDataGenerator(
+      this.config.format as ExportSQLFormat,
+      this.allTables,
+    );
+  }
+
+  public async generateFile(data: any): Promise<string> {
+    let sqlData: Array<any> = [];
+
+    if (Array.isArray(data)) {
+      sqlData = data;
     } else {
-      this.sqlData = [this.data];
+      sqlData = [data];
     }
 
-    this.dataGenerator = new SQLDataGenerator(sqlExtension, this.allTables);
+    this.createData(this.config.fileName, sqlData);
+    // change tables id columns
+    this.allTables.forEach((t) => {
+      t.updateIdColumnName();
+    });
+
+    await fs.promises.writeFile(
+      this.route,
+      this.dataGenerator.getData(),
+      "utf-8",
+    );
+
+    return this.route;
   }
 
   private filterTypeByValue(
@@ -384,26 +405,10 @@ export class SQLGenerator extends Generator {
     return foundTable;
   }
 
-  public async generateFile(): Promise<string> {
-    this.createData(this.config.fileName, this.sqlData);
-    // change tables id columns
-    this.allTables.forEach((t) => {
-      t.updateIdColumnName();
-    });
-
-    await fs.promises.writeFile(
-      this.route,
-      this.dataGenerator.getData(),
-      "utf-8",
-    );
-
-    return this.route;
-  }
-
   public async generateRelationalDataFile(
-    resolvers: Array<SchemaResolver>,
+    resolvers: MultiGenerateResolver,
   ): Promise<string> {
-    resolvers.forEach((r) => {
+    resolvers.getResolvers().forEach((r) => {
       const allKeys = r.getKeyNodes();
       allKeys.forEach((k) => this.schemasPrimaryKeys.push(k));
 
@@ -414,7 +419,7 @@ export class SQLGenerator extends Generator {
       allPosibleNull.forEach((n) => this.schemasPosibleNull.push(n));
     });
 
-    resolvers.forEach((r) => {
+    resolvers.getResolvers().forEach((r) => {
       this.createData(r.getSchemaName(), r.resolve());
     });
 

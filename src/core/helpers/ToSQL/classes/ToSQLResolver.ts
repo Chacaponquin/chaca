@@ -14,19 +14,14 @@ export class ToSQLResolver {
 
   public async resolve(): Promise<string> {
     const multiResolver = new MultiGenerateResolver(this.schemas);
-    const resolvers = multiResolver.getResolvers();
 
-    const sqlGenerator = new SQLGenerator(
-      [],
-      {
-        fileName: this.config.fileName,
-        location: this.config.location,
-        format: "postgresql",
-      },
-      "postgresql",
-    );
+    const sqlGenerator = new SQLGenerator({
+      fileName: this.config.fileName,
+      location: this.config.location,
+      format: "postgresql",
+    });
 
-    await sqlGenerator.generateRelationalDataFile(resolvers);
+    await sqlGenerator.generateRelationalDataFile(multiResolver);
 
     return sqlGenerator.getRoute();
   }

@@ -2,20 +2,28 @@ import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { Generator } from "./../Generator.js";
 import fs from "fs";
 import { ChacaError } from "../../errors/ChacaError.js";
+import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
 export class CSVGenerator extends Generator {
-  constructor(data: any, config: FileConfig) {
-    super(data, "csv", config);
+  constructor(config: FileConfig) {
+    super("csv", config);
   }
 
-  public async generateFile(): Promise<string> {
+  public async generateRelationalDataFile(
+    resolver: MultiGenerateResolver<any>,
+  ): Promise<string> {
+    const data = resolver.resolve();
+    return await this.generateFile(data);
+  }
+
+  public async generateFile(data: any): Promise<string> {
     let content = "";
 
-    if (Array.isArray(this.data)) {
-      content = this.generateArrayObjectsContent(this.data);
+    if (Array.isArray(data)) {
+      content = this.generateArrayObjectsContent(data);
     } else {
-      if (typeof this.data === "object" && this.data !== null) {
-        content = this.generateArrayObjectsContent([this.data]);
+      if (typeof data === "object" && data !== null) {
+        content = this.generateArrayObjectsContent([data]);
       } else {
         throw new ChacaError(`Your data is not an object`);
       }

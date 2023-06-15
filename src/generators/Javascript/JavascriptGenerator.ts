@@ -3,33 +3,32 @@ import { Generator } from "../Generator.js";
 import fs from "fs";
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { ChacaError } from "../../errors/ChacaError.js";
+import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
 export class JavascriptGenerator extends Generator {
-  constructor(data: any, config: FileConfig) {
-    super(data, "js", config);
+  constructor(config: FileConfig) {
+    super("js", config);
   }
 
-  public async generateFile(): Promise<string> {
-    let returnData = ``;
+  public async generateRelationalDataFile(
+    resolver: MultiGenerateResolver<any>,
+  ): Promise<string> {
+    const data = resolver.resolve();
+    return await this.generateFile(data);
+  }
 
+  public async generateFile(data: any): Promise<string> {
     const variableName = PrivateUtils.camelCaseText(this.config.fileName);
-
-    if (Array.isArray(this.data)) {
-      returnData += `const ${variableName} = ${this.generateSchemaArray(
-        this.data,
-      )};\n`;
-    } else {
-      returnData += `const ${variableName} = ${this.filterTypeValue(
-        this.data,
-      )}`;
-    }
+    const returnData = `const ${variableName} = ${this.filterTypeValue(data)}`;
 
     await fs.promises.writeFile(this.route, returnData, "utf-8");
 
     return this.route;
   }
 
-  public generateSchemaArray(schemaObjects: { [path: string]: any }[]): string {
+  public generateSchemaArray(
+    schemaObjects: Array<Record<string, any>>,
+  ): string {
     let returnArray = `[`;
 
     for (let i = 0; i < schemaObjects.length; i++) {
@@ -79,7 +78,7 @@ export class JavascriptGenerator extends Generator {
     return returnValue;
   }
 
-  public generateObject(doc: { [key: string]: any }): string {
+  public generateObject(doc: Record<string, any>): string {
     let objectData = `{`;
     for (const [key, value] of Object.entries(doc)) {
       const val = this.filterTypeValue(value);
@@ -95,7 +94,9 @@ export class JavascriptGenerator extends Generator {
     for (let i = 0; i < array.length; i++) {
       if (i !== array.length - 1) {
         returnArray += `${this.filterTypeValue(array[i])}, `;
-      } else returnArray += `${this.filterTypeValue(array[i])}`;
+      } else {
+        returnArray += `${this.filterTypeValue(array[i])}`;
+      }
     }
     returnArray += "]";
 

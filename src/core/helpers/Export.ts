@@ -46,30 +46,30 @@ export async function Export(data: any, config: FileConfig): Promise<string> {
     let gen: Generator;
     switch (config.format) {
       case "json":
-        gen = new JsonGenerator(data, config);
+        gen = new JsonGenerator(config);
         break;
       case "javascript":
-        gen = new JavascriptGenerator(data, config);
+        gen = new JavascriptGenerator(config);
         break;
       case "csv":
-        gen = new CSVGenerator(data, config);
+        gen = new CSVGenerator(config);
         break;
       case "java":
-        gen = new JavaGenerator(data, config);
+        gen = new JavaGenerator(config);
         break;
       case "typescript":
-        gen = new TypescriptGenerator(data, config);
+        gen = new TypescriptGenerator(config);
         break;
       case "yaml":
-        gen = new YamlGenerator(data, config);
+        gen = new YamlGenerator(config);
         break;
       case "postgresql":
-        gen = new SQLGenerator(data, config, "postgresql");
+        gen = new SQLGenerator(config);
         break;
       default:
         throw new ChacaError(`Format '${String(config.format)}' invalid`);
     }
 
-    return await gen.generateFile();
+    return await gen.generateFile(data);
   } else throw new ChacaError(`Format '${String(config.format)}' invalid`);
 }
