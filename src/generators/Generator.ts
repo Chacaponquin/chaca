@@ -1,6 +1,7 @@
 import { FileConfig } from "../core/interfaces/export.interface.js";
 import path from "path";
 import { ChacaError } from "../errors/ChacaError.js";
+import { MultiGenerateResolver } from "../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
 export abstract class Generator {
   protected ext: string;
@@ -9,12 +10,7 @@ export abstract class Generator {
   protected fileName: string;
   protected baseLocation: string;
 
-  constructor(
-    protected readonly data: any,
-    extension: string,
-    config: FileConfig,
-  ) {
-    this.validateData();
+  constructor(extension: string, config: FileConfig) {
     if (!(typeof config.fileName === "string") || config.fileName.length === 0)
       throw new ChacaError("A file name is necesary to export the data");
     else if (!(typeof config.location === "string"))
@@ -27,13 +23,10 @@ export abstract class Generator {
     this.route = this.generateRoute(config.fileName);
   }
 
-  public abstract generateFile(): Promise<string>;
-
-  private validateData(): void {
-    if (typeof this.data === "function") {
-      throw new ChacaError("The data can not be a function");
-    }
-  }
+  public abstract generateFile(data: any): Promise<string>;
+  public abstract generateRelationalDataFile(
+    resolver: MultiGenerateResolver<any>,
+  ): Promise<string>;
 
   public getRoute() {
     return this.route;

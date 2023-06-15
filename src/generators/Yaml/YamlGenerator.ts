@@ -1,3 +1,4 @@
+import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { Generator } from "../Generator.js";
@@ -6,17 +7,17 @@ import fs from "fs";
 export class YamlGenerator extends Generator {
   private actualMargin = 0;
 
-  constructor(data: any, config: FileConfig) {
-    super(data, "yaml", config);
+  constructor(config: FileConfig) {
+    super("yaml", config);
   }
 
-  public async generateFile(): Promise<string> {
+  public async generateFile(data: any): Promise<string> {
     let returnCode = ``;
 
-    if (Array.isArray(this.data)) {
-      returnCode += this.generateArray(this.data);
+    if (Array.isArray(data)) {
+      returnCode += this.generateArray(data);
     } else {
-      returnCode += this.generateObject(this.data, false);
+      returnCode += this.generateObject(data, false);
     }
 
     await fs.promises.writeFile(this.route, returnCode, "utf-8");
@@ -24,10 +25,14 @@ export class YamlGenerator extends Generator {
     return this.route;
   }
 
-  private generateObject(
-    doc: { [key: string]: any },
-    onArray: boolean,
-  ): string {
+  public async generateRelationalDataFile(
+    resolver: MultiGenerateResolver,
+  ): Promise<string> {
+    const relationalData = resolver.resolve();
+    return await this.generateFile(relationalData);
+  }
+
+  private generateObject(doc: Record<string, any>, onArray: boolean): string {
     let returnCode = `${onArray ? "" : "\n"}`;
 
     Object.entries(doc).forEach(([key, value], index) => {

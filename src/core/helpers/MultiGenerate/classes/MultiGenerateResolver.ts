@@ -5,7 +5,7 @@ import {
   MultiGenerateSchema,
 } from "../interfaces/multiGenerate.interface.js";
 
-export class MultiGenerateResolver<K> {
+export class MultiGenerateResolver<K = any> {
   private resolversArray: Array<SchemaResolver> = [];
   private config: GenerateConfig;
 

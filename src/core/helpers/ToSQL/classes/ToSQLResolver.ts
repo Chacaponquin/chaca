@@ -14,12 +14,10 @@ export class ToSQLResolver {
 
   public async resolve(): Promise<string> {
     const multiResolver = new MultiGenerateResolver(this.schemas);
-
     const resolvers = multiResolver.getResolvers();
-    const data = multiResolver.resolve();
 
     const sqlGenerator = new SQLGenerator(
-      data,
+      [],
       {
         fileName: this.config.fileName,
         location: this.config.location,
