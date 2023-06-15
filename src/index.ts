@@ -177,6 +177,7 @@ export {
   SchemaStore,
   DatasetStore,
   CyclicAccessDataError,
+  EnumField,
 };
 
 export type {

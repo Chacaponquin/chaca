@@ -301,6 +301,7 @@ export class ChacaSchema<K = any, T = any> {
       this.schemaObj,
       1,
       0,
+      false,
     );
 
     return schemaToResolve.resolve()[0];
@@ -316,6 +317,7 @@ export class ChacaSchema<K = any, T = any> {
       this.schemaObj,
       cantDocuments,
       0,
+      false,
     );
 
     return schemaToResolve.resolve();

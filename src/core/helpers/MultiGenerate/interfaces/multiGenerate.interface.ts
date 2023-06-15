@@ -5,3 +5,7 @@ export interface MultiGenerateSchema {
   schema: ChacaSchema;
   documents: number;
 }
+
+export interface GenerateConfig {
+  verbose: boolean;
+}

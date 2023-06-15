@@ -39,17 +39,21 @@ export class SchemaResolver<K = any, T = any> {
 
   private schemasStore: SchemaStore = new SchemaStore([]);
 
+  private consoleVerbose = false;
+
   constructor(
     schemaName: string,
     schemaObject: SchemaToResolve<T>,
     countDoc: number,
     schemaIndex: number,
+    consoleVerbose: boolean,
   ) {
     this.schemaName = this.validateSchemaName(schemaName);
     this.schemaObject = schemaObject;
     this.resultTree = new ChacaResultTree<K>(this.schemaName);
     this.countDoc = this.validateCountDoc(countDoc);
     this.schemaIndex = schemaIndex;
+    this.consoleVerbose = consoleVerbose;
   }
 
   public getKeyNodes(): Array<KeyValueNode> {
@@ -204,6 +208,11 @@ export class SchemaResolver<K = any, T = any> {
     if (!this.finishBuilding) {
       if (!this.isBuilding) {
         if (this.inputTree) {
+          if (this.consoleVerbose) {
+            // eslint-disable-next-line no-console
+            console.log(`Creating ${this.schemaName} data...`);
+          }
+
           // cambiar isBuilding a true
           this.isBuilding = true;
 

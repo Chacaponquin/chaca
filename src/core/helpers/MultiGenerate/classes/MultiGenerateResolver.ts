@@ -1,16 +1,38 @@
 import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SchemaResolver } from "../../../classes/SchemaResolver.js";
-import { MultiGenerateSchema } from "../interfaces/multiGenerate.interface.js";
+import {
+  GenerateConfig,
+  MultiGenerateSchema,
+} from "../interfaces/multiGenerate.interface.js";
 
 export class MultiGenerateResolver<K> {
   private resolversArray: Array<SchemaResolver> = [];
+  private config: GenerateConfig;
 
-  constructor(schemas: Array<MultiGenerateSchema>) {
+  constructor(
+    schemas: Array<MultiGenerateSchema>,
+    config?: Partial<GenerateConfig>,
+  ) {
+    this.config = this.validateGenerateConfig(config);
     this.validateNotRepeatSchemaNames(schemas);
     this.createSchemaResolvers(schemas);
     this.injectSchemas();
     this.buildInputTrees();
     this.buildRefFields();
+  }
+
+  private validateGenerateConfig(
+    config?: Partial<GenerateConfig>,
+  ): GenerateConfig {
+    const returConfig: GenerateConfig = { verbose: false };
+
+    if (config && typeof config === "object") {
+      if (typeof config.verbose === "boolean") {
+        returConfig.verbose = config.verbose;
+      }
+    }
+
+    return returConfig;
   }
 
   public getResolvers() {
@@ -45,6 +67,7 @@ export class MultiGenerateResolver<K> {
           schema.schema.getSchemaObject(),
           schema.documents,
           schemaIndex,
+          this.config.verbose,
         );
       } else {
         throw new ChacaError("You must provide a name for your schema");
