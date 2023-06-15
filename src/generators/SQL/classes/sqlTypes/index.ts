@@ -96,9 +96,9 @@ export class SQLFloatNumber extends SQLNumber {
 
   public getSQLValue(): string {
     if (this.value === Infinity) {
-      return "+infinity";
+      return "'+infinity'";
     } else if (this.value === -Infinity) {
-      return "-infinity";
+      return "'-infinity'";
     } else if (Number.isNaN(this.value)) {
       return `'NaN'`;
     } else {
