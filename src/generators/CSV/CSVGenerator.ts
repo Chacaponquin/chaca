@@ -72,6 +72,8 @@ export class CSVGenerator extends Generator {
       retString = `NULL`;
     } else if (typeof value === "object" && !(value instanceof Date)) {
       throw new ChacaError(`Yo can not insert a nested object into a CSV File`);
+    } else if (typeof value === "number") {
+      retString = `${value}`;
     } else {
       retString = JSON.stringify(value);
     }

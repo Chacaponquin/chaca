@@ -50,7 +50,9 @@ export class JavascriptGenerator extends Generator {
 
     if (typeof value === "string") {
       returnValue = `${JSON.stringify(value)}`;
-    } else if (typeof value === "number" || typeof value === "boolean") {
+    } else if (typeof value === "number") {
+      returnValue = `${value}`;
+    } else if (typeof value === "boolean") {
       returnValue = `${value}`;
     } else if (typeof value === "undefined") {
       returnValue = "undefined";

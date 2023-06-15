@@ -93,6 +93,18 @@ export class SQLFloatNumber extends SQLNumber {
   public getSQLDefinition(): string {
     return "DOUBLE PRECISION";
   }
+
+  public getSQLValue(): string {
+    if (this.value === Infinity) {
+      return "+infinity";
+    } else if (this.value === -Infinity) {
+      return "-infinity";
+    } else if (Number.isNaN(this.value)) {
+      return `'NaN'`;
+    } else {
+      return `${this.value}`;
+    }
+  }
 }
 
 export abstract class SQLString extends SQLType {

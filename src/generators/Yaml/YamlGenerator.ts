@@ -72,7 +72,17 @@ export class YamlGenerator extends Generator {
 
     if (typeof value === "string") {
       returnValue = `${JSON.stringify(value)}`;
-    } else if (typeof value === "number" || typeof value === "boolean") {
+    } else if (typeof value === "number") {
+      if (value === Infinity) {
+        returnValue = `.inf`;
+      } else if (value === -Infinity) {
+        returnValue = "-.inf";
+      } else if (Number.isNaN(value)) {
+        returnValue = ".NAN";
+      } else {
+        returnValue = `${value}`;
+      }
+    } else if (typeof value === "boolean") {
       returnValue = `${value}`;
     } else if (typeof value === "undefined") {
       returnValue = "null";

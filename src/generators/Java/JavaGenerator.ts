@@ -74,7 +74,15 @@ export class JavaGenerator extends Generator {
     if (value instanceof StringType) {
       returnValue = `${JSON.stringify(value.value)}`;
     } else if (value instanceof NumberType) {
-      returnValue = `${value.value}`;
+      if (value.value === Infinity) {
+        returnValue = "Double.POSITIVE_INFINITY";
+      } else if (value.value === -Infinity) {
+        returnValue = "Double.NEGATIVE_INFINITY";
+      } else if (Number.isNaN(value.value)) {
+        returnValue = "Double.NaN";
+      } else {
+        returnValue = `${value.value}`;
+      }
     } else if (value instanceof BooleanType) {
       returnValue = `${value.value}`;
     } else if (value instanceof NullType) {
@@ -118,7 +126,7 @@ export class JavaGenerator extends Generator {
     if (value instanceof StringType) {
       returnType = "String";
     } else if (value instanceof FloatType) {
-      returnType = "Float";
+      returnType = "Double";
     } else if (value instanceof IntegerType) {
       returnType = "Integer";
     } else if (value instanceof BooleanType) {
