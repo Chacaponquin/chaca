@@ -26,12 +26,12 @@ import { GetStoreValueConfig } from "./SchemasStore/interfaces/store.interface.j
 import { DatasetStore } from "./DatasetStore/DatasetStore.js";
 import { SearchedRefValue } from "./ChacaInputTree/classes/RefValueNode/interfaces/refNode.interface.js";
 
-export class SchemaResolver<K = any, T = any> {
-  private inputTree: ChacaInputTree<K> | null = null;
+export class SchemaResolver<K = any> {
+  private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
   private schemaName: string;
   private countDoc: number;
-  private schemaObject: SchemaToResolve<T>;
+  private schemaObject: SchemaToResolve;
   private schemaIndex: number;
 
   private isBuilding = false;
@@ -43,7 +43,7 @@ export class SchemaResolver<K = any, T = any> {
 
   constructor(
     schemaName: string,
-    schemaObject: SchemaToResolve<T>,
+    schemaObject: SchemaToResolve,
     countDoc: number,
     schemaIndex: number,
     consoleVerbose: boolean,
@@ -229,8 +229,12 @@ export class SchemaResolver<K = any, T = any> {
                 indexDoc,
               );
 
-              // insertar la solucion del field en el documento
-              newDoc.insertField(fieldSolutionNode);
+              if (datField instanceof KeyValueNode) {
+                newDoc.insertKeyField(fieldSolutionNode);
+              } else {
+                // insertar la solucion del field en el documento
+                newDoc.insertField(fieldSolutionNode);
+              }
 
               // resolver el field actual en caso de ser un array o un mixed
               this.resolveArrayAndMixedFields(

@@ -8,13 +8,13 @@ import { DatasetStore } from "../classes/DatasetStore/DatasetStore.js";
 import { SchemaData } from "../classes/SchemaData/SchemaData.js";
 import { EnumField } from "../classes/EnumField/EnumField.js";
 
-export type SchemaInputField<T> =
-  | FieldSchemaConfig<T>
+export type SchemaInputField =
+  | FieldSchemaConfig
   | SequentialField
   | KeyField
   | SequenceField;
 
-export type FieldSchemaConfig<R> =
+export type FieldSchemaConfig<R = any> =
   | FieldObjectInput<R>
   | CustomField<any, R>
   | SchemaField<R, any>
@@ -22,13 +22,9 @@ export type FieldSchemaConfig<R> =
   | RefField
   | EnumField<R>;
 
-export type SchemaInput<T> = {
-  [key in keyof T]: SchemaInputField<T[key]>;
-};
+export type SchemaInput = Record<string, SchemaInputField>;
 
-export type SchemaToResolve<T> = {
-  [key in keyof T]: ResolverObject;
-};
+export type SchemaToResolve = Record<string, ResolverObject>;
 
 export type ResolverObject = {
   type: IResolver;
@@ -36,7 +32,7 @@ export type ResolverObject = {
   posibleNull: number;
 };
 
-export type FieldTypeInput<R> =
+export type FieldTypeInput<R = any> =
   | SchemaField<R, any>
   | ChacaSchema<R>
   | RefField

@@ -1,4 +1,3 @@
-import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
 import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
 
 export interface FieldNodeProps {
@@ -30,19 +29,19 @@ export abstract class FieldNode {
   }
 
   private nullPosibility(): boolean {
-    const arrayValues = [] as Array<boolean>;
+    const posibleNull = this.nodeConfig.isPosibleNull;
+    if (posibleNull > 0 && posibleNull < 100) {
+      const randomVal = Math.floor(Math.random() * 101); // Genera un número aleatorio del 0 al 100
 
-    let posibleNull = this.nodeConfig.isPosibleNull;
-
-    for (let i = 0; i < 100; i++) {
-      if (posibleNull > 0) {
-        arrayValues.push(true);
-        posibleNull--;
+      if (randomVal <= posibleNull) {
+        return true; // Devuelve null si el número aleatorio es menor o igual que la probabilidad
       } else {
-        arrayValues.push(false);
+        return false; // Devuelve una cadena vacía si el número aleatorio es mayor que la probabilidad
       }
+    } else if (posibleNull === 100) {
+      return true;
+    } else {
+      return false;
     }
-
-    return PrivateUtils.oneOfArray(arrayValues);
   }
 }

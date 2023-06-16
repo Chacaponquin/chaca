@@ -1,7 +1,7 @@
 import { chaca, schemas } from "../../../../../src";
 
 export const COMPLETE_SCHEMA = chaca.defineSchema({
-  id: schemas.id.uuid(),
+  id: chaca.key(schemas.id.uuid()),
   authors: {
     type: schemas.person.fullName({ language: "es" }),
     isArray: 5,

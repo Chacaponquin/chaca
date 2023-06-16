@@ -9,7 +9,6 @@ import {
   FieldTypeInput,
   IResolver,
   SchemaInput,
-  SchemaInputField,
   SchemaToResolve,
 } from "../../interfaces/schema.interface.js";
 import { EnumField } from "../EnumField/EnumField.js";
@@ -30,10 +29,10 @@ import { SchemaResolver } from "../SchemaResolver.js";
 import { SequenceField } from "../SequenceField/SequenceField.js";
 import { SequentialField } from "../SequentialField/SequentialField.js";
 
-export class ChacaSchema<K = any, T = any> {
-  private schemaObj: SchemaToResolve<T>;
+export class ChacaSchema<K = any> {
+  private schemaObj: SchemaToResolve;
 
-  constructor(inputObj: SchemaInput<T>) {
+  constructor(inputObj: SchemaInput) {
     this.schemaObj = this.validateObjectSchema(inputObj);
   }
 
@@ -55,23 +54,20 @@ export class ChacaSchema<K = any, T = any> {
     return await Export(data, configFile);
   }
 
-  protected validateObjectSchema(obj: SchemaInput<T>): SchemaToResolve<T> {
+  protected validateObjectSchema(obj: SchemaInput): SchemaToResolve {
     if (!obj || (typeof obj === "object" && Array.isArray(obj))) {
       throw new ChacaError(
         "Your schema has to be an object with the fields descriptions",
       );
     } else {
-      let schemaToSave = {} as SchemaToResolve<T>;
+      let schemaToSave = {} as SchemaToResolve;
 
       const defaultConfig: CommonSchema = {
         isArray: null,
         posibleNull: 0,
       };
 
-      for (const k of Object.keys(obj)) {
-        const key = String(k) as keyof T;
-        const schema = obj[key] as SchemaInputField<T[keyof T]>;
-
+      for (const [key, schema] of Object.entries(obj)) {
         if (schema instanceof ChacaSchema) {
           schemaToSave = {
             ...schemaToSave,
@@ -81,7 +77,7 @@ export class ChacaSchema<K = any, T = any> {
           schemaToSave = {
             ...schemaToSave,
             [key]: {
-              type: new CustomFieldResolver<K, T[keyof T]>(schema),
+              type: new CustomFieldResolver(schema),
               ...defaultConfig,
             },
           };
@@ -122,12 +118,15 @@ export class ChacaSchema<K = any, T = any> {
         } else if (schema instanceof SequenceField) {
           schemaToSave = {
             ...schemaToSave,
-            [key]: { type: new SequenceFieldResolver(schema.getConfig()) },
+            [key]: {
+              type: new SequenceFieldResolver(schema.getConfig()),
+              ...defaultConfig,
+            },
           };
         } else if (schema instanceof EnumField) {
           schemaToSave = {
             ...schemaToSave,
-            [key]: { type: this.validateEnum(key, schema) },
+            [key]: { type: this.validateEnum(key, schema), ...defaultConfig },
           };
         } else {
           if (typeof schema === "object" && schema !== null) {
@@ -201,10 +200,7 @@ export class ChacaSchema<K = any, T = any> {
     return new KeyFieldResolver(type);
   }
 
-  private validateType(
-    key: keyof T,
-    type: FieldTypeInput<T[keyof T]>,
-  ): IResolver {
+  private validateType(key: string, type: FieldTypeInput): IResolver {
     if (type instanceof ChacaSchema) {
       return new MixedFieldResolver(type);
     } else if (type instanceof RefField) {
@@ -221,7 +217,7 @@ export class ChacaSchema<K = any, T = any> {
   }
 
   private validateEnum<R>(
-    key: keyof T,
+    key: string,
     enumField: EnumField<R>,
   ): EnumFieldResolver<R> {
     if (Array.isArray(enumField.valuesArray)) {
@@ -296,7 +292,7 @@ export class ChacaSchema<K = any, T = any> {
    * Generate a schema document
    */
   public generateObject(): K {
-    const schemaToResolve = new SchemaResolver<K, T>(
+    const schemaToResolve = new SchemaResolver<K>(
       PrivateUtils.id(),
       this.schemaObj,
       1,
@@ -312,7 +308,7 @@ export class ChacaSchema<K = any, T = any> {
    * @param cantDocuments number of documents that you want to create
    */
   public generate(cantDocuments: number): K[] {
-    const schemaToResolve = new SchemaResolver<K, T>(
+    const schemaToResolve = new SchemaResolver<K>(
       PrivateUtils.id(),
       this.schemaObj,
       cantDocuments,

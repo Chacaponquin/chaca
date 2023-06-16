@@ -28,7 +28,7 @@ import { orderFieldsByPriority } from "./utils/treeUtils.js";
 import { SequentialFieldResolver } from "../Resolvers/SequentialFieldResolver/SequentialFieldResolver.js";
 import { SchemaStore } from "../SchemasStore/SchemaStore.js";
 
-export class ChacaInputTree<T> {
+export class ChacaInputTree {
   private nodes: Array<ChacaTreeNode> = [];
   private schemasStore: SchemaStore;
   private schemaName: string;
@@ -38,7 +38,7 @@ export class ChacaInputTree<T> {
 
   constructor(
     schemaName: string,
-    schemaToResolve: SchemaToResolve<T>,
+    schemaToResolve: SchemaToResolve,
     schemasStore: SchemaStore,
   ) {
     this.schemasStore = schemasStore;

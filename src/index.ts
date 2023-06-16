@@ -57,16 +57,12 @@ const Chaca = {
   utils: ChacaUtils,
 
   /**
-   *
-   * @param schemaName schema name
-   * @throws The name of schema can't be an empty string, or a repetive name
-   *
    * @param inputObj The object with the keys and type of each field
    * @example
    * { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
    */
-  defineSchema<K = any, T = any>(inputObj: SchemaInput<T>): ChacaSchema<K, T> {
-    const newSchema = new ChacaSchema<K, T>(inputObj);
+  defineSchema<K = any>(inputObj: SchemaInput): ChacaSchema<K> {
+    const newSchema = new ChacaSchema<K>(inputObj);
     return newSchema;
   },
 
