@@ -66,9 +66,10 @@ describe("# Car Case Test", () => {
   });
 
   it("SQL", async () => {
-    await chaca.toSQL(CASE_SCHEMAS, {
+    await chaca.exportFromSchemas(CASE_SCHEMAS, {
       fileName: FILE_NAME,
       location: EXPORT_ROUTE,
+      format: "postgresql",
     });
   });
 });

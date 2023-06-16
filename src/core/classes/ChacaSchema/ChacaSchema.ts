@@ -1,6 +1,6 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { SchemaField } from "../../../schemas/SchemaField.js";
-import { Export } from "../../helpers/Export.js";
+import { Export } from "../../helpers/Export/Export.js";
 import { PrivateUtils } from "../../helpers/PrivateUtils.js";
 
 import { FileConfig } from "../../interfaces/export.interface.js";

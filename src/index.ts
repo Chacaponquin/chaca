@@ -13,7 +13,7 @@ import { SchemaField } from "./schemas/SchemaField.js";
 
 import { ChacaSchema } from "./core/classes/ChacaSchema/ChacaSchema.js";
 
-import { Export } from "./core/helpers/Export.js";
+import { Export, ExportFromSchemas } from "./core/helpers/Export/index.js";
 import {
   ChacaError,
   EmptySequentialValuesError,
@@ -46,8 +46,6 @@ import {
   KeyFieldProps,
   KeyAllowDataTypes,
 } from "./core/classes/KeyField/KeyField.js";
-
-import { ToSQL, ToSQLConfig } from "./core/helpers/ToSQL/ToSQL.js";
 import {
   SequenceField,
   SequenceFieldProps,
@@ -123,7 +121,7 @@ const Chaca = {
     return new EnumField<R>(array);
   },
 
-  toSQL: ToSQL,
+  exportFromSchemas: ExportFromSchemas,
 
   /**
    * Export the data to a selected code format
@@ -187,7 +185,6 @@ export type {
   MultiGenerateSchema,
   FieldToRef,
   FieldToRefObject,
-  ToSQLConfig,
   RefFieldWhere,
   GetStoreValueConfig,
   KeyAllowDataTypes,

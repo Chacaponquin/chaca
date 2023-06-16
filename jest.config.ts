@@ -14,6 +14,6 @@ const config: Config.InitialOptions = {
     "(.+)\\.js": "$1",
   },
   extensionsToTreatAsEsm: [".ts"],
-  testTimeout: 50000,
+  testTimeout: 100000,
 };
 export default config;

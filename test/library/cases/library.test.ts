@@ -22,9 +22,10 @@ describe("# Library Case Test", () => {
   });
 
   it("SQL", async () => {
-    await chaca.toSQL(LIBRARY_CASE_SCHEMA, {
+    await chaca.exportFromSchemas(LIBRARY_CASE_SCHEMA, {
       fileName: FILE_NAME,
       location: EXPORT_ROUTE,
+      format: "postgresql",
     });
   });
 

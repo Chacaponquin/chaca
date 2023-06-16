@@ -25,12 +25,13 @@ describe("# Baseball Case Test", () => {
     expect(DATA).toHaveProperty("Batter");
   });
 
-  /* it("SQL", async () => {
-    await chaca.toSQL(BASEBALL_SCHEMAS, {
+  it("SQL", async () => {
+    await chaca.exportFromSchemas(BASEBALL_SCHEMAS, {
       fileName: FILE_NAME,
       location: EXPORT_ROUTE,
+      format: "postgresql",
     });
-  });*/
+  });
 
   it("JSON", async () => {
     await chaca.export(BASEBALL_CASE_DATA, {

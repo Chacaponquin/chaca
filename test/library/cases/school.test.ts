@@ -23,9 +23,10 @@ describe("# School Case Test", () => {
   });
 
   it("SQL", async () => {
-    await chaca.toSQL(SCHOOL_SCHEMAS, {
+    await chaca.exportFromSchemas(SCHOOL_SCHEMAS, {
       fileName: FILE_NAME,
       location: EXPORT_ROUTE,
+      format: "postgresql",
     });
   });
 
