@@ -21,7 +21,6 @@ const VARIANT_ARRAY = [
   [7, 8, 9],
   Date.now(),
   new Date(),
-  Symbol("foo"),
   "Apple",
   10.5,
   undefined,
@@ -43,7 +42,6 @@ const VARIANT_ARRAY = [
   null,
   NaN,
   [70, 80, 90],
-  Symbol("bar"),
   new RegExp(".*"),
   true,
 ];

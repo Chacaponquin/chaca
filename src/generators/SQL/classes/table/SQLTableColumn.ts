@@ -41,7 +41,7 @@ export class SQLTableColumn {
   }
 
   public getSQLColumnName(): string {
-    return this.columnName.trim().replace(" ", "_");
+    return this.columnName.toLowerCase().trim().replace(" ", "_");
   }
 
   public insertValue(value: SQLType) {
