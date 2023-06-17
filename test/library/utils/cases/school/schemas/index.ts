@@ -33,22 +33,19 @@ export const STUDENT_SCHEMA = chaca.defineSchema({
 
 export const GROUP_SCHEMA = chaca.defineSchema({
   year: chaca.key(chaca.ref("Year.year_id")),
-  group_number: chaca.key(
-    ({ currentFields: ownFields, schemaRestDocuments }) => {
-      const allGroupsWithSameYear = schemaRestDocuments
-        .getDocuments()
-        .filter((g) => g.year === ownFields.year);
+  group_number: chaca.key(({ currentFields: ownFields, store }) => {
+    const allGroupsWithSameYear = store
+      .getValue("Group")
+      .filter((g) => g.year === ownFields.year);
 
-      if (allGroupsWithSameYear.length === 0) {
-        return 1;
-      } else {
-        return (
-          allGroupsWithSameYear[allGroupsWithSameYear.length - 1].group_number +
-          1
-        );
-      }
-    },
-  ),
+    if (allGroupsWithSameYear.length === 0) {
+      return 1;
+    } else {
+      return (
+        allGroupsWithSameYear[allGroupsWithSameYear.length - 1].group_number + 1
+      );
+    }
+  }),
 });
 
 export const YEAR_SCHEMA = chaca.defineSchema({

@@ -1,10 +1,10 @@
+import { ChacaError } from "../../../../../errors/ChacaError.js";
 import { DatasetStore } from "../../../DatasetStore/DatasetStore.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { CustomValueNode } from "../CustomValueNode/CustomValueNode.js";
 import { RefValueNode } from "../RefValueNode/RefValueNode.js";
 import { SchemaValueNode } from "../SchemaValueNode/SchemaValueNode.js";
 import { SequenceValueNode } from "../SequenceValueNode/SequenceValueNode.js";
-import { DocumentTree } from "../../../ChacaResultTree/classes/DocumentTree/DocumentTree.js";
 
 export type KeyValueNodeProps =
   | RefValueNode
@@ -31,20 +31,40 @@ export class KeyValueNode extends ChacaTreeNode {
     return fieldTreeRoute.length === 0;
   }
 
-  public getValue<D>(
+  public getValue(
     currentDocument: number,
     store: DatasetStore,
-    restDocuments: Array<DocumentTree<D>>,
     currentSchemaResolver: number,
-  ) {
+  ): unknown {
+    let resultValue: unknown;
+
     if (this.fieldNode instanceof RefValueNode) {
-      return this.fieldNode.getValue(currentDocument, currentSchemaResolver);
+      resultValue = this.fieldNode.getValue(
+        currentDocument,
+        currentSchemaResolver,
+      );
     } else if (this.fieldNode instanceof SchemaValueNode) {
-      return this.fieldNode.getValue();
+      resultValue = this.fieldNode.getValue();
     } else if (this.fieldNode instanceof CustomValueNode) {
-      return this.fieldNode.getValue(currentDocument, store, restDocuments);
+      resultValue = this.fieldNode.getValue(currentDocument, store);
     } else {
-      return this.fieldNode.getNextValue();
+      resultValue = this.fieldNode.getNextValue();
+    }
+
+    if (
+      typeof resultValue === "string" ||
+      typeof resultValue === "number" ||
+      resultValue instanceof Date
+    ) {
+      return resultValue;
+    } else if (resultValue === null) {
+      throw new ChacaError(
+        `The key value ${this.getFieldRouteString()} can not be null`,
+      );
+    } else {
+      throw new ChacaError(
+        `The key value ${this.getFieldRouteString()} has to be an string, number or Date`,
+      );
     }
   }
 }

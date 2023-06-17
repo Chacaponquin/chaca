@@ -335,14 +335,6 @@ export class SchemaResolver<K = any> {
     }
   }
 
-  public documentsWithOutCurrentDocument(
-    omitDocument: number,
-  ): Array<DocumentTree<K>> {
-    return this.resultTree
-      .getDocuments()
-      .filter((_, index) => index !== omitDocument);
-  }
-
   private createSolutionNodeByType(
     field: ChacaTreeNode,
     indexDoc: number,
@@ -375,8 +367,7 @@ export class SchemaResolver<K = any> {
         // obtener el valor de la funcion pasando como parametro el documento actual del ciclo
         const value = field.getValue(
           currentDocument.getDocumentObject(),
-          new DatasetStore(this.schemasStore, currentDocument),
-          this.documentsWithOutCurrentDocument(indexDoc),
+          new DatasetStore(this.schemasStore, currentDocument, this),
         );
 
         return new SingleResultNode(field.getResultNodeConfig(), value);
@@ -391,16 +382,13 @@ export class SchemaResolver<K = any> {
       // en caso de ser un key field
       else if (field instanceof KeyValueNode) {
         const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-
-        return new SingleResultNode(
-          field.getResultNodeConfig(),
-          field.getValue(
-            indexDoc,
-            new DatasetStore(this.schemasStore, currentDocument),
-            this.documentsWithOutCurrentDocument(indexDoc),
-            this.schemaIndex,
-          ),
+        const keyValue = field.getValue(
+          indexDoc,
+          new DatasetStore(this.schemasStore, currentDocument, this),
+          this.schemaIndex,
         );
+
+        return new SingleResultNode(field.getResultNodeConfig(), keyValue);
       }
 
       // en caso de ser un sequence

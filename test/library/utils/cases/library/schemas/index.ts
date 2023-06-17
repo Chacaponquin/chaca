@@ -31,9 +31,9 @@ export const USER_SCHEMA = chaca.defineSchema({
 export const USER_SANCTION_SCHEMA = chaca.defineSchema({
   id: chaca.key(chaca.sequence()),
   user_id: chaca.ref("Library_User.id", {
-    where: ({ schemaRestDocuments, refFields: userFields }) => {
-      return !schemaRestDocuments
-        .getDocuments()
+    where: ({ refFields: userFields, store }) => {
+      return !store
+        .getValue("User_Sanction")
         .some((s) => s.finish_date === null && userFields.id === s.user_id);
     },
   }),

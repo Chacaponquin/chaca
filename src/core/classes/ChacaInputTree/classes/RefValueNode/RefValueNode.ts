@@ -12,7 +12,6 @@ import { FieldToRefObject } from "../../../RefField/RefField.js";
 import { SchemaStore } from "../../../SchemasStore/SchemaStore.js";
 import { SingleResultNode } from "../../../ChacaResultTree/classes/index.js";
 import { DatasetStore } from "../../../DatasetStore/DatasetStore.js";
-import { SchemaData } from "../../../SchemaData/SchemaData.js";
 import { SearchedRefValue } from "./interfaces/refNode.interface.js";
 
 export class RefValueNode extends ChacaTreeNode {
@@ -105,10 +104,6 @@ export class RefValueNode extends ChacaTreeNode {
     const currentSchemaResolver = this.schemasStore.getResolverByIndex(
       currentSchemaResolverIndex,
     );
-    const restSchemaDocuments =
-      currentSchemaResolver.documentsWithOutCurrentDocument(
-        currentDocumentIndex,
-      );
     const currentFields = currentSchemaResolver
       .getResultTree()
       .getDocumentByIndex(currentDocumentIndex)
@@ -118,10 +113,13 @@ export class RefValueNode extends ChacaTreeNode {
     for (const refNode of allValues) {
       if (this.refField.where) {
         const isAccepted = this.refField.where({
-          store: new DatasetStore(this.schemasStore, refNode.document),
+          store: new DatasetStore(
+            this.schemasStore,
+            refNode.document,
+            currentSchemaResolver,
+          ),
           refFields: refNode.document.getDocumentObject(),
           currentFields,
-          schemaRestDocuments: new SchemaData(restSchemaDocuments),
         });
 
         if (isAccepted) {

@@ -1,6 +1,5 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { DatasetStore } from "../DatasetStore/DatasetStore.js";
-import { SchemaData } from "../SchemaData/SchemaData.js";
 
 export type FieldToRef = string;
 
@@ -8,13 +7,14 @@ export type RefFieldWhere<C = any, R = any> = (args: {
   currentFields: C;
   refFields: R;
   store: DatasetStore;
-  schemaRestDocuments: SchemaData<C>;
 }) => boolean;
 
-export type FieldRefInputConfig = {
-  unique?: boolean;
-  where?: RefFieldWhere;
-};
+export type FieldRefInputConfig =
+  | RefFieldWhere
+  | {
+      unique?: boolean;
+      where?: RefFieldWhere;
+    };
 
 export interface FieldToRefObject {
   refField: string;
@@ -50,7 +50,9 @@ export class RefField {
         saveConfig.refField = refField;
       }
 
-      if (config && typeof config === "object") {
+      if (typeof config === "function") {
+        saveConfig.where = config;
+      } else if (config && typeof config === "object") {
         if (typeof config.unique === "boolean") {
           saveConfig.unique = config.unique;
         }

@@ -5,7 +5,6 @@ import { KeyField } from "../classes/KeyField/KeyField.js";
 import { RefField } from "../classes/RefField/RefField.js";
 import { SequenceField } from "../classes/SequenceField/SequenceField.js";
 import { DatasetStore } from "../classes/DatasetStore/DatasetStore.js";
-import { SchemaData } from "../classes/SchemaData/SchemaData.js";
 import { EnumField } from "../classes/EnumField/EnumField.js";
 
 export type SchemaInputField =
@@ -48,7 +47,6 @@ type FieldObjectInput<R> = {
 export type CustomField<C, R> = (args: {
   currentFields: C;
   store: DatasetStore;
-  schemaRestDocuments: SchemaData<C>;
 }) => R;
 
 export interface CommonSchema {

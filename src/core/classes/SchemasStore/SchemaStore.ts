@@ -49,12 +49,14 @@ export class SchemaStore {
       const currentSchema = this.schemas[i];
 
       if (currentSchema.getSchemaName() === fieldToGetArray[0]) {
-        if (!currentSchema.dangerCyclic()) {
-          currentSchema.buildTrees();
-        } else {
-          throw new CyclicAccessDataError(
-            `You are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
-          );
+        if (currentSchema !== config.omitResolver) {
+          if (!currentSchema.dangerCyclic()) {
+            currentSchema.buildTrees();
+          } else {
+            throw new CyclicAccessDataError(
+              `You are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
+            );
+          }
         }
 
         values = currentSchema.getAllValuesByRoute(

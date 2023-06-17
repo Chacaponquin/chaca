@@ -36,7 +36,7 @@ export abstract class FieldNode {
       if (randomVal <= posibleNull) {
         return true; // Devuelve null si el número aleatorio es menor o igual que la probabilidad
       } else {
-        return false; // Devuelve una cadena vacía si el número aleatorio es mayor que la probabilidad
+        return false;
       }
     } else if (posibleNull === 100) {
       return true;

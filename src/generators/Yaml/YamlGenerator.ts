@@ -46,12 +46,16 @@ export class YamlGenerator extends Generator {
 
       returnCode += `${key}: ${this.generateValue(value, false)}`;
 
-      if (index !== Object.entries(doc).length - 1) {
+      if (index !== Object.entries(this.createKeyName(key)).length - 1) {
         returnCode += "\n";
       }
     });
 
     return returnCode;
+  }
+
+  private createKeyName(key: string): string {
+    return key.trim().replace(" ", "_");
   }
 
   private generateArray(array: Array<any>): string {
