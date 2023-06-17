@@ -394,17 +394,6 @@ export class SQLGenerator extends Generator {
     }
   }
 
-  private findTableByName(
-    tables: Array<SQLTable>,
-    tableName: string,
-  ): SQLTable {
-    const foundTable = tables.find(
-      (t) => t.tableName === tableName,
-    ) as SQLTable;
-
-    return foundTable;
-  }
-
   public async generateRelationalDataFile(
     resolvers: MultiGenerateResolver,
   ): Promise<string> {
