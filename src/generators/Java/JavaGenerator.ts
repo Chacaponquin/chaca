@@ -244,17 +244,28 @@ export class JavaGenerator extends Generator {
 
     const constructorArguments = classInf.classType
       .getKeys()
-      .map((k) => `${this.filterTypeByValue(k.dataType)} ${k.key}`)
+      .map(
+        (k) =>
+          `${this.filterTypeByValue(k.dataType)} ${this.createObjectKeyName(
+            k.key,
+          )}`,
+      )
       .join(", ");
     classContent += `\tpublic ${classInf.className}(${constructorArguments}){\n`;
     classInf.classType.getKeys().forEach((c) => {
-      classContent += `\t\tthis.${c.key} = ${c.key};\n`;
+      classContent += `\t\tthis.${this.createObjectKeyName(
+        c.key,
+      )} = ${this.createObjectKeyName(c.key)};\n`;
     });
     classContent += "\t}";
 
     classContent += `}\n`;
 
     return classContent;
+  }
+
+  private createObjectKeyName(key: string): string {
+    return key.trim().replace(" ", "_");
   }
 
   private buildClassFileName(className: string): string {
