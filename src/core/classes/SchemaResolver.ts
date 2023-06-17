@@ -163,9 +163,11 @@ export class SchemaResolver<K = any> {
       const whereFunction = config.where;
 
       if (whereFunction) {
-        const filterDocuments = this.resultTree
-          .getDocuments()
-          .filter((d) => whereFunction(d.getDocumentObject()));
+        const filterDocuments = this.resultTree.getDocuments().filter((d) => {
+          return (
+            d !== config.omitDocument && whereFunction(d.getDocumentObject())
+          );
+        });
 
         return filterDocuments;
       } else {

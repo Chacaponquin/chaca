@@ -76,7 +76,7 @@ const Chaca = {
     valueFunction: (args: T) => K,
   ): (args?: T) => SchemaField<K, T> {
     return (args) =>
-      new SchemaField<K, T>(name, valueFunction, args || ({} as T));
+      new SchemaField<K, T>(name, valueFunction, args || (undefined as T));
   },
 
   /**

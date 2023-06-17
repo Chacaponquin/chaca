@@ -23,7 +23,8 @@ export class ChacaResultTree<D> {
 
     const filterDocuemnts = whereFunction
       ? this.documents.filter((d) => {
-          const isValid = whereFunction(d.getDocumentObject());
+          const isValid =
+            d !== config.omitDocument && whereFunction(d.getDocumentObject());
           return isValid;
         })
       : this.documents;

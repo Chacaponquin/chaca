@@ -47,7 +47,9 @@ export class PostgreSQL extends SQLExtensionGenerator {
 
         if (column.isPrimaryKey()) {
           primaryKeys.push(column);
-        } else if (column.isForeignKey()) {
+        }
+
+        if (column.isForeignKey()) {
           foreingKeys.push(column);
         }
 

@@ -54,7 +54,7 @@ export class ChacaSchema<K = any> {
     return await Export(data, configFile);
   }
 
-  protected validateObjectSchema(obj: SchemaInput): SchemaToResolve {
+  private validateObjectSchema(obj: SchemaInput): SchemaToResolve {
     if (!obj || (typeof obj === "object" && Array.isArray(obj))) {
       throw new ChacaError(
         "Your schema has to be an object with the fields descriptions",
@@ -101,9 +101,7 @@ export class ChacaSchema<K = any> {
           schemaToSave = {
             ...schemaToSave,
             [key]: {
-              type: new SequentialFieldResolver(
-                (schema as SequentialField).getValuesArray(),
-              ),
+              type: new SequentialFieldResolver(schema.getValuesArray()),
               ...defaultConfig,
             },
           };
@@ -150,7 +148,7 @@ export class ChacaSchema<K = any> {
               }
             } else {
               throw new ChacaError(
-                `The field ${String(key)} dosen't have a resolve function`,
+                `The field ${key} dosen't have a resolve function`,
               );
             }
           }
@@ -225,13 +223,11 @@ export class ChacaSchema<K = any> {
         return new EnumFieldResolver(enumField.valuesArray);
       } else
         throw new ChacaError(
-          `For the field ${String(key)} you must provide some values to choce`,
+          `For the field ${key} you must provide some values to choce`,
         );
     } else {
       throw new ChacaError(
-        `If the field ${String(
-          key,
-        )} is a enum type so this one muste be an array of values`,
+        `If the field ${key} is a enum type so this one muste be an array of values`,
       );
     }
   }

@@ -30,7 +30,6 @@ import {
   StringType,
 } from "./classes/types/index.js";
 import fs from "fs";
-import { ColumnForeignKeyConfig } from "./classes/table/SQLTableColumn.js";
 import {
   ChacaTreeNode,
   KeyValueNode,
@@ -268,7 +267,8 @@ export class SQLGenerator extends Generator {
 
       // add foreign keys columns to table
       allForeignKeysTable.forEach((f) => {
-        const fieldName = f.getFieldRoute()[f.getFieldRoute().length - 1];
+        const fieldRoute = f.getFieldRoute();
+        const fieldName = fieldRoute[fieldRoute.length - 1];
         const refFieldRoute = f.getRefFieldRoute();
         const parentTableName = refFieldRoute
           .slice(0, refFieldRoute.length - 1)
@@ -435,31 +435,5 @@ export class SQLGenerator extends Generator {
     );
 
     return this.route;
-  }
-
-  public tranformRefFieldToForeignKey(
-    refField: string,
-    tables: Array<SQLTable>,
-  ): ColumnForeignKeyConfig {
-    const arrayLocation = refField.split(".");
-
-    const columnToRef = arrayLocation.pop() as string;
-    const tableToRef = arrayLocation.join(this.NAMES_DIVISOR);
-
-    const foundTable = this.findTableByName(tables, tableToRef);
-
-    if (foundTable) {
-      const foundColumn = foundTable.findColumnByName(columnToRef);
-
-      if (foundColumn) {
-        return { table: foundTable, column: foundColumn };
-      } else {
-        throw new ChacaError(
-          `Not found column ${columnToRef} in table ${tableToRef}`,
-        );
-      }
-    } else {
-      throw new ChacaError(`Not found table '${tableToRef}'`);
-    }
   }
 }

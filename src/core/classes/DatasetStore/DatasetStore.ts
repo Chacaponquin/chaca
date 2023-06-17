@@ -49,9 +49,7 @@ export class DatasetStore {
       if (node instanceof FieldNode) {
         returnValues.push(node.getRealValue() as R);
       } else {
-        if (node !== this.omitCurrentDocument) {
-          returnValues.push(node.getDocumentObject());
-        }
+        returnValues.push(node.getDocumentObject());
       }
     }
 
