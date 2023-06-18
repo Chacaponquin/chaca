@@ -25,6 +25,11 @@ interface JavaClassCreated {
   classType: ObjectType;
 }
 
+interface MainContentData {
+  variableName: string;
+  dataType: DataType;
+}
+
 export class JavaGenerator extends Generator {
   private classesCreated: Array<JavaClassCreated> = [];
 
@@ -35,14 +40,31 @@ export class JavaGenerator extends Generator {
   public async generateRelationalDataFile(
     resolver: MultiGenerateResolver<any>,
   ): Promise<string> {
-    const data = resolver.resolve();
-    return await this.generateFile(data);
+    this.classesCreated = [];
+    const resolversData = [] as Array<MainContentData>;
+    resolver.getResolvers().forEach((r) => {
+      resolversData.push({
+        variableName: r.getSchemaName(),
+        dataType: this.createDataTypes(r.resolve()),
+      });
+    });
+
+    const mainContent = this.generateMainContent(resolversData);
+
+    return await this.createAllFiles(mainContent);
   }
 
   public async generateFile(data: any): Promise<string> {
-    const dataTypes = this.createDataTypes(data);
-    const mainContent = this.generateMainContent(dataTypes);
+    this.classesCreated = [];
+    const dataType = this.createDataTypes(data);
+    const mainContent = this.generateMainContent([
+      { dataType, variableName: this.config.fileName },
+    ]);
 
+    return await this.createAllFiles(mainContent);
+  }
+
+  private async createAllFiles(mainContent: string): Promise<string> {
     const classesContents = [mainContent];
     const filesRoutes = [];
 
@@ -95,31 +117,36 @@ export class JavaGenerator extends Generator {
     return dType;
   }
 
-  public generateMainContent(dataType: DataType): string {
-    const fileName = this.config.fileName;
-
+  public generateMainContent(content: Array<MainContentData>): string {
     let mainContent = "";
     mainContent += `public class Main {\n`;
     mainContent += `\tpublic static void main(String[] args){\n\t`;
 
-    if (dataType instanceof ArrayType) {
-      const arrayType = this.getArrayType(dataType);
-      mainContent +=
-        `\t\tList<` + `${arrayType}` + `> ${fileName} = LinkedList<` + `>();\n`;
+    for (const { dataType, variableName } of content) {
+      if (dataType instanceof ArrayType) {
+        const arrayType = this.getArrayType(dataType);
+        mainContent +=
+          `\t\tList<` +
+          `${arrayType}` +
+          `> ${variableName} = LinkedList<` +
+          `>();\n`;
 
-      dataType.getValues().forEach((v, index) => {
-        mainContent += `\t\t${arrayType} ${fileName}${
-          index + 1
-        } = ${this.createValueByType(v)};\n`;
-      });
+        dataType.getValues().forEach((v, index) => {
+          mainContent += `\t\t${arrayType} ${variableName}${
+            index + 1
+          } = ${this.createValueByType(v)};\n`;
+        });
 
-      for (let i = 0; i < dataType.getValues().length; i++) {
-        mainContent += `\t\t${fileName}.add(${fileName}${i + 1});\n`;
+        for (let i = 0; i < dataType.getValues().length; i++) {
+          mainContent += `\t\t${variableName}.add(${variableName}${i + 1});\n`;
+        }
+
+        mainContent += "\n";
+      } else {
+        mainContent += `\t\t${this.filterTypeByValue(
+          dataType,
+        )} ${variableName} = ${this.createValueByType(dataType)};\n\n`;
       }
-    } else {
-      mainContent += `\t\t${this.filterTypeByValue(
-        dataType,
-      )} ${fileName} = ${this.createValueByType(dataType)};\n`;
     }
 
     mainContent += "\t}\n}\n";
@@ -216,7 +243,7 @@ export class JavaGenerator extends Generator {
     );
 
     if (foundClass) {
-      return foundClass;
+      return { classType: object, className: foundClass.className };
     } else {
       const className = `Object${PrivateUtils.id()}`;
 
