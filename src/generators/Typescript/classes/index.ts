@@ -37,6 +37,8 @@ export abstract class TypescriptInterface {
         t = new PrimitiveInterface("Date");
       } else if (value === null) {
         t = new PrimitiveInterface("null");
+      } else if (value instanceof RegExp) {
+        t = new PrimitiveInterface("RegExp");
       } else {
         const newObject = new ObjectInterface(value);
         t = ObjectInterface.setObjectToCreate(newObject);

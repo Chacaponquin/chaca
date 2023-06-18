@@ -43,12 +43,24 @@ export abstract class DataType {
         returnType = new DateType(value);
       } else if (value === null) {
         returnType = new NullType();
+      } else if (value instanceof RegExp) {
+        returnType = new RegExpType(value);
       } else {
         returnType = new ObjectType(value);
       }
     }
 
     return returnType;
+  }
+}
+
+export class RegExpType extends DataType {
+  constructor(public readonly value: RegExp) {
+    super();
+  }
+
+  protected equalType(otherType: DataType): boolean {
+    return otherType instanceof RegExpType;
   }
 }
 

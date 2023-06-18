@@ -37,6 +37,8 @@ export abstract class DataType {
         returnType = new ArrayType(value);
       } else if (value instanceof Date) {
         returnType = new DateType(value);
+      } else if (value instanceof RegExp) {
+        throw new ChacaError(`You can not export a RegExp to a SQL file`);
       } else if (value === null) {
         returnType = new NullType();
       } else {

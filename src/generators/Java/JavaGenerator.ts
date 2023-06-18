@@ -16,6 +16,7 @@ import {
   NullType,
   NumberType,
   ObjectType,
+  RegExpType,
   StringType,
 } from "./classes/types/index.js";
 import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
@@ -173,6 +174,8 @@ export class JavaGenerator extends Generator {
       returnValue = `${value.value}`;
     } else if (value instanceof NullType) {
       returnValue = "null";
+    } else if (value instanceof RegExpType) {
+      returnValue = `java.util.regex.Pattern.compile("${value.value.source}")`;
     } else if (value instanceof BigintType) {
       returnValue = `new java.math.BigInteger(${value.value.toString()})`;
     } else if (value instanceof DateType) {
@@ -225,6 +228,8 @@ export class JavaGenerator extends Generator {
       returnType = `java.util.List<` + `${this.getArrayType(value)}` + `>`;
     } else if (value instanceof BigintType) {
       returnType = `java.math.BigInteger`;
+    } else if (value instanceof RegExpType) {
+      returnType = "java.util.regex.Pattern";
     } else {
       returnType = this.createObjectClass(value as ObjectType).className;
     }

@@ -110,6 +110,8 @@ export class YamlGenerator extends Generator {
         returnValue = "null";
       } else if (value instanceof Date) {
         returnValue = `"${JSON.stringify(value)}"`;
+      } else if (value instanceof RegExp) {
+        returnValue = `'${value.source}'`;
       } else {
         this.actualMargin++;
 

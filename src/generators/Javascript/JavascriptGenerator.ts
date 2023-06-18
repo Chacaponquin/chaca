@@ -70,6 +70,8 @@ export class JavascriptGenerator extends Generator {
         returnValue = "null";
       } else if (value instanceof Date) {
         returnValue = `new Date(${JSON.stringify(value)})`;
+      } else if (value instanceof RegExp) {
+        returnValue = `/${value.source}/${value.flags}`;
       } else {
         returnValue = this.generateObject(value);
       }
