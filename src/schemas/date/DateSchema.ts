@@ -1,5 +1,6 @@
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { SchemaField } from "../SchemaField.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 import { MONTHS } from "./constants/month.js";
 import { WEEKDAYS } from "./constants/weekday.js";
 
@@ -36,6 +37,8 @@ type DateBetweenProps = {
 };
 
 export class DateSchema {
+  private dataTypeSchema = new DataTypeSchema();
+
   /**
    * Returns a date in the near future.
    *
@@ -55,7 +58,7 @@ export class DateSchema {
         const days =
           typeof a.days === "number" && a.days > 0
             ? a.days
-            : PrivateUtils.intNumber({ min: 1, max: 200 });
+            : this.dataTypeSchema.int().getValue({ min: 1, max: 200 });
 
         const refDate = this.argToDate(a.refDate);
 
@@ -65,7 +68,7 @@ export class DateSchema {
         };
 
         let future = refDate.getTime();
-        future += PrivateUtils.intNumber(range);
+        future += this.dataTypeSchema.int().getValue(range);
         refDate.setTime(future);
 
         return refDate;
@@ -95,7 +98,7 @@ export class DateSchema {
         const years =
           typeof a.years === "number" && a.years > 0
             ? a.years
-            : PrivateUtils.intNumber({ min: 1, max: 10 });
+            : this.dataTypeSchema.int().getValue({ min: 1, max: 10 });
 
         const refDate = this.argToDate(a.refDate);
 
@@ -105,7 +108,7 @@ export class DateSchema {
         };
 
         let past = refDate.getTime();
-        past -= PrivateUtils.intNumber(range); // some time from now to N years ago, in milliseconds
+        past -= this.dataTypeSchema.int().getValue(range); // some time from now to N years ago, in milliseconds
         refDate.setTime(past);
 
         return refDate;
@@ -143,7 +146,7 @@ export class DateSchema {
         };
 
         let future = refDate.getTime();
-        future += PrivateUtils.intNumber(range);
+        future += this.dataTypeSchema.int().getValue(range);
 
         const newDate = new Date();
         newDate.setTime(future);
@@ -234,7 +237,7 @@ export class DateSchema {
           max = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);
         }
 
-        return new Date(PrivateUtils.intNumber({ min, max }));
+        return new Date(this.dataTypeSchema.int().getValue({ min, max }));
       },
       args || {},
     );
@@ -267,7 +270,7 @@ export class DateSchema {
 
         const fromMs = from.getTime();
         const toMs = to.getTime();
-        const dateOffset = PrivateUtils.intNumber({
+        const dateOffset = this.dataTypeSchema.int().getValue({
           min: 0,
           max: toMs - fromMs,
         });
@@ -301,37 +304,37 @@ export class DateSchema {
 
         switch (filterUnit) {
           case "days":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 30,
             })} ${unit} ago`;
           case "hours":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 23,
             })} ${unit} ago`;
           case "minutes":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 59,
             })} ${unit} ago`;
           case "seconds":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 59,
             })} ${unit} ago`;
           case "years":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 40,
             })} ${unit} ago`;
           case "months":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 11,
             })} ${unit} ago`;
           default:
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 60,
             })} ${unit} ago`;

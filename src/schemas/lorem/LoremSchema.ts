@@ -1,6 +1,6 @@
 import { SchemaField } from "../SchemaField.js";
 import { loremIpsum } from "lorem-ipsum";
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 type WordsProps = {
   count?: number;
@@ -30,6 +30,8 @@ type ParagraphsProps = {
 };
 
 export class LoremSchema {
+  private dataTypeSchema = new DataTypeSchema();
+
   /**
    * @param args.paragraphsCount Number of paragraphs. Default `3`
    * @param args.separator Separator between paragraphs. Default `\n`
@@ -172,7 +174,7 @@ export class LoremSchema {
         const text = loremIpsum({
           format: "plain",
           units: "paragraph",
-          count: PrivateUtils.intNumber({ min: 100, max: 3000 }),
+          count: this.dataTypeSchema.int().getValue({ min: 100, max: 3000 }),
         });
 
         if (a.character_max || a.character_min) {
@@ -183,11 +185,11 @@ export class LoremSchema {
           const charMax =
             typeof a.character_max === "number" && a.character_max > charMin
               ? a.character_max
-              : PrivateUtils.intNumber({ min: 300, max: 1000 });
+              : this.dataTypeSchema.int().getValue({ min: 300, max: 1000 });
 
           return text.slice(
             0,
-            PrivateUtils.intNumber({ min: charMin, max: charMax }),
+            this.dataTypeSchema.int().getValue({ min: charMin, max: charMax }),
           );
         } else return text;
       },

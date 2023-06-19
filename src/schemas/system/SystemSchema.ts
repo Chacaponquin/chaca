@@ -3,6 +3,7 @@ import { SchemaField } from "../SchemaField.js";
 import { Schemas } from "../index.js";
 import { MIME_TYPES } from "./constants/mimeTypes.js";
 import { FILE_EXTENSIONS } from "./constants/fileExtensions.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 export type FileExtensions = {
   audio: string[];
@@ -17,6 +18,8 @@ type FileNameProps = {
 };
 
 export class SystemSchema {
+  private dataTypeSchema = new DataTypeSchema();
+
   /**
    * Returns a file name
    * @param args.ext extension of the file
@@ -36,7 +39,7 @@ export class SystemSchema {
             : this.fileExt().getValue();
 
         const arrayNames: string[] = new Array({
-          length: PrivateUtils.intNumber({ min: 1, max: 5 }),
+          length: this.dataTypeSchema.int().getValue({ min: 1, max: 5 }),
         }).map(() => Schemas.word.noun().getValue({ language: "en" }));
 
         return `${PrivateUtils.joinWords(arrayNames)}.${ext}`;
@@ -90,7 +93,9 @@ export class SystemSchema {
     return new SchemaField<string>(
       "directoryPath",
       () => {
-        const cantFolder = PrivateUtils.intNumber({ min: 1, max: 5 });
+        const cantFolder = this.dataTypeSchema
+          .int()
+          .getValue({ min: 1, max: 5 });
         const array = new Array({ length: cantFolder });
 
         for (let i = 0; i < array.length; i++) {

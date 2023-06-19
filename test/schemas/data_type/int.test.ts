@@ -1,7 +1,7 @@
 import { schemas } from "../../../src";
 
 describe("# Datatype Int Number test", () => {
-  const ARRAY_LENGTH_TEXT = 200;
+  const ARRAY_LENGTH_TEXT = 1000;
 
   it("Passing a max value (5). Should return a int number less than 5", () => {
     const values = Array.from({ length: ARRAY_LENGTH_TEXT }).map(() =>

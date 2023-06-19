@@ -25,8 +25,11 @@ import { SchemaStore } from "./SchemasStore/SchemaStore.js";
 import { GetStoreValueConfig } from "./SchemasStore/interfaces/store.interface.js";
 import { DatasetStore } from "./DatasetStore/DatasetStore.js";
 import { SearchedRefValue } from "./ChacaInputTree/classes/RefValueNode/interfaces/refNode.interface.js";
+import { DataTypeSchema } from "../../schemas/dataType/DataTypeSchema.js";
 
 export class SchemaResolver<K = any> {
+  private dataTypeSchema = new DataTypeSchema();
+
   private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
   private schemaName: string;
@@ -297,7 +300,7 @@ export class SchemaResolver<K = any> {
     const fieldIsArray = field.getNodeConfig().isArray;
     if (fieldIsArray) {
       // limite del arreglo de valores
-      const limit = PrivateUtils.intNumber({
+      const limit = this.dataTypeSchema.int().getValue({
         min: fieldIsArray.min,
         max: fieldIsArray.max,
       });

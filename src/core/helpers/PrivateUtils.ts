@@ -44,22 +44,6 @@ export class PrivateUtils {
     return list[Math.floor(Math.random() * list.length)];
   }
 
-  static intNumber({ min, max }: { min?: number; max?: number }): number {
-    const minimun: number = typeof min === "number" ? min : -999999;
-    let maximun: number;
-
-    if (typeof max === "number") {
-      if (minimun) {
-        if (max >= minimun) maximun = max;
-        else maximun = 99999;
-      } else maximun = max;
-    } else maximun = 99999;
-
-    const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
-
-    return val;
-  }
-
   static numbersArray(): string[] {
     return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
   }

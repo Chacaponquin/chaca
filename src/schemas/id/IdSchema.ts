@@ -1,8 +1,10 @@
 import { SchemaField } from "../SchemaField.js";
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { Schemas } from "../index.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 export class IdSchema {
+  private dataTypeSchema = new DataTypeSchema();
+
   /**
    * Returns a MongoDB [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/) string.
    *
@@ -39,7 +41,9 @@ export class IdSchema {
       () => {
         const RFC4122_TEMPLATE = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
         const replacePlaceholders = (placeholder: string) => {
-          const random = PrivateUtils.intNumber({ min: 0, max: 15 });
+          const random = this.dataTypeSchema
+            .int()
+            .getValue({ min: 0, max: 15 });
           const value = placeholder === "x" ? random : (random & 0x3) | 0x8;
           return value.toString(16);
         };

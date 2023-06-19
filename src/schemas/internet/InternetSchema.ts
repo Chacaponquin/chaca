@@ -5,6 +5,7 @@ import { DOMAIN_SUFFIX } from "./constants/domainSuffix.js";
 import { HTTP_STATUS } from "./constants/httpStatus.js";
 import { GenerateUserAgent } from "./helpers/userAgent.js";
 import { Schemas } from "../index.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 export type HttpStatus = {
   informational: number[];
@@ -53,6 +54,8 @@ type UserNameArgs = {
 };
 
 export class InternetSchema {
+  private dataTypeSchema = new DataTypeSchema();
+
   /**
    * Returns a user email
    * @param args.firstName owner first name
@@ -138,7 +141,8 @@ export class InternetSchema {
               pattern = consonant;
             }
           }
-          const n = PrivateUtils.intNumber({ min: 0, max: 94 }) + 33;
+          const n =
+            this.dataTypeSchema.int().getValue({ min: 0, max: 94 }) + 33;
           let char = String.fromCharCode(n);
           if (memorable) {
             char = char.toLowerCase();
@@ -204,7 +208,7 @@ export class InternetSchema {
         if (firstName && !lastName) {
           return `${firstName}${PrivateUtils.replaceSymbols("######")}`;
         } else {
-          const ran = PrivateUtils.intNumber({ min: 0, max: 2 });
+          const ran = this.dataTypeSchema.int().getValue({ min: 0, max: 2 });
           let result: string;
           switch (ran) {
             case 0:
@@ -321,7 +325,7 @@ export class InternetSchema {
         let retString = "";
 
         for (let i = 1; i <= 4; i++) {
-          const val = PrivateUtils.intNumber({ max: 255, min: 0 });
+          const val = this.dataTypeSchema.int().getValue({ max: 255, min: 0 });
           if (i === 4) retString += `${val}`;
           else retString += `${val}.`;
         }
@@ -407,7 +411,7 @@ export class InternetSchema {
   public port() {
     return new SchemaField<number>(
       "port",
-      () => PrivateUtils.intNumber({ min: 0, max: 65535 }),
+      () => this.dataTypeSchema.int().getValue({ min: 0, max: 65535 }),
       {},
     );
   }

@@ -54,6 +54,9 @@ type CharactersProps = {
 };
 
 export class DataTypeSchema {
+  private MIN_RANDOM_VALUE = -9999999;
+  private MAX_RANDOM_VALUE = 9999999;
+
   /**
    * Returns a boolean
    * @example schemas.dataType.boolean() /// Schema
@@ -82,7 +85,24 @@ export class DataTypeSchema {
     return new SchemaField<number, IntProps>(
       "int",
       (a) => {
-        return PrivateUtils.intNumber(a);
+        const minimun: number =
+          typeof a.min === "number" ? a.min : this.MIN_RANDOM_VALUE;
+        let maximun: number;
+
+        if (typeof a.max === "number") {
+          if (minimun) {
+            if (a.max >= minimun) {
+              maximun = a.max;
+            } else {
+              maximun = this.MAX_RANDOM_VALUE;
+            }
+          } else {
+            maximun = a.max;
+          }
+        } else maximun = this.MAX_RANDOM_VALUE;
+
+        const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
+        return val;
       },
       args || {},
     );
@@ -104,25 +124,32 @@ export class DataTypeSchema {
     return new SchemaField<number, FloatProps>(
       "float",
       (a) => {
-        const minimun: number = typeof a.min === "number" ? a.min : -999999;
-        let maximun: number;
+        const { max, min, precision } = a;
+        let range: number;
+        if (typeof max === "number" && typeof min === "number") {
+          range = max - min;
+        } else if (typeof max === "number" && typeof min === "undefined") {
+          range = max;
+        } else if (typeof max === "undefined" && typeof min === "number") {
+          range = this.MAX_RANDOM_VALUE - min;
+        } else {
+          range = PrivateUtils.oneOfArray([
+            this.MAX_RANDOM_VALUE,
+            this.MIN_RANDOM_VALUE,
+          ]);
+        }
+
         const pres: number =
-          typeof a.precision === "number" &&
-          a.precision > 0 &&
-          a.precision <= 20
-            ? a.precision
-            : 2;
+          typeof precision === "number" && precision > 0 && precision <= 20
+            ? precision
+            : this.int().getValue({ min: 1, max: 10 });
 
-        if (typeof a.max === "number") {
-          if (minimun) {
-            if (a.max > minimun) maximun = a.max;
-            else maximun = 999999;
-          } else maximun = a.max;
-        } else maximun = 999999;
+        const randomNum = Math.random() * range + (min || 0);
+        const factor = Math.pow(10, pres);
 
-        const val = Math.random() * (maximun - minimun + 1) + minimun;
+        const returnValue = Math.round(randomNum * factor) / factor;
 
-        return Number(String(val.toFixed(pres)));
+        return returnValue;
       },
       args || {},
     );
@@ -143,21 +170,22 @@ export class DataTypeSchema {
     return new SchemaField<number, NumberProps>(
       "number",
       (a) => {
-        const minimun: number = typeof a.min === "number" ? a.min : -999999;
+        const minimun: number =
+          typeof a.min === "number" ? a.min : Number.MIN_SAFE_INTEGER;
         let maximun: number;
         const pres: number =
           typeof a.precision === "number" &&
           a.precision > 0 &&
           a.precision <= 20
             ? a.precision
-            : PrivateUtils.intNumber({ min: 0, max: 5 });
+            : this.int().getValue({ min: 0, max: 5 });
 
         if (typeof a.max === "number") {
           if (minimun) {
             if (a.max > minimun) maximun = a.max;
-            else maximun = 999999;
+            else maximun = Number.MAX_SAFE_INTEGER;
           } else maximun = a.max;
-        } else maximun = 999999;
+        } else maximun = Number.MAX_SAFE_INTEGER;
 
         const val = Math.random() * (maximun - minimun + 1) + minimun;
         return Number(String(val.toFixed(pres)));
@@ -187,7 +215,7 @@ export class DataTypeSchema {
         const length =
           typeof a.length === "number" && a.length > 0
             ? a.length
-            : PrivateUtils.intNumber({ min: 5, max: 10 });
+            : this.int().getValue({ min: 5, max: 10 });
         const c = typeof a.case === "string" ? a.case : "mixed";
 
         let ret = "";
@@ -237,11 +265,11 @@ export class DataTypeSchema {
         const x_size =
           typeof a.x_size === "number" && a.x_size > 0
             ? Number.parseInt(String(a.x_size))
-            : PrivateUtils.intNumber({ min: 1, max: 10 });
+            : this.int().getValue({ min: 1, max: 10 });
         const y_size =
           typeof a.y_size === "number" && a.y_size > 0
             ? Number.parseInt(String(a.y_size))
-            : PrivateUtils.intNumber({ min: 1, max: 10 });
+            : this.int().getValue({ min: 1, max: 10 });
 
         const { min, max } = this.validateMinMax(a.min, a.max);
 
@@ -337,7 +365,7 @@ export class DataTypeSchema {
         const length =
           typeof a.length === "number" && a.length > 0
             ? a.length
-            : PrivateUtils.intNumber({ min: 4, max: 8 });
+            : this.int().getValue({ min: 4, max: 8 });
 
         let ret = "";
         for (let i = 1; i <= length; i++) {
@@ -373,7 +401,7 @@ export class DataTypeSchema {
         const length =
           typeof a.length === "number" && a.length > 0
             ? a.length
-            : PrivateUtils.intNumber({ min: 1, max: 20 });
+            : this.int().getValue({ min: 1, max: 20 });
         const banned: string[] = [];
 
         const cass = typeof a.case === "string" ? a.case : undefined;

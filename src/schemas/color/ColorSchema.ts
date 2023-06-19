@@ -118,7 +118,7 @@ export class ColorSchema {
           return color;
         }
         color = Array.from({ length: 3 }).map(() =>
-          PrivateUtils.intNumber({ min: 0, max: 255 }),
+          this.dataTypeSchema.int().getValue({ min: 0, max: 255 }),
         );
         if (includeAlpha) {
           color.push(

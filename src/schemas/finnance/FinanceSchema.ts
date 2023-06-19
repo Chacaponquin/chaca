@@ -2,6 +2,7 @@ import { SchemaField } from "../SchemaField.js";
 import { Schemas } from "../index.js";
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { ACCOUNT_TYPES, IBAN, MONEY_INFO } from "./constants/index.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 type AmountProps = {
   min?: number;
@@ -15,6 +16,8 @@ type PinProps = {
 };
 
 export class FinanceSchema {
+  private dataTypeSchema = new DataTypeSchema();
+
   /**
    * Returns a PIN number.
    *
@@ -34,7 +37,9 @@ export class FinanceSchema {
         const len = typeof a.length === "number" ? a.length : 4;
 
         return Array({ length: len })
-          .map(() => String(PrivateUtils.intNumber({ min: 0, max: 9 })))
+          .map(() =>
+            String(this.dataTypeSchema.int().getValue({ min: 0, max: 9 })),
+          )
           .join("");
       },
       args || {},
@@ -59,7 +64,7 @@ export class FinanceSchema {
         address += Schemas.dataType.alphaNumeric().getValue({
           case: "mixed",
           banned: "0OIl",
-          length: PrivateUtils.intNumber({ min: 25, max: 39 }),
+          length: this.dataTypeSchema.int().getValue({ min: 25, max: 39 }),
         });
 
         return address;
@@ -87,7 +92,7 @@ export class FinanceSchema {
           if (i % 4 === 0) retString = retString.concat("-");
 
           retString = retString.concat(
-            String(PrivateUtils.intNumber({ min: 0, max: 9 })),
+            String(this.dataTypeSchema.int().getValue({ min: 0, max: 9 })),
           );
         }
 
@@ -195,7 +200,10 @@ export class FinanceSchema {
       () => {
         let cvv = "";
         for (let i = 0; i < 3; i++) {
-          cvv += PrivateUtils.intNumber({ max: 9, min: 0 }).toString();
+          cvv += this.dataTypeSchema
+            .int()
+            .getValue({ max: 9, min: 0 })
+            .toString();
         }
         return cvv;
       },
