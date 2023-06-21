@@ -270,7 +270,14 @@ export class SchemaResolver<K = any> {
   public resolve(): Array<K> {
     this.buildInputTree();
     this.buildTrees();
-    return this.resultTree.getDocumentsArray();
+    return this.getDocumentsArray();
+  }
+
+  public getDocumentsArray(omitDocument?: DocumentTree<K>): Array<K> {
+    return this.getResultTree()
+      .getDocuments()
+      .filter((d) => d !== omitDocument)
+      .map((d) => d.getDocumentObject());
   }
 
   private resolveArrayAndMixedFields(

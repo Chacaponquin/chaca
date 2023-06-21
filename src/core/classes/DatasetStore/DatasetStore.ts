@@ -55,4 +55,8 @@ export class DatasetStore {
 
     return returnValues;
   }
+
+  public getSchemaDocuments<R = any>(): Array<R> {
+    return this.omitResolver.getDocumentsArray(this.omitCurrentDocument);
+  }
 }
