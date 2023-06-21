@@ -43,9 +43,8 @@ export class ColorSchema {
    * Returns a random css supported color function name.
    *
    * @example
-   * faker.color.cssSupportedFunction() // 'rgb'
-   *
-   * @since 7.0.0
+   * schemas.color.cssSupportedFunction() // schema
+   * schemas.color.cssSupportedFunction().getValue() // 'rgb'
    */
   cssSupportedFunction(): SchemaField<string> {
     return new SchemaField(
@@ -61,9 +60,8 @@ export class ColorSchema {
    * Returns a random css supported color space name.
    *
    * @example
-   * faker.color.cssSupportedSpace() // 'display-p3'
-   *
-   * @since 7.0.0
+   * schemas.color.cssSupportedSpace() // schema
+   * schemas.color.cssSupportedSpace().getValue() // 'display-p3'
    */
   cssSupportedSpace(): SchemaField<CSSSpace> {
     return new SchemaField(
@@ -76,25 +74,20 @@ export class ColorSchema {
   /**
    * Returns an RGB color.
    *
-   * @param options Options object.
    * @param options.prefix Prefix of the generated hex color. Only applied when `'hex'` format is used. Defaults to `'0x'`.
    * @param options.casing Letter type case of the generated hex color. Only applied when `'hex'` format is used. Defaults to `'mixed'`.
    * @param options.format Format of generated RGB color. Defaults to `'hex'`.
    * @param options.includeAlpha Adds an alpha value to the color (RGBA). Defaults to `false`.
    *
    * @example
-   * faker.color.rgb() // '0xffffFF'
-   * faker.color.rgb({ prefix: '#' }) // '#ffffFF'
-   * faker.color.rgb({ casing: 'upper' }) // '0xFFFFFF'
-   * faker.color.rgb({ casing: 'lower' }) // '0xffffff'
-   * faker.color.rgb({ prefix: '#', casing: 'lower' }) // '#ffffff'
-   * faker.color.rgb({ format: 'hex', casing: 'lower' }) // '#ffffff'
-   * faker.color.rgb({ format: 'decimal' }) // [255, 255, 255]
-   * faker.color.rgb({ format: 'css' }) // 'rgb(255, 0, 0)'
-   * faker.color.rgb({ format: 'binary' }) // '10000000 00000000 11111111'
-   * faker.color.rgb({ format: 'decimal', includeAlpha: true }) // [255, 255, 255, 0.4]
-   *
-   * @since 7.0.0
+   * schemas.color.rgb().getValue() // schema
+   * schemas.color.rgb().getValue({ prefix: '#' }) // '#ffffFF'
+   * schemas.color.rgb().getValue({ casing: 'upper' }) // '0xFFFFFF'
+   * schemas.color.rgb().getValue({ casing: 'lower' }) // '0xffffff'
+   * schemas.color.rgb().getValue({ prefix: '#', casing: 'lower' }) // '#ffffff'
+   * schemas.color.rgb().getValue({ format: 'hex', casing: 'lower' }) // '#ffffff'
+   * schemas.color.rgb().getValue({ format: 'css' }) // 'rgb(255, 0, 0)'
+   * schemas.color.rgb().getValue({ format: 'binary' }) // '10000000 00000000 11111111'
    */
   rgb(args?: Partial<RgbProps>): SchemaField<string, Partial<RgbProps>> {
     return new SchemaField<string, Partial<RgbProps>>(
@@ -138,28 +131,20 @@ export class ColorSchema {
           return returnColor;
         }
       },
-      args || {
-        format: "hex",
-        includeAlpha: false,
-        prefix: "#",
-        casing: "lower",
-      },
+      args || {},
     );
   }
 
   /**
    * Returns a CMYK color.
    *
-   * @param options Options object.
    * @param options.format Format of generated CMYK color. Defaults to `'decimal'`.
    *
    * @example
-   * faker.color.cmyk() // [0.31, 0.52, 0.32, 0.43]
-   * faker.color.cmyk({ format: 'decimal' }) // [0.31, 0.52, 0.32, 0.43]
-   * faker.color.cmyk({ format: 'css' }) // cmyk(100%, 0%, 0%, 0%)
-   * faker.color.cmyk({ format: 'binary' }) // (8-32 bits) x 4
-   *
-   * @since 7.0.0
+   * schemas.color.cmyk() // schema
+   * schemas.color.cmyk().getValue() // cmyk(100%, 0%, 0%, 0%)
+   * schemas.color.cmyk().getValue({ format: 'css' }) // cmyk(100%, 0%, 0%, 0%)
+   * schemas.color.cmyk().getValue({ format: 'binary' }) // (8-32 bits) x 4
    */
   cmyk(args?: Partial<CmykProps>): SchemaField<string, Partial<CmykProps>> {
     return new SchemaField<string, Partial<CmykProps>>(
@@ -182,20 +167,15 @@ export class ColorSchema {
   /**
    * Returns an HSL color.
    *
-   * @param options Options object.
    * @param options.format Format of generated HSL color. Defaults to `'decimal'`.
    * @param options.includeAlpha Adds an alpha value to the color (RGBA). Defaults to `false`.
    *
    * @example
-   * faker.color.hsl() // [201, 0.23, 0.32]
-   * faker.color.hsl({ format: 'decimal' }) // [300, 0.21, 0.52]
-   * faker.color.hsl({ format: 'decimal', includeAlpha: true }) // [300, 0.21, 0.52, 0.28]
-   * faker.color.hsl({ format: 'css' }) // hsl(0deg, 100%, 80%)
-   * faker.color.hsl({ format: 'css', includeAlpha: true }) // hsl(0deg 100% 50% / 0.5)
-   * faker.color.hsl({ format: 'binary' }) // (8-32 bits) x 3
-   * faker.color.hsl({ format: 'binary', includeAlpha: true }) // (8-32 bits) x 4
-   *
-   * @since 7.0.0
+   * schemas.color.hsl() // schema
+   * schemas.color.hsl().getValue({ format: 'css' }) // hsl(0deg, 100%, 80%)
+   * schemas.color.hsl().getValue({ format: 'css', includeAlpha: true }) // hsl(0deg 100% 50% / 0.5)
+   * schemas.color.hsl().getValue({ format: 'binary' }) // (8-32 bits) x 3
+   * schemas.color.hsl().getValue({ format: 'binary', includeAlpha: true }) // (8-32 bits) x 4
    */
   hsl(args?: Partial<HslProps>): SchemaField<string, Partial<HslProps>> {
     return new SchemaField<string, Partial<HslProps>>(
@@ -224,16 +204,12 @@ export class ColorSchema {
   /**
    * Returns an HWB color.
    *
-   * @param options Options object.
    * @param options.format Format of generated RGB color. Defaults to `'decimal'`.
    *
    * @example
-   * faker.color.hwb() // [201, 0.21, 0.31]
-   * faker.color.hwb({ format: 'decimal' }) // [201, 0.21, 0.31]
-   * faker.color.hwb({ format: 'css' }) // hwb(194 0% 0%)
-   * faker.color.hwb({ format: 'binary' }) // (8-32 bits x 3)
-   *
-   * @since 7.0.0
+   * schemas.color.hwb() // schema
+   * schemas.color.hwb().getValue({ format: 'css' }) // hwb(194 0% 0%)
+   * schemas.color.hwb().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
   hwb(args?: Partial<HwbProps>): SchemaField<string, Partial<HwbProps>> {
     return new SchemaField<string, Partial<HwbProps>>(
@@ -265,16 +241,14 @@ export class ColorSchema {
    * it is bounded to 230 as anything above will not
    * make a noticeable difference in the browser.
    *
-   * @param options Options object.
    * @param options.format Format of generated RGB color. Defaults to `'decimal'`.
    *
    * @example
-   * faker.color.lch() // [0.522345, 72.2, 56.2]
-   * faker.color.lch({ format: 'decimal' }) // [0.522345, 72.2, 56.2]
-   * faker.color.lch({ format: 'css' }) // lch(52.2345% 72.2 56.2)
-   * faker.color.lch({ format: 'binary' }) // (8-32 bits x 3)
-   *
-   * @since 7.0.0
+   * schemas.color.lch() // schema
+   * schemas.color.lch().getValue() // [0.522345, 72.2, 56.2]
+   * schemas.color.lch().getValue({ format: 'decimal' }) // [0.522345, 72.2, 56.2]
+   * schemas.color.lch().getValue({ format: 'css' }) // lch(52.2345% 72.2 56.2)
+   * schemas.color.lch().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
   lch(args?: Partial<LchProps>): SchemaField<string, Partial<LchProps>> {
     return new SchemaField(
@@ -305,17 +279,14 @@ export class ColorSchema {
   /**
    * Returns a random color based on CSS color space specified.
    *
-   * @param options Options object.
    * @param options.format Format of generated RGB color. Defaults to `'decimal'`.
    * @param options.space Color space to generate the color for. Defaults to `'sRGB'`.
    *
    * @example
-   * faker.color.colorByCSSColorSpace() // [0.93, 1, 0.82]
-   * faker.color.colorByCSSColorSpace({ format: 'decimal' }) // [0.12, 0.21, 0.31]
-   * faker.color.colorByCSSColorSpace({ format: 'css', space: 'display-p3' }) // color(display-p3 0.12 1 0.23)
-   * faker.color.colorByCSSColorSpace({ format: 'binary' }) // (8-32 bits x 3)
-   *
-   * @since 7.0.0
+   * schemas.color.colorByCSSColorSpace() // schema
+   * schemas.color.colorByCSSColorSpace().getValue() // [0.93, 1, 0.82]
+   * schemas.color.colorByCSSColorSpace().getValue({ format: 'css', space: 'display-p3' }) // color(display-p3 0.12 1 0.23)
+   * schemas.color.colorByCSSColorSpace().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
   colorByCSSColorSpace(
     args?: Partial<ColorByCSSColorSpaceProps>,

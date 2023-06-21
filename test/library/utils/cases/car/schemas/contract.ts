@@ -18,7 +18,7 @@ export const CONTRACT_SCHEMA = chaca.defineSchema({
   driver_dni: { type: chaca.ref("Driver.dni"), posibleNull: 50 },
   end_km: ({ currentFields: fields, store }) => {
     const allCars = store.getValue("Car");
-    const restDocuments = store.getValue("Contract");
+    const restDocuments = store.getSchemaDocuments();
 
     let found = null;
     for (let i = 0; i < restDocuments.length && !found; i++) {
@@ -45,7 +45,7 @@ export const CONTRACT_SCHEMA = chaca.defineSchema({
   },
   start_km: ({ currentFields: fields, store }) => {
     let founds = [] as Array<any>;
-    const restDocuments = store.getValue("Contract");
+    const restDocuments = store.getSchemaDocuments();
 
     for (let i = 0; i < restDocuments.length; i++) {
       const contract = restDocuments[i];

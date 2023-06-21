@@ -24,10 +24,8 @@ export const STUDENT_SCHEMA = chaca.defineSchema({
   sex: chaca.enum(["Male", "Woman"]),
   municipality_id: chaca.ref("Municipality.id"),
   group: chaca.ref("Group.group_number"),
-  year: chaca.ref("Group.year", {
-    where: ({ currentFields, refFields }) => {
-      return currentFields.group === refFields.group_number;
-    },
+  year: chaca.ref("Group.year", ({ currentFields, refFields }) => {
+    return currentFields.group === refFields.group_number;
   }),
 });
 
@@ -74,8 +72,9 @@ export const DOWN_STUDENTS_SCHEMA = chaca.defineSchema({
 export const STUDENT_SUBJECT_GRADE = chaca.defineSchema({
   subject_id: chaca.key(chaca.ref("Subject.id")),
   student: chaca.key(
-    chaca.ref("Student.id", {
-      where: ({ currentFields, refFields: studentFields, store }) => {
+    chaca.ref(
+      "Student.id",
+      ({ currentFields, refFields: studentFields, store }) => {
         const foundSubject = store.getValue("Subject", {
           where(fields) {
             return fields.id === currentFields.subject_id;
@@ -84,7 +83,7 @@ export const STUDENT_SUBJECT_GRADE = chaca.defineSchema({
 
         return studentFields.year === foundSubject[0].year;
       },
-    }),
+    ),
   ),
   grade: chaca.ref("Grade.id"),
 });

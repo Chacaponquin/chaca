@@ -148,7 +148,7 @@ export const CHARGE_SCHEMA = chaca.defineSchema({
   warehouse_id: chaca.ref("Warehouse.id", {
     where: ({ currentFields, store }) => {
       const findChargesWithSameWarehouse = store
-        .getValue<Charge>("Charge")
+        .getSchemaDocuments<Charge>()
         .filter((charge) => {
           return charge.warehouse_id === currentFields.warehouse_id;
         });
