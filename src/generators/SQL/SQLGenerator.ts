@@ -183,9 +183,7 @@ export class SQLGenerator extends Generator {
             table: parentTable,
           });
         } else {
-          value.getValues().forEach((v) => {
-            this.filterTypeByValue(parentTable, null, v);
-          });
+          throw new ChacaError(`Can not export data in array format in SQL.`);
         }
       } else if (value instanceof ObjectType) {
         if (fieldName) {
