@@ -409,15 +409,4 @@ export class DataTypeSchema {
       args || {},
     );
   }
-
-  private validateMinMax(
-    min: number | undefined,
-    max: number | undefined,
-  ): { min: number | undefined; max: number | undefined } {
-    const mi = typeof min === "number" ? min : undefined;
-    const ma =
-      typeof max === "number" ? (mi && max > mi ? max : undefined) : undefined;
-
-    return { min: mi, max: ma };
-  }
 }
