@@ -31,6 +31,8 @@
     "build:esm": "tsc --p tsconfig.esm.json",
     "build:cjs": "tsc --p tsconfig.cjs.json",
     "test": "jest",
+    "test:cases": "jest --testPathPattern=test/library/cases",
+    "test:schemas": "jest --testPathPattern=test/schemas",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "lint-fix": "eslint --fix src/**/*.ts",
     "lint": "eslint src/**/*.ts"

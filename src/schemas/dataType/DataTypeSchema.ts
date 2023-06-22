@@ -1,4 +1,3 @@
-import { ChacaError } from "../../errors/ChacaError.js";
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { SchemaField } from "../SchemaField.js";
 
@@ -44,10 +43,6 @@ type MatrizProps = {
   precision?: number;
 };
 
-type CustomArrayProps = {
-  array: any[];
-};
-
 type CharactersProps = {
   length?: number;
   case?: "lower" | "upper";
@@ -56,6 +51,7 @@ type CharactersProps = {
 export class DataTypeSchema {
   private MIN_RANDOM_VALUE = -9999999;
   private MAX_RANDOM_VALUE = 9999999;
+  private MAX_PRECISION = 16;
 
   /**
    * Returns a boolean
@@ -140,7 +136,9 @@ export class DataTypeSchema {
         }
 
         const pres: number =
-          typeof precision === "number" && precision > 0 && precision <= 20
+          typeof precision === "number" &&
+          precision > 0 &&
+          precision <= this.MAX_PRECISION
             ? precision
             : this.int().getValue({ min: 1, max: 10 });
 
@@ -170,25 +168,15 @@ export class DataTypeSchema {
     return new SchemaField<number, NumberProps>(
       "number",
       (a) => {
-        const minimun: number =
-          typeof a.min === "number" ? a.min : Number.MIN_SAFE_INTEGER;
-        let maximun: number;
-        const pres: number =
-          typeof a.precision === "number" &&
-          a.precision > 0 &&
-          a.precision <= 20
-            ? a.precision
-            : this.int().getValue({ min: 0, max: 5 });
+        const { max, min, precision } = a;
 
-        if (typeof a.max === "number") {
-          if (minimun) {
-            if (a.max > minimun) maximun = a.max;
-            else maximun = Number.MAX_SAFE_INTEGER;
-          } else maximun = a.max;
-        } else maximun = Number.MAX_SAFE_INTEGER;
-
-        const val = Math.random() * (maximun - minimun + 1) + minimun;
-        return Number(String(val.toFixed(pres)));
+        let val: number;
+        if (precision === 0) {
+          val = this.int().getValue({ max, min });
+        } else {
+          val = this.float().getValue({ max, min, precision });
+        }
+        return val;
       },
       args || {},
     );
@@ -198,12 +186,12 @@ export class DataTypeSchema {
    * Returns a string with a hexadecimal code
    * @param args.case Case of the values inside de hexadecimal code (`mixed` | `lower` | `upper`)
    * @param args.length Lenght of the hexadecimal code
-   * @example schemas.dataType.hexadecimal() // Schema
    * @example
+   * schemas.dataType.hexadecimal() // Schema
    * schemas.dataType.hexadecimal().getValue() // '009df'
    * schemas.dataType.hexadecimal().getValue({length: 3}) // '01D'
    * schemas.dataType.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
-   * @returns
+   * @returns string
    */
   public hexadecimal(args?: HexadecimalProps) {
     return new SchemaField<string, HexadecimalProps>(
@@ -263,49 +251,25 @@ export class DataTypeSchema {
       "matriz",
       (a) => {
         const x_size =
-          typeof a.x_size === "number" && a.x_size > 0
+          typeof a.x_size === "number" && a.x_size >= 0
             ? Number.parseInt(String(a.x_size))
             : this.int().getValue({ min: 1, max: 10 });
         const y_size =
-          typeof a.y_size === "number" && a.y_size > 0
+          typeof a.y_size === "number" && a.y_size >= 0
             ? Number.parseInt(String(a.y_size))
             : this.int().getValue({ min: 1, max: 10 });
 
-        const { min, max } = this.validateMinMax(a.min, a.max);
-
-        const precision =
-          typeof a.precision === "number" && a.precision > 0
-            ? a.precision
-            : undefined;
-
-        return new Array(x_size).fill(0).map(() => {
-          return new Array(y_size).fill(0).map(() => {
-            return this.number().getValue({ min, max, precision });
+        return Array.from({ length: x_size }).map(() => {
+          return Array.from({ length: y_size }).map(() => {
+            return this.number().getValue({
+              min: a.min,
+              max: a.max,
+              precision: a.precision,
+            });
           });
         });
       },
       args || {},
-    );
-  }
-
-  /**
-   * Return one of an array of elements
-   * @param args.array Array of elements
-   * @example schemas.dataType.customArray() // Schema
-   * @example schemas.dataType.customArray({array: [5, {hello: "world"}, "Chaca"]}) // 5
-   */
-  public customArray(args?: CustomArrayProps) {
-    return new SchemaField<any, CustomArrayProps>(
-      "customArray",
-      (a) => {
-        if (Array.isArray(a.array) && a.array.length > 0) {
-          return PrivateUtils.oneOfArray(a.array);
-        } else
-          throw new ChacaError(
-            "The argument of custom array must be an array of values",
-          );
-      },
-      args || { array: [] },
     );
   }
 

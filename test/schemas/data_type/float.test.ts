@@ -32,8 +32,26 @@ describe("# Float Datatype test", () => {
       schemas.dataType.float().getValue({ max: 1000, min: -1000 }),
     );
 
-    console.log(allValues.filter((v) => !(v <= 1000 && v >= -1000)));
-
     expect(allValues.every((v) => v <= 1000 && v >= -1000)).toBe(true);
+  });
+
+  it("With precision argument", () => {
+    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
+      schemas.dataType.float().getValue({ precision: 5 }),
+    );
+
+    expect(allValues.every((v) => !Number.isInteger(v))).toBe(true);
+  });
+
+  it("With precision, max and min argumnets", () => {
+    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
+      schemas.dataType
+        .float()
+        .getValue({ precision: 5, max: 1000, min: -1000 }),
+    );
+
+    expect(
+      allValues.every((v) => !Number.isInteger(v) && v >= -1000 && v <= 1000),
+    ).toBe(true);
   });
 });
