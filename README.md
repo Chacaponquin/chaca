@@ -1,6 +1,6 @@
 <p align="center"><img align="center" src="https://res.cloudinary.com/chaca-sa/image/upload/v1681924431/Logopit_1681682634889_hywzcu.png" style="width:300px"/></p>
 
-<p align="center">A Node JS library to create and export data schemas with your rules</p>
+<p align="center">Think your data and let Chaca create it.</p>
 
 > **Note** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!
 
@@ -36,26 +36,22 @@ const postSchema = chaca.defineSchema<MoviePost>({
   },
   image: schemas.image.film(),
   likes: schemas.dataType.int({ min: 0, max: 500000 }),
-  category: {
-    enum: [
-      "Horror",
-      "War",
-      "History",
-      "Comedy",
-      "Mystery",
-      "Action",
-      "Animation",
-      "Musical",
-    ],
-  },
+  category: chaca.enum([
+    "Horror",
+    "War",
+    "History",
+    "Comedy",
+    "Mystery",
+    "Action",
+    "Animation",
+    "Musical",
+  ]),
   adultMovie: (docFields) => {
-    if (
+    return (
       docFields.category === "Horror" ||
       docFields.category === "War" ||
       docFields.category === "Action"
-    ) {
-      return true;
-    } else return false;
+    );
   },
   directorInf: chaca.defineSchema({
     name: schemas.person.fullName(),
@@ -97,6 +93,22 @@ await postSchema.generateAndExport(20, {
 });
 ```
 
+## Fields Type
+
+### schema field
+
+### enum
+
+### custom
+
+### ref
+
+### sequential
+
+### sequence
+
+### key
+
 ## Config API
 
 ### `type`
@@ -129,60 +141,6 @@ const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
     },
     description: schemas.lorem.text(),
   });
-}
-```
-
-### `enum`
-
-Array of values that the field can take
-
-```ts
-// Returns one of this values
-enum: ['Hello World', 'Hi Friend', 'My Name is Hector'] // 'Hi Friend'
-enum: [1, 5, 3, 20, 2] // 2
-```
-
-> **Note** If you pass an empty array `[]` an the result will be `null`
-
-### `custom`
-
-A custom function that has access to values of the fields of the document in which it is located
-
-```ts
-// Simple Function
-{
-  id: () => {
-    return "Hi!!!";
-  }; // The field `id` always be 'Hi!!!'
-}
-
-// You can access to own object properties
-{
-  name: schemas.person.firstName(),
-  age: schemas.dataType.int({min: 18, max: 80}),
-  sex: schemas.person.sex(),
-  isOlder: {
-    custom: (doc) => {
-      if(doc.age < 60) return false
-      else return true
-    }
-  }
-}
-
-// Example return documents
-{
-  name: 'Juan',
-  age: 23,
-  sex: 'Male',
-  isOlder: false
-}
-
-//or
-{
-  name: 'Camila',
-  age: 67,
-  sex: 'Female',
-  isOlder: true
 }
 ```
 
@@ -474,27 +432,9 @@ schemas.word.verb().getValue(); // 'ser';
 schemas.word.noun().getValue(); // 'plato';
 ```
 
-## Schema Fields
+## Custom Schema Fields
 
 If none of the defined schemas are useful you can create your own schemas with the `defineSchemaField` method.
-
-### Javascript
-
-```js
-import { chaca } from "chaca";
-
-// Define Field Schema
-const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
-  return args.a + args.b;
-});
-
-// Usage
-const mySchema = chaca.defineSchema({
-  sum: mySchemaField({ a: 5, b: 10 }), // In all the generated objects the sum field is 15
-});
-```
-
-### Typescript
 
 ```ts
 import { chaca } from "chaca";
@@ -542,23 +482,6 @@ const fileLocation = await chaca.export(data, {
 });
 ```
 
-### `schema.generateAndExport`
-
-```ts
-const schema = chaca.defineSchema({
-  id: schemas.id.mongodbID(),
-  image: schemas.image.film(),
-  name: schemas.person.firstName({ language: "es" }),
-});
-
-// Generates and export in a json file 30 documents of the schema
-await schema.generateAndExport(30, {
-  fileName: "myData",
-  location: "./folder",
-  format: "json",
-});
-```
-
 ## Export API
 
 ```js
@@ -574,6 +497,10 @@ await schema.generateAndExport(30, {
   location: "./folder"
 }
 ```
+
+## Relational Data
+
+### Export From Schemas
 
 ## Contributing
 
