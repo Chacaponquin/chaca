@@ -283,9 +283,12 @@ export class DateSchema {
           if (a.from instanceof Date && !(a.to instanceof Date)) {
             from = this.argToDate(a.from);
             to = this.future().getValue({ refDate: from });
-          } else {
+          } else if (!(a.from instanceof Date) && a.to instanceof Date) {
             to = a.to as Date;
             from = this.past().getValue({ refDate: to });
+          } else {
+            from = this.randomDate();
+            to = this.future().getValue({ refDate: from });
           }
         }
 
