@@ -1,4 +1,5 @@
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaError } from "../../errors/ChacaError.js";
 import { SchemaField } from "../SchemaField.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 import { MONTHS } from "./constants/month.js";
@@ -243,6 +244,14 @@ export class DateSchema {
     );
   }
 
+  private randomDate(): Date {
+    const year = this.dataTypeSchema.int().getValue({ min: 1900, max: 2300 });
+    const month = this.dataTypeSchema.int().getValue({ min: 0, max: 11 });
+    const day = this.dataTypeSchema.int().getValue({ min: 1, max: 30 });
+
+    return new Date(year, month, day);
+  }
+
   /**
    * Returns a date between the given boundaries.
    *
@@ -260,13 +269,25 @@ export class DateSchema {
     return new SchemaField<Date, DateBetweenProps>(
       "dateBetween",
       (a) => {
-        const from = !a.from
-          ? new Date("2030-01-01T00:00:00.000Z")
-          : this.argToDate(a.from);
+        let from: Date;
+        let to: Date;
 
-        const to = !a.to
-          ? new Date("2030-01-01T00:00:00.000Z")
-          : this.argToDate(a.to);
+        if (a.from instanceof Date && a.to instanceof Date) {
+          if (a.from.getTime() > a.to.getTime()) {
+            throw new ChacaError(`The to Date must be greater than from Date.`);
+          } else {
+            from = a.from;
+            to = a.to;
+          }
+        } else {
+          if (a.from instanceof Date && !(a.to instanceof Date)) {
+            from = this.argToDate(a.from);
+            to = this.future().getValue({ refDate: from });
+          } else {
+            to = a.to as Date;
+            from = this.past().getValue({ refDate: to });
+          }
+        }
 
         const fromMs = from.getTime();
         const toMs = to.getTime();

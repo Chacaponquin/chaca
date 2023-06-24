@@ -366,6 +366,7 @@ export class DataTypeSchema {
           typeof a.length === "number" && a.length > 0
             ? a.length
             : this.int().getValue({ min: 1, max: 20 });
+
         const banned: string[] = [];
 
         const cass = typeof a.case === "string" ? a.case : undefined;
