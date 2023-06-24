@@ -1,16 +1,16 @@
 import { chaca, schemas } from "../../../../../src";
 
-export const SCHEMA_ONE = chaca.defineSchema({
+export const SCHEMA_ONE = chaca.schema({
   id: schemas.id.uuid(),
   ref: chaca.ref("SchemaTwo.ref"),
 });
 
-export const SCHEMA_TWO = chaca.defineSchema({
+export const SCHEMA_TWO = chaca.schema({
   id: schemas.id.uuid(),
   ref: chaca.ref("SchemaThree.ref"),
 });
 
-export const SCHEMA_THREE = chaca.defineSchema({
+export const SCHEMA_THREE = chaca.schema({
   id: schemas.id.uuid(),
   name: schemas.person.fullName(),
 });

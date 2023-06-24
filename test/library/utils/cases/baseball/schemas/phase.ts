@@ -25,7 +25,7 @@ const PHASE_DATES: Array<PhaseDate> = [
   },
 ];
 
-export const PHASE_SCHEMA = chaca.defineSchema({
+export const PHASE_SCHEMA = chaca.schema({
   phase_id: chaca.key(chaca.sequence()),
   phase_name: chaca.sequential(PHASE_NAMES),
   start_date: chaca.sequential(PHASE_DATES.map((d) => d.start_date)),

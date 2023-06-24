@@ -4,7 +4,7 @@ import { TOTAL_COACHS, TOTAL_PLAYERS } from "../constants";
 const ARRAY_PLAYERS = new Array(TOTAL_PLAYERS).fill(0).map(() => "P");
 const ARRAY_COACHS = new Array(TOTAL_COACHS).fill(0).map(() => "C");
 
-export const TEAM_MEMBER_SCHEMA = chaca.defineSchema({
+export const TEAM_MEMBER_SCHEMA = chaca.schema({
   member_id: chaca.key(chaca.sequence()),
   member_name: schemas.person.fullName({ language: "es", sex: "male" }),
   team_id: chaca.ref("Team.team_id"),
@@ -13,7 +13,7 @@ export const TEAM_MEMBER_SCHEMA = chaca.defineSchema({
   member_type: chaca.sequential([...ARRAY_PLAYERS, ...ARRAY_COACHS]),
 });
 
-export const PLAYER_SCHEMA = chaca.defineSchema({
+export const PLAYER_SCHEMA = chaca.schema({
   member_id: chaca.key(
     chaca.ref("TeamMember.member_id", {
       unique: true,
@@ -25,7 +25,7 @@ export const PLAYER_SCHEMA = chaca.defineSchema({
   position_id: chaca.ref("Position.position_id"),
 });
 
-export const COACH_SCHEMA = chaca.defineSchema({
+export const COACH_SCHEMA = chaca.schema({
   member_id: chaca.key(
     chaca.ref("TeamMember.member_id", {
       unique: true,
@@ -37,7 +37,7 @@ export const COACH_SCHEMA = chaca.defineSchema({
   experience_year: schemas.dataType.int({ min: 1, max: 15 }),
 });
 
-export const PITCHER_SCHEMA = chaca.defineSchema({
+export const PITCHER_SCHEMA = chaca.schema({
   member_id: chaca.key(
     chaca.ref("Player.member_id", {
       unique: true,
@@ -63,7 +63,7 @@ export const PITCHER_SCHEMA = chaca.defineSchema({
   runs_allowed: schemas.dataType.int({ min: 0, max: 1000 }),
 });
 
-export const BATTER_SCHEMA = chaca.defineSchema({
+export const BATTER_SCHEMA = chaca.schema({
   member_id: chaca.key(
     chaca.ref("Player.member_id", {
       unique: true,

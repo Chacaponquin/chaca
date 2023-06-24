@@ -1,6 +1,6 @@
 import { chaca, schemas } from "../../../../../../src";
 
-export const CONTRACT_SCHEMA = chaca.defineSchema({
+export const CONTRACT_SCHEMA = chaca.schema({
   car_plate: chaca.key(chaca.ref("Car.plate")),
   tourist_passport: chaca.ref("Turist.passport"),
   start_date: chaca.key(schemas.date.past()),

@@ -34,7 +34,7 @@ export class KeyField<A = any, C = any> {
       return fieldFunction;
     } else {
       throw new ChacaError(
-        `The key field must be SchemaField that return an string or a number`,
+        `The key field must return an string, number or Date`,
       );
     }
   }

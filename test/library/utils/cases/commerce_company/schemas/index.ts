@@ -54,7 +54,7 @@ const findWarehouse = (store: DatasetStore, w_id: number) => {
   })[0];
 };
 
-export const CHARGE_PACKAGE_SCHEMA = chaca.defineSchema<Package>({
+export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
   id: chaca.key(chaca.sequence()),
   type: chaca.ref("Package_Type.id"),
   charge_id: chaca.ref("Charge.id"),
@@ -138,7 +138,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.defineSchema<Package>({
   },
 });
 
-export const CHARGE_SCHEMA = chaca.defineSchema({
+export const CHARGE_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
   name: schemas.word.noun(),
   need_refrigeration: schemas.dataType.boolean(),
@@ -180,19 +180,19 @@ export const CHARGE_SCHEMA = chaca.defineSchema({
   }),
 });
 
-export const WAREHOUSE_SCHEMA = chaca.defineSchema({
+export const WAREHOUSE_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
   count_shelfs: schemas.dataType.int({ min: 1, max: 10 }),
   count_rows: schemas.dataType.int({ min: 5, max: 15 }),
   count_box: schemas.dataType.int({ min: 5, max: 10 }),
 });
 
-export const CHARGE_PACKAGE_TYPE_SCHEMA = chaca.defineSchema({
+export const CHARGE_PACKAGE_TYPE_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
   name: chaca.sequential(PACKAGE_TYPE),
 });
 
-export const CLIENT_SCHEMA = chaca.defineSchema({
+export const CLIENT_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
   country: schemas.address.country(),
   phone: schemas.phone.number(),
@@ -210,7 +210,7 @@ export const CLIENT_SCHEMA = chaca.defineSchema({
   init_services_date: schemas.date.past(),
 });
 
-export const ENTERPRISE_CLIENT_SCHEMA = chaca.defineSchema({
+export const ENTERPRISE_CLIENT_SCHEMA = chaca.schema({
   client_id: chaca.key(
     chaca.ref("Client.id", {
       unique: true,

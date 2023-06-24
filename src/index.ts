@@ -61,7 +61,7 @@ const Chaca = {
    * @example
    * { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
    */
-  defineSchema<K = any>(inputObj: SchemaInput): ChacaSchema<K> {
+  schema<K = any>(inputObj: SchemaInput): ChacaSchema<K> {
     const newSchema = new ChacaSchema<K>(inputObj);
     return newSchema;
   },
@@ -71,7 +71,7 @@ const Chaca = {
    * @param name Name
    * @param valueFunction
    */
-  defineSchemaField<T = any, K = unknown>(
+  schemaField<T = any, K = unknown>(
     name: string,
     valueFunction: (args: T) => K,
   ): (args?: T) => SchemaField<K, T> {

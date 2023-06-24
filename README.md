@@ -7,7 +7,7 @@
 ## Instalation
 
 ```bash
- $ npm install chaca
+ npm install chaca
 ```
 
 ## Usage
@@ -28,7 +28,7 @@ type MoviePost = {
   };
 };
 
-const postSchema = chaca.defineSchema<MoviePost>({
+const postSchema = chaca.schema<MoviePost>({
   id: schemas.id.uuid(),
   authors: {
     type: schemas.person.fullName({ language: "es" }),
@@ -46,20 +46,21 @@ const postSchema = chaca.defineSchema<MoviePost>({
     "Animation",
     "Musical",
   ]),
-  adultMovie: (docFields) => {
+  adultMovie: ({ currentFields: docFields }) => {
     return (
       docFields.category === "Horror" ||
       docFields.category === "War" ||
       docFields.category === "Action"
     );
   },
-  directorInf: chaca.defineSchema({
+  directorInf: chaca.schema({
     name: schemas.person.fullName(),
     age: schemas.dataType.int({ min: 18, max: 85 }),
   }),
 });
 
 const docs = postSchema.generate(20);
+
 //Generate 20 objects with the defined schema
 //Example:
 [
@@ -99,41 +100,128 @@ await postSchema.generateAndExport(20, {
 
 ### enum
 
+Returns one of the values of the array passed as argument
+
+```ts
+chaca.enum([1, 2, 3, 4, 5]); // 5;
+chaca.enum([]); // throws an error
+```
+
 ### custom
 
-### ref
+Function that allows customizing a value based on the current state of the dataset
 
-### sequential
-
-### sequence
+```ts
+{
+  isOlder: ({ currentFields }) => {
+    return currentFields.age >= 18;
+  };
+}
+```
 
 ### key
 
-## Config API
-
-### `type`
-
-Indicates the `Schema Field` or the Schema that would be the field
+Indicates that the field is the schema key
 
 ```ts
-// With a defined Schema Field
 {
-  type: schemas.image.film();
+  id: chaca.key(schemas.id.uuid());
 }
+```
 
-//With a custom field schema
-const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
-  return args.a + args.b;
+> **⚠️ Warning**
+>
+> - `sequential`, `enum` and `nested schema` fields can not be schema keys.
+> - In case of being a `schema field` or `custom` field it must return a string, number or Date.
+
+### ref
+
+Reference to another schema, indicates that it will have one of the generated values of the selected field.
+
+```ts
+{
+  user_id: chaca.ref("User.id");
+}
+```
+
+> **⚠️ Warning**
+>
+> - The field to reference must be a `key`.
+
+#### Config
+
+- `where`
+
+  Function that indicates if the ref value is valid
+
+  ```ts
+  {
+    user_id: chaca.ref("User.id", ({ refFields: userFields }) => {
+      // will only choose the ids of users older than 18
+      return userFields.age > 18;
+    });
+  }
+  ```
+
+- `unique`
+
+  Indicates if the selected value can not be chosen by another documents of that schema.
+
+  ```ts
+  {
+    // rest fields
+    user_id: chaca.ref("User.id", { unique: true });
+  }
+  ```
+
+### sequential
+
+Array of values that will be assigned according to the number of the document being created.
+
+```ts
+const postSchema = chaca.schema({
+  count_likes: chaca.sequential([1345, 2781, 90, 234]),
+  // rest fields
 });
-{
-  type: mySchemaField({ a: 10, b: 20 });
-}
 
-// You can also make the field an object of information using an nested schema
+// the first post (count_likes = 1345)
+// the second post (count_likes = 2781)
+// the third post (count_likes = 90)
+// the fourth post (count_likes = 234)
+postSchema.generate(4);
+```
+
+### sequence
+
+Returns anumber that increments for each document created.
+
+```ts
+const userSchema = chaca.schema({
+  id: chaca.sequence(),
+  // rest fields
+});
+
+userSchema.generate(4); // [{id: 1}, {id: 2}, {id: 3}, {id: 4}]
+```
+
+#### Config
+
+- `starsWith`
+
+  The number to start with.
+
+- `step`
+
+  Step between values.
+
+### nested schema
+
+You can also make the field an object of information using an nested schema
+
+```ts
 {
-  name: schemas.person.firstName(),
-  age: schemas.dataType.int({ min: 18, max:90}),
-  userInf: chaca.defineSchema({
+  // rest fields,
+  userInf: chaca.schema({
     firstName: schemas.person.firstName(),
     favoriteCats: {
       type: schemas.animal.cat(),
@@ -141,6 +229,19 @@ const mySchemaField = chaca.defineSchemaField("mySchemaField", (args) => {
     },
     description: schemas.lorem.text(),
   });
+}
+```
+
+## Field Config API
+
+### `type`
+
+Indicates the field type
+
+```ts
+// With a defined Schema Field
+{
+  type: schemas.image.film();
 }
 ```
 
@@ -203,9 +304,6 @@ schemas.dataType.int().getValue({ min: 0, max: 20 }); // 15;
 schemas.dataType.hexadecimal().getValue(); // '#f12a974eB1'
 schemas.dataType.float().getValue(); // 15.2;
 schemas.dataType.matriz({ x_size: 4, y_size: 3 }).getValue(); // [[0, 3, 4, 1], [1, 2, 3], [0, 0, 1]]
-schemas.dataType
-  .customArray()
-  .getValue({ array: [5, { hi: "Hello" }, "Chaca the best!!"] }); // 'Chaca the best!!'
 schemas.dataType.characters().getValue(); // 'a';
 ```
 
@@ -434,7 +532,7 @@ schemas.word.noun().getValue(); // 'plato';
 
 ## Custom Schema Fields
 
-If none of the defined schemas are useful you can create your own schemas with the `defineSchemaField` method.
+If none of the defined schemas are useful you can create your own schemas with the `schemaField` method.
 
 ```ts
 import { chaca } from "chaca";
@@ -445,15 +543,15 @@ type SchemaArguments = {
 };
 
 // Define Schema Field
-const mySchemaField = chaca.defineSchemaField<SchemaArguments>(
+const mySchemaField = chaca.schemaField<SchemaArguments>(
   "mySchemaField",
-  (args) => {
-    return args.a + args.b;
+  ({ a, b }) => {
+    return a + b;
   },
 );
 
 // Usage
-const mySchema = chaca.defineSchema({
+const mySchema = chaca.schema({
   sum: mySchemaField({ a: 5, b: 10 }), // In all the generated objects the sum field is 15
 });
 ```
@@ -484,13 +582,13 @@ const fileLocation = await chaca.export(data, {
 
 ## Export API
 
-```js
+```ts
 {
   //Name of the file that will be export
   fileName: "data",
 
   //Extension of the file data
-  // You can export in `json`, `csv`, `java`, `javascript`, `typescript`
+  // You can export in `json`, `csv`, `java`, `javascript`, `typescript`, `yaml`, `postgresql`
   format: "json",
 
   //Location of the folder that will be our data

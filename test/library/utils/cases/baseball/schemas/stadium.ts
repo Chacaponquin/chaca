@@ -1,6 +1,6 @@
 import { chaca, schemas } from "../../../../../../src";
 
-const stadiumNameSchema = chaca.defineSchemaField<unknown, string>(
+const stadiumNameSchema = chaca.schemaField<unknown, string>(
   "stadiumName",
   () => {
     return [
@@ -11,7 +11,7 @@ const stadiumNameSchema = chaca.defineSchemaField<unknown, string>(
   },
 );
 
-export const STADIUM_SCHEMA = chaca.defineSchema({
+export const STADIUM_SCHEMA = chaca.schema({
   stadium_id: chaca.key(chaca.sequence()),
   stadium_name: stadiumNameSchema(),
   capacity: schemas.dataType.int({ min: 17000, max: 20000 }),

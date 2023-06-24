@@ -1,10 +1,10 @@
 import { chaca, schemas } from "../../../../../../src";
 
-const placa = chaca.defineSchemaField("plate", () => {
+const placa = chaca.schemaField("plate", () => {
   return chaca.utils.replaceSymbols("T######");
 });
 
-export const CAR_SCHEMA = chaca.defineSchema({
+export const CAR_SCHEMA = chaca.schema({
   plate: chaca.key(placa()),
   model_id: chaca.ref("Model.id"),
   color: chaca.enum(["rojo", "negro", "blanco", "amarillo"]),
