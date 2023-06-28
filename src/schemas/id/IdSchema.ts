@@ -1,5 +1,4 @@
 import { SchemaField } from "../SchemaField.js";
-import { Schemas } from "../index.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 export class IdSchema {
@@ -18,7 +17,7 @@ export class IdSchema {
     return new SchemaField<string>(
       "mongodbID",
       () => {
-        return Schemas.dataType
+        return this.dataTypeSchema
           .hexadecimal()
           .getValue({ case: "lower", length: 24 });
       },

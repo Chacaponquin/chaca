@@ -263,13 +263,15 @@ export function GenerateUserAgent(): string {
           min: 1,
           max: 3,
         })}; Trident/7.0; ${
-          PrivateUtils.boolean() ? "Touch; " : ""
+          dataTypeSchema.boolean().getValue() ? "Touch; " : ""
         }rv:11.0) like Gecko`;
       }
 
       //http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx
       return `Mozilla/5.0 (compatible; MSIE ${ver}.0; Windows NT ${version_string.nt()}; Trident/${version_string.trident()}${
-        PrivateUtils.boolean() ? `; .NET CLR ${version_string.net()}` : ""
+        dataTypeSchema.boolean().getValue()
+          ? `; .NET CLR ${version_string.net()}`
+          : ""
       })`;
     },
 

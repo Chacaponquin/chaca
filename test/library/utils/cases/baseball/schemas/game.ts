@@ -38,9 +38,9 @@ export const GAME_SCHEMA = chaca.schema({
         from: foundPhase.start_date,
         to: foundPhase.finish_date,
       });
+    } else {
+      return schemas.date.past().getValue();
     }
-
-    return schemas.date.past().getValue();
   },
   phase_id: chaca.ref("Phase.phase_id"),
   total_audience: ({ currentFields: fields, store }) => {

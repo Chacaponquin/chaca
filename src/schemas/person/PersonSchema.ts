@@ -1,6 +1,7 @@
 import { SchemaField } from "../SchemaField.js";
 import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants/index.js";
 import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 type AllLanguages = "es" | "en";
 
@@ -20,6 +21,8 @@ type SexProps = {
 };
 
 export class PersonSchema {
+  private dataTypeSchema = new DataTypeSchema();
+
   /**
    * Returns a Job Level
    * @example schemas.person.jobLevel() // Schema
@@ -134,23 +137,20 @@ export class PersonSchema {
           : (PrivateUtils.oneOfArray(["male", "female"]) as Sex);
 
         const firstName = PrivateUtils.oneOfArray(this.filterBySex(lan, sex));
-        const middleName = PrivateUtils.boolean()
+        const middleName = this.dataTypeSchema.boolean().getValue()
           ? PrivateUtils.oneOfArray(this.filterBySex(lan, sex))
           : undefined;
         const lastNameFirst = PrivateUtils.oneOfArray(lan.lastNames);
         const lastNameSecond = PrivateUtils.oneOfArray(lan.lastNames);
 
-        const fullName = [firstName, middleName, lastNameFirst, lastNameSecond];
+        const fullName = [
+          firstName,
+          middleName || "",
+          lastNameFirst,
+          lastNameSecond,
+        ];
 
-        let retString = "";
-        for (let i = 0; i < fullName.length; i++) {
-          if (fullName[i]) {
-            retString += `${fullName[i]}`;
-            if (i !== fullName.length - 1) retString += " ";
-          }
-        }
-
-        return retString;
+        return fullName.join(" ");
       },
       args || {},
     );

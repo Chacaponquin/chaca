@@ -3,10 +3,6 @@ import { Schemas } from "../../schemas/index.js";
 
 type TimeUnits = "years" | "seconds" | "minutes" | "days" | "hours" | "months";
 export class PrivateUtils {
-  static boolean(): boolean {
-    return this.oneOfArray([true, false]);
-  }
-
   static id() {
     return Schemas.id.mongodbID().getValue();
   }

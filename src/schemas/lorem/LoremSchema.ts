@@ -37,6 +37,7 @@ export class LoremSchema {
    * @param args.separator Separator between paragraphs. Default `\n`
    * @param args.maxSentences Maximun of sentences of each paragraphs
    * @param args.minSentences Min of sentences of each paragraphs
+   *
    * @example schemas.lorem.paragraphs() // Schema
    * @example schemas.lorem.paragraphs().getValue()
    * @returns string
@@ -77,6 +78,7 @@ export class LoremSchema {
    * @param args.separator Separator between sentences. Default `\n`
    * @param args.wordsMin Minimun of words in each sentence
    * @param args.wordsMax Maximun of words in each sentence
+   *
    * @example schemas.lorem.sentences() // Schema
    * @example schemas.lorem.sentences().getValue()
    * @returns
@@ -163,6 +165,7 @@ export class LoremSchema {
   /**
    * @param args.character_min Minimun of characters in the text
    * @param args.character_max Maximun of characters in the text
+   *
    * @example schemas.lorem.text() // Schema
    * @example schemas.lorem.text().getValue()
    * @returns string
@@ -173,7 +176,7 @@ export class LoremSchema {
       (a) => {
         const text = loremIpsum({
           format: "plain",
-          units: "paragraph",
+          units: "paragraphs",
           count: this.dataTypeSchema.int().getValue({ min: 100, max: 3000 }),
         });
 
@@ -182,6 +185,7 @@ export class LoremSchema {
             typeof a.character_min === "number" && a.character_min > 0
               ? a.character_min
               : 0;
+
           const charMax =
             typeof a.character_max === "number" && a.character_max > charMin
               ? a.character_max
@@ -191,7 +195,9 @@ export class LoremSchema {
             0,
             this.dataTypeSchema.int().getValue({ min: charMin, max: charMax }),
           );
-        } else return text;
+        } else {
+          return text;
+        }
       },
       args || {},
     );

@@ -113,7 +113,18 @@ export abstract class SQLString extends SQLType {
   }
 
   public getSQLValue(): string {
-    return `'${this.value}'`;
+    let returnString = "";
+
+    const jsonString = JSON.stringify(this.value);
+    for (let i = 0; i < jsonString.length; i++) {
+      if (i === 0) {
+        returnString += `'`;
+      } else if (i === jsonString.length - 1) {
+        returnString += `'`;
+      }
+    }
+
+    return returnString;
   }
 }
 
