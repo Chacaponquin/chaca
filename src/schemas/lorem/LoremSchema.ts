@@ -192,7 +192,7 @@ export class LoremSchema {
               : this.dataTypeSchema.int().getValue({ min: 300, max: 1000 });
 
           return text.slice(
-            0,
+            1,
             this.dataTypeSchema.int().getValue({ min: charMin, max: charMax }),
           );
         } else {

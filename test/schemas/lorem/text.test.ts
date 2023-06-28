@@ -33,10 +33,10 @@ describe("# Lorem text test", () => {
 
   it("With character_max=10 and character_min=5", () => {
     const allTexts = Array.from({ length: ARRAY_LENGTH_TEXT }).map(() => {
-      return schemas.lorem.text({ character_max: 10 }).getValue();
+      return schemas.lorem
+        .text({ character_max: 10, character_min: 5 })
+        .getValue();
     });
-
-    console.log(allTexts.filter((v) => !(v.length <= 10 && v.length >= 5)));
 
     expect(allTexts.every((v) => v.length <= 10 && v.length >= 5)).toBe(true);
   });

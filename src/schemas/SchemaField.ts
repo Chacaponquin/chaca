@@ -21,6 +21,7 @@ export class SchemaField<K = unknown, A = any> implements ISchemaField<A, K> {
       a && typeof a === "object" && !Array.isArray(a) && a !== null
         ? a
         : this.args;
+
     return this.valueFunction(ar);
   }
 }
