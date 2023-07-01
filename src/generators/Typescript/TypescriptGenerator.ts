@@ -12,7 +12,7 @@ export class TypescriptGenerator extends Generator {
   }
 
   public async generateFile(data: any): Promise<string> {
-    const variableName = PrivateUtils.camelCaseText(this.config.fileName);
+    const variableName = PrivateUtils.camelCase(this.config.fileName);
 
     const javascriptCode = new JavascriptGenerator(this.config).filterTypeValue(
       data,

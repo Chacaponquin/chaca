@@ -7,33 +7,35 @@ export class PrivateUtils {
     return Schemas.id.mongodbID().getValue();
   }
 
-  static joinWords(words: string[] | string, sep?: string): string {
-    const separator = typeof sep === "string" ? sep : "_";
-    if (typeof words === "string") {
-      let retString = "";
-
-      for (let i = 0; i < words.length; i++) {
-        retString = retString.concat(words[i] === " " ? separator : words[i]);
-      }
-
-      return retString;
-    } else if (Array.isArray(words)) {
-      const words: string[] = [];
-
-      for (const w of words) {
-        if (typeof w === "string") {
-          words.push(w);
-        } else throw new ChacaError(`${w} is not a string`);
-      }
-
-      return words.join(sep);
-    } else
-      throw new ChacaError(`${words} is not a string or an array of strings`);
-  }
-
   static specialCharacters(): string[] {
-    const special = ".!#$%&'*+-/=?^_`{|}~";
-    return special.split("");
+    return [
+      "!",
+      "@",
+      "#",
+      "$",
+      "%",
+      "&",
+      "*",
+      "(",
+      ")",
+      "+",
+      "-",
+      "=",
+      "[",
+      "]",
+      "{",
+      "}",
+      "|",
+      ":",
+      ";",
+      "<",
+      ">",
+      "?",
+      ",",
+      ".",
+      "/",
+      "\\",
+    ];
   }
 
   public static oneOfArray<T = unknown>(list: T[]) {
@@ -45,35 +47,31 @@ export class PrivateUtils {
   }
 
   static replaceSymbols(text: string): string {
-    if (typeof text !== "string") {
-      return "";
-    } else {
-      let ret = "";
+    let ret = "";
 
-      for (let i = 0; i < text.length; i++) {
-        let val: string;
+    for (let i = 0; i < text.length; i++) {
+      let val: string;
 
-        if (text[i] === "#") {
-          val = PrivateUtils.oneOfArray(PrivateUtils.numbersArray());
-        } else if (text[i] === "?") {
-          val = PrivateUtils.oneOfArray(PrivateUtils.characters("upper"));
-        } else if (text[i] === "$") {
-          val = PrivateUtils.oneOfArray(PrivateUtils.characters("lower"));
-        } else if (text[i] === "*") {
-          val = PrivateUtils.oneOfArray([
-            ...PrivateUtils.numbersArray(),
-            ...PrivateUtils.characters("mixed"),
-          ]);
-        } else val = text[i];
+      if (text[i] === "#") {
+        val = PrivateUtils.oneOfArray(PrivateUtils.numbersArray());
+      } else if (text[i] === "?") {
+        val = PrivateUtils.oneOfArray(PrivateUtils.characters("upper"));
+      } else if (text[i] === "$") {
+        val = PrivateUtils.oneOfArray(PrivateUtils.characters("lower"));
+      } else if (text[i] === "*") {
+        val = PrivateUtils.oneOfArray([
+          ...PrivateUtils.numbersArray(),
+          ...PrivateUtils.characters("mixed"),
+        ]);
+      } else val = text[i];
 
-        ret = ret.concat(val);
-      }
-
-      return ret;
+      ret = ret.concat(val);
     }
+
+    return ret;
   }
 
-  public static camelCaseText(text: string): string {
+  public static camelCase(text: string): string {
     if (typeof text === "string") {
       if (!PrivateUtils.isCapitalized(text)) {
         let returnString = "";
@@ -96,6 +94,7 @@ export class PrivateUtils {
             returnString = returnString.concat(
               mayus ? text[i].toUpperCase() : text[i].toLowerCase(),
             );
+
             mayus = false;
           } else {
             mayus = true;
@@ -128,11 +127,8 @@ export class PrivateUtils {
           }
         }
         if (
-          value[i] === " " ||
-          value[i] !== "_" ||
-          value[i] !== "-" ||
-          value[i] !== "(" ||
-          value[i] !== ")"
+          value[i] !== " " &&
+          !PrivateUtils.specialCharacters().find((el) => el === value[i])
         ) {
           returnValue = false;
           break;
@@ -158,7 +154,7 @@ export class PrivateUtils {
   }
 
   static capitalizeCamelCase(text: string): string {
-    const result = PrivateUtils.camelCaseText(text);
+    const result = PrivateUtils.camelCase(text);
     let newResult = "";
 
     for (let i = 0; i < result.length; i++) {
@@ -180,7 +176,7 @@ export class PrivateUtils {
     return newResult;
   }
 
-  static capitalizeText(text: string): string {
+  static capitalize(text: string): string {
     let newResult = "";
 
     for (let i = 0; i < text.length; i++) {

@@ -31,30 +31,19 @@ export const ChacaUtils = {
    * @param text string to capitalize
    *
    * @example
-   * chaca.utils.camelCaseText('Hello World') // 'helloWorld'
-   * chaca.utils.camelCaseText('hiFriend') // 'hiFriend'
+   * chaca.utils.camelCase('Hello World') // 'helloWorld'
+   * chaca.utils.camelCase('hiFriend') // 'hiFriend'
    *
    * @returns string
    */
-  camelCaseText: PrivateUtils.camelCaseText,
-  /**
-   * Concat words with a separator
-   * @param words string or array of strings with thw words that you want concat
-   * @param sep `optional` separator between words. Deafult `'_'`
-   * @example
-   * chaca.utils.joinWords('hi there friend') // 'hi_there_friend'
-   * chaca.utils.joinWords('hi there friend', '*') // 'hi*there*friend'
-   * chaca.utils.joinWords(['hi','there','friend'], '+') // 'hi+there+friends'
-   * @returns string
-   */
-  joinWords: PrivateUtils.joinWords,
+  camelCase: PrivateUtils.camelCase,
   /**
    * Returns a camel case text in capitalize notation from a string argument
    * @param text string to capitalize
    *
    * @example
-   * chaca.utils.camelCaseText('Hello World') // 'HelloWorld'
-   * chaca.utils.camelCaseText('hiFriend') // 'HiFriend'
+   * chaca.utils.camelCase('Hello World') // 'HelloWorld'
+   * chaca.utils.camelCase('hiFriend') // 'HiFriend'
    *
    * @returns string
    */
@@ -74,12 +63,12 @@ export const ChacaUtils = {
    * @param text string with the texto to capitalize
    *
    * @example
-   * chaca.utils.capitalizeText('hi there friend') // 'Hi There Friend'
-   * chaca.utils.capitalizeText(' helloWorld') // ' HelloWorld'
+   * chaca.utils.capitalize('hi there friend') // 'Hi There Friend'
+   * chaca.utils.capitalize(' helloWorld') // ' HelloWorld'
    *
    * @returns string
    */
-  capitalizeText: PrivateUtils.capitalizeText,
+  capitalize: PrivateUtils.capitalize,
 
   sumDateRange: PrivateUtils.sumDateRange,
 };

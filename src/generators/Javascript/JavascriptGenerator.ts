@@ -18,7 +18,7 @@ export class JavascriptGenerator extends Generator {
   }
 
   public async generateFile(data: any): Promise<string> {
-    const variableName = PrivateUtils.camelCaseText(this.config.fileName);
+    const variableName = PrivateUtils.camelCase(this.config.fileName);
     const returnData = `const ${variableName} = ${this.filterTypeValue(data)}`;
 
     await fs.promises.writeFile(this.route, returnData, "utf-8");

@@ -203,11 +203,11 @@ export class InternetSchema {
       (a) => {
         const firstName =
           typeof a.firstName === "string"
-            ? PrivateUtils.camelCaseText(a.firstName)
+            ? PrivateUtils.camelCase(a.firstName)
             : this.personSchema.firstName({ language: "en" }).getValue();
         const lastName =
           typeof a.lastName === "string"
-            ? PrivateUtils.camelCaseText(a.lastName)
+            ? PrivateUtils.camelCase(a.lastName)
             : "";
 
         const ran = this.dataTypeSchema.int().getValue({ min: 0, max: 2 });
