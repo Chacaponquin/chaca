@@ -42,9 +42,8 @@ export class NotEnoughValuesForRefError extends ChacaError {
 }
 
 export class CyclicAccessDataError extends ChacaError {
-  constructor() {
-    super(``);
-
+  constructor(message: string) {
+    super(message);
     this.name = "ChacaError.CyclicAccessDataError";
   }
 }
