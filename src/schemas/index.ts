@@ -16,22 +16,22 @@ import { ScienceSchema } from "./science/ScienceSchema.js";
 import { WordSchema } from "./word/WordSchema.js";
 import { ColorSchema } from "./color/ColorSchema.js";
 
-export const Schemas = {
-  internet: new InternetSchema(),
-  dataType: new DataTypeSchema(),
-  id: new IdSchema(),
-  lorem: new LoremSchema(),
-  image: new ImageSchema(),
-  system: new SystemSchema(),
-  finance: new FinanceSchema(),
-  phone: new PhoneSchema(),
-  address: new AddressSchema(),
-  word: new WordSchema(),
-  vehicle: new VehicleSchema(),
-  date: new DateSchema(),
-  person: new PersonSchema(),
-  video: new VideoSchema(),
-  animal: new AnimalSchema(),
-  science: new ScienceSchema(),
-  color: new ColorSchema(),
-};
+export class Schemas {
+  public readonly internet = new InternetSchema();
+  public readonly dataType = new DataTypeSchema();
+  public readonly id = new IdSchema();
+  public readonly lorem = new LoremSchema();
+  public readonly image = new ImageSchema();
+  public readonly system = new SystemSchema();
+  public readonly finance = new FinanceSchema();
+  public readonly phone = new PhoneSchema();
+  public readonly address = new AddressSchema();
+  public readonly word = new WordSchema();
+  public readonly vehicle = new VehicleSchema();
+  public readonly date = new DateSchema();
+  public readonly person = new PersonSchema();
+  public readonly video = new VideoSchema();
+  public readonly animal = new AnimalSchema();
+  public readonly science = new ScienceSchema();
+  public readonly color = new ColorSchema();
+}

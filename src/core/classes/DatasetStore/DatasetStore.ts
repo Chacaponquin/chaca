@@ -7,6 +7,7 @@ import {
 import { FieldNode } from "../ChacaResultTree/classes/index.js";
 import { SchemaResolver } from "../SchemaResolver.js";
 
+/** Store to interact with all datasets */
 export class DatasetStore {
   constructor(
     private readonly schemasStore: SchemaStore,

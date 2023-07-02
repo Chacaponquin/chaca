@@ -1,3 +1,4 @@
+/** Export files extendsions */
 export type ExportFormat =
   | "json"
   | "java"

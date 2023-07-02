@@ -4,7 +4,13 @@ import { CustomField } from "../../interfaces/schema.interface.js";
 import { RefField } from "../RefField/RefField.js";
 import { SequenceField } from "../SequenceField/SequenceField.js";
 
+/**
+ * Posible types for key schema field
+ */
 export type KeyAllowDataTypes = string | number | Date;
+/**
+ * Posible types for key schema field
+ */
 export type KeyFieldProps<A, C> =
   | SchemaField<KeyAllowDataTypes, A>
   | RefField

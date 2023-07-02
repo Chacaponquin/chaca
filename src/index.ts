@@ -2,6 +2,7 @@ import {
   SchemaInput,
   FieldObjectInput,
   CustomField,
+  SchemaInputField,
 } from "./core/interfaces/schema.interface.js";
 import {
   ExportFormat,
@@ -22,10 +23,7 @@ import {
   CyclicAccessDataError,
 } from "./errors/ChacaError.js";
 
-import {
-  GetStoreValueConfig,
-  GetStoreValueInput,
-} from "./core/classes/SchemasStore/interfaces/store.interface.js";
+import { GetStoreValueInput } from "./core/classes/SchemasStore/interfaces/store.interface.js";
 
 import {
   MultiGenerateSchema,
@@ -35,7 +33,6 @@ import {
 import {
   FieldRefInputConfig,
   FieldToRef,
-  FieldToRefObject,
   RefField,
   RefFieldWhere,
 } from "./core/classes/RefField/RefField.js";
@@ -56,7 +53,7 @@ import { Chaca } from "./Chaca.js";
 import { ChacaUtils } from "./core/helpers/ChacaUtils.js";
 
 export const chaca = new Chaca();
-export const schemas = Schemas;
+export const schemas = new Schemas();
 
 export {
   TryRefANoKeyFieldError,
@@ -84,9 +81,7 @@ export type {
   FileConfig,
   MultiGenerateSchema,
   FieldToRef,
-  FieldToRefObject,
   RefFieldWhere,
-  GetStoreValueConfig,
   KeyAllowDataTypes,
   GetStoreValueInput,
   ExportSQLFormat,
@@ -95,4 +90,5 @@ export type {
   FieldRefInputConfig,
   FieldObjectInput,
   GenerateConfig,
+  SchemaInputField,
 };
