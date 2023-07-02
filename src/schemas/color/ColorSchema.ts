@@ -40,7 +40,7 @@ export class ColorSchema {
   private readonly dataTypeSchema = new DataTypeSchema();
   private utils = new ChacaUtils();
 
-  private readonly constants = {
+  public readonly constants = {
     cssFunctions: CSS_FUNCTIONS,
     cssSpaces: CSS_SPACES,
   };
