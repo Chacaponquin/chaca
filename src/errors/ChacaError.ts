@@ -12,6 +12,8 @@ export class EmptySequentialValuesError extends ChacaError {
         ".",
       )}'`,
     );
+
+    this.name = "ChacaError.EmptySequentialValuesError";
   }
 }
 
@@ -22,6 +24,8 @@ export class TryRefANoKeyFieldError extends ChacaError {
         ".",
       )}' is not a key field, so you can't reference this one`,
     );
+
+    this.name = "ChacaError.TryRefANoKeyFieldError";
   }
 }
 
@@ -32,7 +36,15 @@ export class NotEnoughValuesForRefError extends ChacaError {
         ".",
       )}' for the ref field '${refFieldRoute.join(".")}'`,
     );
+
+    this.name = "ChacaError.NotEnoughValuesForRefError";
   }
 }
 
-export class CyclicAccessDataError extends ChacaError {}
+export class CyclicAccessDataError extends ChacaError {
+  constructor() {
+    super(``);
+
+    this.name = "ChacaError.CyclicAccessDataError";
+  }
+}
