@@ -1,5 +1,5 @@
 import { chaca } from "../../../src";
-import { SCHOOL_SCHEMAS } from "../utils/cases/school";
+import { SCHOOL_SCHEMAS } from "../../utils/cases/school";
 
 const EXPORT_ROUTE = "./data/cases/school";
 const FILE_NAME = "caseSchool";

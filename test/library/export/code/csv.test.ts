@@ -1,81 +1,73 @@
 import { chaca, ChacaError } from "../../../../src";
-import {
-  COMPLETE_SCHEMA_DATA,
-  NESTED_OBJECTS_DATA,
-  SIMPLE_SCHEMA_OBJECT,
-} from "../../utils/data";
+import { COMPLETE_SCHEMA } from "../../../utils/schemas/schemaComplete";
+import { NESTED_OBJECT_SCHEMA } from "../../../utils/schemas/schemaNestedObjects";
+import { SIMPLE_SCHEMA } from "../../../utils/schemas/simpleSchema";
 
 const objectFileName = "csvExport";
 const ROOT = "./data/csv";
 
 describe("#Export CSV test", () => {
+  let COMPLETE_SCHEMA_DATA: any;
+  let NESTED_OBJECTS_DATA: any;
+  let SIMPLE_SCHEMA_DATA: any;
+
+  beforeAll(() => {
+    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
+    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
+    SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.generate(50);
+  });
+
   describe("Export prmitive values", () => {
-    it("Export string", () => {
-      chaca
-        .export("Hi", {
+    it("Export string", async () => {
+      await expect(() =>
+        chaca.export("Hi", {
           fileName: objectFileName + "String",
           location: ROOT,
           format: "csv",
-        })
-        .then(() => {
-          throw Error();
-        })
-        .catch((error) => expect(error instanceof ChacaError).toBe(true));
+        }),
+      ).rejects.toThrow(ChacaError);
     });
 
-    it("Export number", () => {
-      chaca
-        .export(5, {
+    it("Export number", async () => {
+      await expect(
+        chaca.export(5, {
           fileName: objectFileName + "Number",
           location: ROOT,
           format: "csv",
-        })
-        .then(() => {
-          throw Error();
-        })
-        .catch((error) => expect(error instanceof ChacaError).toBe(true));
+        }),
+      ).rejects.toThrowError(ChacaError);
     });
 
-    it("Export boolean", () => {
-      chaca
-        .export(true, {
+    it("Export boolean", async () => {
+      await expect(
+        chaca.export(true, {
           fileName: objectFileName + "Boolean",
           location: ROOT,
           format: "csv",
-        })
-        .then(() => {
-          throw Error();
-        })
-        .catch((error) => expect(error instanceof ChacaError).toBe(true));
+        }),
+      ).rejects.toThrowError(ChacaError);
     });
   });
 
-  describe("Export Objects", () => {
-    it("Export simple object", () => {
-      chaca
-        .export(SIMPLE_SCHEMA_OBJECT, {
+  describe("Export Objects", () => {});
+
+  describe("Export Array", () => {
+    it("Export simple object", async () => {
+      await chaca.export(SIMPLE_SCHEMA_DATA, {
+        fileName: objectFileName + "SimpleObject",
+        location: ROOT,
+        format: "csv",
+      });
+    });
+
+    it("Array of similar objects", async () => {
+      await expect(
+        chaca.export(NESTED_OBJECTS_DATA, {
           fileName: objectFileName + "SimpleObject",
           location: ROOT,
           format: "csv",
-        })
-        .then((s) => {
-          expect(typeof s === "string").toBe(true);
-        });
-    });
-  });
-
-  describe("Export Array", () => {
-    it("Array of similar objects", () => {
-      chaca
-        .export(NESTED_OBJECTS_DATA, {
-          fileName: objectFileName + "ArraySimilarObjects",
-          location: ROOT,
-          format: "csv",
-        })
-        .then(() => {
-          throw new Error();
-        })
-        .catch((error) => expect(error instanceof ChacaError).toBe(true));
+        }),
+      ).rejects.toThrowError(ChacaError);
     });
 
     it("Array of complete schema", async () => {
@@ -91,16 +83,14 @@ describe("#Export CSV test", () => {
     it("Array of object with diferent properties", async () => {
       const data = [
         { name: "Hector", age: 20 },
-        { fullName: "Pquito antonio", favoriteNumber: 50 },
+        { fullName: "Paquito antonio", favoriteNumber: 50 },
       ];
 
-      chaca
-        .export(data, {
-          fileName: objectFileName + "ArrayObjectDiferentProperties",
-          location: ROOT,
-          format: "csv",
-        })
-        .then((s) => expect(typeof s === "string").toBe(true));
+      await chaca.export(data, {
+        fileName: objectFileName + "ArrayObjectDiferentProperties",
+        location: ROOT,
+        format: "csv",
+      });
     });
   });
 });

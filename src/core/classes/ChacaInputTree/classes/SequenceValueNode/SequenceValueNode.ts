@@ -7,7 +7,7 @@ export class SequenceValueNode extends ChacaTreeNode {
 
   constructor(
     fieldTreeRoute: Array<string>,
-    private config: SequenceFieldProps,
+    private config: Required<SequenceFieldProps>,
   ) {
     super({ isArray: null, fieldTreeRoute: fieldTreeRoute, posibleNull: 0 });
     this.actualValue = config.starsWith;

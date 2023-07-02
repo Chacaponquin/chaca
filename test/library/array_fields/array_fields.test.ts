@@ -13,12 +13,12 @@ describe("# Array Field tests", () => {
 
   it("Pass only max parameter. Should return an array with length <= max parameter", () => {
     const schema = chaca.schema({
-      id: { type: schemas.id.mongodbID(), isArray: { max: 2 } },
+      id: { type: schemas.id.mongodbID(), isArray: { max: 8 } },
     });
     const docs = schema.generateObject();
     const id = docs["id"] as Array<String>;
 
-    expect(id.length <= 2).toBe(true);
+    expect(id.length <= 8).toBe(true);
   });
 
   it("Pass only min parameter. Should return an array with length >= min parameter", () => {

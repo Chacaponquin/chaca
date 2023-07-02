@@ -1,5 +1,5 @@
 import { chaca } from "../../../src";
-import { CASE_SCHEMAS } from "../utils/cases/car";
+import { CASE_SCHEMAS } from "../../utils/cases/car";
 
 const EXPORT_ROUTE = "./data/cases/car";
 const FILE_NAME = "caseCar";

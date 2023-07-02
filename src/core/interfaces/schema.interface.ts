@@ -38,7 +38,7 @@ export type FieldTypeInput<R = any> =
   | CustomField<any, R>
   | EnumField<R>;
 
-type FieldObjectInput<R> = {
+export type FieldObjectInput<R> = {
   type?: FieldTypeInput<R>;
   isArray?: boolean | number | { min?: number; max?: number };
   posibleNull?: boolean | number;

@@ -1,5 +1,5 @@
 import { ChacaError } from "../../../src";
-import { COMPLETE_SCHEMA } from "../utils/schemas/simple/schemaComplete";
+import { COMPLETE_SCHEMA } from "../../utils/schemas/schemaComplete";
 
 const MINIMUN_FOR_TEST = 5000;
 const MEDIUM_FOR_TEST = 20000;

@@ -24,26 +24,7 @@ export interface FileConfig {
    */
   location: string;
   /**
-   * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'`)
-   *
-   * - `'java'`
-   * Export a zip file with the classes files and the main java file with the initialization of data
-   *
-   * - `'csv'`
-   * Export a csv file with the data created
-   *
-   * - `'typescript'`
-   * Export a ts file with the data created
-   *
-   * - `'javascript'`
-   * Export a js file with the data created
-   *
-   * - `'json'`
-   * Export a json file with the data created
-   *
-   * - `'yaml'`
-   * Export a yaml file with the data created
-   *
+   * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml' | `'postgresql'`)
    * @example { format: 'csv' }
    */
   format: ExportFormat;

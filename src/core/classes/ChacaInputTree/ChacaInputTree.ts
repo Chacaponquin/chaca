@@ -100,6 +100,7 @@ export class ChacaInputTree {
         object.type.valuesArray,
       );
     } else if (object.type instanceof SequenceFieldResolver) {
+      object.type.getConfig();
       returnNode = new SequenceValueNode(actualRoute, object.type.getConfig());
     } else if (object.type instanceof KeyFieldResolver) {
       if (object.type.fieldType instanceof SchemaFieldResolver) {

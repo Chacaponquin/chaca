@@ -4,16 +4,23 @@ interface ISchemaField<T, K> {
   getValue(args: T): K;
 }
 
-export class SchemaField<K = unknown, A = any> implements ISchemaField<A, K> {
+export class SchemaField<K = any, A = any> implements ISchemaField<A, K> {
   private valueFunction: (args: A) => K;
   private args: A;
+  private name: string;
 
-  constructor(public readonly name: string, func: (args: A) => K, args: A) {
-    if (typeof name !== "string" || name.length === 0) {
-      throw new ChacaError("The SchemaField should have a name");
+  constructor(name: string, func: (args: A) => K, args: A) {
+    if (typeof name !== "string" || name.trim() === "") {
+      throw new ChacaError("The schema field must have a name");
     }
+
+    this.name = name;
     this.valueFunction = func;
     this.args = args;
+  }
+
+  public getName(): string {
+    return this.name;
   }
 
   public getValue(a?: A): K {

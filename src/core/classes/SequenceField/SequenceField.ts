@@ -1,15 +1,15 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
 
-export interface SequenceFieldProps {
+export type SequenceFieldProps = Partial<{
   starsWith: number;
   step: number;
-}
+}>;
 
 export class SequenceField {
-  private config: SequenceFieldProps;
+  private config: Required<SequenceFieldProps>;
 
-  constructor(config?: Partial<SequenceFieldProps>) {
-    const saveConfig: SequenceFieldProps = {
+  constructor(config?: SequenceFieldProps) {
+    const saveConfig: Required<SequenceFieldProps> = {
       starsWith: 1,
       step: 1,
     };

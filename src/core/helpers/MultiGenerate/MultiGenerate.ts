@@ -12,4 +12,4 @@ export function MultiGenerate<K = any>(
   return data;
 }
 
-export type { MultiGenerateSchema };
+export type { MultiGenerateSchema, GenerateConfig };

@@ -24,7 +24,7 @@ export class MultiGenerateResolver<K = any> {
   private validateGenerateConfig(
     config?: Partial<GenerateConfig>,
   ): GenerateConfig {
-    const returConfig: GenerateConfig = { verbose: false };
+    const returConfig: GenerateConfig = { verbose: true };
 
     if (config && typeof config === "object") {
       if (typeof config.verbose === "boolean") {

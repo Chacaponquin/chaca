@@ -2,11 +2,13 @@ import { ChacaError, chaca, schemas } from "../../../src";
 
 describe("# Schema Field test", () => {
   it("Pass empty string as schema name. Should throw an error", () => {
-    expect(() =>
-      chaca.schemaField<{ lenght: number }>("", (a) => {
+    expect(() => {
+      const schema = chaca.schemaField("", (a) => {
         return "a";
-      }),
-    ).toThrow(ChacaError);
+      });
+
+      schema();
+    }).toThrowError(ChacaError);
   });
 
   it("Create an schema and use it in creation of data. Should return always 'a'", () => {

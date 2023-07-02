@@ -33,6 +33,8 @@
     "test": "jest",
     "test:cases": "jest --testPathPattern=test/library/cases",
     "test:schemas": "jest --testPathPattern=test/schemas",
+    "test:library": "jest --testPathPattern=test/library",
+    "test:export": "jest --testPathPattern=test/library/export",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "lint-fix": "eslint --fix src/**/*.ts",
     "lint": "eslint src/**/*.ts"
