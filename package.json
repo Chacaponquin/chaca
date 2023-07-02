@@ -1,7 +1,7 @@
 {
   "name": "chaca",
   "version": "1.5.0",
-  "description": "Create and export data schemas with your rules",
+  "description": "Create and export data with your rules",
   "main": "./lib/esm/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",

@@ -7,9 +7,9 @@ export class IdSchema {
   /**
    * Returns a MongoDB [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/) string.
    *
-   * @example schemas.id.mongodbId() // Schema
+   * @example schemas.id.mongodbID() // Schema
    * @example
-   * schemas.id.mongodbObjectId().getValue() // 'e175cac316a79afdd0ad3afb'
+   * schemas.id.mongodbID().getValue() // 'e175cac316a79afdd0ad3afb'
    *
    * @returns string
    */

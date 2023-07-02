@@ -255,6 +255,11 @@ export class SchemaResolver<K = any> {
           this.isBuilding = false;
           // indicar que ha acabado de crear los result trees
           this.finishBuilding = true;
+
+          if (this.consoleVerbose) {
+            // eslint-disable-next-line no-console
+            console.log("\n");
+          }
         } else {
           throw new ChacaError(
             `It's imposible create the result trees for the schema ${this.schemaName}, because the input tree was not created yet.`,

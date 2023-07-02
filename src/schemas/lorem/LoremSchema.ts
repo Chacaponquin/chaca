@@ -176,8 +176,8 @@ export class LoremSchema {
       (a) => {
         const text = loremIpsum({
           format: "plain",
-          units: "paragraphs",
-          count: this.dataTypeSchema.int().getValue({ min: 100, max: 3000 }),
+          units: "paragraph",
+          count: this.dataTypeSchema.int().getValue({ min: 100, max: 1500 }),
         });
 
         if (a.character_max || a.character_min) {
@@ -192,8 +192,9 @@ export class LoremSchema {
               : this.dataTypeSchema.int().getValue({ min: 300, max: 1000 });
 
           return text.slice(
-            1,
-            this.dataTypeSchema.int().getValue({ min: charMin, max: charMax }),
+            0,
+            this.dataTypeSchema.int().getValue({ min: charMin, max: charMax }) +
+              1,
           );
         } else {
           return text;

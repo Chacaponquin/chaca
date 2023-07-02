@@ -31,13 +31,15 @@ describe("# Lorem text test", () => {
     );
   });
 
-  it("With character_max=10 and character_min=5", () => {
+  it("With character_max=2000 and character_min=500", () => {
     const allTexts = Array.from({ length: ARRAY_LENGTH_TEXT }).map(() => {
       return schemas.lorem
-        .text({ character_max: 10, character_min: 5 })
+        .text({ character_max: 2000, character_min: 500 })
         .getValue();
     });
 
-    expect(allTexts.every((v) => v.length <= 10 && v.length >= 5)).toBe(true);
+    expect(allTexts.every((v) => v.length <= 2000 && v.length >= 500)).toBe(
+      true,
+    );
   });
 });

@@ -253,7 +253,7 @@ export class JavaGenerator extends Generator {
     if (foundClass) {
       return { classType: object, className: foundClass.className };
     } else {
-      const className = `Object${this.idSchema.uuid().getValue()}`;
+      const className = `Object${this.idSchema.mongodbID().getValue()}`;
 
       const newClass = {
         className,

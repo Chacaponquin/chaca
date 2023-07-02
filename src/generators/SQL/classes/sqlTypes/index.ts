@@ -121,6 +121,8 @@ export abstract class SQLString extends SQLType {
         returnString += `'`;
       } else if (i === jsonString.length - 1) {
         returnString += `'`;
+      } else {
+        returnString += jsonString[i];
       }
     }
 
