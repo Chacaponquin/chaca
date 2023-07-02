@@ -23,7 +23,7 @@ export class Chaca {
   /**
    * @param inputObj The object with the keys and type of each field
    * @example
-   * { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName()}
+   * { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName() }
    */
   schema<K = any>(inputObj: SchemaInput): ChacaSchema<K> {
     const newSchema = new ChacaSchema<K>(inputObj);
@@ -40,7 +40,7 @@ export class Chaca {
     valueFunction: (args: T) => K,
   ): (args?: T) => SchemaField<K, T> {
     return (args) =>
-      new SchemaField<K, T>(name, valueFunction, args || (undefined as T));
+      new SchemaField<K, T>(name, valueFunction, args || ({} as T));
   }
 
   /**
@@ -55,7 +55,7 @@ export class Chaca {
   }
 
   /**
-   *
+   * Sequential field
    * @param valuesArray array of the secuential values
    * @example
    * // the first generated object will have the favoriteNumber with value 1
@@ -69,30 +69,56 @@ export class Chaca {
     return new SequentialField(valuesArray);
   }
 
+  /**
+   * Sequence field
+   * @param config.starsWith Init value for the field. Default `1`
+   * @param config.step Step between field values in schema documents. Default `1`
+   */
   sequence(config?: Partial<SequenceFieldProps>) {
     return new SequenceField(config);
   }
 
-  key<A = any, C = any>(schemaField: KeyFieldProps<A, C>) {
-    return new KeyField<A>(schemaField);
+  /**
+   * Key field
+   * @param fieldType field that will return the value. Could be (`SchemaField` | `RefField` | `SequenceField` | `CustomField` )
+   *
+   * @example
+   * chaca.key(chaca.sequence())
+   * chaca.key(schemas.id.uuid())
+   */
+  key<A = any, C = any>(fieldType: KeyFieldProps<A, C>) {
+    return new KeyField<A>(fieldType);
   }
 
+  /**
+   * Enum field
+   * @param array Array of posible values
+   */
   enum<R = any>(array: Array<R>) {
     return new EnumField<R>(array);
   }
 
+  /**
+   * Generate and export data from relational schemas
+   * @param schemas Array with the schemas config
+   * @param fileConfig.fileName file name
+   * @param fileConfig.location location of the file
+   * @param fileConfig.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'`)
+   * @param genConfig.verbose Show log in console progretion
+   */
   exportFromSchemas = ExportFromSchemas;
 
   /**
    * Export the data to a selected code format
    * @param data Data you want to export
    * @param config Configuration of the file you want to export (name, location, format, etc.)
+   * @param config.fileName file name
    * @param config.location location of the file
    * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'`)
    *
    * @example
    * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]
-   * const config = {fileName: 'users', format: 'json', location: '../../data'}
+   * const config = { fileName: 'users', format: 'json', location: '../../data' }
    * await schema.export(data, config)
    *
    * @returns
@@ -100,5 +126,10 @@ export class Chaca {
    */
   export = Export;
 
+  /**
+   * Generate data from realtional schemas
+   * @param schemas Array with the schemas config
+   * @param config.verbose Show log in console progretion
+   */
   multiGenerate = MultiGenerate;
 }

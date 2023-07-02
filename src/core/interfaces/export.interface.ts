@@ -15,7 +15,7 @@ export type ExportSQLFormat = "postgresql";
  */
 export interface FileConfig {
   /**
-   * Name of the file
+   * Name for the file
    */
   fileName: string;
   /**
