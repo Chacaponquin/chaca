@@ -3,7 +3,6 @@ import { Generator } from "./../Generator.js";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
-import { ChacaError } from "../../errors/ChacaError.js";
 
 import {
   ArrayType,
@@ -76,44 +75,40 @@ export class JavaGenerator extends Generator {
       classesContents.push(this.createClassFileContent(c));
     });
 
-    try {
-      for (let i = 0; i < classesContents.length; i++) {
-        if (i === 0) {
-          const mainRoute = this.buildClassFileName("Main");
-          await fs.promises.writeFile(mainRoute, classesContents[i], "utf-8");
+    for (let i = 0; i < classesContents.length; i++) {
+      if (i === 0) {
+        const mainRoute = this.buildClassFileName("Main");
+        await fs.promises.writeFile(mainRoute, classesContents[i], "utf-8");
 
-          filesRoutes.push(mainRoute);
-        } else {
-          const objectClassRoute = this.buildClassFileName(
-            this.classesCreated[i - 1].className,
-          );
+        filesRoutes.push(mainRoute);
+      } else {
+        const objectClassRoute = this.buildClassFileName(
+          this.classesCreated[i - 1].className,
+        );
 
-          await fs.promises.writeFile(
-            objectClassRoute,
-            classesContents[i],
-            "utf-8",
-          );
+        await fs.promises.writeFile(
+          objectClassRoute,
+          classesContents[i],
+          "utf-8",
+        );
 
-          filesRoutes.push(objectClassRoute);
-        }
+        filesRoutes.push(objectClassRoute);
       }
-
-      const zp = new AdmZip();
-      const zipName = `${this.config.fileName}.zip`;
-      const zipPath = path.join(this.baseLocation, zipName);
-
-      for (let i = 0; i < filesRoutes.length; i++) {
-        const r = filesRoutes[i];
-        zp.addLocalFile(r);
-        await fs.promises.unlink(r);
-      }
-
-      zp.writeZip(zipPath);
-
-      return zipPath;
-    } catch (error) {
-      throw new ChacaError("Error export zip File");
     }
+
+    const zp = new AdmZip();
+    const zipName = `${this.config.fileName}.zip`;
+    const zipPath = path.join(this.baseLocation, zipName);
+
+    for (let i = 0; i < filesRoutes.length; i++) {
+      const r = filesRoutes[i];
+      zp.addLocalFile(r);
+      await fs.promises.unlink(r);
+    }
+
+    zp.writeZip(zipPath);
+
+    return zipPath;
   }
 
   private createDataTypes(data: any): DataType {

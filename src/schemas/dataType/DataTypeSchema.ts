@@ -126,7 +126,9 @@ export class DataTypeSchema {
           } else {
             maximun = a.max;
           }
-        } else maximun = this.MAX_RANDOM_VALUE;
+        } else {
+          maximun = this.MAX_RANDOM_VALUE;
+        }
 
         const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
         return val;

@@ -48,7 +48,9 @@ export class Chaca {
    * @param fieldToRef configuration of the reference field. the field location must be separated points
    *
    * @example
-   * {field: chaca.ref('Schema.fieldToRef')}
+   * {
+   *    field: chaca.ref('Schema.fieldToRef')
+   * }
    */
   ref(fieldToRef: FieldToRef, config?: FieldRefInputConfig) {
     return new RefField(fieldToRef, config);

@@ -98,6 +98,37 @@ await postSchema.generateAndExport(20, {
 
 ### schema field
 
+We have several defined schemas that can be used for data creation. You can use them by importing the `schemas` module
+
+```ts
+import { schemas } from "chaca";
+
+// Get the Schema
+schemas.person.firstName();
+
+// Get a value from the schema
+schemas.person.firstName().getValue(); // 'Juan'
+// Get a value from the schema with arguments
+schemas.person.firstName().getValue({ sex: "female" }); // 'Camila'
+```
+
+- `address`
+- `dataType`
+- `finance`
+- `date`
+- `animal`
+- `id`
+- `image`
+- `video`
+- `internet`
+- `lorem`
+- `person`
+- `phone`
+- `science`
+- `system`
+- `vehicle`
+- `word`
+
 ### enum
 
 Returns one of the values of the array passed as argument
@@ -303,39 +334,6 @@ const DATA = chaca.multiGenerate([
 //}
 ```
 
-## Schemas
-
-We have several defined schemas that can be used for data creation. You can use them by importing the `schemas` module
-
-```ts
-import { schemas } from "chaca";
-
-// Get the Schema
-schemas.person.firstName();
-
-// Get a value from the schema
-schemas.person.firstName().getValue(); // 'Juan'
-// Get a value from the schema with arguments
-schemas.person.firstName().getValue({ sex: "female" }); // 'Camila'
-```
-
-- `address`
-- `dataType`
-- `finance`
-- `date`
-- `animal`
-- `id`
-- `image`
-- `video`
-- `internet`
-- `lorem`
-- `person`
-- `phone`
-- `science`
-- `system`
-- `vehicle`
-- `word`
-
 ## Custom Schema Fields
 
 If none of the defined schemas are useful you can create your own schemas with the `schemaField` method.
@@ -349,7 +347,7 @@ type SchemaArguments = {
 };
 
 // Define Schema Field
-const mySchemaField = chaca.schemaField<SchemaArguments>(
+const mySchemaField = chaca.schemaField<SchemaArguments, number>(
   "mySchemaField",
   ({ a, b }) => {
     return a + b;
