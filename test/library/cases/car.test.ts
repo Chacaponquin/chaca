@@ -9,11 +9,11 @@ describe("# Car Case Test", () => {
   let CAR_CASE_DATA: any;
 
   beforeAll(() => {
-    CAR_CASE_DATA = chaca.multiGenerate(CASE_SCHEMAS);
+    CAR_CASE_DATA = chaca.multiGenerate(CASE_SCHEMAS, { verbose: false });
   });
 
   it("Creation", () => {
-    const DATA = chaca.multiGenerate(CASE_SCHEMAS);
+    const DATA = chaca.multiGenerate(CASE_SCHEMAS, { verbose: false });
     expect(DATA).toHaveProperty("Pay_Method");
     expect(DATA).toHaveProperty("Situation");
     expect(DATA).toHaveProperty("Category");
@@ -67,18 +67,26 @@ describe("# Car Case Test", () => {
   });
 
   it("SQL Export From Schemas", async () => {
-    await chaca.exportFromSchemas(CASE_SCHEMAS, {
-      fileName: FILE_NAME,
-      location: EXPORT_ROUTE,
-      format: "postgresql",
-    });
+    await chaca.exportFromSchemas(
+      CASE_SCHEMAS,
+      {
+        fileName: FILE_NAME,
+        location: EXPORT_ROUTE,
+        format: "postgresql",
+      },
+      { verbose: false },
+    );
   });
 
   it("Java Export From Schemas", async () => {
-    await chaca.exportFromSchemas(CASE_SCHEMAS, {
-      fileName: FILE_NAME_FROM_SCHEMAS,
-      location: EXPORT_ROUTE,
-      format: "java",
-    });
+    await chaca.exportFromSchemas(
+      CASE_SCHEMAS,
+      {
+        fileName: FILE_NAME_FROM_SCHEMAS,
+        location: EXPORT_ROUTE,
+        format: "java",
+      },
+      { verbose: false },
+    );
   });
 });

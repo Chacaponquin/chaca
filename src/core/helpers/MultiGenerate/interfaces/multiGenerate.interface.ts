@@ -6,6 +6,6 @@ export interface MultiGenerateSchema {
   documents: number;
 }
 
-export interface GenerateConfig {
+export type GenerateConfig = Partial<{
   verbose: boolean;
-}
+}>;

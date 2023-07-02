@@ -8,11 +8,13 @@ describe("# Baseball Case Test", () => {
   let BASEBALL_CASE_DATA: any;
 
   beforeAll(() => {
-    BASEBALL_CASE_DATA = chaca.multiGenerate(BASEBALL_SCHEMAS);
+    BASEBALL_CASE_DATA = chaca.multiGenerate(BASEBALL_SCHEMAS, {
+      verbose: false,
+    });
   });
 
   it("Creation", () => {
-    const DATA = chaca.multiGenerate(BASEBALL_SCHEMAS);
+    const DATA = chaca.multiGenerate(BASEBALL_SCHEMAS, { verbose: false });
 
     expect(DATA).toHaveProperty("Game");
     expect(DATA).toHaveProperty("Phase");
@@ -26,11 +28,15 @@ describe("# Baseball Case Test", () => {
   });
 
   it("SQL", async () => {
-    await chaca.exportFromSchemas(BASEBALL_SCHEMAS, {
-      fileName: FILE_NAME,
-      location: EXPORT_ROUTE,
-      format: "postgresql",
-    });
+    await chaca.exportFromSchemas(
+      BASEBALL_SCHEMAS,
+      {
+        fileName: FILE_NAME,
+        location: EXPORT_ROUTE,
+        format: "postgresql",
+      },
+      { verbose: false },
+    );
   });
 
   it("JSON", async () => {

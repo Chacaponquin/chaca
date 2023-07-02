@@ -8,11 +8,11 @@ describe("# Library Case Test", () => {
   let CASE_DATA: any;
 
   beforeAll(() => {
-    CASE_DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA);
+    CASE_DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA, { verbose: false });
   });
 
   it("Creation", () => {
-    const DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA);
+    const DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA, { verbose: false });
     expect(DATA).toHaveProperty("Book_Topic");
     expect(DATA).toHaveProperty("Book");
     expect(DATA).toHaveProperty("Author");
@@ -22,11 +22,15 @@ describe("# Library Case Test", () => {
   });
 
   it("SQL", async () => {
-    await chaca.exportFromSchemas(LIBRARY_CASE_SCHEMA, {
-      fileName: FILE_NAME,
-      location: EXPORT_ROUTE,
-      format: "postgresql",
-    });
+    await chaca.exportFromSchemas(
+      LIBRARY_CASE_SCHEMA,
+      {
+        fileName: FILE_NAME,
+        location: EXPORT_ROUTE,
+        format: "postgresql",
+      },
+      { verbose: false },
+    );
   });
 
   it("JSON", async () => {

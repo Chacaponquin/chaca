@@ -8,7 +8,9 @@ describe("# Commerce Company Case Test", () => {
   let CASE_DATA: any;
 
   beforeAll(() => {
-    CASE_DATA = chaca.multiGenerate(COMMERCE_COMPANY_SCHEMAS);
+    CASE_DATA = chaca.multiGenerate(COMMERCE_COMPANY_SCHEMAS, {
+      verbose: false,
+    });
   });
 
   it("JSON", async () => {
@@ -52,10 +54,14 @@ describe("# Commerce Company Case Test", () => {
   });
 
   it("SQL", async () => {
-    await chaca.exportFromSchemas(COMMERCE_COMPANY_SCHEMAS, {
-      fileName: FILE_NAME,
-      format: "postgresql",
-      location: EXPORT_ROUTE,
-    });
+    await chaca.exportFromSchemas(
+      COMMERCE_COMPANY_SCHEMAS,
+      {
+        fileName: FILE_NAME,
+        format: "postgresql",
+        location: EXPORT_ROUTE,
+      },
+      { verbose: false },
+    );
   });
 });

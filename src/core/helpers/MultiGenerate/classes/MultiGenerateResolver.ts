@@ -7,12 +7,9 @@ import {
 
 export class MultiGenerateResolver<K = any> {
   private resolversArray: Array<SchemaResolver> = [];
-  private config: GenerateConfig;
+  private config: Required<GenerateConfig>;
 
-  constructor(
-    schemas: Array<MultiGenerateSchema>,
-    config?: Partial<GenerateConfig>,
-  ) {
+  constructor(schemas: Array<MultiGenerateSchema>, config?: GenerateConfig) {
     this.config = this.validateGenerateConfig(config);
     this.validateNotRepeatSchemaNames(schemas);
     this.createSchemaResolvers(schemas);
@@ -23,8 +20,8 @@ export class MultiGenerateResolver<K = any> {
 
   private validateGenerateConfig(
     config?: Partial<GenerateConfig>,
-  ): GenerateConfig {
-    const returConfig: GenerateConfig = { verbose: true };
+  ): Required<GenerateConfig> {
+    const returConfig: Required<GenerateConfig> = { verbose: true };
 
     if (config && typeof config === "object") {
       if (typeof config.verbose === "boolean") {

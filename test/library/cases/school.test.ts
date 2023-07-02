@@ -8,11 +8,11 @@ describe("# School Case Test", () => {
   let CASE_DATA: any;
 
   beforeAll(() => {
-    CASE_DATA = chaca.multiGenerate(SCHOOL_SCHEMAS);
+    CASE_DATA = chaca.multiGenerate(SCHOOL_SCHEMAS, { verbose: false });
   });
 
   it("Creation", () => {
-    const DATA = chaca.multiGenerate(SCHOOL_SCHEMAS);
+    const DATA = chaca.multiGenerate(SCHOOL_SCHEMAS, { verbose: false });
     expect(DATA).toHaveProperty("Municipality");
     expect(DATA).toHaveProperty("Group");
     expect(DATA).toHaveProperty("Grade");
@@ -23,11 +23,15 @@ describe("# School Case Test", () => {
   });
 
   it("SQL", async () => {
-    await chaca.exportFromSchemas(SCHOOL_SCHEMAS, {
-      fileName: FILE_NAME,
-      location: EXPORT_ROUTE,
-      format: "postgresql",
-    });
+    await chaca.exportFromSchemas(
+      SCHOOL_SCHEMAS,
+      {
+        fileName: FILE_NAME,
+        location: EXPORT_ROUTE,
+        format: "postgresql",
+      },
+      { verbose: false },
+    );
   });
 
   it("JSON", async () => {

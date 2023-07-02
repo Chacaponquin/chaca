@@ -10,7 +10,10 @@ import {
   YamlGenerator,
 } from "../../../generators/index.js";
 import { FileConfig } from "../../interfaces/export.interface.js";
-import { MultiGenerateSchema } from "../MultiGenerate/MultiGenerate.js";
+import {
+  GenerateConfig,
+  MultiGenerateSchema,
+} from "../MultiGenerate/MultiGenerate.js";
 import { MultiGenerateResolver } from "../MultiGenerate/classes/MultiGenerateResolver.js";
 
 export class ExportResolver {
@@ -23,9 +26,10 @@ export class ExportResolver {
 
   public async exportRelationalSchemas(
     schemas: Array<MultiGenerateSchema>,
+    genConfig?: GenerateConfig,
   ): Promise<string> {
     const gen = this.filterGenerator();
-    const multiResolver = new MultiGenerateResolver(schemas);
+    const multiResolver = new MultiGenerateResolver(schemas, genConfig);
     return await gen.generateRelationalDataFile(multiResolver);
   }
 
