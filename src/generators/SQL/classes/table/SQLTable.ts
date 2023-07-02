@@ -1,5 +1,5 @@
-import { PrivateUtils } from "../../../../core/helpers/PrivateUtils.js";
 import { ChacaError } from "../../../../errors/ChacaError.js";
+import { IdSchema } from "../../../../schemas/id/IdSchema.js";
 import { SQLType, SQLNumber, SQLIntegerNumber } from "../sqlTypes/index.js";
 import { ColumnForeignKeyConfig, SQLTableColumn } from "./SQLTableColumn.js";
 
@@ -11,7 +11,7 @@ export class SQLTable {
   constructor(public readonly tableName: string) {}
 
   public generateIDColumn(): void {
-    const idColumn = new SQLTableColumn(PrivateUtils.id());
+    const idColumn = new SQLTableColumn(new IdSchema().uuid().getValue());
     idColumn.changeToPrimaryKey();
 
     this.hasGeneratedID = true;

@@ -1,5 +1,5 @@
 import { TryRefANoKeyFieldError } from "../../../../../errors/ChacaError.js";
-import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../../../helpers/ChacaUtils.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 
@@ -12,8 +12,7 @@ export class EnumValueNode extends ChacaTreeNode {
   }
 
   public getValue(): any {
-    const selectOption = PrivateUtils.oneOfArray(this.enumOptions);
-
+    const selectOption = new ChacaUtils().oneOfArray(this.enumOptions);
     return selectOption ? selectOption : null;
   }
 

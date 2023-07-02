@@ -2,7 +2,6 @@ import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { Generator } from "../Generator.js";
 import { JavascriptGenerator } from "../Javascript/JavascriptGenerator.js";
 import fs from "fs";
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { ObjectInterface, TypescriptInterface } from "./classes/index.js";
 import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
@@ -12,7 +11,7 @@ export class TypescriptGenerator extends Generator {
   }
 
   public async generateFile(data: any): Promise<string> {
-    const variableName = PrivateUtils.camelCase(this.config.fileName);
+    const variableName = this.utils.camelCase(this.config.fileName);
 
     const javascriptCode = new JavascriptGenerator(this.config).filterTypeValue(
       data,

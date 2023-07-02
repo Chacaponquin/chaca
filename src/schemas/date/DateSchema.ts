@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { SchemaField } from "../SchemaField.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
@@ -39,6 +39,12 @@ type DateBetweenProps = {
 
 export class DateSchema {
   private dataTypeSchema = new DataTypeSchema();
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    weekDays: WEEKDAYS,
+    months: MONTHS,
+  };
 
   /**
    * Returns a date in the near future.
@@ -168,7 +174,7 @@ export class DateSchema {
     return new SchemaField<string>(
       "month",
       () => {
-        return PrivateUtils.oneOfArray(MONTHS);
+        return this.utils.oneOfArray(MONTHS);
       },
       {},
     );
@@ -184,7 +190,7 @@ export class DateSchema {
     return new SchemaField<string>(
       "weekDay",
       () => {
-        return PrivateUtils.oneOfArray(WEEKDAYS);
+        return this.utils.oneOfArray(WEEKDAYS);
       },
       {},
     );
@@ -319,11 +325,11 @@ export class DateSchema {
         const units = ["years", "seconds", "minutes", "days", "hours"];
 
         const unit =
-          typeof a.unit === "string" ? a.unit : PrivateUtils.oneOfArray(units);
+          typeof a.unit === "string" ? a.unit : this.utils.oneOfArray(units);
 
         let filterUnit = units.find((el) => el === unit) as TimeUnits;
         if (!filterUnit) {
-          filterUnit = PrivateUtils.oneOfArray(units) as TimeUnits;
+          filterUnit = this.utils.oneOfArray(units) as TimeUnits;
         }
 
         switch (filterUnit) {

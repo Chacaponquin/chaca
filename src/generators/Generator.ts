@@ -2,8 +2,11 @@ import { FileConfig } from "../core/interfaces/export.interface.js";
 import path from "path";
 import { ChacaError } from "../errors/ChacaError.js";
 import { MultiGenerateResolver } from "../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
+import { ChacaUtils } from "../core/helpers/ChacaUtils.js";
 
 export abstract class Generator {
+  protected utils = new ChacaUtils();
+
   protected ext: string;
   protected config: FileConfig;
   protected route: string;

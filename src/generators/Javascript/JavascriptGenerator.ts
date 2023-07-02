@@ -1,7 +1,6 @@
 import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { Generator } from "../Generator.js";
 import fs from "fs";
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
@@ -18,7 +17,7 @@ export class JavascriptGenerator extends Generator {
   }
 
   public async generateFile(data: any): Promise<string> {
-    const variableName = PrivateUtils.camelCase(this.config.fileName);
+    const variableName = this.utils.camelCase(this.config.fileName);
     const returnData = `const ${variableName} = ${this.filterTypeValue(data)}`;
 
     await fs.promises.writeFile(this.route, returnData, "utf-8");

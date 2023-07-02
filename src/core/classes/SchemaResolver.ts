@@ -1,5 +1,5 @@
 import { ChacaError, CyclicAccessDataError } from "../../errors/ChacaError.js";
-import { PrivateUtils } from "../helpers/PrivateUtils.js";
+import { ChacaUtils } from "../helpers/ChacaUtils.js";
 import { SchemaToResolve } from "../interfaces/schema.interface.js";
 import { ChacaInputTree } from "./ChacaInputTree/ChacaInputTree.js";
 import {
@@ -29,6 +29,7 @@ import { DataTypeSchema } from "../../schemas/dataType/DataTypeSchema.js";
 
 export class SchemaResolver<K = any> {
   private dataTypeSchema = new DataTypeSchema();
+  private utils = new ChacaUtils();
 
   private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
@@ -420,7 +421,7 @@ export class SchemaResolver<K = any> {
       else if (field instanceof EnumValueNode) {
         return new SingleResultNode(
           field.getResultNodeConfig(),
-          PrivateUtils.oneOfArray(field.enumOptions),
+          this.utils.oneOfArray(field.enumOptions),
         );
       }
 

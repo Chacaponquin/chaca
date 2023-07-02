@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../../core/helpers/ChacaUtils.js";
 import { DataTypeSchema } from "../../dataType/DataTypeSchema.js";
 
 type OS = "lin" | "mac" | "win";
@@ -106,6 +106,7 @@ const LANGUAGES = [
 
 export function GenerateUserAgent(): string {
   const dataTypeSchema = new DataTypeSchema();
+  const utils = new ChacaUtils();
 
   const weightedKeyFromObject = <T extends Record<string, number>>(
     obj: T,
@@ -130,7 +131,7 @@ export function GenerateUserAgent(): string {
     return return_val;
   };
 
-  const randomLang = (): string => PrivateUtils.oneOfArray(LANGUAGES);
+  const randomLang = (): string => utils.oneOfArray(LANGUAGES);
 
   const randomBrowserAndOS = (): [Browser, OS] => {
     const browser: Browser = weightedKeyFromObject({
@@ -162,7 +163,7 @@ export function GenerateUserAgent(): string {
     };
     const archValue = procs[arch];
     const proc = Array.isArray(archValue)
-      ? PrivateUtils.oneOfArray(archValue)
+      ? utils.oneOfArray(archValue)
       : weightedKeyFromObject(archValue);
 
     return proc;

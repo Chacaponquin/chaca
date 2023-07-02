@@ -7,7 +7,7 @@ import {
 import { SchemaResolver } from "../../../SchemaResolver.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
-import { PrivateUtils } from "../../../../helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../../../helpers/ChacaUtils.js";
 import { FieldToRefObject } from "../../../RefField/RefField.js";
 import { SchemaStore } from "../../../SchemasStore/SchemaStore.js";
 import { SingleResultNode } from "../../../ChacaResultTree/classes/index.js";
@@ -18,6 +18,7 @@ export class RefValueNode extends ChacaTreeNode {
   private refFieldTreeRoute: Array<string>;
   private schemaRefIndex: number | null = null;
   private allRefNodes: Array<SearchedRefValue> | null = null;
+  private utils = new ChacaUtils();
 
   constructor(
     config: ChacaTreeNodeConfig,
@@ -161,7 +162,7 @@ export class RefValueNode extends ChacaTreeNode {
               this.refFieldTreeRoute,
             );
           } else {
-            const node = PrivateUtils.oneOfArray(noTakenValues);
+            const node = this.utils.oneOfArray(noTakenValues);
             node.changeIsTaken(this.getFieldRoute());
 
             return node.getRealValue();
@@ -174,7 +175,7 @@ export class RefValueNode extends ChacaTreeNode {
             );
           }
 
-          return PrivateUtils.oneOfArray(allValues).getRealValue();
+          return this.utils.oneOfArray(allValues).getRealValue();
         }
       } else {
         const refFieldName = this.refFieldTreeRoute.join(".");

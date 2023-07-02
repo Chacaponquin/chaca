@@ -1,5 +1,5 @@
-import { PrivateUtils } from "../../../core/helpers/PrivateUtils.js";
 import { ChacaError } from "../../../errors/ChacaError.js";
+import { IdSchema } from "../../../schemas/id/IdSchema.js";
 
 interface ObjectKeys {
   keyName: string;
@@ -82,7 +82,8 @@ export abstract class TypescriptInterface {
 
 export class ObjectInterface extends TypescriptInterface {
   private keys: Array<ObjectKeys> = [];
-  public readonly name: string = "Object" + PrivateUtils.id();
+  private idSchema = new IdSchema();
+  public readonly name: string = "Object" + this.idSchema.uuid().getValue();
 
   private static objectsToCreate: Array<ObjectInterface> = [];
 

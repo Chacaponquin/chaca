@@ -1,8 +1,7 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { SchemaField } from "../../../schemas/SchemaField.js";
+import { IdSchema } from "../../../schemas/id/IdSchema.js";
 import { Export } from "../../helpers/Export/Export.js";
-import { PrivateUtils } from "../../helpers/PrivateUtils.js";
-
 import { FileConfig } from "../../interfaces/export.interface.js";
 import {
   CommonSchema,
@@ -288,8 +287,10 @@ export class ChacaSchema<K = any> {
    * Generate a schema document
    */
   public generateObject(): K {
+    const idSchema = new IdSchema();
+
     const schemaToResolve = new SchemaResolver<K>(
-      PrivateUtils.id(),
+      idSchema.uuid().getValue(),
       this.schemaObj,
       1,
       0,
@@ -304,8 +305,10 @@ export class ChacaSchema<K = any> {
    * @param cantDocuments number of documents that you want to create
    */
   public generate(cantDocuments: number): K[] {
+    const idSchema = new IdSchema();
+
     const schemaToResolve = new SchemaResolver<K>(
-      PrivateUtils.id(),
+      idSchema.uuid().getValue(),
       this.schemaObj,
       cantDocuments,
       0,

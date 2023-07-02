@@ -1,8 +1,11 @@
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import { IMAGES_DEFINITIONS } from "./constants/images.js";
 
 export class ImageSchema {
+  private utils = new ChacaUtils();
+  public readonly constants = { ...IMAGES_DEFINITIONS };
+
   /**
    * Return a food image url
    *
@@ -15,7 +18,7 @@ export class ImageSchema {
     return new SchemaField<string>(
       "food",
       () => {
-        return PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.food);
+        return this.utils.oneOfArray(IMAGES_DEFINITIONS.food);
       },
       {},
     );
@@ -32,7 +35,7 @@ export class ImageSchema {
   event() {
     return new SchemaField<string>(
       "events",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.event),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.event),
       {},
     );
   }
@@ -48,7 +51,7 @@ export class ImageSchema {
   wallpaper() {
     return new SchemaField<string>(
       "wallpaper",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.wallpaper),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.wallpaper),
       {},
     );
   }
@@ -64,7 +67,7 @@ export class ImageSchema {
   treeDimension() {
     return new SchemaField<string>(
       "3D",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS["3d"]),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS["3d"]),
       {},
     );
   }
@@ -80,7 +83,7 @@ export class ImageSchema {
   architecture() {
     return new SchemaField<string>(
       "archiecture",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.architecture),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.architecture),
       {},
     );
   }
@@ -96,7 +99,7 @@ export class ImageSchema {
   nature() {
     return new SchemaField<string>(
       "nature",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.nature),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.nature),
       {},
     );
   }
@@ -112,7 +115,7 @@ export class ImageSchema {
   fashion() {
     return new SchemaField<string>(
       "fashion",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.fashion),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.fashion),
       {},
     );
   }
@@ -128,7 +131,7 @@ export class ImageSchema {
   film() {
     return new SchemaField<string>(
       "film",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.film),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.film),
       {},
     );
   }
@@ -144,7 +147,7 @@ export class ImageSchema {
   people() {
     return new SchemaField<string>(
       "people",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.people),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.people),
       {},
     );
   }
@@ -160,7 +163,7 @@ export class ImageSchema {
   health() {
     return new SchemaField<string>(
       "health",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.health),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.health),
       {},
     );
   }
@@ -176,7 +179,7 @@ export class ImageSchema {
   house() {
     return new SchemaField<string>(
       "house",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.architecture),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.architecture),
       {},
     );
   }
@@ -192,7 +195,7 @@ export class ImageSchema {
   street() {
     return new SchemaField<string>(
       "street",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.street),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.street),
       {},
     );
   }
@@ -208,7 +211,7 @@ export class ImageSchema {
   animal() {
     return new SchemaField<string>(
       "animal",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.animal),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.animal),
       {},
     );
   }
@@ -224,7 +227,7 @@ export class ImageSchema {
   spiritual() {
     return new SchemaField<string>(
       "spiritual",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.spirituality),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.spirituality),
       {},
     );
   }
@@ -240,7 +243,7 @@ export class ImageSchema {
   travel() {
     return new SchemaField<string>(
       "travel",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.travel),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.travel),
       {},
     );
   }
@@ -256,7 +259,7 @@ export class ImageSchema {
   art() {
     return new SchemaField<string>(
       "art",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.art),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.art),
       {},
     );
   }
@@ -272,7 +275,7 @@ export class ImageSchema {
   history() {
     return new SchemaField<string>(
       "history",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.history),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.history),
       {},
     );
   }
@@ -288,7 +291,7 @@ export class ImageSchema {
   sport() {
     return new SchemaField<string>(
       "sport",
-      () => PrivateUtils.oneOfArray(IMAGES_DEFINITIONS.sport),
+      () => this.utils.oneOfArray(IMAGES_DEFINITIONS.sport),
       {},
     );
   }

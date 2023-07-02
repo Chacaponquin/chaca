@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import {
   ANIMAL_TYPE,
@@ -19,6 +19,26 @@ import {
 } from "./constants/index.js";
 
 export class AnimalSchema {
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    animalTypes: ANIMAL_TYPE,
+    bears: BEAR,
+    birds: BIRD,
+    cats: CAT,
+    ceteceans: CETACEAN,
+    cows: COW,
+    cocodrilas: CROCODILIA,
+    dogs: DOG,
+    hourses: HORSE,
+    insects: INSECT,
+    lions: LION,
+    rabbits: RABBIT,
+    rodents: RODENT,
+    snakes: SNAKE,
+    fishes: FISH,
+  };
+
   /**
    * Returns a dog breed
    * @example schemas.animal.dog() // Schema
@@ -26,11 +46,7 @@ export class AnimalSchema {
    * @returns string
    */
   dog() {
-    return new SchemaField<string>(
-      "dog",
-      () => PrivateUtils.oneOfArray(DOG),
-      {},
-    );
+    return new SchemaField<string>("dog", () => this.utils.oneOfArray(DOG), {});
   }
 
   /**
@@ -42,7 +58,7 @@ export class AnimalSchema {
   bear() {
     return new SchemaField<string>(
       "bear",
-      () => PrivateUtils.oneOfArray(BEAR),
+      () => this.utils.oneOfArray(BEAR),
       {},
     );
   }
@@ -56,7 +72,7 @@ export class AnimalSchema {
   bird() {
     return new SchemaField<string>(
       "bird",
-      () => PrivateUtils.oneOfArray(BIRD),
+      () => this.utils.oneOfArray(BIRD),
       {},
     );
   }
@@ -68,11 +84,7 @@ export class AnimalSchema {
    * @returns string
    */
   cat() {
-    return new SchemaField<string>(
-      "cat",
-      () => PrivateUtils.oneOfArray(CAT),
-      {},
-    );
+    return new SchemaField<string>("cat", () => this.utils.oneOfArray(CAT), {});
   }
 
   /**
@@ -84,7 +96,7 @@ export class AnimalSchema {
   cetacean() {
     return new SchemaField<string>(
       "cetacean",
-      () => PrivateUtils.oneOfArray(CETACEAN),
+      () => this.utils.oneOfArray(CETACEAN),
       {},
     );
   }
@@ -96,11 +108,7 @@ export class AnimalSchema {
    * @returns string
    */
   cow() {
-    return new SchemaField<string>(
-      "cow",
-      () => PrivateUtils.oneOfArray(COW),
-      {},
-    );
+    return new SchemaField<string>("cow", () => this.utils.oneOfArray(COW), {});
   }
 
   /**
@@ -112,7 +120,7 @@ export class AnimalSchema {
   crocodilia() {
     return new SchemaField<string>(
       "crocodilia",
-      () => PrivateUtils.oneOfArray(CROCODILIA),
+      () => this.utils.oneOfArray(CROCODILIA),
       {},
     );
   }
@@ -126,7 +134,7 @@ export class AnimalSchema {
   fish() {
     return new SchemaField<string>(
       "fish",
-      () => PrivateUtils.oneOfArray(FISH),
+      () => this.utils.oneOfArray(FISH),
       {},
     );
   }
@@ -140,7 +148,7 @@ export class AnimalSchema {
   horse() {
     return new SchemaField<string>(
       "horse",
-      () => PrivateUtils.oneOfArray(HORSE),
+      () => this.utils.oneOfArray(HORSE),
       {},
     );
   }
@@ -154,7 +162,7 @@ export class AnimalSchema {
   insect() {
     return new SchemaField<string>(
       "insect",
-      () => PrivateUtils.oneOfArray(INSECT),
+      () => this.utils.oneOfArray(INSECT),
       {},
     );
   }
@@ -168,7 +176,7 @@ export class AnimalSchema {
   lion() {
     return new SchemaField<string>(
       "lion",
-      () => PrivateUtils.oneOfArray(LION),
+      () => this.utils.oneOfArray(LION),
       {},
     );
   }
@@ -182,7 +190,7 @@ export class AnimalSchema {
   rabbit() {
     return new SchemaField<string>(
       "rabbit",
-      () => PrivateUtils.oneOfArray(RABBIT),
+      () => this.utils.oneOfArray(RABBIT),
       {},
     );
   }
@@ -196,7 +204,7 @@ export class AnimalSchema {
   rodent() {
     return new SchemaField<string>(
       "rodent",
-      () => PrivateUtils.oneOfArray(RODENT),
+      () => this.utils.oneOfArray(RODENT),
       {},
     );
   }
@@ -210,7 +218,7 @@ export class AnimalSchema {
   snake() {
     return new SchemaField<string>(
       "snake",
-      () => PrivateUtils.oneOfArray(SNAKE),
+      () => this.utils.oneOfArray(SNAKE),
       {},
     );
   }
@@ -224,7 +232,7 @@ export class AnimalSchema {
   animalType() {
     return new SchemaField<string>(
       "animalType",
-      () => PrivateUtils.oneOfArray(ANIMAL_TYPE),
+      () => this.utils.oneOfArray(ANIMAL_TYPE),
       {},
     );
   }

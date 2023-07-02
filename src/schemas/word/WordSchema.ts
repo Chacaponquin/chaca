@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import WORDS, { ILanguageWord } from "./constants/index.js";
 
@@ -9,6 +9,10 @@ type WordProps = {
 };
 
 export class WordSchema {
+  private utils = new ChacaUtils();
+
+  public readonly constants = { words: WORDS };
+
   /**
    * Returns a adjective from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
@@ -19,7 +23,7 @@ export class WordSchema {
   adjective(args?: WordProps) {
     return new SchemaField<string, WordProps>(
       "adjective",
-      (a) => PrivateUtils.oneOfArray(this.filterWords(a.language).adjectives),
+      (a) => this.utils.oneOfArray(this.filterWords(a.language).adjectives),
       args || {},
     );
   }
@@ -34,7 +38,7 @@ export class WordSchema {
   conjuction(args?: WordProps) {
     return new SchemaField<string, WordProps>(
       "conjuction",
-      (a) => PrivateUtils.oneOfArray(this.filterWords(a.language).conjuctions),
+      (a) => this.utils.oneOfArray(this.filterWords(a.language).conjuctions),
       args || {},
     );
   }
@@ -49,8 +53,7 @@ export class WordSchema {
   interjection(args?: WordProps) {
     return new SchemaField<string, WordProps>(
       "interjection",
-      (a) =>
-        PrivateUtils.oneOfArray(this.filterWords(a.language).interjections),
+      (a) => this.utils.oneOfArray(this.filterWords(a.language).interjections),
       args || {},
     );
   }
@@ -65,7 +68,7 @@ export class WordSchema {
   preposition(args?: WordProps) {
     return new SchemaField<string, WordProps>(
       "preposition",
-      (a) => PrivateUtils.oneOfArray(this.filterWords(a.language).prepositions),
+      (a) => this.utils.oneOfArray(this.filterWords(a.language).prepositions),
       args || {},
     );
   }
@@ -80,7 +83,7 @@ export class WordSchema {
   adverb(args?: WordProps) {
     return new SchemaField<string, WordProps>(
       "adverb",
-      (a) => PrivateUtils.oneOfArray(this.filterWords(a.language).adverbs),
+      (a) => this.utils.oneOfArray(this.filterWords(a.language).adverbs),
       args || {},
     );
   }
@@ -95,7 +98,7 @@ export class WordSchema {
   verb(args?: WordProps) {
     return new SchemaField<string, WordProps>(
       "verb",
-      (a) => PrivateUtils.oneOfArray(this.filterWords(a.language).verbs),
+      (a) => this.utils.oneOfArray(this.filterWords(a.language).verbs),
       args || {},
     );
   }
@@ -110,7 +113,7 @@ export class WordSchema {
   noun(args?: WordProps) {
     return new SchemaField<string, WordProps>(
       "noun",
-      (a) => PrivateUtils.oneOfArray(this.filterWords(a.language).nouns),
+      (a) => this.utils.oneOfArray(this.filterWords(a.language).nouns),
       args || {},
     );
   }

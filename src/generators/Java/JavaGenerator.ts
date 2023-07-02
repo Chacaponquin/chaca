@@ -4,7 +4,7 @@ import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
 import { ChacaError } from "../../errors/ChacaError.js";
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+
 import {
   ArrayType,
   BigintType,
@@ -20,6 +20,7 @@ import {
   StringType,
 } from "./classes/types/index.js";
 import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
+import { IdSchema } from "../../schemas/id/IdSchema.js";
 
 interface JavaClassCreated {
   className: string;
@@ -32,6 +33,8 @@ interface MainContentData {
 }
 
 export class JavaGenerator extends Generator {
+  private idSchema = new IdSchema();
+
   private classesCreated: Array<JavaClassCreated> = [];
 
   constructor(config: FileConfig) {
@@ -250,7 +253,7 @@ export class JavaGenerator extends Generator {
     if (foundClass) {
       return { classType: object, className: foundClass.className };
     } else {
-      const className = `Object${PrivateUtils.id()}`;
+      const className = `Object${this.idSchema.uuid().getValue()}`;
 
       const newClass = {
         className,

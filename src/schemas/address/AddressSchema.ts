@@ -1,7 +1,8 @@
 import { SchemaField } from "../SchemaField.js";
 import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries.js";
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { TIME_ZONE } from "./constants/timeZone.js";
+import { CARDINAL_DIRECTIONS } from "./constants/cardinal_directions.js";
 
 type ZipCodeProps = {
   format?: string;
@@ -19,6 +20,15 @@ type CountryProps = {
 };
 
 export class AddressSchema {
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    timeZones: TIME_ZONE,
+    countries: COUNTRY_LIST,
+    countriesCode: COUNTRY_CODE,
+    cardinalDirections: CARDINAL_DIRECTIONS,
+  };
+
   /**
    * Returns a zip code
    * @param args.format format of the zip code
@@ -34,7 +44,7 @@ export class AddressSchema {
       (a) => {
         const format =
           typeof a.format === "string" && a.format ? a.format : "#####";
-        return PrivateUtils.replaceSymbols(format);
+        return this.utils.replaceSymbols(format);
       },
       args || {},
     );
@@ -49,7 +59,7 @@ export class AddressSchema {
   timeZone() {
     return new SchemaField<string>(
       "timeZone",
-      () => PrivateUtils.oneOfArray(TIME_ZONE),
+      () => this.utils.oneOfArray(TIME_ZONE),
       {},
     );
   }
@@ -63,17 +73,7 @@ export class AddressSchema {
   cardinalDirection() {
     return new SchemaField<string>(
       "cardinalDirection",
-      () =>
-        PrivateUtils.oneOfArray([
-          "North",
-          "East",
-          "South",
-          "West",
-          "Northeast",
-          "Northwest",
-          "Southeast",
-          "Southwest",
-        ]),
+      () => this.utils.oneOfArray(this.constants.cardinalDirections),
       {},
     );
   }
@@ -95,13 +95,13 @@ export class AddressSchema {
           );
 
           if (filterList.length > 0) {
-            return PrivateUtils.oneOfArray(filterList.map((el) => el.country));
-          } else
-            return PrivateUtils.oneOfArray(
-              COUNTRY_LIST.map((el) => el.country),
-            );
-        } else
-          return PrivateUtils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
+            return this.utils.oneOfArray(filterList.map((el) => el.country));
+          } else {
+            return this.utils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
+          }
+        } else {
+          return this.utils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
+        }
       },
       args || {},
     );
@@ -116,7 +116,7 @@ export class AddressSchema {
   countryCode() {
     return new SchemaField<string>(
       "countryCode",
-      () => PrivateUtils.oneOfArray(COUNTRY_CODE),
+      () => this.utils.oneOfArray(COUNTRY_CODE),
       {},
     );
   }

@@ -1,8 +1,12 @@
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import { VIDEOS_DEFINITIONS } from "./constants/videos.js";
 
 export class VideoSchema {
+  private utils = new ChacaUtils();
+
+  public readonly constants = { ...VIDEOS_DEFINITIONS };
+
   /**
    * Return a food video url
    *
@@ -15,7 +19,7 @@ export class VideoSchema {
     return new SchemaField<string>(
       "food",
       () => {
-        return PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.food);
+        return this.utils.oneOfArray(VIDEOS_DEFINITIONS.food);
       },
       {},
     );
@@ -32,7 +36,7 @@ export class VideoSchema {
   event() {
     return new SchemaField<string>(
       "event",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.event),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.event),
       {},
     );
   }
@@ -48,7 +52,7 @@ export class VideoSchema {
   wallpaper() {
     return new SchemaField<string>(
       "wallpaper",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.wallpaper),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.wallpaper),
       {},
     );
   }
@@ -64,7 +68,7 @@ export class VideoSchema {
   treeDimension() {
     return new SchemaField<string>(
       "3D",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS["3d"]),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS["3d"]),
       {},
     );
   }
@@ -80,7 +84,7 @@ export class VideoSchema {
   sport() {
     return new SchemaField<string>(
       "sport",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.sport),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.sport),
       {},
     );
   }
@@ -96,7 +100,7 @@ export class VideoSchema {
   animal() {
     return new SchemaField<string>(
       "animal",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.animal),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.animal),
       {},
     );
   }
@@ -111,7 +115,7 @@ export class VideoSchema {
   experimental() {
     return new SchemaField<string>(
       "experimental",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.experimental),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.experimental),
       {},
     );
   }
@@ -126,7 +130,7 @@ export class VideoSchema {
   architecture() {
     return new SchemaField<string>(
       "architecture",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.architecture),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.architecture),
       {},
     );
   }
@@ -141,7 +145,7 @@ export class VideoSchema {
   nature() {
     return new SchemaField<string>(
       "nature",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.nature),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.nature),
       {},
     );
   }
@@ -156,7 +160,7 @@ export class VideoSchema {
   fashion() {
     return new SchemaField<string>(
       "fashion",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.fashion),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.fashion),
       {},
     );
   }
@@ -171,7 +175,7 @@ export class VideoSchema {
   health() {
     return new SchemaField<string>(
       "health",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.health),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.health),
       {},
     );
   }
@@ -186,7 +190,7 @@ export class VideoSchema {
   people() {
     return new SchemaField<string>(
       "people",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.people),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.people),
       {},
     );
   }
@@ -201,7 +205,7 @@ export class VideoSchema {
   street() {
     return new SchemaField<string>(
       "street",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.street),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.street),
       {},
     );
   }
@@ -216,7 +220,7 @@ export class VideoSchema {
   spiritual() {
     return new SchemaField<string>(
       "spiritual",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.spirituality),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.spirituality),
       {},
     );
   }
@@ -231,7 +235,7 @@ export class VideoSchema {
   travel() {
     return new SchemaField<string>(
       "travel",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.travel),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.travel),
       {},
     );
   }
@@ -246,7 +250,7 @@ export class VideoSchema {
   art() {
     return new SchemaField<string>(
       "art",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.art),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.art),
       {},
     );
   }
@@ -261,7 +265,7 @@ export class VideoSchema {
   history() {
     return new SchemaField<string>(
       "history",
-      () => PrivateUtils.oneOfArray(VIDEOS_DEFINITIONS.history),
+      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.history),
       {},
     );
   }

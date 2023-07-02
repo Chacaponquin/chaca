@@ -40,10 +40,26 @@ export const USER_SANCTION_SCHEMA = chaca.schema({
   init_date: schemas.date.past(),
   finish_date: ({ currentFields: fields }) => {
     return chaca.utils.oneOfArray([
-      chaca.utils.sumDateRange(fields.init_date, 1, "months"),
-      chaca.utils.sumDateRange(fields.init_date, 3, "months"),
-      chaca.utils.sumDateRange(fields.init_date, 6, "months"),
-      chaca.utils.sumDateRange(fields.init_date, 1, "years"),
+      chaca.utils.sumDateRange({
+        date: fields.init_date,
+        value: 1,
+        range: "months",
+      }),
+      chaca.utils.sumDateRange({
+        date: fields.init_date,
+        value: 3,
+        range: "months",
+      }),
+      chaca.utils.sumDateRange({
+        date: fields.init_date,
+        value: 6,
+        range: "months",
+      }),
+      chaca.utils.sumDateRange({
+        date: fields.init_date,
+        value: 1,
+        range: "years",
+      }),
       null,
     ]);
   },

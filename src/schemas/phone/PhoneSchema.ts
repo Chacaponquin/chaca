@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 import { PHONE_PREFIX } from "./constants/phonePrefix.js";
@@ -14,6 +14,11 @@ type NumberProps = {
 
 export class PhoneSchema {
   private dataTypeSchema = new DataTypeSchema();
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    phonePrefixs: PHONE_PREFIX,
+  };
 
   /**
    * Returns a phone number
@@ -32,7 +37,7 @@ export class PhoneSchema {
             ? a.format
             : `${this.prefix().getValue()} ### ### ##`;
 
-        const number: string = PrivateUtils.replaceSymbols(format);
+        const number: string = this.utils.replaceSymbols(format);
         return number;
       },
       args || {},
@@ -48,7 +53,7 @@ export class PhoneSchema {
   prefix() {
     return new SchemaField<string>(
       "prefix",
-      () => PrivateUtils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
+      () => this.utils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
       {},
     );
   }

@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../core/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import {
   CSSSpace,
@@ -38,6 +38,12 @@ type ColorByCSSColorSpaceProps = { format: ColorFormat; space: CSSSpace };
 
 export class ColorSchema {
   private readonly dataTypeSchema = new DataTypeSchema();
+  private utils = new ChacaUtils();
+
+  private readonly constants = {
+    cssFunctions: CSS_FUNCTIONS,
+    cssSpaces: CSS_SPACES,
+  };
 
   /**
    * Returns a random css supported color function name.
@@ -50,7 +56,7 @@ export class ColorSchema {
     return new SchemaField(
       "cssSupportedFunction",
       () => {
-        return PrivateUtils.oneOfArray(CSS_FUNCTIONS as any);
+        return this.utils.oneOfArray(CSS_FUNCTIONS as any);
       },
       {},
     );
@@ -66,7 +72,7 @@ export class ColorSchema {
   cssSupportedSpace(): SchemaField<CSSSpace> {
     return new SchemaField(
       "cssSupportedSpace",
-      () => PrivateUtils.oneOfArray(CSS_SPACES as any),
+      () => this.utils.oneOfArray(CSS_SPACES as any),
       {},
     );
   }
