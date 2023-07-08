@@ -16,4 +16,5 @@ const config: Config.InitialOptions = {
   extensionsToTreatAsEsm: [".ts"],
   testTimeout: 100000000,
 };
+
 export default config;
