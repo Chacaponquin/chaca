@@ -1,4 +1,4 @@
-import { ChacaError, chaca } from "../../../src";
+import { chaca } from "../../../src";
 
 describe("# OneOfArray Util Test", () => {
   it("Pass empty array", () => {

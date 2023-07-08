@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../src";
+import { schemas } from "../../../src";
 
 const validateTime = (
   text: string,

@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../src";
+import { schemas } from "../../../src";
 
 const TEST_COUNT_VALUES = 1000;
 
