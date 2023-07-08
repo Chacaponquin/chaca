@@ -4,7 +4,7 @@ Pull requests are welcome for bug fixes, new features, and supporting new platfo
 
 ## How to Contribute
 
-1. [Create an issue](https://github.com/Chacaponquin/ch-data.git/issues/new) or add a comment to an existing issue to let us know that you plan to fix an issue or implement a requested feature.
+1. [Create an issue](https://github.com/Chacaponquin/chaca/issues/new) or add a comment to an existing issue to let us know that you plan to fix an issue or implement a requested feature.
 2. Fork the repository.
 3. Write tests for your fix or feature.
 4. Implement your fix or feature.
@@ -15,4 +15,10 @@ Pull requests are welcome for bug fixes, new features, and supporting new platfo
 
 ```shell
 npm run test
+npm run test:cases  # test examples schema cases
+npm run test:export # test code export cases
+npm run test:schemas # test defined schema fields
+npm run test:library # test library functions, utils, schemas
+npm run test:utils # test library utils
+
 ```

@@ -1,4 +1,8 @@
 import { chaca, ChacaError } from "../../../../src";
+import {
+  createTestFolder,
+  deleteTestFolder,
+} from "../../../utils/functions/folder";
 import { COMPLETE_SCHEMA } from "../../../utils/schemas/schemaComplete";
 import { NESTED_OBJECT_SCHEMA } from "../../../utils/schemas/schemaNestedObjects";
 import { SIMPLE_SCHEMA } from "../../../utils/schemas/simpleSchema";
@@ -12,6 +16,8 @@ describe("#Export CSV test", () => {
   let SIMPLE_SCHEMA_DATA: any;
 
   beforeAll(() => {
+    createTestFolder("csv");
+
     COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
     NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
     SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.generate(50);

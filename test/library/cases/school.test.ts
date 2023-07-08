@@ -1,5 +1,9 @@
 import { chaca } from "../../../src";
 import { SCHOOL_SCHEMAS } from "../../utils/cases/school";
+import {
+  createTestFolder,
+  deleteTestFolder,
+} from "../../utils/functions/folder";
 
 const EXPORT_ROUTE = "./data/cases/school";
 const FILE_NAME = "caseSchool";
@@ -8,6 +12,7 @@ describe("# School Case Test", () => {
   let CASE_DATA: any;
 
   beforeAll(() => {
+    createTestFolder("cases/school");
     CASE_DATA = chaca.multiGenerate(SCHOOL_SCHEMAS, { verbose: false });
   });
 

@@ -6,7 +6,7 @@
   "module": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=12.0.0"
   },
   "exports": {
     ".": {
@@ -35,6 +35,7 @@
     "test:schemas": "jest --testPathPattern=test/schemas",
     "test:library": "jest --testPathPattern=test/library",
     "test:export": "jest --testPathPattern=test/library/export",
+    "test:utils": "jest --testPathPattern=test/library/utils",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "lint-fix": "eslint --fix src/**/*.ts",
     "lint": "eslint src/**/*.ts"
@@ -47,12 +48,12 @@
     "chaca",
     "fake-data",
     "generate data",
+    "mock",
     "random data",
     "data",
     "fake-data-generator",
-    "logical data",
-    "generator",
-    "data"
+    "relational data",
+    "generator"
   ],
   "author": "chacaponquin <hectorangel2001@gmail.com>",
   "license": "MIT",

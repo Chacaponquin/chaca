@@ -1,28 +1,38 @@
 name: Publish Package to npmjs
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
   release:
     name: publish
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.x]
+
     steps:
-      - name: checkout
+      - name: Checkout
         uses: actions/checkout@v3
-      # Setup .npmrc file to publish to npm
-      - name: node
+
+      - name: Node
         uses: actions/setup-node@v3
         with:
-          node-version: "16.x"
+          node-version: ${{ matrix.node-version }}
           registry-url: "https://registry.npmjs.org"
-      - name: ci
+
+      - name: 🕹️ Ci
         run: npm ci
-      - name: build chaca
+
+      - name: 🪛 Build Chaca
         run: npm run build
-      - name: tests
+
+      - name: 🧪 Test
         run: npm run test
-      - name: publish
+
+      - name: ✅ Publish
         run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -13,6 +13,7 @@
 #### Schemas
 
 - Add `ColorSchema`
+- Delete `numberRow` from `IdSchema`
 
 #### Utils
 

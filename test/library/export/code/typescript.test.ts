@@ -1,4 +1,8 @@
 import { chaca } from "../../../../src";
+import {
+  createTestFolder,
+  deleteTestFolder,
+} from "../../../utils/functions/folder";
 import { COMPLETE_SCHEMA } from "../../../utils/schemas/schemaComplete";
 import { NESTED_OBJECT_SCHEMA } from "../../../utils/schemas/schemaNestedObjects";
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../../../utils/schemas/schemaWithArray";
@@ -12,6 +16,8 @@ describe("# Export Typescript", () => {
   let NESTED_OBJECTS_DATA: any;
 
   beforeAll(() => {
+    createTestFolder("typescript");
+
     COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
     NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
   });

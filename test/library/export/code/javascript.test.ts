@@ -1,9 +1,17 @@
 import { chaca } from "../../../../src";
+import {
+  createTestFolder,
+  deleteTestFolder,
+} from "../../../utils/functions/folder";
 
 const objectFileName = "javascriptExport";
 const ROOT = "./data/javascript";
 
 describe("#Javascript Export Test", () => {
+  beforeAll(() => {
+    createTestFolder("javascript");
+  });
+
   describe("Export Primitive values", () => {
     it("Export string", async () => {
       await chaca.export("Javascript Test", {

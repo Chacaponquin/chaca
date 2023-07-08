@@ -1,5 +1,9 @@
 import { chaca } from "../../../src";
 import { LIBRARY_CASE_SCHEMA } from "../../utils/cases/library";
+import {
+  createTestFolder,
+  deleteTestFolder,
+} from "../../utils/functions/folder";
 
 const EXPORT_ROUTE = "./data/cases/library";
 const FILE_NAME = "caseLibrary";
@@ -8,6 +12,7 @@ describe("# Library Case Test", () => {
   let CASE_DATA: any;
 
   beforeAll(() => {
+    createTestFolder("cases/library");
     CASE_DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA, { verbose: false });
   });
 
