@@ -1,12 +1,12 @@
 name: Publish Package to npmjs
 on:
   push:
-    branches: [main]
+    branches: [chaca-dev]
   pull_request:
-    branches: [main]
+    branches: [chaca-dev]
 jobs:
   release:
-    name: 🔥 Publish
+    name: 🖥️ Dev
     runs-on: ubuntu-latest
 
     strategy:
@@ -31,8 +31,3 @@ jobs:
 
       - name: 🧪 Test
         run: npm run test
-
-      - name: ✅ Publish
-        run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
