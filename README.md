@@ -6,7 +6,7 @@
 
 ## Instalation
 
-```bash
+```shell
  npm install chaca
 ```
 
@@ -96,7 +96,7 @@ await postSchema.generateAndExport(20, {
 
 ## Fields Type
 
-### schema field
+### `schema field`
 
 We have several defined schemas that can be used for data creation. You can use them by importing the `schemas` module
 
@@ -129,7 +129,7 @@ schemas.person.firstName().getValue({ sex: "female" }); // 'Camila'
 - `vehicle`
 - `word`
 
-### enum
+### `enum`
 
 Returns one of the values of the array passed as argument
 
@@ -138,7 +138,7 @@ chaca.enum([1, 2, 3, 4, 5]); // 5;
 chaca.enum([]); // throws an error
 ```
 
-### custom
+### `custom`
 
 Function that allows customizing a value based on the current state of the dataset
 
@@ -150,7 +150,7 @@ Function that allows customizing a value based on the current state of the datas
 }
 ```
 
-### key
+### `key`
 
 Indicates that the field is the schema key
 
@@ -165,7 +165,7 @@ Indicates that the field is the schema key
 > - `sequential`, `enum` and `nested schema` fields can not be schema keys.
 > - In case of being a `schema field` or `custom` field it must return a string, number or Date.
 
-### ref
+### `ref`
 
 Reference to another schema, indicates that it will have one of the generated values of the selected field.
 
@@ -205,7 +205,7 @@ Reference to another schema, indicates that it will have one of the generated va
   }
   ```
 
-### sequential
+### `sequential`
 
 Array of values that will be assigned according to the number of the document being created.
 
@@ -222,7 +222,7 @@ const postSchema = chaca.schema({
 postSchema.generate(4);
 ```
 
-### sequence
+### `sequence`
 
 Returns anumber that increments for each document created.
 
