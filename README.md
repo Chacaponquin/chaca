@@ -245,7 +245,7 @@ userSchema.generate(4); // [{id: 1}, {id: 2}, {id: 3}, {id: 4}]
 
   Step between values.
 
-### nested schema
+### `nested schema`
 
 You can also make the field an object of information using an nested schema
 
