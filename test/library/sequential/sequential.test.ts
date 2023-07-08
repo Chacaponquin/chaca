@@ -1,9 +1,4 @@
-import {
-  ChacaError,
-  EmptySequentialValuesError,
-  chaca,
-  schemas,
-} from "../../../src";
+import { ChacaError, EmptySequentialValuesError } from "../../../src";
 import { CORRECT_SEQUENTIAL_DATA } from "./schemas/correctSchema";
 import {
   FEW_VALUES_SEQUENTIAL_SCHEMA,

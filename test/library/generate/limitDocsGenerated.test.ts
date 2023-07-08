@@ -2,8 +2,8 @@ import { ChacaError } from "../../../src";
 import { COMPLETE_SCHEMA } from "../../utils/schemas/schemaComplete";
 
 const MINIMUN_FOR_TEST = 5000;
-const MEDIUM_FOR_TEST = 20000;
-const MAXIMUN_FOR_TEST = 40000;
+// const MEDIUM_FOR_TEST = 20000;
+// const MAXIMUN_FOR_TEST = 40000;
 
 describe("# Limit Docs Generated Test", () => {
   it("Pass a not number values as a number to generate. Should throw an error", () => {
