@@ -72,6 +72,7 @@ describe("# SQL Export Test", () => {
             format: "postgresql",
             location: ROOT,
           },
+          { verbose: false },
         ),
       ).rejects.toThrowError(ChacaError);
     });

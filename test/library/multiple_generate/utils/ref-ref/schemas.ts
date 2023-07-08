@@ -16,8 +16,11 @@ export const SCHEMA_THREE = chaca.schema({
 });
 
 export const REF_REF_VALUE_DATA = () =>
-  chaca.multiGenerate([
-    { name: "SchemaOne", documents: 50, schema: SCHEMA_ONE },
-    { name: "SchemaTwo", documents: 50, schema: SCHEMA_TWO },
-    { name: "SchemaThree", documents: 50, schema: SCHEMA_THREE },
-  ]);
+  chaca.multiGenerate(
+    [
+      { name: "SchemaOne", documents: 50, schema: SCHEMA_ONE },
+      { name: "SchemaTwo", documents: 50, schema: SCHEMA_TWO },
+      { name: "SchemaThree", documents: 50, schema: SCHEMA_THREE },
+    ],
+    { verbose: false },
+  );
