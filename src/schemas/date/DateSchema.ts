@@ -1,5 +1,7 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
+import { ChacaError } from "../../errors/ChacaError.js";
 import { SchemaField } from "../SchemaField.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 import { MONTHS } from "./constants/month.js";
 import { WEEKDAYS } from "./constants/weekday.js";
 
@@ -36,6 +38,14 @@ type DateBetweenProps = {
 };
 
 export class DateSchema {
+  private dataTypeSchema = new DataTypeSchema();
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    weekDays: WEEKDAYS,
+    months: MONTHS,
+  };
+
   /**
    * Returns a date in the near future.
    *
@@ -55,7 +65,7 @@ export class DateSchema {
         const days =
           typeof a.days === "number" && a.days > 0
             ? a.days
-            : PrivateUtils.intNumber({ min: 1, max: 200 });
+            : this.dataTypeSchema.int().getValue({ min: 1, max: 200 });
 
         const refDate = this.argToDate(a.refDate);
 
@@ -65,7 +75,7 @@ export class DateSchema {
         };
 
         let future = refDate.getTime();
-        future += PrivateUtils.intNumber(range);
+        future += this.dataTypeSchema.int().getValue(range);
         refDate.setTime(future);
 
         return refDate;
@@ -95,7 +105,7 @@ export class DateSchema {
         const years =
           typeof a.years === "number" && a.years > 0
             ? a.years
-            : PrivateUtils.intNumber({ min: 1, max: 10 });
+            : this.dataTypeSchema.int().getValue({ min: 1, max: 10 });
 
         const refDate = this.argToDate(a.refDate);
 
@@ -105,7 +115,7 @@ export class DateSchema {
         };
 
         let past = refDate.getTime();
-        past -= PrivateUtils.intNumber(range); // some time from now to N years ago, in milliseconds
+        past -= this.dataTypeSchema.int().getValue(range); // some time from now to N years ago, in milliseconds
         refDate.setTime(past);
 
         return refDate;
@@ -143,10 +153,12 @@ export class DateSchema {
         };
 
         let future = refDate.getTime();
-        future += PrivateUtils.intNumber(range);
-        refDate.setTime(future);
+        future += this.dataTypeSchema.int().getValue(range);
 
-        return refDate;
+        const newDate = new Date();
+        newDate.setTime(future);
+
+        return newDate;
       },
       args || {},
     );
@@ -162,7 +174,7 @@ export class DateSchema {
     return new SchemaField<string>(
       "month",
       () => {
-        return PrivateUtils.oneOfArray(MONTHS);
+        return this.utils.oneOfArray(MONTHS);
       },
       {},
     );
@@ -178,7 +190,7 @@ export class DateSchema {
     return new SchemaField<string>(
       "weekDay",
       () => {
-        return PrivateUtils.oneOfArray(WEEKDAYS);
+        return this.utils.oneOfArray(WEEKDAYS);
       },
       {},
     );
@@ -223,6 +235,7 @@ export class DateSchema {
         let min: number =
           typeof a.min === "number" && a.min > 0 ? a.min : refYear - 18;
         let max: number = typeof a.max === "number" ? a.max : refYear - 80;
+
         if (mode === "age") {
           min = new Date(refDate).setUTCFullYear(refYear - max - 1);
           max = new Date(refDate).setUTCFullYear(refYear - min);
@@ -231,10 +244,18 @@ export class DateSchema {
           max = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);
         }
 
-        return new Date(PrivateUtils.intNumber({ min, max }));
+        return new Date(this.dataTypeSchema.int().getValue({ min, max }));
       },
       args || {},
     );
+  }
+
+  private randomDate(): Date {
+    const year = this.dataTypeSchema.int().getValue({ min: 1900, max: 2300 });
+    const month = this.dataTypeSchema.int().getValue({ min: 0, max: 11 });
+    const day = this.dataTypeSchema.int().getValue({ min: 1, max: 30 });
+
+    return new Date(year, month, day);
   }
 
   /**
@@ -254,17 +275,32 @@ export class DateSchema {
     return new SchemaField<Date, DateBetweenProps>(
       "dateBetween",
       (a) => {
-        const from = !a.from
-          ? new Date("2030-01-01T00:00:00.000Z")
-          : this.argToDate(a.from);
+        let from: Date;
+        let to: Date;
 
-        const to = !a.to
-          ? new Date("2030-01-01T00:00:00.000Z")
-          : this.argToDate(a.to);
+        if (a.from instanceof Date && a.to instanceof Date) {
+          if (a.from.getTime() > a.to.getTime()) {
+            throw new ChacaError(`The to Date must be greater than from Date.`);
+          } else {
+            from = a.from;
+            to = a.to;
+          }
+        } else {
+          if (a.from instanceof Date && !(a.to instanceof Date)) {
+            from = this.argToDate(a.from);
+            to = this.future().getValue({ refDate: from });
+          } else if (!(a.from instanceof Date) && a.to instanceof Date) {
+            to = a.to as Date;
+            from = this.past().getValue({ refDate: to });
+          } else {
+            from = this.randomDate();
+            to = this.future().getValue({ refDate: from });
+          }
+        }
 
         const fromMs = from.getTime();
         const toMs = to.getTime();
-        const dateOffset = PrivateUtils.intNumber({
+        const dateOffset = this.dataTypeSchema.int().getValue({
           min: 0,
           max: toMs - fromMs,
         });
@@ -289,46 +325,46 @@ export class DateSchema {
         const units = ["years", "seconds", "minutes", "days", "hours"];
 
         const unit =
-          typeof a.unit === "string" ? a.unit : PrivateUtils.oneOfArray(units);
+          typeof a.unit === "string" ? a.unit : this.utils.oneOfArray(units);
 
         let filterUnit = units.find((el) => el === unit) as TimeUnits;
         if (!filterUnit) {
-          filterUnit = PrivateUtils.oneOfArray(units) as TimeUnits;
+          filterUnit = this.utils.oneOfArray(units) as TimeUnits;
         }
 
         switch (filterUnit) {
           case "days":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 30,
             })} ${unit} ago`;
           case "hours":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 23,
             })} ${unit} ago`;
           case "minutes":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 59,
             })} ${unit} ago`;
           case "seconds":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 59,
             })} ${unit} ago`;
           case "years":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 40,
             })} ${unit} ago`;
           case "months":
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 11,
             })} ${unit} ago`;
           default:
-            return `${PrivateUtils.intNumber({
+            return `${this.dataTypeSchema.int().getValue({
               min: 1,
               max: 60,
             })} ${unit} ago`;

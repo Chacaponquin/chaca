@@ -1,6 +1,11 @@
-import { ChacaError } from "../../errors/ChacaError.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
+import { SPECIAL_CHARACTERS } from "./constants/special_characters.js";
+import {
+  LOWER_CHARACTERS,
+  MIXED_CHARACTERS,
+  UPPER_CHARACTERS,
+} from "./constants/characters.js";
 
 type Case = "lower" | "upper" | "mixed";
 
@@ -44,16 +49,41 @@ type MatrizProps = {
   precision?: number;
 };
 
-type CustomArrayProps = {
-  array: any[];
-};
-
 type CharactersProps = {
   length?: number;
   case?: "lower" | "upper";
 };
 
 export class DataTypeSchema {
+  private MIN_RANDOM_VALUE = -9999999;
+  private MAX_RANDOM_VALUE = 9999999;
+  private MAX_PRECISION = 16;
+
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    upperCharacters: UPPER_CHARACTERS,
+    lowerCharacters: LOWER_CHARACTERS,
+    mixedCharacters: MIXED_CHARACTERS,
+    specialCharacters: SPECIAL_CHARACTERS,
+  };
+
+  /**
+   * Returns a keyboard special character
+   * @example schemas.dataType.specialCharacter() // Schema
+   * @example schemas.dataType.specialCharacter().getValue() // '_'
+   * @returns string
+   */
+  public specialCharacter(): SchemaField<string> {
+    return new SchemaField<string>(
+      "specialCharacter",
+      () => {
+        return this.utils.oneOfArray(SPECIAL_CHARACTERS);
+      },
+      {},
+    );
+  }
+
   /**
    * Returns a boolean
    * @example schemas.dataType.boolean() /// Schema
@@ -63,7 +93,7 @@ export class DataTypeSchema {
   public boolean() {
     return new SchemaField<boolean>(
       "boolean",
-      () => PrivateUtils.oneOfArray([true, false]),
+      () => this.utils.oneOfArray([true, false]),
       {},
     );
   }
@@ -82,7 +112,26 @@ export class DataTypeSchema {
     return new SchemaField<number, IntProps>(
       "int",
       (a) => {
-        return PrivateUtils.intNumber(a);
+        const minimun: number =
+          typeof a.min === "number" ? a.min : this.MIN_RANDOM_VALUE;
+        let maximun: number;
+
+        if (typeof a.max === "number") {
+          if (minimun) {
+            if (a.max >= minimun) {
+              maximun = a.max;
+            } else {
+              maximun = this.MAX_RANDOM_VALUE;
+            }
+          } else {
+            maximun = a.max;
+          }
+        } else {
+          maximun = this.MAX_RANDOM_VALUE;
+        }
+
+        const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
+        return val;
       },
       args || {},
     );
@@ -104,25 +153,34 @@ export class DataTypeSchema {
     return new SchemaField<number, FloatProps>(
       "float",
       (a) => {
-        const minimun: number = typeof a.min === "number" ? a.min : -999999;
-        let maximun: number;
+        const { max, min, precision } = a;
+        let range: number;
+        if (typeof max === "number" && typeof min === "number") {
+          range = max - min;
+        } else if (typeof max === "number" && typeof min === "undefined") {
+          range = max;
+        } else if (typeof max === "undefined" && typeof min === "number") {
+          range = this.MAX_RANDOM_VALUE - min;
+        } else {
+          range = this.utils.oneOfArray([
+            this.MAX_RANDOM_VALUE,
+            this.MIN_RANDOM_VALUE,
+          ]);
+        }
+
         const pres: number =
-          typeof a.precision === "number" &&
-          a.precision > 0 &&
-          a.precision <= 20
-            ? a.precision
-            : 2;
+          typeof precision === "number" &&
+          precision > 0 &&
+          precision <= this.MAX_PRECISION
+            ? precision
+            : this.int().getValue({ min: 1, max: 10 });
 
-        if (typeof a.max === "number") {
-          if (minimun) {
-            if (a.max > minimun) maximun = a.max;
-            else maximun = 999999;
-          } else maximun = a.max;
-        } else maximun = 999999;
+        const randomNum = Math.random() * range + (min || 0);
+        const factor = Math.pow(10, pres);
 
-        const val = Math.random() * (maximun - minimun + 1) + minimun;
+        const returnValue = Math.round(randomNum * factor) / factor;
 
-        return Number(String(val.toFixed(pres)));
+        return returnValue;
       },
       args || {},
     );
@@ -143,24 +201,15 @@ export class DataTypeSchema {
     return new SchemaField<number, NumberProps>(
       "number",
       (a) => {
-        const minimun: number = typeof a.min === "number" ? a.min : -999999;
-        let maximun: number;
-        const pres: number =
-          typeof a.precision === "number" &&
-          a.precision > 0 &&
-          a.precision <= 20
-            ? a.precision
-            : PrivateUtils.intNumber({ min: 0, max: 5 });
+        const { max, min, precision } = a;
 
-        if (typeof a.max === "number") {
-          if (minimun) {
-            if (a.max > minimun) maximun = a.max;
-            else maximun = 999999;
-          } else maximun = a.max;
-        } else maximun = 999999;
-
-        const val = Math.random() * (maximun - minimun + 1) + minimun;
-        return Number(String(val.toFixed(pres)));
+        let val: number;
+        if (precision === 0) {
+          val = this.int().getValue({ max, min });
+        } else {
+          val = this.float().getValue({ max, min, precision });
+        }
+        return val;
       },
       args || {},
     );
@@ -170,12 +219,12 @@ export class DataTypeSchema {
    * Returns a string with a hexadecimal code
    * @param args.case Case of the values inside de hexadecimal code (`mixed` | `lower` | `upper`)
    * @param args.length Lenght of the hexadecimal code
-   * @example schemas.dataType.hexadecimal() // Schema
    * @example
+   * schemas.dataType.hexadecimal() // Schema
    * schemas.dataType.hexadecimal().getValue() // '009df'
    * schemas.dataType.hexadecimal().getValue({length: 3}) // '01D'
    * schemas.dataType.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
-   * @returns
+   * @returns string
    */
   public hexadecimal(args?: HexadecimalProps) {
     return new SchemaField<string, HexadecimalProps>(
@@ -187,19 +236,19 @@ export class DataTypeSchema {
         const length =
           typeof a.length === "number" && a.length > 0
             ? a.length
-            : PrivateUtils.intNumber({ min: 5, max: 10 });
+            : this.int().getValue({ min: 5, max: 10 });
         const c = typeof a.case === "string" ? a.case : "mixed";
 
         let ret = "";
         for (let i = 1; i <= length; i++) {
           ret = ret.concat(
-            PrivateUtils.oneOfArray([
+            this.utils.oneOfArray([
               ...numbers,
               ...characters.map((el) => {
                 if (c === "lower") return el.toLowerCase();
                 else if (c === "upper") return el;
                 else {
-                  return PrivateUtils.oneOfArray([
+                  return this.utils.oneOfArray([
                     el.toLowerCase(),
                     el.toUpperCase(),
                   ]);
@@ -230,54 +279,30 @@ export class DataTypeSchema {
    * schemas.dataType.matriz().getValue() // [[1, 0, 5], [5, 10, 9]]
    * schemas.dataType.matriz().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
-  public matriz(args?: MatrizProps) {
+  public matrix(args?: MatrizProps) {
     return new SchemaField<number[][], MatrizProps>(
       "matriz",
       (a) => {
         const x_size =
-          typeof a.x_size === "number" && a.x_size > 0
+          typeof a.x_size === "number" && a.x_size >= 0
             ? Number.parseInt(String(a.x_size))
-            : PrivateUtils.intNumber({ min: 1, max: 10 });
+            : this.int().getValue({ min: 1, max: 10 });
         const y_size =
-          typeof a.y_size === "number" && a.y_size > 0
+          typeof a.y_size === "number" && a.y_size >= 0
             ? Number.parseInt(String(a.y_size))
-            : PrivateUtils.intNumber({ min: 1, max: 10 });
+            : this.int().getValue({ min: 1, max: 10 });
 
-        const { min, max } = this.validateMinMax(a.min, a.max);
-
-        const precision =
-          typeof a.precision === "number" && a.precision > 0
-            ? a.precision
-            : undefined;
-
-        return new Array(x_size).fill(0).map(() => {
-          return new Array(y_size).fill(0).map(() => {
-            return this.number().getValue({ min, max, precision });
+        return Array.from({ length: x_size }).map(() => {
+          return Array.from({ length: y_size }).map(() => {
+            return this.number().getValue({
+              min: a.min,
+              max: a.max,
+              precision: a.precision,
+            });
           });
         });
       },
       args || {},
-    );
-  }
-
-  /**
-   * Return one of an array of elements
-   * @param args.array Array of elements
-   * @example schemas.dataType.customArray() // Schema
-   * @example schemas.dataType.customArray({array: [5, {hello: "world"}, "Chaca"]}) // 5
-   */
-  public customArray(args?: CustomArrayProps) {
-    return new SchemaField<any, CustomArrayProps>(
-      "customArray",
-      (a) => {
-        if (Array.isArray(a.array) && a.array.length > 0) {
-          return PrivateUtils.oneOfArray(a.array);
-        } else
-          throw new ChacaError(
-            "The argument of custom array must be an array of values",
-          );
-      },
-      args || { array: [] },
     );
   }
 
@@ -300,22 +325,29 @@ export class DataTypeSchema {
       (a) => {
         const len =
           typeof a.length === "number" && a.length > 0 ? a.length : undefined;
-        let charactersToRet: string[] = [];
+        let charactersToRet;
 
         if (a.case) {
-          if (a.case === "lower")
-            charactersToRet = PrivateUtils.characters("lower");
-          else if (a.case === "upper") PrivateUtils.characters("upper");
-          else charactersToRet = PrivateUtils.characters();
-        } else charactersToRet = PrivateUtils.characters();
+          if (a.case === "lower") {
+            charactersToRet = this.constants.lowerCharacters;
+          } else if (a.case === "upper") {
+            charactersToRet = this.constants.upperCharacters;
+          } else {
+            charactersToRet = this.constants.mixedCharacters;
+          }
+        } else {
+          charactersToRet = this.constants.mixedCharacters;
+        }
 
         if (len) {
           let ret = "";
           for (let i = 1; i <= len; i++) {
-            ret = ret.concat(PrivateUtils.oneOfArray(charactersToRet));
+            ret = ret.concat(this.utils.oneOfArray(charactersToRet));
           }
           return ret;
-        } else return PrivateUtils.oneOfArray(charactersToRet);
+        } else {
+          return this.utils.oneOfArray(charactersToRet);
+        }
       },
       args || {},
     );
@@ -330,18 +362,18 @@ export class DataTypeSchema {
    * schemas.dataType.binaryCode().getValue({length: 6}) // '010100'
    * @returns
    */
-  binaryCode(args?: BinaryCodeProps) {
+  public binaryCode(args?: BinaryCodeProps) {
     return new SchemaField<string, BinaryCodeProps>(
       "binaryCode",
       (a) => {
         const length =
           typeof a.length === "number" && a.length > 0
             ? a.length
-            : PrivateUtils.intNumber({ min: 4, max: 8 });
+            : this.int().getValue({ min: 4, max: 8 });
 
         let ret = "";
         for (let i = 1; i <= length; i++) {
-          ret = ret.concat(String(PrivateUtils.oneOfArray([0, 1])));
+          ret = ret.concat(String(this.utils.oneOfArray([0, 1])));
         }
 
         return ret;
@@ -350,30 +382,15 @@ export class DataTypeSchema {
     );
   }
 
-  /**
-   * Returns a keyboard special character
-   * @example schemas.dataType.specialCharacter() // Schema
-   * @example schemas.dataType.specialCharacter().getValue() // '_'
-   * @returns string
-   */
-  public specialCharacter() {
-    return new SchemaField<string>(
-      "specialCharacter",
-      () => {
-        return PrivateUtils.oneOfArray(PrivateUtils.specialCharacters());
-      },
-      {},
-    );
-  }
-
-  alphaNumeric(args?: AlphaNumericProps) {
+  public alphaNumeric(args?: AlphaNumericProps) {
     return new SchemaField<string, AlphaNumericProps>(
       "alphaNumeric",
       (a) => {
         const length =
           typeof a.length === "number" && a.length > 0
             ? a.length
-            : PrivateUtils.intNumber({ min: 1, max: 20 });
+            : this.int().getValue({ min: 1, max: 20 });
+
         const banned: string[] = [];
 
         const cass = typeof a.case === "string" ? a.case : undefined;
@@ -385,19 +402,21 @@ export class DataTypeSchema {
             }
           } else if (Array.isArray(banned)) {
             for (const c of a.banned) {
-              if (typeof c === "string") banned.push(c);
+              if (typeof c === "string") {
+                banned.push(c);
+              }
             }
           }
         }
 
-        const selectNumbers = PrivateUtils.numbersArray().filter((el) => {
+        const selectNumbers = this.numbersArray().filter((el) => {
           let is = true;
           banned.forEach((b) => {
             if (b === el) is = false;
           });
           return is;
         });
-        const characters = PrivateUtils.characters(cass);
+        const characters = this.filterCharacters(cass);
         const selectCharacters = characters.filter((el) => {
           let is = true;
           banned.forEach((b) => {
@@ -409,7 +428,7 @@ export class DataTypeSchema {
 
         let retString = "";
         for (let i = 1; i <= length; i++) {
-          retString = retString.concat(PrivateUtils.oneOfArray(selectValues));
+          retString = retString.concat(this.utils.oneOfArray(selectValues));
         }
 
         return retString;
@@ -418,14 +437,17 @@ export class DataTypeSchema {
     );
   }
 
-  private validateMinMax(
-    min: number | undefined,
-    max: number | undefined,
-  ): { min: number | undefined; max: number | undefined } {
-    const mi = typeof min === "number" ? min : undefined;
-    const ma =
-      typeof max === "number" ? (mi && max > mi ? max : undefined) : undefined;
+  private filterCharacters(fCase?: Case): string[] {
+    if (fCase === "upper") {
+      return this.constants.upperCharacters;
+    } else if (fCase === "lower") {
+      return this.constants.lowerCharacters;
+    } else {
+      return this.constants.mixedCharacters;
+    }
+  }
 
-    return { min: mi, max: ma };
+  private numbersArray(): string[] {
+    return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
   }
 }

@@ -1,6 +1,6 @@
 import { SchemaField } from "../SchemaField.js";
 import { loremIpsum } from "lorem-ipsum";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 type WordsProps = {
   count?: number;
@@ -30,11 +30,14 @@ type ParagraphsProps = {
 };
 
 export class LoremSchema {
+  private dataTypeSchema = new DataTypeSchema();
+
   /**
    * @param args.paragraphsCount Number of paragraphs. Default `3`
    * @param args.separator Separator between paragraphs. Default `\n`
    * @param args.maxSentences Maximun of sentences of each paragraphs
    * @param args.minSentences Min of sentences of each paragraphs
+   *
    * @example schemas.lorem.paragraphs() // Schema
    * @example schemas.lorem.paragraphs().getValue()
    * @returns string
@@ -75,6 +78,7 @@ export class LoremSchema {
    * @param args.separator Separator between sentences. Default `\n`
    * @param args.wordsMin Minimun of words in each sentence
    * @param args.wordsMax Maximun of words in each sentence
+   *
    * @example schemas.lorem.sentences() // Schema
    * @example schemas.lorem.sentences().getValue()
    * @returns
@@ -161,6 +165,7 @@ export class LoremSchema {
   /**
    * @param args.character_min Minimun of characters in the text
    * @param args.character_max Maximun of characters in the text
+   *
    * @example schemas.lorem.text() // Schema
    * @example schemas.lorem.text().getValue()
    * @returns string
@@ -172,7 +177,7 @@ export class LoremSchema {
         const text = loremIpsum({
           format: "plain",
           units: "paragraph",
-          count: PrivateUtils.intNumber({ min: 100, max: 3000 }),
+          count: this.dataTypeSchema.int().getValue({ min: 100, max: 1500 }),
         });
 
         if (a.character_max || a.character_min) {
@@ -180,16 +185,20 @@ export class LoremSchema {
             typeof a.character_min === "number" && a.character_min > 0
               ? a.character_min
               : 0;
+
           const charMax =
             typeof a.character_max === "number" && a.character_max > charMin
               ? a.character_max
-              : PrivateUtils.intNumber({ min: 300, max: 1000 });
+              : this.dataTypeSchema.int().getValue({ min: 300, max: 1000 });
 
           return text.slice(
             0,
-            PrivateUtils.intNumber({ min: charMin, max: charMax }),
+            this.dataTypeSchema.int().getValue({ min: charMin, max: charMax }) +
+              1,
           );
-        } else return text;
+        } else {
+          return text;
+        }
       },
       args || {},
     );

@@ -1,27 +1,15 @@
 import { SchemaField } from "../SchemaField.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
-import { Schemas } from "../index.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 export class IdSchema {
-  /**
-   * Generates a unique number
-   *
-   * @example schemas.id.numberRow() // Schema
-   * @example
-   * schemas.id.numberRow().getValue() //1664755445878
-   *
-   * @returns string
-   */
-  public numberRow() {
-    return new SchemaField<number>("numberRow", () => Date.now(), {});
-  }
+  private dataTypeSchema = new DataTypeSchema();
 
   /**
    * Returns a MongoDB [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/) string.
    *
-   * @example schemas.id.mongodbId() // Schema
+   * @example schemas.id.mongodbID() // Schema
    * @example
-   * schemas.id.mongodbObjectId().getValue() // 'e175cac316a79afdd0ad3afb'
+   * schemas.id.mongodbID().getValue() // 'e175cac316a79afdd0ad3afb'
    *
    * @returns string
    */
@@ -29,7 +17,7 @@ export class IdSchema {
     return new SchemaField<string>(
       "mongodbID",
       () => {
-        return Schemas.dataType
+        return this.dataTypeSchema
           .hexadecimal()
           .getValue({ case: "lower", length: 24 });
       },
@@ -52,7 +40,9 @@ export class IdSchema {
       () => {
         const RFC4122_TEMPLATE = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
         const replacePlaceholders = (placeholder: string) => {
-          const random = PrivateUtils.intNumber({ min: 0, max: 15 });
+          const random = this.dataTypeSchema
+            .int()
+            .getValue({ min: 0, max: 15 });
           const value = placeholder === "x" ? random : (random & 0x3) | 0x8;
           return value.toString(16);
         };

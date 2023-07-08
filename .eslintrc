@@ -24,7 +24,10 @@
     "import/extensions": ["error", "ignorePackages"],
     "file-extension-in-import-ts/file-extension-in-import-ts": "error",
     "@typescript-eslint/no-explicit-any": "off",
-    "require-yield": "off"
+    "require-yield": "error",
+    "no-console": "error",
+    "require-await": "error",
+    "eqeqeq": "error"
   },
   "settings": {
     "import/extensions": [".js", "ts"],

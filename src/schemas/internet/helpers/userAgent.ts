@@ -1,4 +1,5 @@
-import { PrivateUtils } from "../../../utils/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../../core/helpers/ChacaUtils.js";
+import { DataTypeSchema } from "../../dataType/DataTypeSchema.js";
 
 type OS = "lin" | "mac" | "win";
 
@@ -104,11 +105,14 @@ const LANGUAGES = [
 ];
 
 export function GenerateUserAgent(): string {
+  const dataTypeSchema = new DataTypeSchema();
+  const utils = new ChacaUtils();
+
   const weightedKeyFromObject = <T extends Record<string, number>>(
     obj: T,
   ): keyof T => {
     //returns a random key from the passed object; keys are weighted by the decimal probability in their value
-    const rand = PrivateUtils.intNumber({ min: 0, max: 100 }) / 100;
+    const rand = dataTypeSchema.int().getValue({ min: 0, max: 100 }) / 100;
     let min = 0;
     let max = 0;
     let return_val = "";
@@ -127,7 +131,7 @@ export function GenerateUserAgent(): string {
     return return_val;
   };
 
-  const randomLang = (): string => PrivateUtils.oneOfArray(LANGUAGES);
+  const randomLang = (): string => utils.oneOfArray(LANGUAGES);
 
   const randomBrowserAndOS = (): [Browser, OS] => {
     const browser: Browser = weightedKeyFromObject({
@@ -159,7 +163,7 @@ export function GenerateUserAgent(): string {
     };
     const archValue = procs[arch];
     const proc = Array.isArray(archValue)
-      ? PrivateUtils.oneOfArray(archValue)
+      ? utils.oneOfArray(archValue)
       : weightedKeyFromObject(archValue);
 
     return proc;
@@ -170,7 +174,7 @@ export function GenerateUserAgent(): string {
     //generate a random revision
     //dots = 2 returns .x.y where x & y are between 0 and 9
     for (let x = 0; x < dots; x++) {
-      return_val += `.${PrivateUtils.intNumber({ min: 0, max: 9 })}`;
+      return_val += `.${dataTypeSchema.int().getValue({ min: 0, max: 9 })}`;
     }
     return return_val;
   };
@@ -178,53 +182,53 @@ export function GenerateUserAgent(): string {
   const version_string = {
     net() {
       return [
-        PrivateUtils.intNumber({ min: 1, max: 4 }),
-        PrivateUtils.intNumber({ min: 0, max: 9 }),
-        PrivateUtils.intNumber({ min: 10000, max: 99999 }),
-        PrivateUtils.intNumber({ min: 0, max: 9 }),
+        dataTypeSchema.int().getValue({ min: 1, max: 4 }),
+        dataTypeSchema.int().getValue({ min: 0, max: 9 }),
+        dataTypeSchema.int().getValue({ min: 10000, max: 99999 }),
+        dataTypeSchema.int().getValue({ min: 0, max: 9 }),
       ].join(".");
     },
     nt() {
       return [
-        PrivateUtils.intNumber({ min: 5, max: 6 }),
-        PrivateUtils.intNumber({ min: 0, max: 3 }),
+        dataTypeSchema.int().getValue({ min: 5, max: 6 }),
+        dataTypeSchema.int().getValue({ min: 0, max: 3 }),
       ].join(".");
     },
     ie() {
-      return PrivateUtils.intNumber({ min: 7, max: 11 });
+      return dataTypeSchema.int().getValue({ min: 7, max: 11 });
     },
     trident() {
       return [
-        PrivateUtils.intNumber({ min: 3, max: 7 }),
-        PrivateUtils.intNumber({ min: 0, max: 1 }),
+        dataTypeSchema.int().getValue({ min: 3, max: 7 }),
+        dataTypeSchema.int().getValue({ min: 0, max: 1 }),
       ].join(".");
     },
     osx(delim?: string) {
       return [
         10,
-        PrivateUtils.intNumber({ min: 5, max: 10 }),
-        PrivateUtils.intNumber({ min: 0, max: 9 }),
+        dataTypeSchema.int().getValue({ min: 5, max: 10 }),
+        dataTypeSchema.int().getValue({ min: 0, max: 9 }),
       ].join(delim || ".");
     },
     chrome() {
       return [
-        PrivateUtils.intNumber({ min: 13, max: 39 }),
+        dataTypeSchema.int().getValue({ min: 13, max: 39 }),
         0,
-        PrivateUtils.intNumber({ min: 800, max: 899 }),
+        dataTypeSchema.int().getValue({ min: 800, max: 899 }),
         0,
       ].join(".");
     },
     presto() {
-      return `2.9.${PrivateUtils.intNumber({ min: 160, max: 190 })}`;
+      return `2.9.${dataTypeSchema.int().getValue({ min: 160, max: 190 })}`;
     },
     presto2() {
-      return `${PrivateUtils.intNumber({ min: 10, max: 12 })}.00`;
+      return `${dataTypeSchema.int().getValue({ min: 10, max: 12 })}.00`;
     },
     safari() {
       return [
-        PrivateUtils.intNumber({ min: 531, max: 538 }),
-        PrivateUtils.intNumber({ min: 0, max: 2 }),
-        PrivateUtils.intNumber({ min: 0, max: 2 }),
+        dataTypeSchema.int().getValue({ min: 531, max: 538 }),
+        dataTypeSchema.int().getValue({ min: 0, max: 2 }),
+        dataTypeSchema.int().getValue({ min: 0, max: 2 }),
       ].join(".");
     },
   };
@@ -232,7 +236,7 @@ export function GenerateUserAgent(): string {
   const browserMap = {
     firefox(arch: OS): string {
       //https://developer.mozilla.org/en-US/docs/Gecko_user_agent_string_reference
-      const firefox_ver = `${PrivateUtils.intNumber({
+      const firefox_ver = `${dataTypeSchema.int().getValue({
           min: 5,
           max: 15,
         })}${randomRevision(2)}`,
@@ -256,17 +260,19 @@ export function GenerateUserAgent(): string {
 
       if (ver >= 11) {
         //http://msdn.microsoft.com/en-us/library/ie/hh869301(v=vs.85).aspx
-        return `Mozilla/5.0 (Windows NT 6.${PrivateUtils.intNumber({
+        return `Mozilla/5.0 (Windows NT 6.${dataTypeSchema.int().getValue({
           min: 1,
           max: 3,
         })}; Trident/7.0; ${
-          PrivateUtils.boolean() ? "Touch; " : ""
+          dataTypeSchema.boolean().getValue() ? "Touch; " : ""
         }rv:11.0) like Gecko`;
       }
 
       //http://msdn.microsoft.com/en-us/library/ie/ms537503(v=vs.85).aspx
       return `Mozilla/5.0 (compatible; MSIE ${ver}.0; Windows NT ${version_string.nt()}; Trident/${version_string.trident()}${
-        PrivateUtils.boolean() ? `; .NET CLR ${version_string.net()}` : ""
+        dataTypeSchema.boolean().getValue()
+          ? `; .NET CLR ${version_string.net()}`
+          : ""
       })`;
     },
 
@@ -280,10 +286,10 @@ export function GenerateUserAgent(): string {
             ? `(X11; Linux ${randomProc(arch)}; U; ${randomLang()}${presto_ver}`
             : `(Macintosh; Intel Mac OS X ${version_string.osx()} U; ${randomLang()} Presto/${version_string.presto()} Version/${version_string.presto2()})`;
 
-      return `Opera/${PrivateUtils.intNumber({
+      return `Opera/${dataTypeSchema.int().getValue({
         min: 9,
         max: 14,
-      })}.${PrivateUtils.intNumber({
+      })}.${dataTypeSchema.int().getValue({
         min: 0,
         max: 99,
       })} ${os_ver}`;
@@ -291,18 +297,18 @@ export function GenerateUserAgent(): string {
 
     safari(arch: OS): string {
       const safari = version_string.safari(),
-        ver = `${PrivateUtils.intNumber({
+        ver = `${dataTypeSchema.int().getValue({
           min: 4,
           max: 7,
-        })}.${PrivateUtils.intNumber({
+        })}.${dataTypeSchema.int().getValue({
           min: 0,
           max: 1,
-        })}.${PrivateUtils.intNumber({ min: 0, max: 10 })}`,
+        })}.${dataTypeSchema.int().getValue({ min: 0, max: 10 })}`,
         os_ver =
           arch === "mac"
             ? `(Macintosh; ${randomProc("mac")} Mac OS X ${version_string.osx(
                 "_",
-              )} rv:${PrivateUtils.intNumber({
+              )} rv:${dataTypeSchema.int().getValue({
                 min: 2,
                 max: 6,
               })}.0; ${randomLang()}) `

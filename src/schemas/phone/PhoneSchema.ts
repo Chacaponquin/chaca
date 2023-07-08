@@ -1,5 +1,6 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 import { PHONE_PREFIX } from "./constants/phonePrefix.js";
 
 type CallDurationProps = {
@@ -12,6 +13,13 @@ type NumberProps = {
 };
 
 export class PhoneSchema {
+  private dataTypeSchema = new DataTypeSchema();
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    phonePrefixs: PHONE_PREFIX,
+  };
+
   /**
    * Returns a phone number
    * @param args.format Format of the phone number
@@ -29,7 +37,7 @@ export class PhoneSchema {
             ? a.format
             : `${this.prefix().getValue()} ### ### ##`;
 
-        const number: string = PrivateUtils.replaceSymbols(format);
+        const number: string = this.utils.replaceSymbols(format);
         return number;
       },
       args || {},
@@ -45,7 +53,7 @@ export class PhoneSchema {
   prefix() {
     return new SchemaField<string>(
       "prefix",
-      () => PrivateUtils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
+      () => this.utils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
       {},
     );
   }
@@ -72,11 +80,11 @@ export class PhoneSchema {
             ? a.max
             : 59;
 
-        const minutes = PrivateUtils.intNumber({
+        const minutes = this.dataTypeSchema.int().getValue({
           min,
           max,
         });
-        const seconds = PrivateUtils.intNumber({ min: 0, max: 59 });
+        const seconds = this.dataTypeSchema.int().getValue({ min: 0, max: 59 });
 
         const stringMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
         const stringSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;

@@ -1,4 +1,4 @@
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import {
   PERIODIC_TABLE_ELEMETNS,
@@ -15,6 +15,14 @@ type UnitProps = {
 };
 
 export class ScienceSchema {
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    units: UNITS,
+    periodicTableElements: PERIODIC_TABLE_ELEMETNS,
+    periodicTableSymbols: PERIODIC_TABLE_SYMBOLS,
+  };
+
   /**
    * Returns periodic table element
    * @param args.type element format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
@@ -30,9 +38,9 @@ export class ScienceSchema {
       (a) => {
         if (typeof a.type === "string") {
           if (a.type === "name") {
-            return PrivateUtils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
-          } else return PrivateUtils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
-        } else return PrivateUtils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
+            return this.utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
+          } else return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
+        } else return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
       },
       args || {},
     );
@@ -55,9 +63,9 @@ export class ScienceSchema {
       (a) => {
         if (typeof a.type === "string") {
           if (a.type === "symbol") {
-            return PrivateUtils.oneOfArray(UNITS.map((el) => el.symbol));
-          } else return PrivateUtils.oneOfArray(UNITS.map((el) => el.val));
-        } else return PrivateUtils.oneOfArray(UNITS.map((el) => el.val));
+            return this.utils.oneOfArray(UNITS.map((el) => el.symbol));
+          } else return this.utils.oneOfArray(UNITS.map((el) => el.val));
+        } else return this.utils.oneOfArray(UNITS.map((el) => el.val));
       },
       args || {},
     );

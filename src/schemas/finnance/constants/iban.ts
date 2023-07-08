@@ -1,4 +1,4 @@
-interface Iban {
+export interface Iban {
   alpha: string[];
   formats: Array<{
     bban: Array<{ type: string; count: number }>;

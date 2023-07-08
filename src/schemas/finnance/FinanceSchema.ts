@@ -1,7 +1,7 @@
 import { SchemaField } from "../SchemaField.js";
-import { Schemas } from "../index.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { ACCOUNT_TYPES, IBAN, MONEY_INFO } from "./constants/index.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 type AmountProps = {
   min?: number;
@@ -15,6 +15,15 @@ type PinProps = {
 };
 
 export class FinanceSchema {
+  private dataTypeSchema = new DataTypeSchema();
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    accountTypes: ACCOUNT_TYPES,
+    ibans: IBAN,
+    moneyInfo: MONEY_INFO,
+  };
+
   /**
    * Returns a PIN number.
    *
@@ -33,8 +42,10 @@ export class FinanceSchema {
       (a) => {
         const len = typeof a.length === "number" ? a.length : 4;
 
-        return Array({ length: len })
-          .map(() => String(PrivateUtils.intNumber({ min: 0, max: 9 })))
+        return Array.from({ length: len })
+          .map(() =>
+            String(this.dataTypeSchema.int().getValue({ min: 0, max: 9 })),
+          )
           .join("");
       },
       args || {},
@@ -54,12 +65,12 @@ export class FinanceSchema {
     return new SchemaField<string>(
       "bitcoinAddress",
       () => {
-        let address: string = PrivateUtils.oneOfArray(["1", "3"]);
+        let address: string = this.utils.oneOfArray(["1", "3"]);
 
-        address += Schemas.dataType.alphaNumeric().getValue({
+        address += this.dataTypeSchema.alphaNumeric().getValue({
           case: "mixed",
           banned: "0OIl",
-          length: PrivateUtils.intNumber({ min: 25, max: 39 }),
+          length: this.dataTypeSchema.int().getValue({ min: 25, max: 39 }),
         });
 
         return address;
@@ -87,7 +98,7 @@ export class FinanceSchema {
           if (i % 4 === 0) retString = retString.concat("-");
 
           retString = retString.concat(
-            String(PrivateUtils.intNumber({ min: 0, max: 9 })),
+            String(this.dataTypeSchema.int().getValue({ min: 0, max: 9 })),
           );
         }
 
@@ -106,19 +117,21 @@ export class FinanceSchema {
    *
    * @returns string
    */
-  ethereumAddress() {
+  ethereumAddress(): SchemaField<string> {
     return new SchemaField(
       "ethereumAddress",
       () =>
-        Schemas.dataType.hexadecimal().getValue({ length: 40, case: "lower" }),
+        this.dataTypeSchema
+          .hexadecimal()
+          .getValue({ length: 40, case: "lower" }),
       {},
     );
   }
 
-  accountType() {
+  accountType(): SchemaField<string> {
     return new SchemaField<string>(
       "accountType",
-      () => PrivateUtils.oneOfArray(ACCOUNT_TYPES),
+      () => this.utils.oneOfArray(ACCOUNT_TYPES),
       {},
     );
   }
@@ -136,18 +149,18 @@ export class FinanceSchema {
     return new SchemaField<string>(
       "bic",
       () => {
-        const bankIdentifier = Schemas.dataType.characters().getValue({
+        const bankIdentifier = this.dataTypeSchema.characters().getValue({
           length: 4,
           case: "upper",
         });
-        const countryCode = PrivateUtils.oneOfArray(IBAN.iso3166);
-        const locationCode = Schemas.dataType.alphaNumeric().getValue({
+        const countryCode = this.utils.oneOfArray(IBAN.iso3166);
+        const locationCode = this.dataTypeSchema.alphaNumeric().getValue({
           case: "upper",
           length: 2,
         });
-        const branchCode = PrivateUtils.boolean()
-          ? PrivateUtils.boolean()
-            ? Schemas.dataType
+        const branchCode = this.dataTypeSchema.boolean().getValue()
+          ? this.dataTypeSchema.boolean().getValue()
+            ? this.dataTypeSchema
                 .alphaNumeric()
                 .getValue({ case: "upper", length: 3 })
             : "XXX"
@@ -163,7 +176,7 @@ export class FinanceSchema {
     return new SchemaField<string>(
       "routingNumber",
       () => {
-        const routingNumber = PrivateUtils.replaceSymbols("########");
+        const routingNumber = this.utils.replaceSymbols("########");
 
         // Modules 10 straight summation.
         let sum = 0;
@@ -189,13 +202,16 @@ export class FinanceSchema {
    *
    * @returns string
    */
-  creditCardCVV() {
+  creditCardCVV(): SchemaField<string> {
     return new SchemaField<string>(
       "creaditCardCVV",
       () => {
         let cvv = "";
         for (let i = 0; i < 3; i++) {
-          cvv += PrivateUtils.intNumber({ max: 9, min: 0 }).toString();
+          cvv += this.dataTypeSchema
+            .int()
+            .getValue({ max: 9, min: 0 })
+            .toString();
         }
         return cvv;
       },
@@ -209,11 +225,11 @@ export class FinanceSchema {
    * @example schemas.finance.moneySymbol().getValue() // '$'
    * @returns string
    */
-  moneySymbol() {
+  moneySymbol(): SchemaField<string> {
     return new SchemaField<string>(
       "moneySymbol",
       () => {
-        return PrivateUtils.oneOfArray(
+        return this.utils.oneOfArray(
           Object.values(MONEY_INFO).map((el) => el.symbol),
         );
       },
@@ -237,13 +253,13 @@ export class FinanceSchema {
    *
    * @returns string
    */
-  amount(args?: AmountProps) {
+  amount(args?: AmountProps): SchemaField<string, AmountProps> {
     return new SchemaField<string, AmountProps>(
       "amount",
       (a) => {
         const symbol = typeof a.symbol === "string" ? a.symbol : "$";
 
-        return `${symbol}${Schemas.dataType.number({
+        return `${symbol}${this.dataTypeSchema.number().getValue({
           max: a.max,
           min: a.min,
           precision: a.precision,
@@ -263,7 +279,7 @@ export class FinanceSchema {
     return new SchemaField<string>(
       "currencyMoneyName",
       () =>
-        PrivateUtils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name)),
+        this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name)),
       {},
     );
   }
@@ -274,11 +290,11 @@ export class FinanceSchema {
    * @example schemas.finance.moneyCode().getValue() // 'EUR'
    * @returns string
    */
-  moneyCode() {
+  moneyCode(): SchemaField<string> {
     return new SchemaField<string>(
       "moneyCode",
       () => {
-        return PrivateUtils.oneOfArray(
+        return this.utils.oneOfArray(
           Object.values(MONEY_INFO).map((el) => el.code),
         );
       },

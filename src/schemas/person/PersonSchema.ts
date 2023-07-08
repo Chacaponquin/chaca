@@ -1,6 +1,7 @@
 import { SchemaField } from "../SchemaField.js";
 import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants/index.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 type AllLanguages = "es" | "en";
 
@@ -20,6 +21,16 @@ type SexProps = {
 };
 
 export class PersonSchema {
+  private dataTypeSchema = new DataTypeSchema();
+  private utils = new ChacaUtils();
+
+  public readonly constants = {
+    jobLevels: JOBS.JOB_LEVELS,
+    jobAreas: JOBS.JOBS_AREAS,
+    genders: GENDERS,
+    names: NAMES,
+  };
+
   /**
    * Returns a Job Level
    * @example schemas.person.jobLevel() // Schema
@@ -29,7 +40,7 @@ export class PersonSchema {
   jobLevel() {
     return new SchemaField<string>(
       "jobLevel",
-      () => PrivateUtils.oneOfArray(JOBS.JOB_LEVELS),
+      () => this.utils.oneOfArray(JOBS.JOB_LEVELS),
       {},
     );
   }
@@ -43,7 +54,7 @@ export class PersonSchema {
   jobArea() {
     return new SchemaField<string>(
       "jobArea",
-      () => PrivateUtils.oneOfArray(JOBS.JOBS_AREAS),
+      () => this.utils.oneOfArray(JOBS.JOBS_AREAS),
       {},
     );
   }
@@ -57,7 +68,7 @@ export class PersonSchema {
   gender() {
     return new SchemaField<string>(
       "gender",
-      () => PrivateUtils.oneOfArray(GENDERS),
+      () => this.utils.oneOfArray(GENDERS),
       {},
     );
   }
@@ -71,7 +82,7 @@ export class PersonSchema {
   sex() {
     return new SchemaField<string>(
       "sex",
-      () => PrivateUtils.oneOfArray(["Male", "Female"]),
+      () => this.utils.oneOfArray(["Male", "Female"]),
       {},
     );
   }
@@ -88,7 +99,7 @@ export class PersonSchema {
     return new SchemaField<string, NameProps>(
       "firstName",
       (a) => {
-        return PrivateUtils.oneOfArray(
+        return this.utils.oneOfArray(
           this.filterBySex(this.filterNameByLanguage(a.language), a.sex),
         );
       },
@@ -107,7 +118,7 @@ export class PersonSchema {
     return new SchemaField<string, LangugeProps>(
       "lastName",
       (a) => {
-        return PrivateUtils.oneOfArray(
+        return this.utils.oneOfArray(
           this.filterNameByLanguage(a.language).lastNames,
         );
       },
@@ -131,26 +142,23 @@ export class PersonSchema {
 
         const sex = a.sex
           ? a.sex
-          : (PrivateUtils.oneOfArray(["male", "female"]) as Sex);
+          : (this.utils.oneOfArray(["male", "female"]) as Sex);
 
-        const firstName = PrivateUtils.oneOfArray(this.filterBySex(lan, sex));
-        const middleName = PrivateUtils.boolean()
-          ? PrivateUtils.oneOfArray(this.filterBySex(lan, sex))
+        const firstName = this.utils.oneOfArray(this.filterBySex(lan, sex));
+        const middleName = this.dataTypeSchema.boolean().getValue()
+          ? this.utils.oneOfArray(this.filterBySex(lan, sex))
           : undefined;
-        const lastNameFirst = PrivateUtils.oneOfArray(lan.lastNames);
-        const lastNameSecond = PrivateUtils.oneOfArray(lan.lastNames);
+        const lastNameFirst = this.utils.oneOfArray(lan.lastNames);
+        const lastNameSecond = this.utils.oneOfArray(lan.lastNames);
 
-        const fullName = [firstName, middleName, lastNameFirst, lastNameSecond];
+        const fullName = [
+          firstName,
+          middleName || "",
+          lastNameFirst,
+          lastNameSecond,
+        ];
 
-        let retString = "";
-        for (let i = 0; i < fullName.length; i++) {
-          if (fullName[i]) {
-            retString += `${fullName[i]}`;
-            if (i !== fullName.length - 1) retString += " ";
-          }
-        }
-
-        return retString;
+        return fullName.join(" ");
       },
       args || {},
     );
@@ -173,10 +181,10 @@ export class PersonSchema {
         const female = ["Ms.", "Miss"];
 
         if (sex) {
-          if (sex === "male") return PrivateUtils.oneOfArray(male);
-          else if (sex === "female") return PrivateUtils.oneOfArray(female);
-          else return PrivateUtils.oneOfArray([...male, ...female]);
-        } else return PrivateUtils.oneOfArray([...male, ...female]);
+          if (sex === "male") return this.utils.oneOfArray(male);
+          else if (sex === "female") return this.utils.oneOfArray(female);
+          else return this.utils.oneOfArray([...male, ...female]);
+        } else return this.utils.oneOfArray([...male, ...female]);
       },
       args || {},
     );

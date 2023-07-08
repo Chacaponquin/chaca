@@ -1,8 +1,10 @@
+import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
 import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants/index.js";
 
 export class VehicleSchema {
+  private utils = new ChacaUtils();
+
   /**
    * Returns a bicycle type
    * @example schemas.vehicle.bicycle() // Schema
@@ -12,7 +14,7 @@ export class VehicleSchema {
   bicycle() {
     return new SchemaField<string>(
       "bicycle",
-      () => PrivateUtils.oneOfArray(BICYCLE),
+      () => this.utils.oneOfArray(BICYCLE),
       {},
     );
   }
@@ -26,7 +28,7 @@ export class VehicleSchema {
   manufacturer() {
     return new SchemaField<string>(
       "manufacturer",
-      () => PrivateUtils.oneOfArray(MANUFACTURER),
+      () => this.utils.oneOfArray(MANUFACTURER),
       {},
     );
   }
@@ -40,7 +42,7 @@ export class VehicleSchema {
   vehicleModel() {
     return new SchemaField<string>(
       "vehicleModel",
-      () => PrivateUtils.oneOfArray(MODEL),
+      () => this.utils.oneOfArray(MODEL),
       {},
     );
   }
@@ -54,7 +56,7 @@ export class VehicleSchema {
   vehicleType() {
     return new SchemaField<string>(
       "vehicleType",
-      () => PrivateUtils.oneOfArray(TYPE),
+      () => this.utils.oneOfArray(TYPE),
       {},
     );
   }
@@ -83,7 +85,7 @@ export class VehicleSchema {
   fuel() {
     return new SchemaField<string>(
       "fuel",
-      () => PrivateUtils.oneOfArray(FUEL),
+      () => this.utils.oneOfArray(FUEL),
       {},
     );
   }

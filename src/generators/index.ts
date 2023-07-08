@@ -5,6 +5,7 @@ import { CSVGenerator } from "./CSV/CSVGenerator.js";
 import { JavaGenerator } from "./Java/JavaGenerator.js";
 import { TypescriptGenerator } from "./Typescript/TypescriptGenerator.js";
 import { YamlGenerator } from "./Yaml/YamlGenerator.js";
+import { SQLGenerator } from "./SQL/SQLGenerator.js";
 
 export {
   JsonGenerator,
@@ -14,4 +15,5 @@ export {
   JavaGenerator,
   TypescriptGenerator,
   YamlGenerator,
+  SQLGenerator,
 };

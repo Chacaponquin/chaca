@@ -1,42 +1,40 @@
-import { FileConfig } from "../../utils/interfaces/export.interface.js";
-import { Generator } from "./../Generator.js";
+import { FileConfig } from "../../core/interfaces/export.interface.js";
+import { Generator } from "../Generator.js";
 import fs from "fs";
-import { PrivateUtils } from "../../utils/helpers/PrivateUtils.js";
+import { ChacaError } from "../../errors/ChacaError.js";
+import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
 
 export class JavascriptGenerator extends Generator {
-  constructor(data: any, config: FileConfig) {
-    super(data, "js", config);
+  constructor(config: FileConfig) {
+    super("js", config);
   }
 
-  public async generateFile(): Promise<string> {
-    let returnData = ``;
+  public async generateRelationalDataFile(
+    resolver: MultiGenerateResolver<any>,
+  ): Promise<string> {
+    const data = resolver.resolve();
+    return await this.generateFile(data);
+  }
 
-    if (Array.isArray(this.data)) {
-      returnData += `const ${PrivateUtils.camelCaseText(
-        this.config.fileName,
-      )} = ${this.generateSchemaArray(this.data)};\n`;
-    } else {
-      returnData += `const ${PrivateUtils.camelCaseText(
-        this.config.fileName,
-      )} = ${this.generateObject(this.data)}`;
-    }
+  public async generateFile(data: any): Promise<string> {
+    const variableName = this.utils.camelCase(this.config.fileName);
+    const returnData = `const ${variableName} = ${this.filterTypeValue(data)}`;
 
     await fs.promises.writeFile(this.route, returnData, "utf-8");
 
     return this.route;
   }
 
-  public generateSchemaArray(schemaObjects: { [path: string]: any }[]): string {
+  public generateSchemaArray(
+    schemaObjects: Array<Record<string, any>>,
+  ): string {
     let returnArray = `[`;
 
     for (let i = 0; i < schemaObjects.length; i++) {
-      if (
-        typeof schemaObjects[i] === "object" &&
-        !Array.isArray(schemaObjects[i])
-      ) {
-        if (i !== schemaObjects.length - 1)
-          returnArray += `${this.generateObject(schemaObjects[i])}, `;
-        else returnArray += `${this.generateObject(schemaObjects[i])}`;
+      if (i !== schemaObjects.length - 1)
+        returnArray += `${this.filterTypeValue(schemaObjects[i])}, `;
+      else {
+        returnArray += `${this.filterTypeValue(schemaObjects[i])}`;
       }
     }
 
@@ -45,30 +43,47 @@ export class JavascriptGenerator extends Generator {
     return returnArray;
   }
 
-  private filterTypeValue(value: any): string {
+  public filterTypeValue(value: any): string {
     let returnValue = "undefined";
 
-    if (typeof value === "string") returnValue = `"${value}"`;
-    else if (typeof value === "number" || typeof value === "boolean")
+    if (typeof value === "string") {
+      returnValue = `${JSON.stringify(value)}`;
+    } else if (typeof value === "number") {
       returnValue = `${value}`;
-    else if (typeof value === "object") {
-      if (Array.isArray(value)) returnValue = this.generateArray(value);
-      else {
-        if (value === null) returnValue = "null";
-        else if (value instanceof Date)
-          returnValue = `new Date("${value.toISOString()}")`;
-        else returnValue = this.generateObject(value);
+    } else if (typeof value === "boolean") {
+      returnValue = `${value}`;
+    } else if (typeof value === "undefined") {
+      returnValue = "undefined";
+    } else if (typeof value === "bigint") {
+      returnValue = `${value.toString()}n`;
+    } else if (typeof value === "function") {
+      throw new ChacaError(
+        `You can not export a function to a javascript file.`,
+      );
+    } else if (typeof value === "symbol") {
+      throw new ChacaError(`You can not export a Symbol to a javascript file.`);
+    } else if (typeof value === "object") {
+      if (Array.isArray(value)) {
+        returnValue = this.generateArray(value);
+      } else if (value === null) {
+        returnValue = "null";
+      } else if (value instanceof Date) {
+        returnValue = `new Date(${JSON.stringify(value)})`;
+      } else if (value instanceof RegExp) {
+        returnValue = `/${value.source}/${value.flags}`;
+      } else {
+        returnValue = this.generateObject(value);
       }
     }
 
     return returnValue;
   }
 
-  public generateObject(doc: { [key: string]: any }): string {
+  public generateObject(doc: Record<string, any>): string {
     let objectData = `{`;
     for (const [key, value] of Object.entries(doc)) {
       const val = this.filterTypeValue(value);
-      objectData += `${key}: ${val},`;
+      objectData += `"${key}": ${val},`;
     }
     objectData += "}";
 
@@ -80,7 +95,9 @@ export class JavascriptGenerator extends Generator {
     for (let i = 0; i < array.length; i++) {
       if (i !== array.length - 1) {
         returnArray += `${this.filterTypeValue(array[i])}, `;
-      } else returnArray += `${this.filterTypeValue(array[i])}`;
+      } else {
+        returnArray += `${this.filterTypeValue(array[i])}`;
+      }
     }
     returnArray += "]";
 

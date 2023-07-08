@@ -27,7 +27,7 @@ export const ENGLISH_NAMES: ILanguageNames = {
     "Penelope",
     "Chloe",
     "Layla",
-    ",ila",
+    "Lila",
     "Nora",
     "Hazel",
     "Madison",

@@ -1,0 +1,36 @@
+name: 🖥️ Workflow Dev
+on:
+  push:
+    branches: [chaca-dev]
+  pull_request:
+    branches: [chaca-dev]
+jobs:
+  release:
+    name: 🖥️ Dev
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [14.x, 16.x]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          registry-url: "https://registry.npmjs.org"
+
+      - name: 🕹️ Ci
+        run: npm ci
+
+      - name: 📦 Install packages
+        run: npm install
+
+      - name: 🪛 Build Chaca
+        run: npm run build
+
+      - name: 🧪 Test
+        run: npm run test

@@ -1,12 +1,12 @@
 {
   "name": "chaca",
-  "version": "1.1.1",
-  "description": "A Node JS library to create and export data schemas with your rules",
+  "version": "1.5.0",
+  "description": "Create and export data with your rules",
   "main": "./lib/esm/index.js",
   "module": "./lib/esm/index.js",
   "types": "./lib/types/index.d.ts",
   "engines": {
-    "node": ">=6.0.0"
+    "node": ">=14.0.0"
   },
   "exports": {
     ".": {
@@ -23,15 +23,22 @@
     "CHANGELOG.md"
   ],
   "scripts": {
+    "prepare": "husky install",
     "clean": "rm -rf ./lib",
-    "build": "npm run fix && npm run prettier-format && npm run build:lib",
+    "build": "npm run lint-fix && npm run prettier-format && npm run build:lib",
     "build:lib": "npm run clean && npm run build:esm && npm run build:cjs && npm run build:types",
     "build:types": "tsc -p ./tsconfig.types.json",
     "build:esm": "tsc --p tsconfig.esm.json",
     "build:cjs": "tsc --p tsconfig.cjs.json",
     "test": "jest",
+    "test:cases": "jest --testPathPattern=test/library/cases",
+    "test:schemas": "jest --testPathPattern=test/schemas",
+    "test:library": "jest --testPathPattern=test/library",
+    "test:export": "jest --testPathPattern=test/library/export",
+    "test:utils": "jest --testPathPattern=test/library/utils",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
-    "fix": "eslint --fix src/**/*.ts"
+    "lint-fix": "eslint --fix src/**/*.ts",
+    "lint": "eslint src/**/*.ts"
   },
   "repository": {
     "type": "git",
@@ -41,12 +48,12 @@
     "chaca",
     "fake-data",
     "generate data",
+    "mock",
     "random data",
     "data",
     "fake-data-generator",
-    "logical data",
-    "generator",
-    "data"
+    "relational data",
+    "generator"
   ],
   "author": "chacaponquin <hectorangel2001@gmail.com>",
   "license": "MIT",
@@ -64,21 +71,20 @@
     "eslint-plugin-file-extension-in-import-ts": "^1.0.1",
     "eslint-plugin-import": "^2.26.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.3",
     "jest": "^29.3.1",
     "prettier": "^2.7.1",
     "ts-jest": "^29.0.3",
-    "ts-mocha": "^10.0.0",
     "ts-node": "^10.9.1",
     "tsx": "^3.11.0",
     "typescript": "^4.8.4"
   },
   "dependencies": {
     "adm-zip": "^0.5.9",
-    "json2csv": "^5.0.7",
     "lorem-ipsum": "^2.0.8"
   },
   "bugs": {
-    "url": "https://github.com/Chacaponquin/ch-data/issues"
+    "url": "https://github.com/Chacaponquin/chaca/issues"
   },
-  "homepage": "https://github.com/Chacaponquin/ch-data#readme"
+  "homepage": "https://github.com/Chacaponquin/chaca#readme"
 }
