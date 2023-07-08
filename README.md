@@ -1,4 +1,4 @@
-<p align="center"><img align="center" src="https://res.cloudinary.com/chaca-sa/image/upload/v1681924431/Logopit_1681682634889_hywzcu.png" style="width:170px"/></p>
+<p align="center" style="padding: 0 70px"><img align="center" src="https://res.cloudinary.com/chaca-sa/image/upload/v1681924431/Logopit_1681682634889_hywzcu.png" style="width:270px; max-width: 100%"/></p>
 
 <p align="center">Think your data and let Chaca create it.</p>
 
