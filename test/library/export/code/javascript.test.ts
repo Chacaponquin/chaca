@@ -1,8 +1,5 @@
 import { chaca } from "../../../../src";
-import {
-  createTestFolder,
-  deleteTestFolder,
-} from "../../../utils/functions/folder";
+import { createTestFolder } from "../../../utils/functions/folder";
 
 const objectFileName = "javascriptExport";
 const ROOT = "./data/javascript";

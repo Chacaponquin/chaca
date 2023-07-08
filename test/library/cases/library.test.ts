@@ -1,9 +1,6 @@
 import { chaca } from "../../../src";
 import { LIBRARY_CASE_SCHEMA } from "../../utils/cases/library";
-import {
-  createTestFolder,
-  deleteTestFolder,
-} from "../../utils/functions/folder";
+import { createTestFolder } from "../../utils/functions/folder";
 
 const EXPORT_ROUTE = "./data/cases/library";
 const FILE_NAME = "caseLibrary";

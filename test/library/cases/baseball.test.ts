@@ -1,9 +1,6 @@
 import { chaca } from "../../../src";
 import { BASEBALL_SCHEMAS } from "../../utils/cases/baseball";
-import {
-  createTestFolder,
-  deleteTestFolder,
-} from "../../utils/functions/folder";
+import { createTestFolder } from "../../utils/functions/folder";
 
 const EXPORT_ROUTE = "./data/cases/baseball";
 const FILE_NAME = "caseBaseball";

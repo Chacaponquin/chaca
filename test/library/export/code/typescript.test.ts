@@ -1,8 +1,5 @@
 import { chaca } from "../../../../src";
-import {
-  createTestFolder,
-  deleteTestFolder,
-} from "../../../utils/functions/folder";
+import { createTestFolder } from "../../../utils/functions/folder";
 import { COMPLETE_SCHEMA } from "../../../utils/schemas/schemaComplete";
 import { NESTED_OBJECT_SCHEMA } from "../../../utils/schemas/schemaNestedObjects";
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../../../utils/schemas/schemaWithArray";
@@ -80,17 +77,15 @@ describe("# Export Typescript", () => {
   });
 
   describe("Export Object", () => {
-    it("Export empty object", () => {
-      chaca
-        .export(
-          {},
-          {
-            format: "typescript",
-            fileName: objectFileName + "EmptyObject",
-            location: ROOT,
-          },
-        )
-        .then((s) => expect(typeof s).toBe("string"));
+    it("Export empty object", async () => {
+      await chaca.export(
+        {},
+        {
+          format: "typescript",
+          fileName: objectFileName + "EmptyObject",
+          location: ROOT,
+        },
+      );
     });
 
     it("Export simple object", async () => {

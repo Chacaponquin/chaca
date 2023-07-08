@@ -1,9 +1,6 @@
 import { chaca } from "../../../src";
 import { COMMERCE_COMPANY_SCHEMAS } from "../../utils/cases/commerce_company";
-import {
-  createTestFolder,
-  deleteTestFolder,
-} from "../../utils/functions/folder";
+import { createTestFolder } from "../../utils/functions/folder";
 
 const EXPORT_ROUTE = "./data/cases/commerce_company";
 const FILE_NAME = "caseCommerceCompany";
