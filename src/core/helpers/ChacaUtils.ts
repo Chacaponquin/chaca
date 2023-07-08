@@ -15,7 +15,7 @@ export class ChacaUtils {
    * @example chaca.utils.oneOfArray([1, 2, 3, 5, 4]) // 3
    * @example chaca.utils.oneOfArray(['Hi!!!', 'Chaca the best!!!', 10]) // 'Chaca the best!!!'
    */
-  public oneOfArray<T = unknown>(list: T[]) {
+  public oneOfArray<T = any>(list: T[]) {
     return list[Math.floor(Math.random() * list.length)];
   }
 

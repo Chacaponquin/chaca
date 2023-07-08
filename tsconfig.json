@@ -1,14 +1,12 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
-    "module": "commonjs",
-    "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": false,
+    "target": "esnext",
+    "module": "esnext",
     "strict": true,
     "esModuleInterop": true,
-    "isolatedModules": true
-  },
-  "files": ["src/index.ts"]
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": false,
+    "noUnusedParameters": true,
+    "noUnusedLocals": true
+  }
 }

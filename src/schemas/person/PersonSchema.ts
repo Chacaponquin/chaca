@@ -153,10 +153,10 @@ export class PersonSchema {
 
         const fullName = [
           firstName,
-          middleName || "",
+          middleName,
           lastNameFirst,
           lastNameSecond,
-        ];
+        ].filter((n) => n !== undefined);
 
         return fullName.join(" ");
       },

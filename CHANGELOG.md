@@ -1,3 +1,11 @@
+### chaca@1.5.1
+
+### 🪛 Fix
+
+#### Schemas
+
+- Fix extra blank space in `PersonSchema.fullName`
+
 ## chaca@1.5.0
 
 ### 🌚 Features
