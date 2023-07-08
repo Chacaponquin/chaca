@@ -1,4 +1,4 @@
-name: Publish Package to npmjs
+name: 🖥️ Workflow Dev
 on:
   push:
     branches: [chaca-dev]

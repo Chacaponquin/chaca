@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-npm run build && npm run test:library
+npm run build && npm run test:export && npm run test:schemas && npm run test:utils
