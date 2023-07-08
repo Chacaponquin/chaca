@@ -26,6 +26,9 @@ jobs:
       - name: 🕹️ Ci
         run: npm ci
 
+      - name: 📦 Install packages
+        run: npm install
+
       - name: 🪛 Build Chaca
         run: npm run build
 
