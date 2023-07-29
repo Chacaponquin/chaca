@@ -3,6 +3,8 @@ import {
   FieldObjectInput,
   CustomField,
   SchemaInputField,
+  InputIsArrayConfig,
+  InputPosibleNull,
 } from "./core/interfaces/schema.interface.js";
 import {
   ExportFormat,
@@ -91,4 +93,6 @@ export type {
   FieldObjectInput,
   GenerateConfig,
   SchemaInputField,
+  InputIsArrayConfig,
+  InputPosibleNull,
 };

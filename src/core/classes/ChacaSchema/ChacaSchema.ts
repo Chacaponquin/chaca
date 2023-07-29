@@ -4,7 +4,7 @@ import { IdSchema } from "../../../schemas/id/IdSchema.js";
 import { Export } from "../../helpers/Export/Export.js";
 import { FileConfig } from "../../interfaces/export.interface.js";
 import {
-  CommonSchema,
+  FieldIsArrayConfig,
   FieldTypeInput,
   IResolver,
   SchemaInput,
@@ -27,6 +27,13 @@ import {
 import { SchemaResolver } from "../SchemaResolver.js";
 import { SequenceField } from "../SequenceField/SequenceField.js";
 import { SequentialField } from "../SequentialField/SequentialField.js";
+import { FieldIsArray } from "./value-object/FieldIsArray.js";
+import { FieldPosibleNull } from "./value-object/FieldPosibleNull.js";
+
+export interface CommonSchema {
+  isArray: FieldIsArrayConfig;
+  posibleNull: number;
+}
 
 export class ChacaSchema<K = any> {
   private schemaObj: SchemaToResolve;
@@ -152,25 +159,21 @@ export class ChacaSchema<K = any> {
             }
           }
 
-          if (schema.posibleNull) {
-            schemaToSave = {
-              ...schemaToSave,
-              [key]: {
-                ...schemaToSave[key],
-                posibleNull: this.validatePosibleNull(schema.posibleNull),
-              },
-            };
-          }
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: {
+              ...schemaToSave[key],
+              posibleNull: new FieldPosibleNull(schema.posibleNull).value(),
+            },
+          };
 
-          if (schema.isArray) {
-            schemaToSave = {
-              ...schemaToSave,
-              [key]: {
-                ...schemaToSave[key],
-                isArray: this.validateIsArray(schema.isArray),
-              },
-            };
-          }
+          schemaToSave = {
+            ...schemaToSave,
+            [key]: {
+              ...schemaToSave[key],
+              isArray: new FieldIsArray(schema.isArray).value(),
+            },
+          };
         }
       }
 
@@ -229,58 +232,6 @@ export class ChacaSchema<K = any> {
         `If the field ${key} is a enum type so this one muste be an array of values`,
       );
     }
-  }
-
-  private validatePosibleNull(pos: boolean | number): number {
-    let value: number;
-
-    if (typeof pos === "number") {
-      value = pos <= 100 && pos >= 0 ? pos : 50;
-    } else {
-      value = pos ? 50 : 0;
-    }
-
-    return value;
-  }
-
-  private validateIsArray(
-    isArray: boolean | number | { min?: number; max?: number },
-  ): { min: number; max: number } | null {
-    let value: { min: number; max: number } | null = null;
-
-    if (typeof isArray === "number") {
-      if (isArray >= 1) {
-        value = {
-          min: isArray,
-          max: isArray,
-        };
-      } else {
-        value = {
-          min: 10,
-          max: 10,
-        };
-      }
-    } else if (typeof isArray === "boolean") {
-      if (isArray) value = { min: 0, max: 10 };
-      else value = null;
-    } else if (
-      typeof isArray === "object" &&
-      !Array.isArray(isArray) &&
-      isArray !== null
-    ) {
-      const min =
-        typeof isArray["min"] === "number" && isArray["min"] > 0
-          ? isArray["min"]
-          : 1;
-      const max =
-        typeof isArray["max"] === "number" && isArray["max"] > min
-          ? isArray["max"]
-          : min + 9;
-
-      value = { min, max };
-    }
-
-    return value;
   }
 
   /**

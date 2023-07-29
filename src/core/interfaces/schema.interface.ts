@@ -33,7 +33,7 @@ export type SchemaToResolve = Record<string, ResolverObject>;
 
 export type ResolverObject = {
   type: IResolver;
-  isArray: { min: number; max: number } | null;
+  isArray: FieldIsArrayConfig;
   posibleNull: number;
 };
 
@@ -44,6 +44,12 @@ export type FieldTypeInput<R = any> =
   | CustomField<any, R>
   | EnumField<R>;
 
+export type ArrayLimitObject = { min: number; max: number };
+export type FieldIsArrayConfig = ArrayLimitObject | null;
+
+export type InputIsArrayConfig = boolean | number | Partial<ArrayLimitObject>;
+export type InputPosibleNull = boolean | number;
+
 export type FieldObjectInput<R> = {
   /** Schema field type*/
   type?: FieldTypeInput<R>;
@@ -52,12 +58,12 @@ export type FieldObjectInput<R> = {
    * - `number` - specific array length
    * - `config.min` and `config.max` - limits of array length
    */
-  isArray?: boolean | number | { min?: number; max?: number };
+  isArray?: InputIsArrayConfig;
   /** Null schema field configuration
    * - `boolean` - `true` 50% chances to be null, `false` 0% chances
    * - `number` specific porcent of chances
    */
-  posibleNull?: boolean | number;
+  posibleNull?: InputPosibleNull;
 };
 
 /**
@@ -69,12 +75,5 @@ export type CustomField<C = any, R = any> = (args: {
   /** Store to interact with all datasets */
   store: DatasetStore;
 }) => R;
-
-export interface CommonSchema {
-  isArray: FieldIsArrayConfig;
-  posibleNull: number;
-}
-
-export type FieldIsArrayConfig = { min: number; max: number } | null;
 
 export class IResolver {}

@@ -44,6 +44,14 @@ describe("# Datatype Int Number test", () => {
       schemas.dataType.int().getValue({ min: -50 }),
     );
 
-    expect(values.every((v) => Number.isInteger(v) && v >= 50)).toBe(true);
+    expect(values.every((v) => Number.isInteger(v) && v >= -50)).toBe(true);
+  });
+
+  it("Pass min=0 & max=0. Should return 0", () => {
+    const values = Array.from({ length: ARRAY_LENGTH_TEXT }).map(() =>
+      schemas.dataType.int().getValue({ min: 0, max: 0 }),
+    );
+
+    expect(values.every((v) => Number.isInteger(v) && v === 0)).toBe(true);
   });
 });

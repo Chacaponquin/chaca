@@ -306,7 +306,7 @@ export class SchemaResolver<K = any> {
     indexDoc: number,
   ) {
     const fieldIsArray = field.getNodeConfig().isArray;
-    if (fieldIsArray) {
+    if (fieldIsArray !== null) {
       // limite del arreglo de valores
       const limit = this.dataTypeSchema.int().getValue({
         min: fieldIsArray.min,
