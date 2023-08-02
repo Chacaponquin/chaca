@@ -42,10 +42,6 @@ export class ChacaSchema<K = any> {
     this.schemaObj = this.validateObjectSchema(inputObj);
   }
 
-  public getSchemaObject() {
-    return this.schemaObj;
-  }
-
   /**
    * Generate and export the schema documents
    * @param cantDocuments number of documents that you want to create
