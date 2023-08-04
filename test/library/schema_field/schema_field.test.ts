@@ -21,7 +21,7 @@ describe("# Schema Field test", () => {
       test: schema(),
     });
 
-    expect(dataSchema.generateObject()["test"] === "a").toBe(true);
+    expect(dataSchema.generateObject()["test"]).toBe("a");
   });
 
   it("Create an schema with arguments and the function sum the both", () => {
@@ -37,6 +37,6 @@ describe("# Schema Field test", () => {
       test: schema({ a: 5, b: 5 }),
     });
 
-    expect(dataSchema.generateObject()["test"] === 10).toBe(true);
+    expect(dataSchema.generateObject()["test"]).toBe(10);
   });
 });

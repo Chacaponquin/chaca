@@ -155,12 +155,15 @@ export class InternetSchema {
           const n =
             this.dataTypeSchema.int().getValue({ min: 0, max: 94 }) + 33;
           let char = String.fromCharCode(n);
+
           if (memorable) {
             char = char.toLowerCase();
           }
+
           if (!char.match(pattern)) {
             return _password(length, memorable, pattern, prefix);
           }
+
           return _password(length, memorable, pattern, prefix + char);
         };
 
@@ -311,6 +314,7 @@ export class InternetSchema {
         for (let i = 0; i < 8; i++) {
           result[i] = randHash();
         }
+
         return result.join(":");
       },
       {},
@@ -343,6 +347,7 @@ export class InternetSchema {
 
   /**
    * Return an emoji
+   * @param args.emoji emoji category
    * @example schemas.internet.emoji() // Schema
    * @example schemas.internet.emoji().getValue() // '🔎'
    * @returns string

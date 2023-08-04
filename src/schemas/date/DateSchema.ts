@@ -313,7 +313,7 @@ export class DateSchema {
 
   /**
    * Returns a string with a time ago information
-   * @param args.unit time unit. Can be (`"years"` | `"seconds"` | `"minutes"` | `"days"` | `"hours"` | `"months"`)
+   * @param args.unit Date time unit. Can be (`"years"` | `"seconds"` | `"minutes"` | `"days"` | `"hours"` | `"months"`)
    * @example schemas.date.timeAgo() // Schema
    * @example schemas.date.timeAgo().getValue({unit: 'days'}) // '20 days ago'
    * @returns string

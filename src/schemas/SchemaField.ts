@@ -9,14 +9,14 @@ export class SchemaField<K = any, A = any> implements ISchemaField<A, K> {
   private args: A;
   private name: string;
 
-  constructor(name: string, func: (args: A) => K, args: A) {
+  constructor(name: string, func: (args: A) => K, args?: A) {
     if (typeof name !== "string" || name.trim() === "") {
       throw new ChacaError("The schema field must have a name");
     }
 
     this.name = name;
     this.valueFunction = func;
-    this.args = args;
+    this.args = args || ({} as A);
   }
 
   public getName(): string {

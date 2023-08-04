@@ -115,6 +115,7 @@ schemas.person.firstName().getValue({ sex: "female" }); // 'Camila'
 - `address`
 - `dataType`
 - `finance`
+- `color`
 - `date`
 - `animal`
 - `id`

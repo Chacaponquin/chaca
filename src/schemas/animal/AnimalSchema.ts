@@ -80,7 +80,7 @@ export class AnimalSchema {
   /**
    * Returns a cat breed
    * @example schemas.animal.cat() // Schema
-   * @example schemas.animal.cat().getValue() // 'Singapuria'
+   * @example schemas.animal.cat().getValue() // 'Bengal'
    * @returns string
    */
   cat() {

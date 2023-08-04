@@ -144,7 +144,7 @@ export class ColorSchema {
   /**
    * Returns a CMYK color.
    *
-   * @param options.format Format of generated CMYK color. Defaults to `'decimal'`.
+   * @param options.format Format of generated CMYK color. Defaults to `'css'`.
    *
    * @example
    * schemas.color.cmyk() // schema
@@ -173,7 +173,7 @@ export class ColorSchema {
   /**
    * Returns an HSL color.
    *
-   * @param options.format Format of generated HSL color. Defaults to `'decimal'`.
+   * @param options.format Format of generated HSL color. Defaults to `'css'`.
    * @param options.includeAlpha Adds an alpha value to the color (RGBA). Defaults to `false`.
    *
    * @example
@@ -194,11 +194,11 @@ export class ColorSchema {
         ];
 
         for (let i = 0; i < (includeAlpha ? 3 : 2); i++) {
-          hsl.push(
-            this.dataTypeSchema
-              .float()
-              .getValue({ min: 0, max: 1, precision: 3 }),
-          );
+          const value = this.dataTypeSchema
+            .float()
+            .getValue({ min: 0, max: 1, precision: 3 });
+
+          hsl.push(value);
         }
 
         return toColorFormat(hsl, format, includeAlpha ? "hsla" : "hsl");
@@ -210,7 +210,7 @@ export class ColorSchema {
   /**
    * Returns an HWB color.
    *
-   * @param options.format Format of generated RGB color. Defaults to `'decimal'`.
+   * @param options.format Format of generated HWB color. Defaults to `'css'`.
    *
    * @example
    * schemas.color.hwb() // schema
@@ -247,12 +247,10 @@ export class ColorSchema {
    * it is bounded to 230 as anything above will not
    * make a noticeable difference in the browser.
    *
-   * @param options.format Format of generated RGB color. Defaults to `'decimal'`.
+   * @param options.format Format of generated LCH color. Defaults to `'decimal'`.
    *
    * @example
    * schemas.color.lch() // schema
-   * schemas.color.lch().getValue() // [0.522345, 72.2, 56.2]
-   * schemas.color.lch().getValue({ format: 'decimal' }) // [0.522345, 72.2, 56.2]
    * schemas.color.lch().getValue({ format: 'css' }) // lch(52.2345% 72.2 56.2)
    * schemas.color.lch().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
@@ -285,12 +283,11 @@ export class ColorSchema {
   /**
    * Returns a random color based on CSS color space specified.
    *
-   * @param options.format Format of generated RGB color. Defaults to `'decimal'`.
+   * @param options.format Format of generated color. Defaults to `'css'`.
    * @param options.space Color space to generate the color for. Defaults to `'sRGB'`.
    *
    * @example
    * schemas.color.colorByCSSColorSpace() // schema
-   * schemas.color.colorByCSSColorSpace().getValue() // [0.93, 1, 0.82]
    * schemas.color.colorByCSSColorSpace().getValue({ format: 'css', space: 'display-p3' }) // color(display-p3 0.12 1 0.23)
    * schemas.color.colorByCSSColorSpace().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */

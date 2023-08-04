@@ -17,7 +17,7 @@ import {
   PITCHER_SCHEMA,
   PLAYER_SCHEMA,
   TEAM_MEMBER_SCHEMA,
-} from "./schemas/teamMember";
+} from "./schemas/team_member";
 
 export const BASEBALL_SCHEMAS = [
   {

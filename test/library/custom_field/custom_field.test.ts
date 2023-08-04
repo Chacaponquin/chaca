@@ -37,7 +37,7 @@ describe("# Custom field tests", () => {
 
     const docs = schema.generateObject();
 
-    expect(docs["custom"] === docs["id"]).toBe(true);
+    expect(docs["custom"]).toBe(docs["id"]);
   });
 
   it("custom function in a nested schema", () => {

@@ -84,7 +84,7 @@ export class FinanceSchema {
    *
    * @example schemas.finance.creaditNumber() // Schema
    * @example
-   * faker.finance.creditCard().getValue() // '6375-3265-4676-6646'
+   * schemas.finance.creditCard().getValue() // '6375-3265-4676-6646'
    *
    * @returns string
    */
@@ -128,6 +128,12 @@ export class FinanceSchema {
     );
   }
 
+  /**
+   * @example
+   * schemas.finance.accountType() // Schema
+   * schemas.finance.accountType().getValue() // "Credit Card"
+   * @returns string
+   */
   accountType(): SchemaField<string> {
     return new SchemaField<string>(
       "accountType",
@@ -172,6 +178,12 @@ export class FinanceSchema {
     );
   }
 
+  /**
+   * @example
+   * schemas.finance.routingNumber() // Schema
+   * schemas.finance.routingNumber().getValue() // '522814402'
+   * @returns string
+   */
   routingNumber() {
     return new SchemaField<string>(
       "routingNumber",

@@ -38,7 +38,7 @@ type IntProps = {
 
 type HexadecimalProps = {
   length?: number;
-  case?: "mixed" | "lower" | "upper";
+  case?: Case;
 };
 
 type MatrizProps = {
@@ -190,7 +190,7 @@ export class DataTypeSchema {
    * Returns a number
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
-   * @param args.precision Precision of the number. Must be a value between `1` and `20`.
+   * @param args.precision Precision of the number. Must be a value between `0` and `20`.
    * @example schemas.dataType.number() // Schema
    * @example
    * schemas.dataType.number().getValue() // 301
@@ -209,6 +209,7 @@ export class DataTypeSchema {
         } else {
           val = this.float().getValue({ max, min, precision });
         }
+
         return val;
       },
       args || {},
@@ -269,15 +270,15 @@ export class DataTypeSchema {
    *
    * @param args.x_size Columns size
    * @param args.y_size Row size
-   * @param args.min Min value for the numbers of the matriz
-   * @param args.max Max value for the numbers of the matriz
-   * @param args.precision Number precision of the matriz
+   * @param args.min Min value for the numbers of the matrix
+   * @param args.max Max value for the numbers of the matrix
+   * @param args.precision Number precision of the matrix
    *
    * @example schemas.dataType.matriz() // Schema
    *
    * @example
-   * schemas.dataType.matriz().getValue() // [[1, 0, 5], [5, 10, 9]]
-   * schemas.dataType.matriz().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
+   * schemas.dataType.matrix().getValue() // [[1, 0, 5], [5, 10, 9]]
+   * schemas.dataType.matrix().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
   public matrix(args?: MatrizProps) {
     return new SchemaField<number[][], MatrizProps>(
@@ -325,6 +326,7 @@ export class DataTypeSchema {
       (a) => {
         const len =
           typeof a.length === "number" && a.length > 0 ? a.length : undefined;
+
         let charactersToRet;
 
         if (a.case) {
@@ -344,6 +346,7 @@ export class DataTypeSchema {
           for (let i = 1; i <= len; i++) {
             ret = ret.concat(this.utils.oneOfArray(charactersToRet));
           }
+
           return ret;
         } else {
           return this.utils.oneOfArray(charactersToRet);
@@ -360,7 +363,7 @@ export class DataTypeSchema {
    * @example
    * schemas.dataType.binaryCode().getValue() // '00101'
    * schemas.dataType.binaryCode().getValue({length: 6}) // '010100'
-   * @returns
+   * @returns string
    */
   public binaryCode(args?: BinaryCodeProps) {
     return new SchemaField<string, BinaryCodeProps>(
@@ -381,6 +384,13 @@ export class DataTypeSchema {
       args || {},
     );
   }
+
+  /**
+   * @param args.length Length of the string
+   * @param args.case Case of the string. (`lower`, `upper`, `mixed`)
+   * @param args.banned Characters that cannot appear in the string. It can be an array of characters or a string with all the characters
+   * @returns string
+   */
 
   public alphaNumeric(args?: AlphaNumericProps) {
     return new SchemaField<string, AlphaNumericProps>(
@@ -410,12 +420,10 @@ export class DataTypeSchema {
         }
 
         const selectNumbers = this.numbersArray().filter((el) => {
-          let is = true;
-          banned.forEach((b) => {
-            if (b === el) is = false;
-          });
-          return is;
+          const is = banned.some((b) => b === el);
+          return !is;
         });
+
         const characters = this.filterCharacters(cass);
         const selectCharacters = characters.filter((el) => {
           let is = true;
