@@ -5,6 +5,14 @@ import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants/index.js";
 export class VehicleSchema {
   private utils = new ChacaUtils();
 
+  public readonly constants = {
+    bicycles: BICYCLE,
+    fuels: FUEL,
+    manufacturers: MANUFACTURER,
+    models: MODEL,
+    vehicleTypes: TYPE,
+  };
+
   /**
    * Returns a bicycle type
    * @example schemas.vehicle.bicycle() // Schema

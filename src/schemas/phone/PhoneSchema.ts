@@ -25,7 +25,7 @@ export class PhoneSchema {
    * @param args.format Format of the phone number
    * @example schemas.phone.number() // Schema
    * @example
-   * schemas.phone.number().getValue({format: '+53 #### ## ##'}) // '+53 5417 35 91'
+   * schemas.phone.number().getValue({format: '+53 #### ## ##'}) // '+53 5417 35 99'
    * @returns string
    */
   number(args?: NumberProps) {
@@ -67,6 +67,7 @@ export class PhoneSchema {
    * @example
    * schemas.phone.callDuration().getValue({min: 10, max: 30}) // '27:30'
    * schemas.phone.callDuration().getValue() // '20:52'
+   *
    * @returns string
    */
   callDuration(args?: CallDurationProps) {
