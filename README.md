@@ -1,6 +1,6 @@
 <p align="center"><img align="center" width="200" src="https://res.cloudinary.com/chaca-sa/image/upload/v1681924431/Logopit_1681682634889_hywzcu.png" style="max-width: 100%"/></p>
 
-<p align="center">Think your data and let Chaca create it.</p>
+<p align="center" style="font-size: 20px; font-weight: 600">🌚 Think your data and let Chaca create it.</p>
 
 > **Note** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!
 
@@ -8,6 +8,7 @@
 
 ```shell
  npm install chaca
+
 ```
 
 ## Usage
@@ -92,6 +93,7 @@ await postSchema.generateAndExport(20, {
   format: "json",
   location: "./folder",
 });
+
 ```
 
 ## Fields Type
@@ -110,6 +112,7 @@ schemas.person.firstName();
 schemas.person.firstName().getValue(); // 'Juan'
 // Get a value from the schema with arguments
 schemas.person.firstName().getValue({ sex: "female" }); // 'Camila'
+
 ```
 
 - `address`
@@ -137,6 +140,7 @@ Returns one of the values of the array passed as argument
 ```ts
 chaca.enum([1, 2, 3, 4, 5]); // 5;
 chaca.enum([]); // throws an error
+
 ```
 
 ### `custom`
@@ -149,6 +153,7 @@ Function that allows customizing a value based on the current state of the datas
     return currentFields.age >= 18;
   };
 }
+
 ```
 
 ### `key`
@@ -159,6 +164,7 @@ Indicates that the field is the schema key
 {
   id: chaca.key(schemas.id.uuid());
 }
+
 ```
 
 > **⚠️ Warning**
@@ -174,6 +180,7 @@ Reference to another schema, indicates that it will have one of the generated va
 {
   user_id: chaca.ref("User.id");
 }
+
 ```
 
 > **⚠️ Warning**
@@ -184,27 +191,29 @@ Reference to another schema, indicates that it will have one of the generated va
 
 - `where`
 
-  Function that indicates if the ref value is valid
+Function that indicates if the ref value is valid
 
-  ```ts
-  {
-    user_id: chaca.ref("User.id", ({ refFields: userFields }) => {
-      // will only choose the ids of users older than 18
-      return userFields.age > 18;
-    });
-  }
-  ```
+```ts
+{
+  user_id: chaca.ref("User.id", ({ refFields: userFields }) => {
+    // will only choose the ids of users older than 18
+    return userFields.age > 18;
+  });
+}
+
+```
 
 - `unique`
 
-  Indicates if the selected value can not be chosen by another documents of that schema.
+Indicates if the selected value can not be chosen by another documents of that schema.
 
-  ```ts
-  {
-    // rest fields
-    user_id: chaca.ref("User.id", { unique: true });
-  }
-  ```
+```ts
+{
+  // rest fields
+  user_id: chaca.ref("User.id", { unique: true });
+}
+
+```
 
 ### `sequential`
 
@@ -221,6 +230,7 @@ const postSchema = chaca.schema({
 // the third post (count_likes = 90)
 // the fourth post (count_likes = 234)
 postSchema.generate(4);
+
 ```
 
 ### `sequence`
@@ -234,17 +244,18 @@ const userSchema = chaca.schema({
 });
 
 userSchema.generate(4); // [{id: 1}, {id: 2}, {id: 3}, {id: 4}]
+
 ```
 
 #### Config
 
 - `starsWith`
 
-  The number to start with.
+   The number to start with.
 
 - `step`
 
-  Step between values.
+   Step between values.
 
 ### `nested schema`
 
@@ -262,6 +273,7 @@ You can also make the field an object of information using an nested schema
     description: schemas.lorem.text(),
   });
 }
+
 ```
 
 ## Field Config API
@@ -275,6 +287,7 @@ Indicates the field type
 {
   type: schemas.image.film();
 }
+
 ```
 
 ### `isArray`
@@ -285,6 +298,7 @@ Indicates if the field is an array of values of the the selected schema
 isArray: true; // The field would be an array with length between 0 and 10
 isArray: { min: 5, max: 10 } // the field would be an array with length between 5 and 10
 isArray: 20 // The field would be an array with length 20
+
 ```
 
 ### `posibleNull`
@@ -296,6 +310,7 @@ posibleNull: true; // the field has a 50% chance of being null
 
 //The number indicates de chance porcent
 posibleNull: 60; // the field has a 60% chance of being null
+
 ```
 
 ## Relational Schemas
@@ -333,6 +348,7 @@ const DATA = chaca.multiGenerate([
 //  "Category Post": [...categories],
 //  "User": [...users]
 //}
+
 ```
 
 ## Custom Schema Fields
@@ -359,6 +375,7 @@ const mySchemaField = chaca.schemaField<SchemaArguments, number>(
 const mySchema = chaca.schema({
   sum: mySchemaField({ a: 5, b: 10 }), // In all the generated objects the sum field is 15
 });
+
 ```
 
 ## Export
@@ -383,6 +400,7 @@ const fileLocation = await chaca.export(data, {
   location: "./dataFolder",
   format: "json",
 });
+
 ```
 
 ### `chaca.exportFromSchemas`
@@ -400,6 +418,7 @@ await chaca.exportFromSchemas(
     format: "json",
   },
 );
+
 ```
 
 ## Export API
@@ -416,6 +435,7 @@ await chaca.exportFromSchemas(
   // Location of the folder that will be our data
   location: "./folder"
 }
+
 ```
 
 ## Contributing
