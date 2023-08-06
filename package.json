@@ -1,12 +1,15 @@
 {
   "name": "chaca",
   "version": "1.5.1",
-  "description": "Create and export data with your rules",
+  "description": "Create and export mock data with your rules",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.mjs",
   "types": "./lib/types/index.d.ts",
   "engines": {
     "node": ">=14.0.0"
+  },
+  "bin": {
+    "chaca": "./bin/index.js"
   },
   "exports": {
     ".": {
@@ -91,6 +94,7 @@
   },
   "dependencies": {
     "adm-zip": "^0.5.9",
+    "commander": "^11.0.0",
     "lorem-ipsum": "^2.0.8",
     "yargs": "^17.7.2"
   },

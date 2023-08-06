@@ -1,11 +1,11 @@
 import { ChacaError, EmptySequentialValuesError } from "../../../src";
-import { CORRECT_SEQUENTIAL_DATA } from "./schemas/correctSchema";
+import { CORRECT_SEQUENTIAL_DATA } from "./schemas/correct_schema";
 import {
   FEW_VALUES_SEQUENTIAL_SCHEMA,
   NUMBER_SEQUENTIAL_SCHEMA,
   STRING_SEQUENTIAL_SCHEMA,
-} from "./schemas/incorrectSchemas";
-import { TOO_MUCH_VALUES_SEQUENTIAL_DATA } from "./schemas/tooMuchValuesSchema";
+} from "./schemas/incorrect_schemas";
+import { TOO_MUCH_VALUES_SEQUENTIAL_DATA } from "./schemas/too_much_values_schema";
 
 describe("# Sequential Field test", () => {
   it("Correct define of a schema with sequential field", () => {
