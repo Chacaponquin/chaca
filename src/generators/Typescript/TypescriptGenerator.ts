@@ -3,7 +3,7 @@ import { Generator } from "../Generator.js";
 import { JavascriptGenerator } from "../Javascript/JavascriptGenerator.js";
 import fs from "fs";
 import { ObjectInterface, TypescriptInterface } from "./classes/index.js";
-import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
+import { MultiGenerateResolver } from "../../core/classes/MultiGenerate/MultiGenerateResolver.js";
 
 export class TypescriptGenerator extends Generator {
   constructor(config: FileConfig) {

@@ -13,8 +13,8 @@ import { FileConfig } from "../../interfaces/export.interface.js";
 import {
   GenerateConfig,
   MultiGenerateSchema,
-} from "../MultiGenerate/MultiGenerate.js";
-import { MultiGenerateResolver } from "../MultiGenerate/classes/MultiGenerateResolver.js";
+} from "../MultiGenerate/interfaces/multiGenerate.interface.js";
+import { MultiGenerateResolver } from "../MultiGenerate/MultiGenerateResolver.js";
 
 export class ExportResolver {
   constructor(private readonly config: FileConfig) {}

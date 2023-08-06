@@ -2,7 +2,7 @@ import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { Generator } from "../Generator.js";
 import fs from "fs";
 import { ChacaError } from "../../errors/ChacaError.js";
-import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
+import { MultiGenerateResolver } from "../../core/classes/MultiGenerate/MultiGenerateResolver.js";
 
 export class JavascriptGenerator extends Generator {
   constructor(config: FileConfig) {

@@ -1,4 +1,4 @@
-import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
+import { ChacaUtils } from "../../core/classes/ChacaUtils/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import { SPECIAL_CHARACTERS } from "./constants/special_characters.js";
 import {

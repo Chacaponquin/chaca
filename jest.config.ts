@@ -3,12 +3,7 @@ import type { Config } from "@jest/types";
 const config: Config.InitialOptions = {
   verbose: true,
   transform: {
-    "\\.[jt]sx?$": "ts-jest",
-  },
-  globals: {
-    "ts-jest": {
-      useESM: true,
-    },
+    "^.+\\.(t|j)s$": "ts-jest",
   },
   moduleNameMapper: {
     "(.+)\\.js": "$1",

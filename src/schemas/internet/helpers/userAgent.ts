@@ -1,4 +1,4 @@
-import { ChacaUtils } from "../../../core/helpers/ChacaUtils.js";
+import { ChacaUtils } from "../../../core/classes/ChacaUtils/ChacaUtils.js";
 import { DataTypeSchema } from "../../dataType/DataTypeSchema.js";
 
 type OS = "lin" | "mac" | "win";

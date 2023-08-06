@@ -18,7 +18,7 @@ import {
   RegExpType,
   StringType,
 } from "./classes/types/index.js";
-import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
+import { MultiGenerateResolver } from "../../core/classes/MultiGenerate/MultiGenerateResolver.js";
 import { IdSchema } from "../../schemas/id/IdSchema.js";
 
 interface JavaClassCreated {

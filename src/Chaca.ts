@@ -11,11 +11,16 @@ import {
   SequenceFieldProps,
 } from "./core/classes/SequenceField/SequenceField.js";
 import { SequentialField } from "./core/classes/SequentialField/SequentialField.js";
-import { ChacaUtils } from "./core/helpers/ChacaUtils.js";
+import { ChacaUtils } from "./core/classes/ChacaUtils/ChacaUtils.js";
 import { SchemaInput } from "./core/interfaces/schema.interface.js";
 import { SchemaField } from "./schemas/SchemaField.js";
-import { Export, ExportFromSchemas } from "./core/helpers/Export/index.js";
-import { MultiGenerate } from "./core/helpers/MultiGenerate/MultiGenerate.js";
+import {
+  GenerateConfig,
+  MultiGenerateSchema,
+} from "./core/classes/MultiGenerate/interfaces/multiGenerate.interface.js";
+import { ExportResolver } from "./core/classes/Export/ExportResolver.js";
+import { FileConfig } from "./core/interfaces/export.interface.js";
+import { MultiGenerateResolver } from "./core/classes/MultiGenerate/MultiGenerateResolver.js";
 
 export class Chaca {
   utils = new ChacaUtils();
@@ -108,7 +113,14 @@ export class Chaca {
    * @param fileConfig.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'`)
    * @param genConfig.verbose Show log in console progretion
    */
-  exportFromSchemas = ExportFromSchemas;
+  async exportFromSchemas(
+    schemas: Array<MultiGenerateSchema>,
+    fileConfig: FileConfig,
+    genConfig?: GenerateConfig,
+  ) {
+    const exportResolver = new ExportResolver(fileConfig);
+    return await exportResolver.exportRelationalSchemas(schemas, genConfig);
+  }
 
   /**
    * Export the data to a selected code format
@@ -126,12 +138,21 @@ export class Chaca {
    * @returns
    * Promise<string>
    */
-  export = Export;
+  async export(data: any, config: FileConfig) {
+    const exportResolver = new ExportResolver(config);
+    return await exportResolver.exportData(data);
+  }
 
   /**
    * Generate data from realtional schemas
    * @param schemas Array with the schemas config
    * @param config.verbose Show log in console progretion
    */
-  multiGenerate = MultiGenerate;
+  multiGenerate<K = any>(
+    schemas: Array<MultiGenerateSchema>,
+    config?: GenerateConfig,
+  ) {
+    const resolver = new MultiGenerateResolver<K>(schemas, config);
+    return resolver.resolve();
+  }
 }

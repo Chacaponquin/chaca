@@ -1,5 +1,5 @@
 import { TryRefANoKeyFieldError } from "../../../../../errors/ChacaError.js";
-import { ChacaUtils } from "../../../../helpers/ChacaUtils.js";
+import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 

@@ -36,7 +36,7 @@ import {
   RefValueNode,
 } from "../../core/classes/ChacaInputTree/classes/index.js";
 import { SQLDataGenerator } from "./classes/generators/index.js";
-import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
+import { MultiGenerateResolver } from "../../core/classes/MultiGenerate/MultiGenerateResolver.js";
 
 export class SQLGenerator extends Generator {
   private schemasPrimaryKeys: Array<KeyValueNode> = [];

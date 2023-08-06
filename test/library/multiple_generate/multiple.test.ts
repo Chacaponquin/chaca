@@ -1,6 +1,6 @@
 import { ChacaError, TryRefANoKeyFieldError } from "../../../src";
 import { REF_REF_VALUE_DATA } from "./utils/ref-ref/schemas";
-import { REPEAT_NAMES_DATA } from "./utils/repeatNames/schemas";
+import { REPEAT_NAMES_DATA } from "./utils/repeat_names/schemas";
 
 describe("Multiple Generation Test", () => {
   describe("Incorrect declaration of reference field", () => {

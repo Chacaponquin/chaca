@@ -1,7 +1,7 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
 import { SchemaField } from "../../../schemas/SchemaField.js";
 import { IdSchema } from "../../../schemas/id/IdSchema.js";
-import { Export } from "../../helpers/Export/Export.js";
+import { ExportResolver } from "../Export/ExportResolver.js";
 import { FileConfig } from "../../interfaces/export.interface.js";
 import {
   FieldIsArrayConfig,
@@ -16,7 +16,6 @@ import { RefField } from "../RefField/RefField.js";
 import { KeyFieldResolverProps } from "../Resolvers/KeyFieldResolver/KeyFieldResolver.js";
 import {
   CustomFieldResolver,
-  EnumFieldResolver,
   KeyFieldResolver,
   MixedFieldResolver,
   RefFieldResolver,
@@ -29,6 +28,7 @@ import { SequenceField } from "../SequenceField/SequenceField.js";
 import { SequentialField } from "../SequentialField/SequentialField.js";
 import { FieldIsArray } from "./value-object/FieldIsArray.js";
 import { FieldPosibleNull } from "./value-object/FieldPosibleNull.js";
+import { Enum } from "./value-object/index.js";
 
 export interface CommonSchema {
   isArray: FieldIsArrayConfig;
@@ -57,7 +57,7 @@ export class ChacaSchema<K = any> {
     configFile: FileConfig,
   ): Promise<string> {
     const data = this.generate(cantDocuments);
-    return await Export(data, configFile);
+    return await new ExportResolver(configFile).exportData(data);
   }
 
   private validateObjectSchema(obj: SchemaInput): SchemaToResolve {
@@ -130,7 +130,7 @@ export class ChacaSchema<K = any> {
         } else if (schema instanceof EnumField) {
           schemaToSave = {
             ...schemaToSave,
-            [key]: { type: this.validateEnum(key, schema), ...defaultConfig },
+            [key]: { type: new Enum(key, schema).resolver(), ...defaultConfig },
           };
         } else {
           if (typeof schema === "object" && schema !== null) {
@@ -208,7 +208,7 @@ export class ChacaSchema<K = any> {
     } else if (type instanceof SchemaField) {
       return new SchemaFieldResolver(type);
     } else if (type instanceof EnumField) {
-      return this.validateEnum(key, type);
+      return new Enum(key, type).resolver();
     } else if (typeof type === "function") {
       return new CustomFieldResolver(type);
     } else {
@@ -216,39 +216,12 @@ export class ChacaSchema<K = any> {
     }
   }
 
-  private validateEnum<R>(
-    key: string,
-    enumField: EnumField<R>,
-  ): EnumFieldResolver<R> {
-    if (Array.isArray(enumField.valuesArray)) {
-      if (enumField.valuesArray.length > 0) {
-        return new EnumFieldResolver(enumField.valuesArray);
-      } else
-        throw new ChacaError(
-          `For the field ${key} you must provide some values to choce`,
-        );
-    } else {
-      throw new ChacaError(
-        `If the field ${key} is a enum type so this one muste be an array of values`,
-      );
-    }
-  }
-
   /**
    * Generate a schema document
    */
   public generateObject(): K {
-    const idSchema = new IdSchema();
-
-    const schemaToResolve = new SchemaResolver<K>(
-      idSchema.uuid().getValue(),
-      this.schemaObj,
-      1,
-      0,
-      false,
-    );
-
-    return schemaToResolve.resolve()[0];
+    const result = this.generate(1);
+    return result[0];
   }
 
   /**

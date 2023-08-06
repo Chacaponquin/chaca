@@ -1,4 +1,4 @@
-import { MultiGenerateResolver } from "../../core/helpers/MultiGenerate/classes/MultiGenerateResolver.js";
+import { MultiGenerateResolver } from "../../core/classes/MultiGenerate/MultiGenerateResolver.js";
 import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { Generator } from "../Generator.js";

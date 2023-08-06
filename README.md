@@ -4,7 +4,7 @@
 
 > **Note** This is the first version we released so any suggestions or bug reports are appreciated. Thanks!!!
 
-## Instalation
+## Installation
 
 ```shell
  npm install chaca

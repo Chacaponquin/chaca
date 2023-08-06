@@ -30,7 +30,7 @@ import { GetStoreValueInput } from "./core/classes/SchemasStore/interfaces/store
 import {
   MultiGenerateSchema,
   GenerateConfig,
-} from "./core/helpers/MultiGenerate/MultiGenerate.js";
+} from "./core/classes/MultiGenerate/interfaces/multiGenerate.interface.js";
 
 import {
   FieldRefInputConfig,
@@ -52,7 +52,7 @@ import {
 import { DatasetStore } from "./core/classes/DatasetStore/DatasetStore.js";
 import { EnumField } from "./core/classes/EnumField/EnumField.js";
 import { Chaca } from "./Chaca.js";
-import { ChacaUtils } from "./core/helpers/ChacaUtils.js";
+import { ChacaUtils } from "./core/classes/ChacaUtils/ChacaUtils.js";
 
 export const chaca = new Chaca();
 export const schemas = new Schemas();

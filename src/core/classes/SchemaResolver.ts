@@ -1,5 +1,5 @@
 import { ChacaError, CyclicAccessDataError } from "../../errors/ChacaError.js";
-import { ChacaUtils } from "../helpers/ChacaUtils.js";
+import { ChacaUtils } from "./ChacaUtils/ChacaUtils.js";
 import { SchemaToResolve } from "../interfaces/schema.interface.js";
 import { ChacaInputTree } from "./ChacaInputTree/ChacaInputTree.js";
 import {

@@ -1,4 +1,4 @@
-import { ChacaUtils } from "../../core/helpers/ChacaUtils.js";
+import { ChacaUtils } from "../../core/classes/ChacaUtils/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import { MIME_TYPES } from "./constants/mimeTypes.js";
 import { FILE_EXTENSIONS } from "./constants/fileExtensions.js";
