@@ -20,6 +20,7 @@
   },
   "files": [
     "lib/**/*",
+    "bin/**/*",
     "LICENSE",
     "CONTRIBUTING.md",
     "README.md",
