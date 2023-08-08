@@ -5,7 +5,7 @@ import {
   GetStoreValueInput,
 } from "../SchemasStore/interfaces/store.interface.js";
 import { FieldNode } from "../ChacaResultTree/classes/index.js";
-import { SchemaResolver } from "../SchemaResolver.js";
+import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
 
 /** Store to interact with all datasets */
 export class DatasetStore {

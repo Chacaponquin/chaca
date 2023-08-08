@@ -1,35 +1,22 @@
 import { ChacaError } from "../../../errors/ChacaError.js";
-import { SchemaResolver } from "../SchemaResolver.js";
+import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
 import {
   GenerateConfig,
   MultiGenerateSchema,
 } from "./interfaces/multiGenerate.interface.js";
+import { GenerateConfigObject } from "./value-object/index.js";
 
 export class MultiGenerateResolver<K = any> {
   private resolversArray: Array<SchemaResolver> = [];
   private config: Required<GenerateConfig>;
 
   constructor(schemas: Array<MultiGenerateSchema>, config?: GenerateConfig) {
-    this.config = this.validateGenerateConfig(config);
-    this.validateNotRepeatSchemaNames(schemas);
+    this.config = new GenerateConfigObject(config).value();
     this.createSchemaResolvers(schemas);
+    this.validateNotRepeatSchemaNames(schemas);
     this.injectSchemas();
     this.buildInputTrees();
     this.buildRefFields();
-  }
-
-  private validateGenerateConfig(
-    config?: Partial<GenerateConfig>,
-  ): Required<GenerateConfig> {
-    const returConfig: Required<GenerateConfig> = { verbose: true };
-
-    if (config && typeof config === "object") {
-      if (typeof config.verbose === "boolean") {
-        returConfig.verbose = config.verbose;
-      }
-    }
-
-    return returConfig;
   }
 
   public getResolvers() {
@@ -59,15 +46,17 @@ export class MultiGenerateResolver<K = any> {
   private createSchemaResolvers(schemas: Array<MultiGenerateSchema>): void {
     this.resolversArray = schemas.map((schema, schemaIndex) => {
       if (typeof schema === "object" && schema !== null) {
-        return new SchemaResolver(
-          schema.name,
-          schema.schema.getSchemaObject(),
-          schema.documents,
-          schemaIndex,
-          this.config.verbose,
-        );
+        return new SchemaResolver({
+          schemaName: schema.name,
+          schemaObject: schema.schema.getSchemaObject(),
+          countDoc: schema.documents,
+          schemaIndex: schemaIndex,
+          consoleVerbose: this.config.verbose,
+        });
       } else {
-        throw new ChacaError("You must provide a name for your schema");
+        throw new ChacaError(
+          "You must provide a object with the schema configuration. Example: { name: 'User', schema: UserSchema, documents: 50 }",
+        );
       }
     });
   }

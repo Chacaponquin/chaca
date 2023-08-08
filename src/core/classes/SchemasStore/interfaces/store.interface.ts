@@ -1,5 +1,5 @@
 import { DocumentTree } from "../../ChacaResultTree/classes/index.js";
-import { SchemaResolver } from "../../SchemaResolver.js";
+import { SchemaResolver } from "../../SchemaResolver/SchemaResolver.js";
 
 /**
  * Get value in dataset store config

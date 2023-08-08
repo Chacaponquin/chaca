@@ -23,7 +23,7 @@ import {
   SequenceFieldResolver,
   SequentialFieldResolver,
 } from "../Resolvers/index.js";
-import { SchemaResolver } from "../SchemaResolver.js";
+import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
 import { SequenceField } from "../SequenceField/SequenceField.js";
 import { SequentialField } from "../SequentialField/SequentialField.js";
 import { FieldIsArray } from "./value-object/FieldIsArray.js";
@@ -231,13 +231,13 @@ export class ChacaSchema<K = any> {
   public generate(cantDocuments: number): K[] {
     const idSchema = new IdSchema();
 
-    const schemaToResolve = new SchemaResolver<K>(
-      idSchema.uuid().getValue(),
-      this.schemaObj,
-      cantDocuments,
-      0,
-      false,
-    );
+    const schemaToResolve = new SchemaResolver<K>({
+      schemaName: idSchema.uuid().getValue(),
+      schemaObject: this.schemaObj,
+      countDoc: cantDocuments,
+      schemaIndex: 0,
+      consoleVerbose: false,
+    });
 
     return schemaToResolve.resolve();
   }

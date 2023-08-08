@@ -1,4 +1,4 @@
-import { SchemaResolver } from "../../core/classes/SchemaResolver.js";
+import { SchemaResolver } from "../../core/classes/SchemaResolver/SchemaResolver.js";
 import {
   ExportSQLFormat,
   FileConfig,

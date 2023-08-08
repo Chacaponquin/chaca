@@ -1,7 +1,10 @@
-import { ChacaError, CyclicAccessDataError } from "../../errors/ChacaError.js";
-import { ChacaUtils } from "./ChacaUtils/ChacaUtils.js";
-import { SchemaToResolve } from "../interfaces/schema.interface.js";
-import { ChacaInputTree } from "./ChacaInputTree/ChacaInputTree.js";
+import {
+  ChacaError,
+  CyclicAccessDataError,
+} from "../../../errors/ChacaError.js";
+import { ChacaUtils } from "../ChacaUtils/ChacaUtils.js";
+import { SchemaToResolve } from "../../interfaces/schema.interface.js";
+import { ChacaInputTree } from "../ChacaInputTree/ChacaInputTree.js";
 import {
   ChacaTreeNode,
   CustomValueNode,
@@ -12,20 +15,29 @@ import {
   KeyValueNode,
   SequentialValueNode,
   SequenceValueNode,
-} from "./ChacaInputTree/classes/index.js";
-import { ChacaResultTree } from "./ChacaResultTree/ChacaResultTree.js";
+} from "../ChacaInputTree/classes/index.js";
+import { ChacaResultTree } from "../ChacaResultTree/ChacaResultTree.js";
 import {
   DocumentTree,
   FieldNode,
   ArrayResultNode,
   MixedFieldNode,
   SingleResultNode,
-} from "./ChacaResultTree/classes/index.js";
-import { SchemaStore } from "./SchemasStore/SchemaStore.js";
-import { GetStoreValueConfig } from "./SchemasStore/interfaces/store.interface.js";
-import { DatasetStore } from "./DatasetStore/DatasetStore.js";
-import { SearchedRefValue } from "./ChacaInputTree/classes/RefValueNode/interfaces/refNode.interface.js";
-import { DataTypeSchema } from "../../schemas/dataType/DataTypeSchema.js";
+} from "../ChacaResultTree/classes/index.js";
+import { SchemaStore } from "../SchemasStore/SchemaStore.js";
+import { GetStoreValueConfig } from "../SchemasStore/interfaces/store.interface.js";
+import { DatasetStore } from "../DatasetStore/DatasetStore.js";
+import { SearchedRefValue } from "../ChacaInputTree/classes/RefValueNode/interfaces/refNode.interface.js";
+import { DataTypeSchema } from "../../../schemas/dataType/DataTypeSchema.js";
+import { CountDoc, SchemaName } from "./value-object/index.js";
+
+interface SchemaResolverProps {
+  schemaName: string;
+  schemaObject: SchemaToResolve;
+  countDoc: number;
+  schemaIndex: number;
+  consoleVerbose: boolean;
+}
 
 export class SchemaResolver<K = any> {
   private dataTypeSchema = new DataTypeSchema();
@@ -45,17 +57,17 @@ export class SchemaResolver<K = any> {
 
   private consoleVerbose = false;
 
-  constructor(
-    schemaName: string,
-    schemaObject: SchemaToResolve,
-    countDoc: number,
-    schemaIndex: number,
-    consoleVerbose: boolean,
-  ) {
-    this.schemaName = this.validateSchemaName(schemaName);
+  constructor({
+    consoleVerbose,
+    countDoc,
+    schemaIndex,
+    schemaName,
+    schemaObject,
+  }: SchemaResolverProps) {
+    this.schemaName = new SchemaName(schemaName).value();
     this.schemaObject = schemaObject;
     this.resultTree = new ChacaResultTree<K>(this.schemaName);
-    this.countDoc = this.validateCountDoc(countDoc);
+    this.countDoc = new CountDoc(countDoc).value();
     this.schemaIndex = schemaIndex;
     this.consoleVerbose = consoleVerbose;
   }
@@ -99,39 +111,6 @@ export class SchemaResolver<K = any> {
         this.schemaObject,
         this.schemasStore,
       );
-    }
-  }
-
-  private validateCountDoc(cantDocuments: number): number {
-    let numberCant = 10;
-    const MAX_COUNT = 400000;
-
-    if (typeof cantDocuments === "number") {
-      if (cantDocuments >= 0 && cantDocuments <= MAX_COUNT) {
-        numberCant = cantDocuments;
-      } else if (cantDocuments < 0) {
-        throw new ChacaError(
-          `You can not generate a negative number of documents`,
-        );
-      } else if (cantDocuments > MAX_COUNT) {
-        throw new ChacaError(
-          `You can not generate more than ${MAX_COUNT} documents`,
-        );
-      }
-    } else {
-      throw new ChacaError(
-        `You have to specify a number of documents to create`,
-      );
-    }
-
-    return numberCant;
-  }
-
-  private validateSchemaName(name: string): string {
-    if (name && typeof name === "string") {
-      return name;
-    } else {
-      throw new ChacaError("You must provide a name for the schema");
     }
   }
 

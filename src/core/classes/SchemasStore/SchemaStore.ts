@@ -3,7 +3,7 @@ import {
   CyclicAccessDataError,
 } from "../../../errors/ChacaError.js";
 import { DocumentTree, FieldNode } from "../ChacaResultTree/classes/index.js";
-import { SchemaResolver } from "../SchemaResolver.js";
+import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
 import { GetStoreValueConfig } from "./interfaces/store.interface.js";
 
 export class SchemaStore {

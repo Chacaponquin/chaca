@@ -4,7 +4,7 @@ import {
   NotEnoughValuesForRefError,
   TryRefANoKeyFieldError,
 } from "../../../../../errors/ChacaError.js";
-import { SchemaResolver } from "../../../SchemaResolver.js";
+import { SchemaResolver } from "../../../SchemaResolver/SchemaResolver.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils.js";
