@@ -1,5 +1,5 @@
 import { FileConfig } from "../../core/interfaces/export.interface.js";
-import { Generator } from "./../Generator.js";
+import { Generator } from "../Generator/Generator.js";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";

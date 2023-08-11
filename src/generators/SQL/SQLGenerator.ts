@@ -4,7 +4,7 @@ import {
   FileConfig,
 } from "../../core/interfaces/export.interface.js";
 import { ChacaError } from "../../errors/ChacaError.js";
-import { Generator } from "../Generator.js";
+import { Generator } from "../Generator/Generator.js";
 import {
   SQLBoolean,
   SQLDate,

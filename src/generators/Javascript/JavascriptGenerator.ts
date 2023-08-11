@@ -1,5 +1,5 @@
 import { FileConfig } from "../../core/interfaces/export.interface.js";
-import { Generator } from "../Generator.js";
+import { Generator } from "../Generator/Generator.js";
 import fs from "fs";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { MultiGenerateResolver } from "../../core/classes/MultiGenerate/MultiGenerateResolver.js";

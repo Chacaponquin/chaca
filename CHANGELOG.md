@@ -1,10 +1,15 @@
-### chaca@1.5.1
+## chaca@1.5.2
 
 ### 🪛 Fix
 
-#### Schemas
+- Allow 0 as a possible value for the `isArray` parameter
+- Interfaces referring to `isArray` and `possibleNull` configurations are now accessible
 
-- Fix extra blank space in `PersonSchema.fullName`
+## chaca@1.5.1
+
+### 🪛 Fix
+
+- Fix extra blank space in `PersonSchema.fullName` string generation
 
 ## chaca@1.5.0
 

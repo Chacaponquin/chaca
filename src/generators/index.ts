@@ -1,5 +1,5 @@
 import { JsonGenerator } from "./JSON/JsonGenerator.js";
-import { Generator } from "./Generator.js";
+import { Generator } from "./Generator/Generator.js";
 import { JavascriptGenerator } from "./Javascript/JavascriptGenerator.js";
 import { CSVGenerator } from "./CSV/CSVGenerator.js";
 import { JavaGenerator } from "./Java/JavaGenerator.js";

@@ -1,5 +1,5 @@
 import { FileConfig } from "../../core/interfaces/export.interface.js";
-import { Generator } from "../Generator.js";
+import { Generator } from "../Generator/Generator.js";
 import { JavascriptGenerator } from "../Javascript/JavascriptGenerator.js";
 import fs from "fs";
 import { ObjectInterface, TypescriptInterface } from "./classes/index.js";

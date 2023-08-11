@@ -1,7 +1,7 @@
 import { MultiGenerateResolver } from "../../core/classes/MultiGenerate/MultiGenerateResolver.js";
 import { FileConfig } from "../../core/interfaces/export.interface.js";
 import { ChacaError } from "../../errors/ChacaError.js";
-import { Generator } from "../Generator.js";
+import { Generator } from "../Generator/Generator.js";
 import fs from "fs";
 
 export class YamlGenerator extends Generator {
