@@ -1,9 +1,9 @@
-import { InputPosibleNull } from "../../../interfaces/schema.interface.js";
+import { InputPossibleNull } from "../../../interfaces/schema.interface.js";
 
-export class FieldPosibleNull {
+export class FieldPossibleNull {
   private _value: number;
 
-  constructor(posible?: InputPosibleNull) {
+  constructor(posible?: InputPossibleNull) {
     this._value = this.validate(posible);
   }
 
@@ -11,7 +11,7 @@ export class FieldPosibleNull {
     return this._value;
   }
 
-  private validate(pos?: InputPosibleNull): number {
+  private validate(pos?: InputPossibleNull): number {
     let value: number;
 
     if (typeof pos === "number") {

@@ -68,7 +68,7 @@ export class ChacaInputTree {
     const nodeConfig = {
       fieldTreeRoute: actualRoute,
       isArray: object.isArray,
-      posibleNull: object.posibleNull,
+      posibleNull: object.possibleNull,
     };
 
     if (object.type instanceof CustomFieldResolver) {

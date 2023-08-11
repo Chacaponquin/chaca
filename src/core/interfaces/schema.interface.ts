@@ -34,7 +34,7 @@ export type SchemaToResolve = Record<string, ResolverObject>;
 export type ResolverObject = {
   type: IResolver;
   isArray: FieldIsArrayConfig;
-  posibleNull: number;
+  possibleNull: number;
 };
 
 export type FieldTypeInput<R = any> =
@@ -48,7 +48,7 @@ export type ArrayLimitObject = { min: number; max: number };
 export type FieldIsArrayConfig = ArrayLimitObject | null;
 
 export type InputIsArrayConfig = boolean | number | Partial<ArrayLimitObject>;
-export type InputPosibleNull = boolean | number;
+export type InputPossibleNull = boolean | number;
 
 export type FieldObjectInput<R> = {
   /** Schema field type*/
@@ -63,7 +63,7 @@ export type FieldObjectInput<R> = {
    * - `boolean` - `true` 50% chances to be null, `false` 0% chances
    * - `number` specific porcent of chances
    */
-  posibleNull?: InputPosibleNull;
+  posibleNull?: InputPossibleNull;
 };
 
 /**

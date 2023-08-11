@@ -1,4 +1,4 @@
-import { ChacaError } from "../../../errors/ChacaError.js";
+import { ChacaError } from "../../../../errors/ChacaError.js";
 
 export class Location {
   private _value: string;

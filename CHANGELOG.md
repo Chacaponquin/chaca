@@ -1,9 +1,14 @@
-## chaca@1.5.2
+## chaca@1.6.0
+
+### 🌚 Features
+
+- Add CLI commands for export dataset from schemas configuration file
 
 ### 🪛 Fix
 
 - Allow 0 as a possible value for the `isArray` parameter
 - Interfaces referring to `isArray` and `possibleNull` configurations are now accessible
+- Change `posibleNull` to `possibleNull` in schema configuration
 
 ## chaca@1.5.1
 

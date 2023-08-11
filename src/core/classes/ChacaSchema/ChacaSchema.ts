@@ -27,12 +27,12 @@ import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
 import { SequenceField } from "../SequenceField/SequenceField.js";
 import { SequentialField } from "../SequentialField/SequentialField.js";
 import { FieldIsArray } from "./value-object/FieldIsArray.js";
-import { FieldPosibleNull } from "./value-object/FieldPosibleNull.js";
+import { FieldPossibleNull } from "./value-object/FieldPossibleNull.js";
 import { Enum } from "./value-object/index.js";
 
 export interface CommonSchema {
   isArray: FieldIsArrayConfig;
-  posibleNull: number;
+  possibleNull: number;
 }
 
 export class ChacaSchema<K = any> {
@@ -75,7 +75,7 @@ export class ChacaSchema<K = any> {
 
       const defaultConfig: CommonSchema = {
         isArray: null,
-        posibleNull: 0,
+        possibleNull: 0,
       };
 
       for (const [key, schema] of Object.entries(obj)) {
@@ -168,7 +168,7 @@ export class ChacaSchema<K = any> {
             ...schemaToSave,
             [key]: {
               ...schemaToSave[key],
-              posibleNull: new FieldPosibleNull(schema.posibleNull).value(),
+              possibleNull: new FieldPossibleNull(schema.posibleNull).value(),
             },
           };
 

@@ -1,5 +1,5 @@
 import { Enum } from "./Enum.js";
 import { FieldIsArray } from "./FieldIsArray.js";
-import { FieldPosibleNull } from "./FieldPosibleNull.js";
+import { FieldPossibleNull } from "./FieldPossibleNull.js";
 
-export { FieldIsArray, FieldPosibleNull, Enum };
+export { FieldIsArray, FieldPossibleNull, Enum };

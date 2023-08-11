@@ -4,7 +4,7 @@ import {
   CustomField,
   SchemaInputField,
   InputIsArrayConfig,
-  InputPosibleNull,
+  InputPossibleNull,
 } from "./core/interfaces/schema.interface.js";
 import {
   ExportFormat,
@@ -94,5 +94,5 @@ export type {
   GenerateConfig,
   SchemaInputField,
   InputIsArrayConfig,
-  InputPosibleNull,
+  InputPossibleNull,
 };
