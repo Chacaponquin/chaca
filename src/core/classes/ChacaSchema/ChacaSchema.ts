@@ -49,15 +49,20 @@ export class ChacaSchema<K = any> {
   /**
    * Generate and export the schema documents
    * @param cantDocuments number of documents that you want to create
-   * @param configFile Configuration of the file you want to export (name, location, format, etc.)
+   * @param configFile Configuration of the file you want to export (name, location, format)
    * @returns Promise<string>
    */
   public async generateAndExport(
     cantDocuments: number,
     configFile: FileConfig,
   ): Promise<string> {
-    const data = this.generate(cantDocuments);
-    return await new ExportResolver(configFile).exportData(data);
+    const exportResolver = new ExportResolver(configFile);
+    const fileRoute = await exportResolver.exportRelationalSchemas(
+      [{ name: configFile.fileName, documents: cantDocuments, schema: this }],
+      { verbose: false },
+    );
+
+    return fileRoute;
   }
 
   private validateObjectSchema(obj: SchemaInput): SchemaToResolve {
