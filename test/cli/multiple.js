@@ -6,12 +6,12 @@ const USER_SCHEMA = chaca.schema({
 });
 
 const POST_SCHEMA = chaca.schema({
-  id: schemas.id.uuid(),
-  title: schemas.word.noun(),
+  id: chaca.key(schemas.id.uuid()),
+  title: schemas.lorem.words(),
   user: chaca.ref("User.id"),
 });
 
 module.exports = [
-  { name: "User", schema: USER_SCHEMA, documents: 10 },
-  { name: "Post", schema: POST_SCHEMA, documents: 100 },
+  { name: "User", schema: USER_SCHEMA, documents: 3 },
+  { name: "Post", schema: POST_SCHEMA, documents: 10 },
 ];

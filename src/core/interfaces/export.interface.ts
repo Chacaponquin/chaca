@@ -25,7 +25,7 @@ export interface FileConfig {
    */
   location: string;
   /**
-   * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml' | `'postgresql'`)
+   * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'`)
    * @example { format: 'csv' }
    */
   format: ExportFormat;
