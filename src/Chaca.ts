@@ -110,7 +110,7 @@ export class Chaca {
    * @param schemas Array with the schemas config
    * @param fileConfig.fileName file name
    * @param fileConfig.location location of the file
-   * @param fileConfig.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'`)
+   * @param fileConfig.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    * @param genConfig.verbose Show log in console progretion
    */
   async exportFromSchemas(
@@ -128,7 +128,7 @@ export class Chaca {
    * @param config Configuration of the file you want to export (name, location, format, etc.)
    * @param config.fileName file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    *
    * @example
    * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]

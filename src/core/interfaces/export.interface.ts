@@ -6,6 +6,7 @@ export type ExportFormat =
   | "csv"
   | "javascript"
   | "yaml"
+  | "python"
   | ExportSQLFormat;
 
 export type ExportSQLFormat = "postgresql";
@@ -25,7 +26,7 @@ export interface FileConfig {
    */
   location: string;
   /**
-   * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'`)
+   * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    * @example { format: 'csv' }
    */
   format: ExportFormat;

@@ -6,6 +6,7 @@ import { JavaGenerator } from "./Java/JavaGenerator.js";
 import { TypescriptGenerator } from "./Typescript/TypescriptGenerator.js";
 import { YamlGenerator } from "./Yaml/YamlGenerator.js";
 import { SQLGenerator } from "./SQL/SQLGenerator.js";
+import { PythonGenerator } from "./Python/PythonGenerator.js";
 
 export {
   JsonGenerator,
@@ -16,4 +17,5 @@ export {
   TypescriptGenerator,
   YamlGenerator,
   SQLGenerator,
+  PythonGenerator,
 };
