@@ -75,4 +75,12 @@ describe("# School Case Test", () => {
       format: "yaml",
     });
   });
+
+  it("Python", async () => {
+    await chaca.export(CASE_DATA, {
+      location: EXPORT_ROUTE,
+      fileName: FILE_NAME,
+      format: "python",
+    });
+  });
 });

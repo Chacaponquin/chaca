@@ -30,13 +30,25 @@ describe("# Baseball Case Test", () => {
     expect(DATA).toHaveProperty("Batter");
   });
 
-  it("SQL", async () => {
+  it("Postgresql", async () => {
     await chaca.exportFromSchemas(
       BASEBALL_SCHEMAS,
       {
         fileName: FILE_NAME,
         location: EXPORT_ROUTE,
         format: "postgresql",
+      },
+      { verbose: false },
+    );
+  });
+
+  it("CSV", async () => {
+    await chaca.exportFromSchemas(
+      BASEBALL_SCHEMAS,
+      {
+        fileName: FILE_NAME,
+        location: EXPORT_ROUTE,
+        format: "csv",
       },
       { verbose: false },
     );
@@ -79,6 +91,14 @@ describe("# Baseball Case Test", () => {
       location: EXPORT_ROUTE,
       fileName: FILE_NAME,
       format: "yaml",
+    });
+  });
+
+  it("Python", async () => {
+    await chaca.export(BASEBALL_CASE_DATA, {
+      location: EXPORT_ROUTE,
+      fileName: FILE_NAME,
+      format: "python",
     });
   });
 });

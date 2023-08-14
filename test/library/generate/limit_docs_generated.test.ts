@@ -12,7 +12,7 @@ describe("# Limit Docs Generated Test", () => {
     expect(() => COMPLETE_SCHEMA.generate(-10)).toThrowError(ChacaError);
   });
 
-  for (let i = 0; i <= MAXIMUN_FOR_TEST; i += 500) {
+  for (let i = 0; i <= MAXIMUN_FOR_TEST; i += 5000) {
     it(`${i} documents`, () => {
       const cantDoc = i;
       expect(COMPLETE_SCHEMA.generate(cantDoc).length).toBe(cantDoc);

@@ -74,16 +74,39 @@ export class CSVGenerator extends Generator {
   }
 
   private filterValue(value: any): string {
-    let retString = "";
+    let retString = "NULL";
 
-    if (value === null) {
-      retString = `NULL`;
-    } else if (typeof value === "object" && !(value instanceof Date)) {
-      throw new ChacaError(`Yo can not insert a nested object into a CSV File`);
+    if (typeof value === "string") {
+      retString = `${JSON.stringify(value)}`;
     } else if (typeof value === "number") {
-      retString = `${value}`;
-    } else {
-      retString = JSON.stringify(value);
+      if (Number.isNaN(value)) {
+        retString = "NaN";
+      } else if (value === Infinity) {
+        retString = "Infinity";
+      } else if (value === -Infinity) {
+        retString = "-Infinity";
+      } else {
+        retString = `${value}`;
+      }
+    } else if (typeof value === "bigint") {
+      retString = value.toString();
+    } else if (typeof value === "boolean") {
+      if (value) retString = "TRUE";
+      else retString = "FALSE";
+    } else if (typeof value === "undefined") {
+      retString = "NULL";
+    } else if (typeof value === "function") {
+      throw new ChacaError(`You can not export a function in a csv file.`);
+    } else if (typeof value === "symbol") {
+      throw new ChacaError(`You can not export a Symbol in a csv file.`);
+    } else if (typeof value === "object") {
+      if (value instanceof Date) {
+        retString = value.toISOString();
+      } else {
+        throw new ChacaError(
+          `Yo can not insert a nested object or array into a CSV File`,
+        );
+      }
     }
 
     return retString;

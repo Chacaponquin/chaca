@@ -49,7 +49,11 @@ export class JavascriptGenerator extends Generator {
     if (typeof value === "string") {
       returnValue = `${JSON.stringify(value)}`;
     } else if (typeof value === "number") {
-      returnValue = `${value}`;
+      if (Number.isNaN(value)) {
+        returnValue = `NaN`;
+      } else {
+        returnValue = `${value}`;
+      }
     } else if (typeof value === "boolean") {
       returnValue = `${value}`;
     } else if (typeof value === "undefined") {
@@ -64,7 +68,7 @@ export class JavascriptGenerator extends Generator {
       throw new ChacaError(`You can not export a Symbol to a javascript file.`);
     } else if (typeof value === "object") {
       if (Array.isArray(value)) {
-        returnValue = this.generateArray(value);
+        returnValue = this.createArrayCode(value);
       } else if (value === null) {
         returnValue = "null";
       } else if (value instanceof Date) {
@@ -72,14 +76,14 @@ export class JavascriptGenerator extends Generator {
       } else if (value instanceof RegExp) {
         returnValue = `/${value.source}/${value.flags}`;
       } else {
-        returnValue = this.generateObject(value);
+        returnValue = this.createObjectCode(value);
       }
     }
 
     return returnValue;
   }
 
-  public generateObject(doc: Record<string, any>): string {
+  public createObjectCode(doc: Record<string, any>): string {
     let objectData = `{`;
     for (const [key, value] of Object.entries(doc)) {
       const val = this.filterTypeValue(value);
@@ -90,7 +94,7 @@ export class JavascriptGenerator extends Generator {
     return objectData;
   }
 
-  private generateArray(array: any[]): string {
+  private createArrayCode(array: any[]): string {
     let returnArray = "[";
     for (let i = 0; i < array.length; i++) {
       if (i !== array.length - 1) {

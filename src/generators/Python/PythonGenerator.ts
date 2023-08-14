@@ -13,8 +13,21 @@ export class PythonGenerator extends Generator {
 
   public async generateFile(data: any): Promise<string> {
     let pythonCode = "";
+    const variableName = this.utils.camelCase(this.config.fileName);
 
-    pythonCode += `${this.fileName} = ${this.filterValueByType(data)}`;
+    pythonCode += `${variableName} = ${this.filterValueByType(data)}`;
+
+    if (this.importLibraries.length) {
+      const importStrings = [] as Array<string>;
+
+      for (const i of this.importLibraries) {
+        importStrings.push(`import ${i}`);
+      }
+
+      const importCode = importStrings.join("\n");
+
+      pythonCode = importCode + "\n\n" + pythonCode;
+    }
 
     await fs.promises.writeFile(this.route, pythonCode, "utf-8");
     return this.route;
@@ -37,9 +50,17 @@ export class PythonGenerator extends Generator {
     let returnValueCode = "None";
 
     if (typeof value === "string") {
-      returnValueCode = `"${value}"`;
+      returnValueCode = `${JSON.stringify(value)}`;
     } else if (typeof value === "number") {
-      returnValueCode = `${value}`;
+      if (value === Infinity) {
+        returnValueCode = `float('inf')`;
+      } else if (Number.isNaN(value)) {
+        returnValueCode = `float('nan')`;
+      } else if (value === -Infinity) {
+        returnValueCode = `float('-inf')`;
+      } else {
+        returnValueCode = `${value}`;
+      }
     } else if (typeof value === "boolean") {
       if (value) {
         returnValueCode = "True";
@@ -52,16 +73,14 @@ export class PythonGenerator extends Generator {
       if (value === null) {
         returnValueCode = "None";
       } else if (Array.isArray(value)) {
-        const valuesString = [] as Array<string>;
-
-        for (const v of value) {
-          valuesString.push(this.filterValueByType(v));
-        }
-
+        const valuesString = value.map((v) => this.filterValueByType(v));
         returnValueCode = `[${valuesString.join(", ")}]`;
       } else if (value instanceof Date) {
         this.insertImportLibrary("datetime");
         returnValueCode = this.createDateCode(value);
+      } else if (value instanceof RegExp) {
+        this.insertImportLibrary("re");
+        returnValueCode = `re.compile(r'${value.source}')`;
       } else {
         returnValueCode = this.createObjectCode(value);
       }

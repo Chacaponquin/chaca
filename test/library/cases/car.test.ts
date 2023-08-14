@@ -37,6 +37,14 @@ describe("# Car Case Test", () => {
     });
   });
 
+  it("CSV Simple Export", async () => {
+    await chaca.export(CAR_CASE_DATA, {
+      location: EXPORT_ROUTE,
+      fileName: FILE_NAME,
+      format: "csv",
+    });
+  });
+
   it("Javascript Simple Export", async () => {
     await chaca.export(CAR_CASE_DATA, {
       location: EXPORT_ROUTE,
@@ -69,6 +77,14 @@ describe("# Car Case Test", () => {
     });
   });
 
+  it("Python Simple Export", async () => {
+    await chaca.export(CAR_CASE_DATA, {
+      location: EXPORT_ROUTE,
+      fileName: FILE_NAME,
+      format: "python",
+    });
+  });
+
   it("SQL Export From Schemas", async () => {
     await chaca.exportFromSchemas(
       CASE_SCHEMAS,
@@ -88,6 +104,18 @@ describe("# Car Case Test", () => {
         fileName: FILE_NAME_FROM_SCHEMAS,
         location: EXPORT_ROUTE,
         format: "java",
+      },
+      { verbose: false },
+    );
+  });
+
+  it("Python Export From Schemas", async () => {
+    await chaca.exportFromSchemas(
+      CASE_SCHEMAS,
+      {
+        fileName: FILE_NAME_FROM_SCHEMAS,
+        location: EXPORT_ROUTE,
+        format: "python",
       },
       { verbose: false },
     );

@@ -56,12 +56,24 @@ describe("# Commerce Company Case Test", () => {
     });
   });
 
-  it("SQL", async () => {
+  it("Postgresql", async () => {
     await chaca.exportFromSchemas(
       COMMERCE_COMPANY_SCHEMAS,
       {
         fileName: FILE_NAME,
         format: "postgresql",
+        location: EXPORT_ROUTE,
+      },
+      { verbose: false },
+    );
+  });
+
+  it("Python", async () => {
+    await chaca.exportFromSchemas(
+      COMMERCE_COMPANY_SCHEMAS,
+      {
+        fileName: FILE_NAME,
+        format: "python",
         location: EXPORT_ROUTE,
       },
       { verbose: false },

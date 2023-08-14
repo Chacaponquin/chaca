@@ -1,4 +1,4 @@
-const VARIANT_ARRAY = [
+export const VARIANT_ARRAY = [
   "Hola",
   123,
   true,

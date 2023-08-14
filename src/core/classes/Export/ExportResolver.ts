@@ -23,7 +23,9 @@ export class ExportResolver {
 
   public async exportData(data: any): Promise<string> {
     const gen = this.filterGenerator();
-    return await gen.generateFile(data);
+    const route = await gen.generateFile(data);
+
+    return route;
   }
 
   public async exportRelationalSchemas(
