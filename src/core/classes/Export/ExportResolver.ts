@@ -5,6 +5,7 @@ import {
   JavaGenerator,
   JavascriptGenerator,
   JsonGenerator,
+  PythonGenerator,
   SQLGenerator,
   TypescriptGenerator,
   YamlGenerator,
@@ -31,7 +32,9 @@ export class ExportResolver {
   ): Promise<string> {
     const gen = this.filterGenerator();
     const multiResolver = new MultiGenerateResolver(schemas, genConfig);
-    return await gen.generateRelationalDataFile(multiResolver);
+    const route = await gen.generateRelationalDataFile(multiResolver);
+
+    return route;
   }
 
   private filterGenerator(): Generator {
@@ -64,6 +67,9 @@ export class ExportResolver {
         break;
       case "postgresql":
         gen = new SQLGenerator(config);
+        break;
+      case "python":
+        gen = new PythonGenerator(config);
         break;
       default:
         throw new ChacaError(`Format '${config.format}' invalid`);
