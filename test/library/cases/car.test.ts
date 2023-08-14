@@ -38,11 +38,15 @@ describe("# Car Case Test", () => {
   });
 
   it("CSV Simple Export", async () => {
-    await chaca.export(CAR_CASE_DATA, {
-      location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
-      format: "csv",
-    });
+    await chaca.exportFromSchemas(
+      CASE_SCHEMAS,
+      {
+        location: EXPORT_ROUTE,
+        fileName: FILE_NAME_FROM_SCHEMAS + "CSV",
+        format: "csv",
+      },
+      { verbose: false },
+    );
   });
 
   it("Javascript Simple Export", async () => {

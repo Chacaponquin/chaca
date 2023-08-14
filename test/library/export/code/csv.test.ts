@@ -89,11 +89,14 @@ describe("#Export CSV test", () => {
         { fullName: "Paquito antonio", favoriteNumber: 50 },
       ];
 
-      await chaca.export(data, {
-        fileName: objectFileName + "ArrayObjectDiferentProperties",
-        location: ROOT,
-        format: "csv",
-      });
+      await expect(
+        async () =>
+          await chaca.export(data, {
+            fileName: objectFileName + "ArrayObjectDiferentProperties",
+            location: ROOT,
+            format: "csv",
+          }),
+      ).rejects.toThrow(ChacaError);
     });
   });
 });
