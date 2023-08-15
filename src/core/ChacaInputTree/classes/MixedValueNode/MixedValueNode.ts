@@ -1,13 +1,16 @@
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
-import { orderFieldsByPriority } from "../../utils/treeUtils.js";
+import { InputTreeUtils } from "../../utils/input_tree_utils.js";
 import { TryRefANoKeyFieldError } from "../../../../errors/ChacaError.js";
 import { KeyValueNode } from "../KeyValueNode/KeyValueNode.js";
 
 export class MixedValueNode extends ChacaTreeNode {
   private nodes: Array<ChacaTreeNode> = [];
 
-  constructor(config: ChacaTreeNodeConfig) {
+  constructor(
+    config: ChacaTreeNodeConfig,
+    private readonly treeUtils: InputTreeUtils,
+  ) {
     super(config);
   }
 
@@ -16,7 +19,10 @@ export class MixedValueNode extends ChacaTreeNode {
   }
 
   public getNoArrayNode(): ChacaTreeNode {
-    return new MixedValueNode({ ...this.getNodeConfig(), isArray: null });
+    return new MixedValueNode(
+      { ...this.getNodeConfig(), isArray: null },
+      this.treeUtils,
+    );
   }
 
   public getPosibleNullNodes(): Array<ChacaTreeNode> {
@@ -53,7 +59,7 @@ export class MixedValueNode extends ChacaTreeNode {
 
   public insertNode(node: ChacaTreeNode): void {
     this.nodes.push(node);
-    orderFieldsByPriority(this.nodes);
+    this.treeUtils.orderNodesByPriority(this.nodes);
   }
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {

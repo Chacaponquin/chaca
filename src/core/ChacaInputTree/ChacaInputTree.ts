@@ -24,11 +24,13 @@ import {
   SequenceValueNode,
   SequentialValueNode,
 } from "./classes/index.js";
-import { orderFieldsByPriority } from "./utils/treeUtils.js";
+import { InputTreeUtils } from "./utils/input_tree_utils.js";
 import { SequentialFieldResolver } from "../Resolvers/core/SequentialFieldResolver/SequentialFieldResolver.js";
 import { SchemaStore } from "../SchemasStore/SchemaStore.js";
 
 export class ChacaInputTree {
+  private inputTreeUtils = new InputTreeUtils();
+
   private nodes: Array<ChacaTreeNode> = [];
   private schemasStore: SchemaStore;
   private schemaName: string;
@@ -78,7 +80,7 @@ export class ChacaInputTree {
     } else if (object.type instanceof EnumFieldResolver) {
       returnNode = new EnumValueNode(nodeConfig, object.type.array);
     } else if (object.type instanceof MixedFieldResolver) {
-      returnNode = new MixedValueNode(nodeConfig);
+      returnNode = new MixedValueNode(nodeConfig, this.inputTreeUtils);
       this.createSubNodesOfMixedField(
         actualRoute,
         returnNode as MixedValueNode,
@@ -165,7 +167,7 @@ export class ChacaInputTree {
 
   public insertNode(node: ChacaTreeNode) {
     this.nodes.push(node);
-    this.nodes = orderFieldsByPriority(this.nodes);
+    this.nodes = this.inputTreeUtils.orderNodesByPriority(this.nodes);
   }
 
   public checkIfFieldExists(fieldTreeRoute: Array<string>): boolean {
