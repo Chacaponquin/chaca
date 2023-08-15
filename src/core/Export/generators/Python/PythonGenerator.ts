@@ -12,38 +12,56 @@ export class PythonGenerator extends Generator {
   }
 
   public async generateFile(data: any): Promise<string> {
-    let pythonCode = "";
-    const variableName = this.utils.camelCase(this.config.fileName);
+    const pythonCode = this.createDataCode(this.config.fileName, data);
+    const finalCode = this.buildFinalCode(pythonCode);
 
-    pythonCode += `${variableName} = ${this.filterValueByType(data)}`;
-
-    if (this.importLibraries.length) {
-      const importStrings = [] as Array<string>;
-
-      for (const i of this.importLibraries) {
-        importStrings.push(`import ${i}`);
-      }
-
-      const importCode = importStrings.join("\n");
-
-      pythonCode = importCode + "\n\n" + pythonCode;
-    }
-
-    await fs.promises.writeFile(this.route, pythonCode, "utf-8");
+    await fs.promises.writeFile(this.route, finalCode, "utf-8");
     return this.route;
-  }
-
-  private insertImportLibrary(lib: string): void {
-    if (!this.importLibraries.includes(lib)) {
-      this.importLibraries.push(lib);
-    }
   }
 
   public async generateRelationalDataFile(
-    resolver: MultiGenerateResolver<any>,
+    resolver: MultiGenerateResolver,
   ): Promise<string> {
-    await this.generateFile(resolver.resolve());
+    const allDeclarations = [] as Array<string>;
+    resolver.getResolvers().forEach((r) => {
+      const pythonCode = this.createDataCode(r.getSchemaName(), r.resolve());
+      allDeclarations.push(pythonCode);
+    });
+
+    const code = allDeclarations.join("\n\n");
+
+    const finalCode = this.buildFinalCode(code);
+    await fs.promises.writeFile(this.route, finalCode, "utf-8");
     return this.route;
+  }
+
+  private buildFinalCode(pythonCode: string): string {
+    let code = pythonCode;
+    const importCode = this.createImportCode();
+
+    if (importCode) {
+      code = importCode + "\n\n" + pythonCode;
+    }
+
+    return code;
+  }
+
+  private createImportCode(): string {
+    if (this.importLibraries.length) {
+      const importStrings = this.importLibraries.map((i) => `import ${i}`);
+      const importCode = importStrings.join("\n");
+
+      return importCode;
+    } else {
+      return "";
+    }
+  }
+
+  private createDataCode(name: string, data: any): string {
+    const variableName = this.utils.camelCase(name);
+    const pythonCode = `${variableName} = ${this.filterValueByType(data)}`;
+
+    return pythonCode;
   }
 
   private filterValueByType(value: any): string {
@@ -111,5 +129,11 @@ export class PythonGenerator extends Generator {
     }
 
     return `{${keysString.join(", ")}}`;
+  }
+
+  private insertImportLibrary(lib: string): void {
+    if (!this.importLibraries.includes(lib)) {
+      this.importLibraries.push(lib);
+    }
   }
 }
