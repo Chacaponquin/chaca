@@ -1,4 +1,4 @@
-import { ChacaUtils } from "../../core/classes/ChacaUtils/ChacaUtils.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { ChacaError } from "../../errors/ChacaError.js";
 import { SchemaField } from "../SchemaField.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";

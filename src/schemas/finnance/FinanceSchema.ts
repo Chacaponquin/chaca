@@ -1,5 +1,5 @@
 import { SchemaField } from "../SchemaField.js";
-import { ChacaUtils } from "../../core/classes/ChacaUtils/ChacaUtils.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { ACCOUNT_TYPES, IBAN, MONEY_INFO } from "./constants/index.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 

@@ -1,5 +1,5 @@
 import { SchemaField } from "../SchemaField.js";
-import { ChacaUtils } from "../../core/classes/ChacaUtils/ChacaUtils.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { EMOJIS } from "./constants/emojis.js";
 import { DOMAIN_SUFFIX } from "./constants/domainSuffix.js";
 import { HTTP_STATUS } from "./constants/httpStatus.js";

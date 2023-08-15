@@ -1,4 +1,4 @@
-import { ChacaUtils } from "../../core/classes/ChacaUtils/ChacaUtils.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
 import { VIDEOS_DEFINITIONS } from "./constants/videos.js";
 

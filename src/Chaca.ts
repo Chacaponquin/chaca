@@ -1,26 +1,29 @@
-import { ChacaSchema } from "./core/classes/ChacaSchema/ChacaSchema.js";
-import { EnumField } from "./core/classes/EnumField/EnumField.js";
-import { KeyField, KeyFieldProps } from "./core/classes/KeyField/KeyField.js";
+import { ChacaSchema } from "./core/ChacaSchema/ChacaSchema.js";
+import { EnumField } from "./core/Fields/core/EnumField/EnumField.js";
+import {
+  KeyField,
+  KeyFieldProps,
+} from "./core/Fields/core/KeyField/KeyField.js";
 import {
   FieldRefInputConfig,
   FieldToRef,
   RefField,
-} from "./core/classes/RefField/RefField.js";
+} from "./core/Fields/core/RefField/RefField.js";
 import {
   SequenceField,
   SequenceFieldProps,
-} from "./core/classes/SequenceField/SequenceField.js";
-import { SequentialField } from "./core/classes/SequentialField/SequentialField.js";
-import { ChacaUtils } from "./core/classes/ChacaUtils/ChacaUtils.js";
-import { SchemaInput } from "./core/interfaces/schema.interface.js";
+} from "./core/Fields/core/SequenceField/SequenceField.js";
+import { SequentialField } from "./core/Fields/core/SequentialField/SequentialField.js";
+import { ChacaUtils } from "./core/ChacaUtils/ChacaUtils.js";
+import { SchemaInput } from "./core/ChacaSchema/interfaces/schema.interface.js";
 import { SchemaField } from "./schemas/SchemaField.js";
 import {
   GenerateConfig,
   MultiGenerateSchema,
-} from "./core/classes/MultiGenerate/interfaces/multiGenerate.interface.js";
-import { ExportResolver } from "./core/classes/Export/ExportResolver.js";
-import { FileConfig } from "./core/interfaces/export.interface.js";
-import { MultiGenerateResolver } from "./core/classes/MultiGenerate/MultiGenerateResolver.js";
+} from "./core/MultiGenerate/interfaces/multiGenerate.interface.js";
+import { ExportResolver } from "./core/Export/ExportResolver.js";
+import { FileConfig } from "./core/Export/interfaces/export.interface.js";
+import { MultiGenerateResolver } from "./core/MultiGenerate/MultiGenerateResolver.js";
 
 export class Chaca {
   utils = new ChacaUtils();

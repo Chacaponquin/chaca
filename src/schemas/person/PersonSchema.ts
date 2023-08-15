@@ -1,6 +1,6 @@
 import { SchemaField } from "../SchemaField.js";
 import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants/index.js";
-import { ChacaUtils } from "../../core/classes/ChacaUtils/ChacaUtils.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 type AllLanguages = "es" | "en";

@@ -1,6 +1,6 @@
 import { SchemaField } from "../SchemaField.js";
 import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries.js";
-import { ChacaUtils } from "../../core/classes/ChacaUtils/ChacaUtils.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { TIME_ZONE } from "./constants/timeZone.js";
 import { CARDINAL_DIRECTIONS } from "./constants/cardinal_directions.js";
 

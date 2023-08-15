@@ -5,17 +5,17 @@ import {
   SchemaInputField,
   InputIsArrayConfig,
   InputPossibleNull,
-} from "./core/interfaces/schema.interface.js";
+} from "./core/ChacaSchema/interfaces/schema.interface.js";
 import {
   ExportFormat,
   FileConfig,
   ExportSQLFormat,
-} from "./core/interfaces/export.interface.js";
+} from "./core/Export/interfaces/export.interface.js";
 
 import { Schemas } from "./schemas/index.js";
 import { SchemaField } from "./schemas/SchemaField.js";
 
-import { ChacaSchema } from "./core/classes/ChacaSchema/ChacaSchema.js";
+import { ChacaSchema } from "./core/ChacaSchema/ChacaSchema.js";
 
 import {
   ChacaError,
@@ -25,34 +25,34 @@ import {
   CyclicAccessDataError,
 } from "./errors/ChacaError.js";
 
-import { GetStoreValueInput } from "./core/classes/SchemasStore/interfaces/store.interface.js";
+import { GetStoreValueInput } from "./core/SchemasStore/interfaces/store.interface.js";
 
 import {
   MultiGenerateSchema,
   GenerateConfig,
-} from "./core/classes/MultiGenerate/interfaces/multiGenerate.interface.js";
+} from "./core/MultiGenerate/interfaces/multiGenerate.interface.js";
 
 import {
   FieldRefInputConfig,
   FieldToRef,
   RefField,
   RefFieldWhere,
-} from "./core/classes/RefField/RefField.js";
+} from "./core/Fields/core/RefField/RefField.js";
 
-import { SequentialField } from "./core/classes/SequentialField/SequentialField.js";
+import { SequentialField } from "./core/Fields/core/SequentialField/SequentialField.js";
 import {
   KeyField,
   KeyFieldProps,
   KeyAllowDataTypes,
-} from "./core/classes/KeyField/KeyField.js";
+} from "./core/Fields/core/KeyField/KeyField.js";
 import {
   SequenceField,
   SequenceFieldProps,
-} from "./core/classes/SequenceField/SequenceField.js";
-import { DatasetStore } from "./core/classes/DatasetStore/DatasetStore.js";
-import { EnumField } from "./core/classes/EnumField/EnumField.js";
+} from "./core/Fields/core/SequenceField/SequenceField.js";
+import { DatasetStore } from "./core/DatasetStore/DatasetStore.js";
+import { EnumField } from "./core/Fields/core/EnumField/EnumField.js";
 import { Chaca } from "./Chaca.js";
-import { ChacaUtils } from "./core/classes/ChacaUtils/ChacaUtils.js";
+import { ChacaUtils } from "./core/ChacaUtils/ChacaUtils.js";
 
 export const chaca = new Chaca();
 export const schemas = new Schemas();
