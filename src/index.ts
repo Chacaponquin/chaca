@@ -5,6 +5,7 @@ import {
   SchemaInputField,
   InputIsArrayConfig,
   InputPossibleNull,
+  CustomFieldProps,
 } from "./core/ChacaSchema/interfaces/schema.interface.js";
 import {
   ExportFormat,
@@ -95,4 +96,5 @@ export type {
   SchemaInputField,
   InputIsArrayConfig,
   InputPossibleNull,
+  CustomFieldProps,
 };
