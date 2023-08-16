@@ -37,6 +37,7 @@ import {
   FieldRefInputConfig,
   FieldToRef,
   RefField,
+  RefFieldWhereProps,
   RefFieldWhere,
 } from "./core/Fields/core/RefField/RefField.js";
 
@@ -101,4 +102,5 @@ export type {
   InputPossibleNull,
   CustomFieldProps,
   SequentialFieldConfig,
+  RefFieldWhereProps,
 };

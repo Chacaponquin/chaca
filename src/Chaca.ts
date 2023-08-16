@@ -46,7 +46,7 @@ export class Chaca {
    * @param name schema field name
    * @param valueFunction function that returns a value
    */
-  schemaField<T = any, K = unknown>(
+  schemaField<T = any, K = any>(
     name: string,
     valueFunction: (args: T) => K,
   ): (args?: T) => SchemaField<K, T> {
