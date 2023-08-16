@@ -39,15 +39,11 @@ export class AddressSchema {
    * @returns string
    */
   zipCode(args?: ZipCodeProps) {
-    return new SchemaField<string, ZipCodeProps>(
-      "zipCode",
-      (a) => {
-        const format =
-          typeof a.format === "string" && a.format ? a.format : "#####";
-        return this.utils.replaceSymbols(format);
-      },
-      args || {},
-    );
+    return new SchemaField<string, ZipCodeProps>((a) => {
+      const format =
+        typeof a.format === "string" && a.format ? a.format : "#####";
+      return this.utils.replaceSymbols(format);
+    }, args || {});
   }
 
   /**
@@ -57,11 +53,7 @@ export class AddressSchema {
    * @returns string
    */
   timeZone() {
-    return new SchemaField<string>(
-      "timeZone",
-      () => this.utils.oneOfArray(TIME_ZONE),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(TIME_ZONE), {});
   }
 
   /**
@@ -72,7 +64,6 @@ export class AddressSchema {
    */
   cardinalDirection() {
     return new SchemaField<string>(
-      "cardinalDirection",
       () => this.utils.oneOfArray(this.constants.cardinalDirections),
       {},
     );
@@ -86,25 +77,21 @@ export class AddressSchema {
    * @returns string
    */
   country(args?: CountryProps) {
-    return new SchemaField<string, CountryProps>(
-      "country",
-      (a) => {
-        if (a.continent && typeof a.continent === "string") {
-          const filterList = COUNTRY_LIST.filter(
-            (el) => el.continent === a.continent,
-          );
+    return new SchemaField<string, CountryProps>((a) => {
+      if (a.continent && typeof a.continent === "string") {
+        const filterList = COUNTRY_LIST.filter(
+          (el) => el.continent === a.continent,
+        );
 
-          if (filterList.length > 0) {
-            return this.utils.oneOfArray(filterList.map((el) => el.country));
-          } else {
-            return this.utils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
-          }
+        if (filterList.length > 0) {
+          return this.utils.oneOfArray(filterList.map((el) => el.country));
         } else {
           return this.utils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
         }
-      },
-      args || {},
-    );
+      } else {
+        return this.utils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
+      }
+    }, args || {});
   }
 
   /**
@@ -115,7 +102,6 @@ export class AddressSchema {
    */
   countryCode() {
     return new SchemaField<string>(
-      "countryCode",
       () => this.utils.oneOfArray(COUNTRY_CODE),
       {},
     );

@@ -38,22 +38,18 @@ export class SystemSchema {
    * @returns string
    */
   fileName(args?: FileNameProps) {
-    return new SchemaField<string, FileNameProps>(
-      "fileName",
-      (a) => {
-        const ext =
-          typeof a.ext === "string" && a.ext.length > 0
-            ? a.ext
-            : this.fileExt().getValue();
+    return new SchemaField<string, FileNameProps>((a) => {
+      const ext =
+        typeof a.ext === "string" && a.ext.length > 0
+          ? a.ext
+          : this.fileExt().getValue();
 
-        const arrayNames: string[] = Array.from({
-          length: this.dataTypeSchema.int().getValue({ min: 1, max: 5 }),
-        }).map(() => this.wordSchema.noun().getValue({ language: "en" }));
+      const arrayNames: string[] = Array.from({
+        length: this.dataTypeSchema.int().getValue({ min: 1, max: 5 }),
+      }).map(() => this.wordSchema.noun().getValue({ language: "en" }));
 
-        return `${arrayNames.join("")}.${ext}`;
-      },
-      args || {},
-    );
+      return `${arrayNames.join("")}.${ext}`;
+    }, args || {});
   }
 
   /**
@@ -63,13 +59,7 @@ export class SystemSchema {
    * @returns string
    */
   mimeType() {
-    return new SchemaField<string>(
-      "mimeType",
-      () => {
-        return this.utils.oneOfArray(MIME_TYPES);
-      },
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(MIME_TYPES));
   }
 
   /**
@@ -79,16 +69,12 @@ export class SystemSchema {
    * @returns string
    */
   fileExt() {
-    return new SchemaField<string>(
-      "fileExtension",
-      () => {
-        const selTem = this.utils.oneOfArray(
-          Object.keys(FILE_EXTENSIONS),
-        ) as keyof FileExtensions;
-        return this.utils.oneOfArray(FILE_EXTENSIONS[selTem]);
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      const selTem = this.utils.oneOfArray(
+        Object.keys(FILE_EXTENSIONS),
+      ) as keyof FileExtensions;
+      return this.utils.oneOfArray(FILE_EXTENSIONS[selTem]);
+    });
   }
 
   /**
@@ -98,22 +84,16 @@ export class SystemSchema {
    * @returns string
    */
   directoryPath() {
-    return new SchemaField<string>(
-      "directoryPath",
-      () => {
-        const cantFolder = this.dataTypeSchema
-          .int()
-          .getValue({ min: 1, max: 5 });
-        const array = Array.from({ length: cantFolder });
+    return new SchemaField<string>(() => {
+      const cantFolder = this.dataTypeSchema.int().getValue({ min: 1, max: 5 });
+      const array = Array.from({ length: cantFolder });
 
-        for (let i = 0; i < array.length; i++) {
-          array[i] = this.wordSchema.noun().getValue();
-        }
+      for (let i = 0; i < array.length; i++) {
+        array[i] = this.wordSchema.noun().getValue();
+      }
 
-        return array.join("/");
-      },
-      {},
-    );
+      return array.join("/");
+    });
   }
 
   /**
@@ -123,12 +103,8 @@ export class SystemSchema {
    * @returns string
    */
   filePath() {
-    return new SchemaField<string>(
-      "filePath",
-      () => {
-        return `${this.directoryPath().getValue()}/${this.fileName().getValue()}`;
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      return `${this.directoryPath().getValue()}/${this.fileName().getValue()}`;
+    });
   }
 }

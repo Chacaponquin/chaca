@@ -29,19 +29,15 @@ export class PhoneSchema {
    * @returns string
    */
   number(args?: NumberProps) {
-    return new SchemaField<string, NumberProps>(
-      "number",
-      (a) => {
-        const format: string =
-          typeof a.format === "string"
-            ? a.format
-            : `${this.prefix().getValue()} ### ### ##`;
+    return new SchemaField<string, NumberProps>((a) => {
+      const format: string =
+        typeof a.format === "string"
+          ? a.format
+          : `${this.prefix().getValue()} ### ### ##`;
 
-        const number: string = this.utils.replaceSymbols(format);
-        return number;
-      },
-      args || {},
-    );
+      const number: string = this.utils.replaceSymbols(format);
+      return number;
+    }, args || {});
   }
 
   /**
@@ -51,10 +47,8 @@ export class PhoneSchema {
    * @returns string
    */
   prefix() {
-    return new SchemaField<string>(
-      "prefix",
-      () => this.utils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
     );
   }
 
@@ -71,28 +65,24 @@ export class PhoneSchema {
    * @returns string
    */
   callDuration(args?: CallDurationProps) {
-    return new SchemaField<string, CallDurationProps>(
-      "callDuration",
-      (a) => {
-        const min: number =
-          typeof a.min === "number" && a.min >= 0 && a.min < 60 ? a.min : 0;
-        const max: number =
-          typeof a.max === "number" && a.max < 60 && a.max >= 0 && a.max >= min
-            ? a.max
-            : 59;
+    return new SchemaField<string, CallDurationProps>((a) => {
+      const min: number =
+        typeof a.min === "number" && a.min >= 0 && a.min < 60 ? a.min : 0;
+      const max: number =
+        typeof a.max === "number" && a.max < 60 && a.max >= 0 && a.max >= min
+          ? a.max
+          : 59;
 
-        const minutes = this.dataTypeSchema.int().getValue({
-          min,
-          max,
-        });
-        const seconds = this.dataTypeSchema.int().getValue({ min: 0, max: 59 });
+      const minutes = this.dataTypeSchema.int().getValue({
+        min,
+        max,
+      });
+      const seconds = this.dataTypeSchema.int().getValue({ min: 0, max: 59 });
 
-        const stringMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-        const stringSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+      const stringMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+      const stringSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
 
-        return `${stringMinutes}:${stringSeconds}`;
-      },
-      args || {},
-    );
+      return `${stringMinutes}:${stringSeconds}`;
+    }, args || {});
   }
 }

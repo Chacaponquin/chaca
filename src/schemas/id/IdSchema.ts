@@ -14,15 +14,11 @@ export class IdSchema {
    * @returns string
    */
   public mongodbID() {
-    return new SchemaField<string>(
-      "mongodbID",
-      () => {
-        return this.dataTypeSchema
-          .hexadecimal()
-          .getValue({ case: "lower", length: 24 });
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      return this.dataTypeSchema
+        .hexadecimal()
+        .getValue({ case: "lower", length: 24 });
+    }, {});
   }
 
   /**
@@ -35,20 +31,14 @@ export class IdSchema {
    * @returns string
    */
   public uuid() {
-    return new SchemaField<string>(
-      "uuid",
-      () => {
-        const RFC4122_TEMPLATE = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
-        const replacePlaceholders = (placeholder: string) => {
-          const random = this.dataTypeSchema
-            .int()
-            .getValue({ min: 0, max: 15 });
-          const value = placeholder === "x" ? random : (random & 0x3) | 0x8;
-          return value.toString(16);
-        };
-        return RFC4122_TEMPLATE.replace(/[xy]/g, replacePlaceholders);
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      const RFC4122_TEMPLATE = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
+      const replacePlaceholders = (placeholder: string) => {
+        const random = this.dataTypeSchema.int().getValue({ min: 0, max: 15 });
+        const value = placeholder === "x" ? random : (random & 0x3) | 0x8;
+        return value.toString(16);
+      };
+      return RFC4122_TEMPLATE.replace(/[xy]/g, replacePlaceholders);
+    }, {});
   }
 }

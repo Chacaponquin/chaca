@@ -38,10 +38,8 @@ export class PersonSchema {
    * @returns string
    */
   jobLevel() {
-    return new SchemaField<string>(
-      "jobLevel",
-      () => this.utils.oneOfArray(JOBS.JOB_LEVELS),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(JOBS.JOB_LEVELS),
     );
   }
 
@@ -52,10 +50,8 @@ export class PersonSchema {
    * @returns string
    */
   jobArea() {
-    return new SchemaField<string>(
-      "jobArea",
-      () => this.utils.oneOfArray(JOBS.JOBS_AREAS),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(JOBS.JOBS_AREAS),
     );
   }
 
@@ -66,11 +62,7 @@ export class PersonSchema {
    * @returns string
    */
   gender() {
-    return new SchemaField<string>(
-      "gender",
-      () => this.utils.oneOfArray(GENDERS),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(GENDERS));
   }
 
   /**
@@ -80,10 +72,8 @@ export class PersonSchema {
    * @returns `Male` | `Female`
    */
   sex() {
-    return new SchemaField<string>(
-      "sex",
-      () => this.utils.oneOfArray(["Male", "Female"]),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(["Male", "Female"]),
     );
   }
 
@@ -96,15 +86,11 @@ export class PersonSchema {
    * @returns string
    */
   firstName(args?: NameProps) {
-    return new SchemaField<string, NameProps>(
-      "firstName",
-      (a) => {
-        return this.utils.oneOfArray(
-          this.filterBySex(this.filterNameByLanguage(a.language), a.sex),
-        );
-      },
-      args || {},
-    );
+    return new SchemaField<string, NameProps>((a) => {
+      return this.utils.oneOfArray(
+        this.filterBySex(this.filterNameByLanguage(a.language), a.sex),
+      );
+    }, args || {});
   }
 
   /**
@@ -115,15 +101,11 @@ export class PersonSchema {
    * @returns string
    */
   lastName(args?: LangugeProps) {
-    return new SchemaField<string, LangugeProps>(
-      "lastName",
-      (a) => {
-        return this.utils.oneOfArray(
-          this.filterNameByLanguage(a.language).lastNames,
-        );
-      },
-      args || {},
-    );
+    return new SchemaField<string, LangugeProps>((a) => {
+      return this.utils.oneOfArray(
+        this.filterNameByLanguage(a.language).lastNames,
+      );
+    }, args || {});
   }
 
   /**
@@ -135,33 +117,29 @@ export class PersonSchema {
    * @returns string
    */
   fullName(args?: NameProps) {
-    return new SchemaField<string, NameProps>(
-      "fullName",
-      (a) => {
-        const lan = this.filterNameByLanguage(a.language);
+    return new SchemaField<string, NameProps>((a) => {
+      const lan = this.filterNameByLanguage(a.language);
 
-        const sex = a.sex
-          ? a.sex
-          : (this.utils.oneOfArray(["male", "female"]) as Sex);
+      const sex = a.sex
+        ? a.sex
+        : (this.utils.oneOfArray(["male", "female"]) as Sex);
 
-        const firstName = this.utils.oneOfArray(this.filterBySex(lan, sex));
-        const middleName = this.dataTypeSchema.boolean().getValue()
-          ? this.utils.oneOfArray(this.filterBySex(lan, sex))
-          : undefined;
-        const lastNameFirst = this.utils.oneOfArray(lan.lastNames);
-        const lastNameSecond = this.utils.oneOfArray(lan.lastNames);
+      const firstName = this.utils.oneOfArray(this.filterBySex(lan, sex));
+      const middleName = this.dataTypeSchema.boolean().getValue()
+        ? this.utils.oneOfArray(this.filterBySex(lan, sex))
+        : undefined;
+      const lastNameFirst = this.utils.oneOfArray(lan.lastNames);
+      const lastNameSecond = this.utils.oneOfArray(lan.lastNames);
 
-        const fullName = [
-          firstName,
-          middleName,
-          lastNameFirst,
-          lastNameSecond,
-        ].filter((n) => n !== undefined);
+      const fullName = [
+        firstName,
+        middleName,
+        lastNameFirst,
+        lastNameSecond,
+      ].filter((n) => n !== undefined);
 
-        return fullName.join(" ");
-      },
-      args || {},
-    );
+      return fullName.join(" ");
+    }, args || {});
   }
 
   /**
@@ -172,22 +150,18 @@ export class PersonSchema {
    * @returns string
    */
   prefix(args?: SexProps) {
-    return new SchemaField<string, SexProps>(
-      "preffix",
-      (a) => {
-        const sex = typeof a.sex === "string" ? a.sex : undefined;
+    return new SchemaField<string, SexProps>((a) => {
+      const sex = typeof a.sex === "string" ? a.sex : undefined;
 
-        const male = ["Mr.", "Mrs.", "Dr."];
-        const female = ["Ms.", "Miss"];
+      const male = ["Mr.", "Mrs.", "Dr."];
+      const female = ["Ms.", "Miss"];
 
-        if (sex) {
-          if (sex === "male") return this.utils.oneOfArray(male);
-          else if (sex === "female") return this.utils.oneOfArray(female);
-          else return this.utils.oneOfArray([...male, ...female]);
-        } else return this.utils.oneOfArray([...male, ...female]);
-      },
-      args || {},
-    );
+      if (sex) {
+        if (sex === "male") return this.utils.oneOfArray(male);
+        else if (sex === "female") return this.utils.oneOfArray(female);
+        else return this.utils.oneOfArray([...male, ...female]);
+      } else return this.utils.oneOfArray([...male, ...female]);
+    }, args || {});
   }
 
   private filterNameByLanguage(

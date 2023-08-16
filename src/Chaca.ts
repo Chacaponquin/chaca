@@ -46,12 +46,10 @@ export class Chaca {
    * @param name schema field name
    * @param valueFunction function that returns a value
    */
-  schemaField<T = any, K = any>(
-    name: string,
+  schemaField<K = any, T = any>(
     valueFunction: (args: T) => K,
   ): (args?: T) => SchemaField<K, T> {
-    return (args) =>
-      new SchemaField<K, T>(name, valueFunction, args || ({} as T));
+    return (args) => new SchemaField<K, T>(valueFunction, args);
   }
 
   /**
@@ -70,6 +68,7 @@ export class Chaca {
   /**
    * Sequential field
    * @param valuesArray array of the secuential values
+   * @param config.loop Boolean indicating whether the values should be generated cyclically. Default `false`
    * @example
    * // the first generated object will have the favoriteNumber with value 1
    * // the second generated object will have the favoriteNumber with value 2
@@ -87,7 +86,7 @@ export class Chaca {
    * @param config.starsWith Init value for the field. Default `1`
    * @param config.step Step between field values in schema documents. Default `1`
    */
-  sequence(config?: Partial<SequenceFieldProps>) {
+  sequence(config?: SequenceFieldProps) {
     return new SequenceField(config);
   }
 

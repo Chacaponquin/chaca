@@ -43,34 +43,30 @@ export class LoremSchema {
    * @returns string
    */
   public paragraphs(args?: ParagraphsProps) {
-    return new SchemaField<string, ParagraphsProps>(
-      "paragraphs",
-      (a) => {
-        const separator = typeof a.separator === "string" ? a.separator : "\n";
-        const cant =
-          typeof a.paragraphsCount === "number" && a.paragraphsCount > 0
-            ? a.paragraphsCount
-            : 3;
-        const minS =
-          typeof a.minSentences === "number" && a.minSentences > 0
-            ? a.minSentences
-            : undefined;
-        const maxS =
-          typeof a.maxSentences === "number" && a.maxSentences > 0
-            ? a.maxSentences
-            : undefined;
+    return new SchemaField<string, ParagraphsProps>((a) => {
+      const separator = typeof a.separator === "string" ? a.separator : "\n";
+      const cant =
+        typeof a.paragraphsCount === "number" && a.paragraphsCount > 0
+          ? a.paragraphsCount
+          : 3;
+      const minS =
+        typeof a.minSentences === "number" && a.minSentences > 0
+          ? a.minSentences
+          : undefined;
+      const maxS =
+        typeof a.maxSentences === "number" && a.maxSentences > 0
+          ? a.maxSentences
+          : undefined;
 
-        return loremIpsum({
-          format: "plain",
-          suffix: separator,
-          count: cant,
-          paragraphUpperBound: maxS,
-          paragraphLowerBound: minS,
-          units: "paragraphs",
-        });
-      },
-      args || {},
-    );
+      return loremIpsum({
+        format: "plain",
+        suffix: separator,
+        count: cant,
+        paragraphUpperBound: maxS,
+        paragraphLowerBound: minS,
+        units: "paragraphs",
+      });
+    }, args || {});
   }
 
   /**
@@ -84,34 +80,30 @@ export class LoremSchema {
    * @returns
    */
   public sentences(args?: SentencesProps) {
-    return new SchemaField<string, SentencesProps>(
-      "sentences",
-      (a) => {
-        const cant =
-          typeof a.sentencesCount === "number" && a.sentencesCount > 0
-            ? a.sentencesCount
-            : 3;
-        const separator = typeof a.separator === "string" ? a.separator : "\n";
-        const wordMin =
-          typeof a.wordsMin === "number" && a.wordsMin > 0
-            ? a.wordsMin
-            : undefined;
-        const wordMax =
-          typeof a.wordsMax === "number" && a.wordsMax > 0
-            ? a.wordsMax
-            : undefined;
+    return new SchemaField<string, SentencesProps>((a) => {
+      const cant =
+        typeof a.sentencesCount === "number" && a.sentencesCount > 0
+          ? a.sentencesCount
+          : 3;
+      const separator = typeof a.separator === "string" ? a.separator : "\n";
+      const wordMin =
+        typeof a.wordsMin === "number" && a.wordsMin > 0
+          ? a.wordsMin
+          : undefined;
+      const wordMax =
+        typeof a.wordsMax === "number" && a.wordsMax > 0
+          ? a.wordsMax
+          : undefined;
 
-        return loremIpsum({
-          format: "plain",
-          units: "sentences",
-          count: cant,
-          suffix: separator,
-          sentenceLowerBound: wordMin,
-          sentenceUpperBound: wordMax,
-        });
-      },
-      args || {},
-    );
+      return loremIpsum({
+        format: "plain",
+        units: "sentences",
+        count: cant,
+        suffix: separator,
+        sentenceLowerBound: wordMin,
+        sentenceUpperBound: wordMax,
+      });
+    }, args || {});
   }
 
   /**
@@ -121,27 +113,23 @@ export class LoremSchema {
    * @returns string
    */
   public slug(args?: SlugProps) {
-    return new SchemaField<string, SlugProps>(
-      "slug",
-      (a) => {
-        const cant =
-          typeof a.wordCount === "number" && a.wordCount > 0 ? a.wordCount : 3;
+    return new SchemaField<string, SlugProps>((a) => {
+      const cant =
+        typeof a.wordCount === "number" && a.wordCount > 0 ? a.wordCount : 3;
 
-        const words = loremIpsum({
-          format: "plain",
-          count: cant,
-          units: "words",
-        });
+      const words = loremIpsum({
+        format: "plain",
+        count: cant,
+        units: "words",
+      });
 
-        let retString = "";
-        for (let i = 0; i < words.length; i++) {
-          retString = retString.concat(words[i] === " " ? "-" : words[i]);
-        }
+      let retString = "";
+      for (let i = 0; i < words.length; i++) {
+        retString = retString.concat(words[i] === " " ? "-" : words[i]);
+      }
 
-        return retString;
-      },
-      args || {},
-    );
+      return retString;
+    }, args || {});
   }
 
   /**
@@ -152,14 +140,10 @@ export class LoremSchema {
    * @returns string
    */
   public words(args?: WordsProps) {
-    return new SchemaField<string, WordsProps>(
-      "words",
-      (a) => {
-        const cant = typeof a.count === "number" && a.count > 0 ? a.count : 5;
-        return loremIpsum({ format: "plain", units: "words", count: cant });
-      },
-      args || {},
-    );
+    return new SchemaField<string, WordsProps>((a) => {
+      const cant = typeof a.count === "number" && a.count > 0 ? a.count : 5;
+      return loremIpsum({ format: "plain", units: "words", count: cant });
+    }, args || {});
   }
 
   /**
@@ -171,36 +155,32 @@ export class LoremSchema {
    * @returns string
    */
   public text(args?: TextProps) {
-    return new SchemaField<string, TextProps>(
-      "text",
-      (a) => {
-        const text = loremIpsum({
-          format: "plain",
-          units: "paragraph",
-          count: this.dataTypeSchema.int().getValue({ min: 100, max: 1500 }),
-        });
+    return new SchemaField<string, TextProps>((a) => {
+      const text = loremIpsum({
+        format: "plain",
+        units: "paragraph",
+        count: this.dataTypeSchema.int().getValue({ min: 100, max: 1500 }),
+      });
 
-        if (a.character_max || a.character_min) {
-          const charMin =
-            typeof a.character_min === "number" && a.character_min > 0
-              ? a.character_min
-              : 0;
+      if (a.character_max || a.character_min) {
+        const charMin =
+          typeof a.character_min === "number" && a.character_min > 0
+            ? a.character_min
+            : 0;
 
-          const charMax =
-            typeof a.character_max === "number" && a.character_max > charMin
-              ? a.character_max
-              : this.dataTypeSchema.int().getValue({ min: 300, max: 1000 });
+        const charMax =
+          typeof a.character_max === "number" && a.character_max > charMin
+            ? a.character_max
+            : this.dataTypeSchema.int().getValue({ min: 300, max: 1000 });
 
-          return text.slice(
-            0,
-            this.dataTypeSchema.int().getValue({ min: charMin, max: charMax }) +
-              1,
-          );
-        } else {
-          return text;
-        }
-      },
-      args || {},
-    );
+        return text.slice(
+          0,
+          this.dataTypeSchema.int().getValue({ min: charMin, max: charMax }) +
+            1,
+        );
+      } else {
+        return text;
+      }
+    }, args || {});
   }
 }

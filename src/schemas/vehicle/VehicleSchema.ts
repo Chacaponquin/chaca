@@ -20,11 +20,7 @@ export class VehicleSchema {
    * @returns string
    */
   bicycle() {
-    return new SchemaField<string>(
-      "bicycle",
-      () => this.utils.oneOfArray(BICYCLE),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(BICYCLE));
   }
 
   /**
@@ -34,11 +30,7 @@ export class VehicleSchema {
    * @returns string
    */
   manufacturer() {
-    return new SchemaField<string>(
-      "manufacturer",
-      () => this.utils.oneOfArray(MANUFACTURER),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(MANUFACTURER));
   }
 
   /**
@@ -48,11 +40,7 @@ export class VehicleSchema {
    * @returns string
    */
   vehicleModel() {
-    return new SchemaField<string>(
-      "vehicleModel",
-      () => this.utils.oneOfArray(MODEL),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(MODEL));
   }
 
   /**
@@ -62,11 +50,7 @@ export class VehicleSchema {
    * @returns string
    */
   vehicleType() {
-    return new SchemaField<string>(
-      "vehicleType",
-      () => this.utils.oneOfArray(TYPE),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(TYPE));
   }
 
   /**
@@ -77,10 +61,8 @@ export class VehicleSchema {
    */
   vehicle() {
     return new SchemaField<string>(
-      "vehicle",
       () =>
         `${this.manufacturer().getValue()} ${this.vehicleModel().getValue()}`,
-      {},
     );
   }
 
@@ -91,10 +73,6 @@ export class VehicleSchema {
    * @returns string
    */
   fuel() {
-    return new SchemaField<string>(
-      "fuel",
-      () => this.utils.oneOfArray(FUEL),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(FUEL));
   }
 }

@@ -32,6 +32,20 @@
   */
   ```
 
+- Remove names from `schema field` declaration
+
+  ```js
+  // Before
+  const customField = chaca.schemaField("customField", (args) => {
+    // return value
+  });
+
+  // Now
+  const customField = chaca.schemaField((args) => {
+    // return value
+  });
+  ```
+
 ### 🪛 Fix
 
 - Allow 0 as a possible value for the `isArray` parameter

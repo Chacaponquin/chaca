@@ -33,17 +33,13 @@ export class ScienceSchema {
    * @returns string
    */
   periodicTableElement(args?: PeriodicTableProps) {
-    return new SchemaField<string, PeriodicTableProps>(
-      "periodicTableElement",
-      (a) => {
-        if (typeof a.type === "string") {
-          if (a.type === "name") {
-            return this.utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
-          } else return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
+    return new SchemaField<string, PeriodicTableProps>((a) => {
+      if (typeof a.type === "string") {
+        if (a.type === "name") {
+          return this.utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
         } else return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
-      },
-      args || {},
-    );
+      } else return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
+    }, args || {});
   }
 
   /**
@@ -58,16 +54,12 @@ export class ScienceSchema {
    * @returns string
    */
   unit(args?: UnitProps) {
-    return new SchemaField<string, UnitProps>(
-      "unit",
-      (a) => {
-        if (typeof a.type === "string") {
-          if (a.type === "symbol") {
-            return this.utils.oneOfArray(UNITS.map((el) => el.symbol));
-          } else return this.utils.oneOfArray(UNITS.map((el) => el.val));
+    return new SchemaField<string, UnitProps>((a) => {
+      if (typeof a.type === "string") {
+        if (a.type === "symbol") {
+          return this.utils.oneOfArray(UNITS.map((el) => el.symbol));
         } else return this.utils.oneOfArray(UNITS.map((el) => el.val));
-      },
-      args || {},
-    );
+      } else return this.utils.oneOfArray(UNITS.map((el) => el.val));
+    }, args || {});
   }
 }

@@ -46,7 +46,7 @@ export class AnimalSchema {
    * @returns string
    */
   dog() {
-    return new SchemaField<string>("dog", () => this.utils.oneOfArray(DOG), {});
+    return new SchemaField<string>(() => this.utils.oneOfArray(DOG), {});
   }
 
   /**
@@ -56,11 +56,7 @@ export class AnimalSchema {
    * @returns string
    */
   bear() {
-    return new SchemaField<string>(
-      "bear",
-      () => this.utils.oneOfArray(BEAR),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(BEAR), {});
   }
 
   /**
@@ -70,11 +66,7 @@ export class AnimalSchema {
    * @returns string
    */
   bird() {
-    return new SchemaField<string>(
-      "bird",
-      () => this.utils.oneOfArray(BIRD),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(BIRD), {});
   }
 
   /**
@@ -84,7 +76,7 @@ export class AnimalSchema {
    * @returns string
    */
   cat() {
-    return new SchemaField<string>("cat", () => this.utils.oneOfArray(CAT), {});
+    return new SchemaField<string>(() => this.utils.oneOfArray(CAT), {});
   }
 
   /**
@@ -94,11 +86,7 @@ export class AnimalSchema {
    * @returns string
    */
   cetacean() {
-    return new SchemaField<string>(
-      "cetacean",
-      () => this.utils.oneOfArray(CETACEAN),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(CETACEAN), {});
   }
 
   /**
@@ -108,7 +96,7 @@ export class AnimalSchema {
    * @returns string
    */
   cow() {
-    return new SchemaField<string>("cow", () => this.utils.oneOfArray(COW), {});
+    return new SchemaField<string>(() => this.utils.oneOfArray(COW), {});
   }
 
   /**
@@ -118,11 +106,7 @@ export class AnimalSchema {
    * @returns string
    */
   crocodilia() {
-    return new SchemaField<string>(
-      "crocodilia",
-      () => this.utils.oneOfArray(CROCODILIA),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(CROCODILIA), {});
   }
 
   /**
@@ -132,11 +116,7 @@ export class AnimalSchema {
    * @returns string
    */
   fish() {
-    return new SchemaField<string>(
-      "fish",
-      () => this.utils.oneOfArray(FISH),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(FISH), {});
   }
 
   /**
@@ -146,11 +126,7 @@ export class AnimalSchema {
    * @returns string
    */
   horse() {
-    return new SchemaField<string>(
-      "horse",
-      () => this.utils.oneOfArray(HORSE),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(HORSE), {});
   }
 
   /**
@@ -160,11 +136,7 @@ export class AnimalSchema {
    * @returns string
    */
   insect() {
-    return new SchemaField<string>(
-      "insect",
-      () => this.utils.oneOfArray(INSECT),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(INSECT), {});
   }
 
   /**
@@ -174,11 +146,7 @@ export class AnimalSchema {
    * @returns string
    */
   lion() {
-    return new SchemaField<string>(
-      "lion",
-      () => this.utils.oneOfArray(LION),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(LION), {});
   }
 
   /**
@@ -188,11 +156,7 @@ export class AnimalSchema {
    * @returns string
    */
   rabbit() {
-    return new SchemaField<string>(
-      "rabbit",
-      () => this.utils.oneOfArray(RABBIT),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(RABBIT), {});
   }
 
   /**
@@ -202,11 +166,7 @@ export class AnimalSchema {
    * @returns string
    */
   rodent() {
-    return new SchemaField<string>(
-      "rodent",
-      () => this.utils.oneOfArray(RODENT),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(RODENT), {});
   }
 
   /**
@@ -216,11 +176,7 @@ export class AnimalSchema {
    * @returns string
    */
   snake() {
-    return new SchemaField<string>(
-      "snake",
-      () => this.utils.oneOfArray(SNAKE),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(SNAKE), {});
   }
 
   /**
@@ -231,7 +187,6 @@ export class AnimalSchema {
    */
   animalType() {
     return new SchemaField<string>(
-      "animalType",
       () => this.utils.oneOfArray(ANIMAL_TYPE),
       {},
     );

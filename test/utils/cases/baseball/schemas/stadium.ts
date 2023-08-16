@@ -1,15 +1,12 @@
 import { chaca, schemas } from "../../../../../src";
 
-const stadiumNameSchema = chaca.schemaField<unknown, string>(
-  "stadiumName",
-  () => {
-    return [
-      schemas.person.firstName().getValue(),
-      schemas.person.lastName().getValue(),
-      "Stadium",
-    ].join(" ");
-  },
-);
+const stadiumNameSchema = chaca.schemaField<unknown, string>(() => {
+  return [
+    schemas.person.firstName().getValue(),
+    schemas.person.lastName().getValue(),
+    "Stadium",
+  ].join(" ");
+});
 
 export const STADIUM_SCHEMA = chaca.schema({
   stadium_id: chaca.key(chaca.sequence()),

@@ -83,25 +83,21 @@ export class InternetSchema {
    * @returns string
    */
   public email(args?: EmailArgs) {
-    return new SchemaField<string, EmailArgs>(
-      "email",
-      (a) => {
-        const provider =
-          typeof a.provider === "string"
-            ? a.provider
-            : this.utils.oneOfArray(["gmail.com", "yahoo.com", "hotmail.com"]);
+    return new SchemaField<string, EmailArgs>((a) => {
+      const provider =
+        typeof a.provider === "string"
+          ? a.provider
+          : this.utils.oneOfArray(["gmail.com", "yahoo.com", "hotmail.com"]);
 
-        const userName = this.userName({
-          firstName: a.firstName,
-          lastName: a.lastName,
-        })
-          .getValue()
-          .toLowerCase();
+      const userName = this.userName({
+        firstName: a.firstName,
+        lastName: a.lastName,
+      })
+        .getValue()
+        .toLowerCase();
 
-        return `${userName}@${provider}`;
-      },
-      args || {},
-    );
+      return `${userName}@${provider}`;
+    }, args || {});
   }
 
   /**
@@ -123,54 +119,47 @@ export class InternetSchema {
    * @returns string
    */
   public password(args?: PasswordArgs) {
-    return new SchemaField<string, PasswordArgs>(
-      "password",
-      (a) => {
-        const vowel = /[aeiouAEIOU]$/;
-        const consonant = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]$/;
+    return new SchemaField<string, PasswordArgs>((a) => {
+      const vowel = /[aeiouAEIOU]$/;
+      const consonant = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]$/;
 
-        const len =
-          typeof a.length === "number" && a.length > 0 ? a.length : 15;
-        const memorable =
-          typeof a.memorable === "boolean" ? a.memorable : false;
-        const pattern = a.pattern instanceof RegExp ? a.pattern : /w/;
-        const prefix = typeof a.prefix === "string" ? a.prefix : "";
+      const len = typeof a.length === "number" && a.length > 0 ? a.length : 15;
+      const memorable = typeof a.memorable === "boolean" ? a.memorable : false;
+      const pattern = a.pattern instanceof RegExp ? a.pattern : /w/;
+      const prefix = typeof a.prefix === "string" ? a.prefix : "";
 
-        const _password = (
-          length: number,
-          memorable: boolean,
-          pattern: RegExp,
-          prefix: string,
-        ): string => {
-          if (prefix.length >= length) {
-            return prefix;
+      const _password = (
+        length: number,
+        memorable: boolean,
+        pattern: RegExp,
+        prefix: string,
+      ): string => {
+        if (prefix.length >= length) {
+          return prefix;
+        }
+        if (memorable) {
+          if (prefix.match(consonant)) {
+            pattern = vowel;
+          } else {
+            pattern = consonant;
           }
-          if (memorable) {
-            if (prefix.match(consonant)) {
-              pattern = vowel;
-            } else {
-              pattern = consonant;
-            }
-          }
-          const n =
-            this.dataTypeSchema.int().getValue({ min: 0, max: 94 }) + 33;
-          let char = String.fromCharCode(n);
+        }
+        const n = this.dataTypeSchema.int().getValue({ min: 0, max: 94 }) + 33;
+        let char = String.fromCharCode(n);
 
-          if (memorable) {
-            char = char.toLowerCase();
-          }
+        if (memorable) {
+          char = char.toLowerCase();
+        }
 
-          if (!char.match(pattern)) {
-            return _password(length, memorable, pattern, prefix);
-          }
+        if (!char.match(pattern)) {
+          return _password(length, memorable, pattern, prefix);
+        }
 
-          return _password(length, memorable, pattern, prefix + char);
-        };
+        return _password(length, memorable, pattern, prefix + char);
+      };
 
-        return _password(len, memorable, pattern, prefix);
-      },
-      args || {},
-    );
+      return _password(len, memorable, pattern, prefix);
+    }, args || {});
   }
 
   /**
@@ -182,18 +171,14 @@ export class InternetSchema {
    * @returns
    */
   public url(args?: UrlArgs) {
-    return new SchemaField<string, UrlArgs>(
-      "url",
-      (a) => {
-        if (typeof a.secure === "boolean") {
-          const sec = a.secure ? "https" : "http";
+    return new SchemaField<string, UrlArgs>((a) => {
+      if (typeof a.secure === "boolean") {
+        const sec = a.secure ? "https" : "http";
 
-          return `${sec}://${this.domainName().getValue()}.${this.domainSuffix().getValue()}`;
-        } else
-          return `${this.protocol().getValue()}://${this.domainName().getValue()}.${this.domainSuffix().getValue()}`;
-      },
-      args || {},
-    );
+        return `${sec}://${this.domainName().getValue()}.${this.domainSuffix().getValue()}`;
+      } else
+        return `${this.protocol().getValue()}://${this.domainName().getValue()}.${this.domainSuffix().getValue()}`;
+    }, args || {});
   }
 
   /**
@@ -207,54 +192,45 @@ export class InternetSchema {
    * @returns string
    */
   public userName(args?: UserNameArgs) {
-    return new SchemaField<string, UserNameArgs>(
-      "userName",
-      (a) => {
-        const firstName =
-          typeof a.firstName === "string"
-            ? this.utils.camelCase(a.firstName)
-            : this.personSchema.firstName({ language: "en" }).getValue();
-        const lastName =
-          typeof a.lastName === "string"
-            ? this.utils.camelCase(a.lastName)
-            : "";
+    return new SchemaField<string, UserNameArgs>((a) => {
+      const firstName =
+        typeof a.firstName === "string"
+          ? this.utils.camelCase(a.firstName)
+          : this.personSchema.firstName({ language: "en" }).getValue();
+      const lastName =
+        typeof a.lastName === "string" ? this.utils.camelCase(a.lastName) : "";
 
-        const ran = this.dataTypeSchema.int().getValue({ min: 0, max: 2 });
+      const ran = this.dataTypeSchema.int().getValue({ min: 0, max: 2 });
 
-        let result: string;
-        switch (ran) {
-          case 0:
-            result = `${firstName}${lastName}${this.utils.replaceSymbols(
-              "###",
-            )}`;
-            break;
+      let result: string;
+      switch (ran) {
+        case 0:
+          result = `${firstName}${lastName}${this.utils.replaceSymbols("###")}`;
+          break;
 
-          case 1:
-            result = `${firstName}${this.utils.oneOfArray([
-              ".",
-              "_",
-            ])}${lastName}`;
-            break;
+        case 1:
+          result = `${firstName}${this.utils.oneOfArray([
+            ".",
+            "_",
+          ])}${lastName}`;
+          break;
 
-          case 2:
-            result = result = `${firstName}${this.utils.oneOfArray([
-              ".",
-              "_",
-            ])}${lastName}${this.utils.replaceSymbols("###")}`;
-            break;
+        case 2:
+          result = result = `${firstName}${this.utils.oneOfArray([
+            ".",
+            "_",
+          ])}${lastName}${this.utils.replaceSymbols("###")}`;
+          break;
 
-          default:
-            result =
-              result = `${firstName}${lastName}${this.utils.replaceSymbols(
-                "###",
-              )}`;
-            break;
-        }
+        default:
+          result = result = `${firstName}${lastName}${this.utils.replaceSymbols(
+            "###",
+          )}`;
+          break;
+      }
 
-        return result;
-      },
-      args || {},
-    );
+      return result;
+    }, args || {});
   }
 
   /**
@@ -266,13 +242,9 @@ export class InternetSchema {
    * @returns `GET` | `PATCH` | `DELETE` | `POST` | `PUT`
    */
   public httpMethod(): SchemaField<string> {
-    return new SchemaField<string>(
-      "httoMethod",
-      () => {
-        return this.utils.oneOfArray(HTTP_METHODS);
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      return this.utils.oneOfArray(HTTP_METHODS);
+    }, {});
   }
 
   /**
@@ -282,43 +254,39 @@ export class InternetSchema {
    * @returns string
    */
   public ipv6() {
-    return new SchemaField<string>(
-      "ipv6",
-      () => {
-        const randHash = () => {
-          let result = "";
-          for (let i = 0; i < 4; i++) {
-            result += this.utils.oneOfArray([
-              "0",
-              "1",
-              "2",
-              "3",
-              "4",
-              "5",
-              "6",
-              "7",
-              "8",
-              "9",
-              "a",
-              "b",
-              "c",
-              "d",
-              "e",
-              "f",
-            ]);
-          }
-          return result;
-        };
-
-        const result: string[] = [];
-        for (let i = 0; i < 8; i++) {
-          result[i] = randHash();
+    return new SchemaField<string>(() => {
+      const randHash = () => {
+        let result = "";
+        for (let i = 0; i < 4; i++) {
+          result += this.utils.oneOfArray([
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "a",
+            "b",
+            "c",
+            "d",
+            "e",
+            "f",
+          ]);
         }
+        return result;
+      };
 
-        return result.join(":");
-      },
-      {},
-    );
+      const result: string[] = [];
+      for (let i = 0; i < 8; i++) {
+        result[i] = randHash();
+      }
+
+      return result.join(":");
+    }, {});
   }
 
   /**
@@ -328,21 +296,17 @@ export class InternetSchema {
    * @returns string
    */
   public ipv4(): SchemaField<string> {
-    return new SchemaField<string>(
-      "ipv4",
-      () => {
-        let retString = "";
+    return new SchemaField<string>(() => {
+      let retString = "";
 
-        for (let i = 1; i <= 4; i++) {
-          const val = this.dataTypeSchema.int().getValue({ max: 255, min: 0 });
-          if (i === 4) retString += `${val}`;
-          else retString += `${val}.`;
-        }
+      for (let i = 1; i <= 4; i++) {
+        const val = this.dataTypeSchema.int().getValue({ max: 255, min: 0 });
+        if (i === 4) retString += `${val}`;
+        else retString += `${val}.`;
+      }
 
-        return retString;
-      },
-      {},
-    );
+      return retString;
+    }, {});
   }
 
   /**
@@ -353,33 +317,29 @@ export class InternetSchema {
    * @returns string
    */
   public emoji(args?: EmojiProps): SchemaField<string, EmojiProps> {
-    return new SchemaField<string, EmojiProps>(
-      "emoji",
-      (a) => {
-        const emoji = typeof a.emoji === "string" ? a.emoji : undefined;
+    return new SchemaField<string, EmojiProps>((a) => {
+      const emoji = typeof a.emoji === "string" ? a.emoji : undefined;
 
-        if (emoji) {
-          const selEmoji = EMOJIS[emoji];
-          if (selEmoji) {
-            return this.utils.oneOfArray(selEmoji);
-          } else {
-            let retEmojis: string[] = [];
-            for (const val of Object.values(EMOJIS)) {
-              retEmojis = [...retEmojis, ...val];
-            }
-
-            return this.utils.oneOfArray(retEmojis);
-          }
+      if (emoji) {
+        const selEmoji = EMOJIS[emoji];
+        if (selEmoji) {
+          return this.utils.oneOfArray(selEmoji);
         } else {
           let retEmojis: string[] = [];
           for (const val of Object.values(EMOJIS)) {
             retEmojis = [...retEmojis, ...val];
           }
+
           return this.utils.oneOfArray(retEmojis);
         }
-      },
-      args || {},
-    );
+      } else {
+        let retEmojis: string[] = [];
+        for (const val of Object.values(EMOJIS)) {
+          retEmojis = [...retEmojis, ...val];
+        }
+        return this.utils.oneOfArray(retEmojis);
+      }
+    }, args || {});
   }
 
   /**
@@ -389,28 +349,24 @@ export class InternetSchema {
    * @returns string
    */
   public mac() {
-    return new SchemaField<string>(
-      "mac",
-      () => {
-        let retString = "";
+    return new SchemaField<string>(() => {
+      let retString = "";
 
-        const lowerCharacters = this.dataTypeSchema.constants.lowerCharacters;
-        const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+      const lowerCharacters = this.dataTypeSchema.constants.lowerCharacters;
+      const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
-        for (let i = 1; i <= 6; i++) {
-          for (let j = 1; j <= 2; j++) {
-            retString += `${String(
-              this.utils.oneOfArray([...numbers, ...lowerCharacters]),
-            )}`;
-          }
-
-          if (i !== 6) retString += `:`;
+      for (let i = 1; i <= 6; i++) {
+        for (let j = 1; j <= 2; j++) {
+          retString += `${String(
+            this.utils.oneOfArray([...numbers, ...lowerCharacters]),
+          )}`;
         }
 
-        return retString;
-      },
-      {},
-    );
+        if (i !== 6) retString += `:`;
+      }
+
+      return retString;
+    }, {});
   }
 
   /**
@@ -422,7 +378,6 @@ export class InternetSchema {
    */
   public port(): SchemaField<number> {
     return new SchemaField<number>(
-      "port",
       () => this.dataTypeSchema.int().getValue({ min: 0, max: 65535 }),
       {},
     );
@@ -435,7 +390,7 @@ export class InternetSchema {
    * @returns string
    */
   public userAgent(): SchemaField<string> {
-    return new SchemaField<string>("userAgent", () => GenerateUserAgent(), {});
+    return new SchemaField<string>(() => GenerateUserAgent(), {});
   }
 
   /**
@@ -446,7 +401,6 @@ export class InternetSchema {
    */
   public protocol(): SchemaField<string> {
     return new SchemaField<string>(
-      "protocol",
       () => this.utils.oneOfArray(["http", "https"]),
       {},
     );
@@ -459,11 +413,7 @@ export class InternetSchema {
    * @returns string
    */
   public domainSuffix(): SchemaField<string> {
-    return new SchemaField<string>(
-      "domainSuffix",
-      () => this.utils.oneOfArray(DOMAIN_SUFFIX),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(DOMAIN_SUFFIX));
   }
 
   /**
@@ -473,28 +423,22 @@ export class InternetSchema {
    * @returns string
    */
   public domainName(): SchemaField<string> {
-    return new SchemaField<string>(
-      "domainName",
-      () => {
-        const name: string = this.wordSchema
-          .noun()
-          .getValue({ language: "en" });
-        const tale = this.dataTypeSchema.boolean().getValue();
+    return new SchemaField<string>(() => {
+      const name: string = this.wordSchema.noun().getValue({ language: "en" });
+      const tale = this.dataTypeSchema.boolean().getValue();
 
-        if (tale) {
-          const t = this.utils.oneOfArray([
-            "info",
-            this.wordSchema.adjective().getValue({ language: "en" }),
-          ]);
-          const sep = this.utils.oneOfArray([".", "-"]);
+      if (tale) {
+        const t = this.utils.oneOfArray([
+          "info",
+          this.wordSchema.adjective().getValue({ language: "en" }),
+        ]);
+        const sep = this.utils.oneOfArray([".", "-"]);
 
-          return `${name}${sep}${t}`;
-        } else {
-          return name;
-        }
-      },
-      {},
-    );
+        return `${name}${sep}${t}`;
+      } else {
+        return name;
+      }
+    });
   }
 
   /**
@@ -504,16 +448,12 @@ export class InternetSchema {
    * @returns string
    */
   public httpStatusCode(): SchemaField<number> {
-    return new SchemaField<number>(
-      "httpStatusCode",
-      () => {
-        const sel = this.utils.oneOfArray(
-          Object.keys(HTTP_STATUS),
-        ) as keyof HttpStatus;
+    return new SchemaField<number>(() => {
+      const sel = this.utils.oneOfArray(
+        Object.keys(HTTP_STATUS),
+      ) as keyof HttpStatus;
 
-        return this.utils.oneOfArray(HTTP_STATUS[sel]);
-      },
-      {},
-    );
+      return this.utils.oneOfArray(HTTP_STATUS[sel]);
+    });
   }
 }

@@ -37,19 +37,15 @@ export class FinanceSchema {
    * @returns string
    */
   pin(args?: PinProps) {
-    return new SchemaField<string, PinProps>(
-      "pin",
-      (a) => {
-        const len = typeof a.length === "number" ? a.length : 4;
+    return new SchemaField<string, PinProps>((a) => {
+      const len = typeof a.length === "number" && a.length > 0 ? a.length : 4;
 
-        return Array.from({ length: len })
-          .map(() =>
-            String(this.dataTypeSchema.int().getValue({ min: 0, max: 9 })),
-          )
-          .join("");
-      },
-      args || {},
-    );
+      return Array.from({ length: len })
+        .map(() =>
+          String(this.dataTypeSchema.int().getValue({ min: 0, max: 9 })),
+        )
+        .join("");
+    }, args || {});
   }
 
   /**
@@ -62,21 +58,17 @@ export class FinanceSchema {
    * @returns string
    */
   bitcoinAddress() {
-    return new SchemaField<string>(
-      "bitcoinAddress",
-      () => {
-        let address: string = this.utils.oneOfArray(["1", "3"]);
+    return new SchemaField<string>(() => {
+      let address: string = this.utils.oneOfArray(["1", "3"]);
 
-        address += this.dataTypeSchema.alphaNumeric().getValue({
-          case: "mixed",
-          banned: "0OIl",
-          length: this.dataTypeSchema.int().getValue({ min: 25, max: 39 }),
-        });
+      address += this.dataTypeSchema.alphaNumeric().getValue({
+        case: "mixed",
+        banned: "0OIl",
+        length: this.dataTypeSchema.int().getValue({ min: 25, max: 39 }),
+      });
 
-        return address;
-      },
-      {},
-    );
+      return address;
+    }, {});
   }
 
   /**
@@ -89,23 +81,19 @@ export class FinanceSchema {
    * @returns string
    */
   creditCard() {
-    return new SchemaField<string>(
-      "creditCard",
-      () => {
-        let retString = "";
+    return new SchemaField<string>(() => {
+      let retString = "";
 
-        for (let i = 1; i <= 12; i++) {
-          if (i % 4 === 0) retString = retString.concat("-");
+      for (let i = 1; i <= 12; i++) {
+        if (i % 4 === 0) retString = retString.concat("-");
 
-          retString = retString.concat(
-            String(this.dataTypeSchema.int().getValue({ min: 0, max: 9 })),
-          );
-        }
+        retString = retString.concat(
+          String(this.dataTypeSchema.int().getValue({ min: 0, max: 9 })),
+        );
+      }
 
-        return retString;
-      },
-      {},
-    );
+      return retString;
+    }, {});
   }
 
   /**
@@ -119,7 +107,6 @@ export class FinanceSchema {
    */
   ethereumAddress(): SchemaField<string> {
     return new SchemaField(
-      "ethereumAddress",
       () =>
         this.dataTypeSchema
           .hexadecimal()
@@ -136,7 +123,6 @@ export class FinanceSchema {
    */
   accountType(): SchemaField<string> {
     return new SchemaField<string>(
-      "accountType",
       () => this.utils.oneOfArray(ACCOUNT_TYPES),
       {},
     );
@@ -152,30 +138,26 @@ export class FinanceSchema {
    * @returns string
    */
   bic() {
-    return new SchemaField<string>(
-      "bic",
-      () => {
-        const bankIdentifier = this.dataTypeSchema.characters().getValue({
-          length: 4,
-          case: "upper",
-        });
-        const countryCode = this.utils.oneOfArray(IBAN.iso3166);
-        const locationCode = this.dataTypeSchema.alphaNumeric().getValue({
-          case: "upper",
-          length: 2,
-        });
-        const branchCode = this.dataTypeSchema.boolean().getValue()
-          ? this.dataTypeSchema.boolean().getValue()
-            ? this.dataTypeSchema
-                .alphaNumeric()
-                .getValue({ case: "upper", length: 3 })
-            : "XXX"
-          : "";
+    return new SchemaField<string>(() => {
+      const bankIdentifier = this.dataTypeSchema.characters().getValue({
+        length: 4,
+        case: "upper",
+      });
+      const countryCode = this.utils.oneOfArray(IBAN.iso3166);
+      const locationCode = this.dataTypeSchema.alphaNumeric().getValue({
+        case: "upper",
+        length: 2,
+      });
+      const branchCode = this.dataTypeSchema.boolean().getValue()
+        ? this.dataTypeSchema.boolean().getValue()
+          ? this.dataTypeSchema
+              .alphaNumeric()
+              .getValue({ case: "upper", length: 3 })
+          : "XXX"
+        : "";
 
-        return `${bankIdentifier}${countryCode}${locationCode}${branchCode}`;
-      },
-      {},
-    );
+      return `${bankIdentifier}${countryCode}${locationCode}${branchCode}`;
+    }, {});
   }
 
   /**
@@ -185,24 +167,20 @@ export class FinanceSchema {
    * @returns string
    */
   routingNumber() {
-    return new SchemaField<string>(
-      "routingNumber",
-      () => {
-        const routingNumber = this.utils.replaceSymbols("########");
+    return new SchemaField<string>(() => {
+      const routingNumber = this.utils.replaceSymbols("########");
 
-        // Modules 10 straight summation.
-        let sum = 0;
+      // Modules 10 straight summation.
+      let sum = 0;
 
-        for (let i = 0; i < routingNumber.length; i += 3) {
-          sum += Number(routingNumber[i]) * 3;
-          sum += Number(routingNumber[i + 1]) * 7;
-          sum += Number(routingNumber[i + 2]) || 0;
-        }
+      for (let i = 0; i < routingNumber.length; i += 3) {
+        sum += Number(routingNumber[i]) * 3;
+        sum += Number(routingNumber[i + 1]) * 7;
+        sum += Number(routingNumber[i + 2]) || 0;
+      }
 
-        return `${routingNumber}${Math.ceil(sum / 10) * 10 - sum}`;
-      },
-      {},
-    );
+      return `${routingNumber}${Math.ceil(sum / 10) * 10 - sum}`;
+    }, {});
   }
 
   /**
@@ -215,20 +193,16 @@ export class FinanceSchema {
    * @returns string
    */
   creditCardCVV(): SchemaField<string> {
-    return new SchemaField<string>(
-      "creaditCardCVV",
-      () => {
-        let cvv = "";
-        for (let i = 0; i < 3; i++) {
-          cvv += this.dataTypeSchema
-            .int()
-            .getValue({ max: 9, min: 0 })
-            .toString();
-        }
-        return cvv;
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      let cvv = "";
+      for (let i = 0; i < 3; i++) {
+        cvv += this.dataTypeSchema
+          .int()
+          .getValue({ max: 9, min: 0 })
+          .toString();
+      }
+      return cvv;
+    }, {});
   }
 
   /**
@@ -238,15 +212,11 @@ export class FinanceSchema {
    * @returns string
    */
   moneySymbol(): SchemaField<string> {
-    return new SchemaField<string>(
-      "moneySymbol",
-      () => {
-        return this.utils.oneOfArray(
-          Object.values(MONEY_INFO).map((el) => el.symbol),
-        );
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      return this.utils.oneOfArray(
+        Object.values(MONEY_INFO).map((el) => el.symbol),
+      );
+    }, {});
   }
 
   /**
@@ -266,19 +236,15 @@ export class FinanceSchema {
    * @returns string
    */
   amount(args?: AmountProps): SchemaField<string, AmountProps> {
-    return new SchemaField<string, AmountProps>(
-      "amount",
-      (a) => {
-        const symbol = typeof a.symbol === "string" ? a.symbol : "$";
+    return new SchemaField<string, AmountProps>((a) => {
+      const symbol = typeof a.symbol === "string" ? a.symbol : "$";
 
-        return `${symbol}${this.dataTypeSchema.number().getValue({
-          max: a.max,
-          min: a.min,
-          precision: a.precision,
-        })}`;
-      },
-      args || {},
-    );
+      return `${symbol}${this.dataTypeSchema.number().getValue({
+        max: a.max,
+        min: a.min,
+        precision: a.precision,
+      })}`;
+    }, args || {});
   }
 
   /**
@@ -289,7 +255,6 @@ export class FinanceSchema {
    */
   currencyMoneyName() {
     return new SchemaField<string>(
-      "currencyMoneyName",
       () =>
         this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name)),
       {},
@@ -304,12 +269,8 @@ export class FinanceSchema {
    */
   moneyCode(): SchemaField<string> {
     return new SchemaField<string>(
-      "moneyCode",
-      () => {
-        return this.utils.oneOfArray(
-          Object.values(MONEY_INFO).map((el) => el.code),
-        );
-      },
+      () =>
+        this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.code)),
       {},
     );
   }

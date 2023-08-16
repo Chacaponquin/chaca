@@ -53,13 +53,9 @@ export class ColorSchema {
    * schemas.color.cssSupportedFunction().getValue() // 'rgb'
    */
   cssSupportedFunction(): SchemaField<string> {
-    return new SchemaField(
-      "cssSupportedFunction",
-      () => {
-        return this.utils.oneOfArray(CSS_FUNCTIONS as any);
-      },
-      {},
-    );
+    return new SchemaField(() => {
+      return this.utils.oneOfArray(CSS_FUNCTIONS as any);
+    }, {});
   }
 
   /**
@@ -70,11 +66,7 @@ export class ColorSchema {
    * schemas.color.cssSupportedSpace().getValue() // 'display-p3'
    */
   cssSupportedSpace(): SchemaField<CSSSpace> {
-    return new SchemaField(
-      "cssSupportedSpace",
-      () => this.utils.oneOfArray(CSS_SPACES as any),
-      {},
-    );
+    return new SchemaField(() => this.utils.oneOfArray(CSS_SPACES as any), {});
   }
 
   /**
@@ -96,49 +88,45 @@ export class ColorSchema {
    * schemas.color.rgb().getValue({ format: 'binary' }) // '10000000 00000000 11111111'
    */
   rgb(args?: Partial<RgbProps>): SchemaField<string, Partial<RgbProps>> {
-    return new SchemaField<string, Partial<RgbProps>>(
-      "rgb",
-      (a) => {
-        const {
-          format = "hex",
-          includeAlpha,
-          casing = "mixed",
-          prefix = "#",
-        } = a;
+    return new SchemaField<string, Partial<RgbProps>>((a) => {
+      const {
+        format = "hex",
+        includeAlpha,
+        casing = "mixed",
+        prefix = "#",
+      } = a;
 
-        let color: string | number[];
-        let cssFunction: CSSFunction = "rgb";
-        if (format === "hex") {
-          color = this.dataTypeSchema.hexadecimal().getValue({
-            length: includeAlpha ? 8 : 6,
-          });
+      let color: string | number[];
+      let cssFunction: CSSFunction = "rgb";
+      if (format === "hex") {
+        color = this.dataTypeSchema.hexadecimal().getValue({
+          length: includeAlpha ? 8 : 6,
+        });
 
-          color = formatHexColor(color, args);
-          return color;
-        }
-        color = Array.from({ length: 3 }).map(() =>
-          this.dataTypeSchema.int().getValue({ min: 0, max: 255 }),
+        color = formatHexColor(color, args);
+        return color;
+      }
+      color = Array.from({ length: 3 }).map(() =>
+        this.dataTypeSchema.int().getValue({ min: 0, max: 255 }),
+      );
+      if (includeAlpha) {
+        color.push(
+          this.dataTypeSchema
+            .float()
+            .getValue({ min: 0, max: 1, precision: 2 }),
         );
-        if (includeAlpha) {
-          color.push(
-            this.dataTypeSchema
-              .float()
-              .getValue({ min: 0, max: 1, precision: 2 }),
-          );
-          cssFunction = "rgba";
-        }
+        cssFunction = "rgba";
+      }
 
-        const returnColor = prefix + toColorFormat(color, format, cssFunction);
-        if (casing === "lower") {
-          return returnColor.toLowerCase();
-        } else if (casing === "upper") {
-          return returnColor.toUpperCase();
-        } else {
-          return returnColor;
-        }
-      },
-      args || {},
-    );
+      const returnColor = prefix + toColorFormat(color, format, cssFunction);
+      if (casing === "lower") {
+        return returnColor.toLowerCase();
+      } else if (casing === "upper") {
+        return returnColor.toUpperCase();
+      } else {
+        return returnColor;
+      }
+    }, args || {});
   }
 
   /**
@@ -153,21 +141,15 @@ export class ColorSchema {
    * schemas.color.cmyk().getValue({ format: 'binary' }) // (8-32 bits) x 4
    */
   cmyk(args?: Partial<CmykProps>): SchemaField<string, Partial<CmykProps>> {
-    return new SchemaField<string, Partial<CmykProps>>(
-      "cmyk",
-      (a) => {
-        const { format = "css" } = a;
+    return new SchemaField<string, Partial<CmykProps>>((a) => {
+      const { format = "css" } = a;
 
-        const color: number[] = Array.from({ length: 4 }).map(() =>
-          this.dataTypeSchema
-            .float()
-            .getValue({ min: 0, max: 1, precision: 2 }),
-        );
+      const color: number[] = Array.from({ length: 4 }).map(() =>
+        this.dataTypeSchema.float().getValue({ min: 0, max: 1, precision: 2 }),
+      );
 
-        return toColorFormat(color, format, "cmyk");
-      },
-      args || {},
-    );
+      return toColorFormat(color, format, "cmyk");
+    }, args || {});
   }
 
   /**
@@ -184,27 +166,23 @@ export class ColorSchema {
    * schemas.color.hsl().getValue({ format: 'binary', includeAlpha: true }) // (8-32 bits) x 4
    */
   hsl(args?: Partial<HslProps>): SchemaField<string, Partial<HslProps>> {
-    return new SchemaField<string, Partial<HslProps>>(
-      "hsl",
-      (a) => {
-        const { format = "css", includeAlpha } = a;
+    return new SchemaField<string, Partial<HslProps>>((a) => {
+      const { format = "css", includeAlpha } = a;
 
-        const hsl: number[] = [
-          this.dataTypeSchema.int().getValue({ min: 0, max: 360 }),
-        ];
+      const hsl: number[] = [
+        this.dataTypeSchema.int().getValue({ min: 0, max: 360 }),
+      ];
 
-        for (let i = 0; i < (includeAlpha ? 3 : 2); i++) {
-          const value = this.dataTypeSchema
-            .float()
-            .getValue({ min: 0, max: 1, precision: 3 });
+      for (let i = 0; i < (includeAlpha ? 3 : 2); i++) {
+        const value = this.dataTypeSchema
+          .float()
+          .getValue({ min: 0, max: 1, precision: 3 });
 
-          hsl.push(value);
-        }
+        hsl.push(value);
+      }
 
-        return toColorFormat(hsl, format, includeAlpha ? "hsla" : "hsl");
-      },
-      args || {},
-    );
+      return toColorFormat(hsl, format, includeAlpha ? "hsla" : "hsl");
+    }, args || {});
   }
 
   /**
@@ -218,27 +196,23 @@ export class ColorSchema {
    * schemas.color.hwb().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
   hwb(args?: Partial<HwbProps>): SchemaField<string, Partial<HwbProps>> {
-    return new SchemaField<string, Partial<HwbProps>>(
-      "hwb",
-      (a) => {
-        const { format = "css" } = a;
+    return new SchemaField<string, Partial<HwbProps>>((a) => {
+      const { format = "css" } = a;
 
-        const hsl: number[] = [
-          this.dataTypeSchema.int().getValue({ min: 0, max: 360 }),
-        ];
+      const hsl: number[] = [
+        this.dataTypeSchema.int().getValue({ min: 0, max: 360 }),
+      ];
 
-        for (let i = 0; i < 2; i++) {
-          hsl.push(
-            this.dataTypeSchema
-              .float()
-              .getValue({ min: 0, max: 1, precision: 3 }),
-          );
-        }
+      for (let i = 0; i < 2; i++) {
+        hsl.push(
+          this.dataTypeSchema
+            .float()
+            .getValue({ min: 0, max: 1, precision: 3 }),
+        );
+      }
 
-        return toColorFormat(hsl, format, "hwb");
-      },
-      args || {},
-    );
+      return toColorFormat(hsl, format, "hwb");
+    }, args || {});
   }
 
   /**
@@ -255,29 +229,23 @@ export class ColorSchema {
    * schemas.color.lch().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
   lch(args?: Partial<LchProps>): SchemaField<string, Partial<LchProps>> {
-    return new SchemaField(
-      "lch",
-      (a) => {
-        const { format = "css" } = a;
+    return new SchemaField((a) => {
+      const { format = "css" } = a;
 
-        const lch = [
+      const lch = [
+        this.dataTypeSchema.float().getValue({ min: 0, max: 1, precision: 6 }),
+      ];
+
+      for (let i = 0; i < 2; i++) {
+        lch.push(
           this.dataTypeSchema
-            .float()
-            .getValue({ min: 0, max: 1, precision: 6 }),
-        ];
+            .number()
+            .getValue({ min: 0, max: 230, precision: 1 }),
+        );
+      }
 
-        for (let i = 0; i < 2; i++) {
-          lch.push(
-            this.dataTypeSchema
-              .number()
-              .getValue({ min: 0, max: 230, precision: 1 }),
-          );
-        }
-
-        return toColorFormat(lch, format, "lch");
-      },
-      args || {},
-    );
+      return toColorFormat(lch, format, "lch");
+    }, args || {});
   }
 
   /**
@@ -294,20 +262,16 @@ export class ColorSchema {
   colorByCSSColorSpace(
     args?: Partial<ColorByCSSColorSpaceProps>,
   ): SchemaField<string, Partial<ColorByCSSColorSpaceProps>> {
-    return new SchemaField<string, Partial<ColorByCSSColorSpaceProps>>(
-      "colorByCssColorSpace",
-      (a) => {
-        const { format = "css", space = "sRGB" } = a;
+    return new SchemaField<string, Partial<ColorByCSSColorSpaceProps>>((a) => {
+      const { format = "css", space = "sRGB" } = a;
 
-        const color = Array.from({ length: 3 }).map(() =>
-          this.dataTypeSchema
-            .float()
-            .getValue({ min: 0, max: 1, precision: 0.0001 }),
-        );
+      const color = Array.from({ length: 3 }).map(() =>
+        this.dataTypeSchema
+          .float()
+          .getValue({ min: 0, max: 1, precision: 0.0001 }),
+      );
 
-        return toColorFormat(color, format, "color", space);
-      },
-      args || {},
-    );
+      return toColorFormat(color, format, "color", space);
+    }, args || {});
   }
 }

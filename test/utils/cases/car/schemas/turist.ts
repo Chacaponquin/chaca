@@ -1,6 +1,6 @@
 import { chaca, schemas } from "../../../../../src";
 
-const passport = chaca.schemaField("passport", () => {
+const passport = chaca.schemaField(() => {
   return chaca.utils.replaceSymbols("???######");
 });
 

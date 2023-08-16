@@ -1,6 +1,6 @@
 import { chaca, schemas } from "../../../../../src";
 
-const placa = chaca.schemaField("plate", () => {
+const placa = chaca.schemaField(() => {
   return chaca.utils.replaceSymbols("T######");
 });
 

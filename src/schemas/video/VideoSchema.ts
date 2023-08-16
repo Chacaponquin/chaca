@@ -16,13 +16,9 @@ export class VideoSchema {
    * @returns string
    */
   food() {
-    return new SchemaField<string>(
-      "food",
-      () => {
-        return this.utils.oneOfArray(VIDEOS_DEFINITIONS.food);
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      return this.utils.oneOfArray(VIDEOS_DEFINITIONS.food);
+    });
   }
 
   /**
@@ -34,10 +30,8 @@ export class VideoSchema {
    * @returns string
    */
   event() {
-    return new SchemaField<string>(
-      "event",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.event),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.event),
     );
   }
 
@@ -50,10 +44,8 @@ export class VideoSchema {
    * @returns string
    */
   wallpaper() {
-    return new SchemaField<string>(
-      "wallpaper",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.wallpaper),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.wallpaper),
     );
   }
 
@@ -66,10 +58,8 @@ export class VideoSchema {
    * @returns string
    */
   treeDimension() {
-    return new SchemaField<string>(
-      "3D",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS["3d"]),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS["3d"]),
     );
   }
 
@@ -82,10 +72,8 @@ export class VideoSchema {
    * @returns string
    */
   sport() {
-    return new SchemaField<string>(
-      "sport",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.sport),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.sport),
     );
   }
 
@@ -98,10 +86,8 @@ export class VideoSchema {
    * @returns string
    */
   animal() {
-    return new SchemaField<string>(
-      "animal",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.animal),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.animal),
     );
   }
 
@@ -113,10 +99,8 @@ export class VideoSchema {
    * @returns string
    */
   experimental() {
-    return new SchemaField<string>(
-      "experimental",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.experimental),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.experimental),
     );
   }
 
@@ -128,10 +112,8 @@ export class VideoSchema {
    * @returns string
    */
   architecture() {
-    return new SchemaField<string>(
-      "architecture",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.architecture),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.architecture),
     );
   }
 
@@ -143,10 +125,8 @@ export class VideoSchema {
    * @returns string
    */
   nature() {
-    return new SchemaField<string>(
-      "nature",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.nature),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.nature),
     );
   }
 
@@ -158,10 +138,8 @@ export class VideoSchema {
    * @returns string
    */
   fashion() {
-    return new SchemaField<string>(
-      "fashion",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.fashion),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.fashion),
     );
   }
 
@@ -173,10 +151,8 @@ export class VideoSchema {
    * @returns string
    */
   health() {
-    return new SchemaField<string>(
-      "health",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.health),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.health),
     );
   }
 
@@ -188,10 +164,8 @@ export class VideoSchema {
    * @returns string
    */
   people() {
-    return new SchemaField<string>(
-      "people",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.people),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.people),
     );
   }
 
@@ -203,10 +177,8 @@ export class VideoSchema {
    * @returns string
    */
   street() {
-    return new SchemaField<string>(
-      "street",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.street),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.street),
     );
   }
 
@@ -218,10 +190,8 @@ export class VideoSchema {
    * @returns string
    */
   spiritual() {
-    return new SchemaField<string>(
-      "spiritual",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.spirituality),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.spirituality),
     );
   }
 
@@ -233,10 +203,8 @@ export class VideoSchema {
    * @returns string
    */
   travel() {
-    return new SchemaField<string>(
-      "travel",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.travel),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.travel),
     );
   }
 
@@ -248,10 +216,8 @@ export class VideoSchema {
    * @returns string
    */
   art() {
-    return new SchemaField<string>(
-      "art",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.art),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.art),
     );
   }
 
@@ -263,10 +229,8 @@ export class VideoSchema {
    * @returns string
    */
   history() {
-    return new SchemaField<string>(
-      "history",
-      () => this.utils.oneOfArray(VIDEOS_DEFINITIONS.history),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(VIDEOS_DEFINITIONS.history),
     );
   }
 }

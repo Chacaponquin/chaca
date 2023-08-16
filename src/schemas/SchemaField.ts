@@ -1,5 +1,3 @@
-import { ChacaError } from "../errors/ChacaError.js";
-
 interface ISchemaField<T, K> {
   getValue(args: T): K;
 }
@@ -7,28 +5,16 @@ interface ISchemaField<T, K> {
 export class SchemaField<K = any, A = any> implements ISchemaField<A, K> {
   private valueFunction: (args: A) => K;
   private args: A;
-  private name: string;
 
-  constructor(name: string, func: (args: A) => K, args?: A) {
-    if (typeof name !== "string" || name.trim() === "") {
-      throw new ChacaError("The schema field must have a name");
-    }
-
-    this.name = name;
+  constructor(func: (args: A) => K, args?: A) {
     this.valueFunction = func;
     this.args = args || ({} as A);
   }
 
-  public getName(): string {
-    return this.name;
-  }
-
   public getValue(a?: A): K {
-    const ar =
-      a && typeof a === "object" && !Array.isArray(a) && a !== null
-        ? a
-        : this.args;
+    const args =
+      a && typeof a === "object" && !Array.isArray(a) ? a : this.args;
 
-    return this.valueFunction(ar);
+    return this.valueFunction(args);
   }
 }

@@ -1,9 +1,11 @@
 import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { SchemaField } from "../SchemaField.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 import { IMAGES_DEFINITIONS } from "./constants/images.js";
 
 export class ImageSchema {
   private utils = new ChacaUtils();
+  private dataTypeSchema = new DataTypeSchema();
   public readonly constants = { ...IMAGES_DEFINITIONS };
 
   /**
@@ -15,13 +17,9 @@ export class ImageSchema {
    * @returns string
    */
   food() {
-    return new SchemaField<string>(
-      "food",
-      () => {
-        return this.utils.oneOfArray(IMAGES_DEFINITIONS.food);
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      return this.utils.oneOfArray(IMAGES_DEFINITIONS.food);
+    }, {});
   }
 
   /**
@@ -34,7 +32,6 @@ export class ImageSchema {
    */
   event() {
     return new SchemaField<string>(
-      "events",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.event),
       {},
     );
@@ -50,7 +47,6 @@ export class ImageSchema {
    */
   wallpaper() {
     return new SchemaField<string>(
-      "wallpaper",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.wallpaper),
       {},
     );
@@ -66,7 +62,6 @@ export class ImageSchema {
    */
   treeDimension() {
     return new SchemaField<string>(
-      "3D",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS["3d"]),
       {},
     );
@@ -82,7 +77,6 @@ export class ImageSchema {
    */
   architecture() {
     return new SchemaField<string>(
-      "archiecture",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.architecture),
       {},
     );
@@ -98,7 +92,6 @@ export class ImageSchema {
    */
   nature() {
     return new SchemaField<string>(
-      "nature",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.nature),
       {},
     );
@@ -114,7 +107,6 @@ export class ImageSchema {
    */
   fashion() {
     return new SchemaField<string>(
-      "fashion",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.fashion),
       {},
     );
@@ -130,7 +122,6 @@ export class ImageSchema {
    */
   film() {
     return new SchemaField<string>(
-      "film",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.film),
       {},
     );
@@ -146,7 +137,6 @@ export class ImageSchema {
    */
   people() {
     return new SchemaField<string>(
-      "people",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.people),
       {},
     );
@@ -162,7 +152,6 @@ export class ImageSchema {
    */
   health() {
     return new SchemaField<string>(
-      "health",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.health),
       {},
     );
@@ -178,7 +167,6 @@ export class ImageSchema {
    */
   house() {
     return new SchemaField<string>(
-      "house",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.architecture),
       {},
     );
@@ -194,7 +182,6 @@ export class ImageSchema {
    */
   street() {
     return new SchemaField<string>(
-      "street",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.street),
       {},
     );
@@ -210,7 +197,6 @@ export class ImageSchema {
    */
   animal() {
     return new SchemaField<string>(
-      "animal",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.animal),
       {},
     );
@@ -226,7 +212,6 @@ export class ImageSchema {
    */
   spiritual() {
     return new SchemaField<string>(
-      "spiritual",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.spirituality),
       {},
     );
@@ -242,7 +227,6 @@ export class ImageSchema {
    */
   travel() {
     return new SchemaField<string>(
-      "travel",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.travel),
       {},
     );
@@ -258,7 +242,6 @@ export class ImageSchema {
    */
   art() {
     return new SchemaField<string>(
-      "art",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.art),
       {},
     );
@@ -274,7 +257,6 @@ export class ImageSchema {
    */
   history() {
     return new SchemaField<string>(
-      "history",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.history),
       {},
     );
@@ -290,7 +272,6 @@ export class ImageSchema {
    */
   sport() {
     return new SchemaField<string>(
-      "sport",
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS.sport),
       {},
     );
@@ -306,13 +287,9 @@ export class ImageSchema {
    * @returns string
    */
   animateAvatar() {
-    return new SchemaField<string>(
-      "animateAvatar",
-      () =>
-        `https://api.multiavatar.com/${Number(Math.random() * 1000).toFixed(
-          0,
-        )}.svg`,
-      {},
-    );
+    return new SchemaField<string>(() => {
+      const ranNumber = this.dataTypeSchema.int({ min: 0, max: 1000 });
+      return `https://api.multiavatar.com/${ranNumber}.svg`;
+    }, {});
   }
 }

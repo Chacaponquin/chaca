@@ -75,13 +75,9 @@ export class DataTypeSchema {
    * @returns string
    */
   public specialCharacter(): SchemaField<string> {
-    return new SchemaField<string>(
-      "specialCharacter",
-      () => {
-        return this.utils.oneOfArray(SPECIAL_CHARACTERS);
-      },
-      {},
-    );
+    return new SchemaField<string>(() => {
+      return this.utils.oneOfArray(SPECIAL_CHARACTERS);
+    }, {});
   }
 
   /**
@@ -92,7 +88,6 @@ export class DataTypeSchema {
    */
   public boolean() {
     return new SchemaField<boolean>(
-      "boolean",
       () => this.utils.oneOfArray([true, false]),
       {},
     );
@@ -109,32 +104,28 @@ export class DataTypeSchema {
    * @returns number
    */
   int(args?: IntProps) {
-    return new SchemaField<number, IntProps>(
-      "int",
-      (a) => {
-        const minimun: number =
-          typeof a.min === "number" ? a.min : this.MIN_RANDOM_VALUE;
-        let maximun: number;
+    return new SchemaField<number, IntProps>((a) => {
+      const minimun: number =
+        typeof a.min === "number" ? a.min : this.MIN_RANDOM_VALUE;
+      let maximun: number;
 
-        if (typeof a.max === "number") {
-          if (minimun) {
-            if (a.max >= minimun) {
-              maximun = a.max;
-            } else {
-              maximun = this.MAX_RANDOM_VALUE;
-            }
-          } else {
+      if (typeof a.max === "number") {
+        if (minimun) {
+          if (a.max >= minimun) {
             maximun = a.max;
+          } else {
+            maximun = this.MAX_RANDOM_VALUE;
           }
         } else {
-          maximun = this.MAX_RANDOM_VALUE;
+          maximun = a.max;
         }
+      } else {
+        maximun = this.MAX_RANDOM_VALUE;
+      }
 
-        const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
-        return val;
-      },
-      args || {},
-    );
+      const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
+      return val;
+    }, args || {});
   }
 
   /**
@@ -150,40 +141,36 @@ export class DataTypeSchema {
    * @returns number
    */
   float(args?: FloatProps) {
-    return new SchemaField<number, FloatProps>(
-      "float",
-      (a) => {
-        const { max, min, precision } = a;
-        let range: number;
-        if (typeof max === "number" && typeof min === "number") {
-          range = max - min;
-        } else if (typeof max === "number" && typeof min === "undefined") {
-          range = max;
-        } else if (typeof max === "undefined" && typeof min === "number") {
-          range = this.MAX_RANDOM_VALUE - min;
-        } else {
-          range = this.utils.oneOfArray([
-            this.MAX_RANDOM_VALUE,
-            this.MIN_RANDOM_VALUE,
-          ]);
-        }
+    return new SchemaField<number, FloatProps>((a) => {
+      const { max, min, precision } = a;
+      let range: number;
+      if (typeof max === "number" && typeof min === "number") {
+        range = max - min;
+      } else if (typeof max === "number" && typeof min === "undefined") {
+        range = max;
+      } else if (typeof max === "undefined" && typeof min === "number") {
+        range = this.MAX_RANDOM_VALUE - min;
+      } else {
+        range = this.utils.oneOfArray([
+          this.MAX_RANDOM_VALUE,
+          this.MIN_RANDOM_VALUE,
+        ]);
+      }
 
-        const pres: number =
-          typeof precision === "number" &&
-          precision > 0 &&
-          precision <= this.MAX_PRECISION
-            ? precision
-            : this.int().getValue({ min: 1, max: 10 });
+      const pres: number =
+        typeof precision === "number" &&
+        precision > 0 &&
+        precision <= this.MAX_PRECISION
+          ? precision
+          : this.int().getValue({ min: 1, max: 10 });
 
-        const randomNum = Math.random() * range + (min || 0);
-        const factor = Math.pow(10, pres);
+      const randomNum = Math.random() * range + (min || 0);
+      const factor = Math.pow(10, pres);
 
-        const returnValue = Math.round(randomNum * factor) / factor;
+      const returnValue = Math.round(randomNum * factor) / factor;
 
-        return returnValue;
-      },
-      args || {},
-    );
+      return returnValue;
+    }, args || {});
   }
 
   /**
@@ -198,22 +185,18 @@ export class DataTypeSchema {
    * @returns number
    */
   number(args?: NumberProps) {
-    return new SchemaField<number, NumberProps>(
-      "number",
-      (a) => {
-        const { max, min, precision } = a;
+    return new SchemaField<number, NumberProps>((a) => {
+      const { max, min, precision } = a;
 
-        let val: number;
-        if (precision === 0) {
-          val = this.int().getValue({ max, min });
-        } else {
-          val = this.float().getValue({ max, min, precision });
-        }
+      let val: number;
+      if (precision === 0) {
+        val = this.int().getValue({ max, min });
+      } else {
+        val = this.float().getValue({ max, min, precision });
+      }
 
-        return val;
-      },
-      args || {},
-    );
+      return val;
+    }, args || {});
   }
 
   /**
@@ -228,41 +211,37 @@ export class DataTypeSchema {
    * @returns string
    */
   public hexadecimal(args?: HexadecimalProps) {
-    return new SchemaField<string, HexadecimalProps>(
-      "hexadecimal",
-      (a) => {
-        const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-        const characters = ["A", "B", "C", "D", "E", "F", "G"];
+    return new SchemaField<string, HexadecimalProps>((a) => {
+      const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+      const characters = ["A", "B", "C", "D", "E", "F", "G"];
 
-        const length =
-          typeof a.length === "number" && a.length > 0
-            ? a.length
-            : this.int().getValue({ min: 5, max: 10 });
-        const c = typeof a.case === "string" ? a.case : "mixed";
+      const length =
+        typeof a.length === "number" && a.length > 0
+          ? a.length
+          : this.int().getValue({ min: 5, max: 10 });
+      const c = typeof a.case === "string" ? a.case : "mixed";
 
-        let ret = "";
-        for (let i = 1; i <= length; i++) {
-          ret = ret.concat(
-            this.utils.oneOfArray([
-              ...numbers,
-              ...characters.map((el) => {
-                if (c === "lower") return el.toLowerCase();
-                else if (c === "upper") return el;
-                else {
-                  return this.utils.oneOfArray([
-                    el.toLowerCase(),
-                    el.toUpperCase(),
-                  ]);
-                }
-              }),
-            ]),
-          );
-        }
+      let ret = "";
+      for (let i = 1; i <= length; i++) {
+        ret = ret.concat(
+          this.utils.oneOfArray([
+            ...numbers,
+            ...characters.map((el) => {
+              if (c === "lower") return el.toLowerCase();
+              else if (c === "upper") return el;
+              else {
+                return this.utils.oneOfArray([
+                  el.toLowerCase(),
+                  el.toUpperCase(),
+                ]);
+              }
+            }),
+          ]),
+        );
+      }
 
-        return ret;
-      },
-      args || {},
-    );
+      return ret;
+    }, args || {});
   }
 
   /**
@@ -281,30 +260,26 @@ export class DataTypeSchema {
    * schemas.dataType.matrix().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
   public matrix(args?: MatrizProps) {
-    return new SchemaField<number[][], MatrizProps>(
-      "matriz",
-      (a) => {
-        const x_size =
-          typeof a.x_size === "number" && a.x_size >= 0
-            ? Number.parseInt(String(a.x_size))
-            : this.int().getValue({ min: 1, max: 10 });
-        const y_size =
-          typeof a.y_size === "number" && a.y_size >= 0
-            ? Number.parseInt(String(a.y_size))
-            : this.int().getValue({ min: 1, max: 10 });
+    return new SchemaField<number[][], MatrizProps>((a) => {
+      const x_size =
+        typeof a.x_size === "number" && a.x_size >= 0
+          ? Number.parseInt(String(a.x_size))
+          : this.int().getValue({ min: 1, max: 10 });
+      const y_size =
+        typeof a.y_size === "number" && a.y_size >= 0
+          ? Number.parseInt(String(a.y_size))
+          : this.int().getValue({ min: 1, max: 10 });
 
-        return Array.from({ length: x_size }).map(() => {
-          return Array.from({ length: y_size }).map(() => {
-            return this.number().getValue({
-              min: a.min,
-              max: a.max,
-              precision: a.precision,
-            });
+      return Array.from({ length: x_size }).map(() => {
+        return Array.from({ length: y_size }).map(() => {
+          return this.number().getValue({
+            min: a.min,
+            max: a.max,
+            precision: a.precision,
           });
         });
-      },
-      args || {},
-    );
+      });
+    }, args || {});
   }
 
   /**
@@ -321,39 +296,35 @@ export class DataTypeSchema {
    * @returns string
    */
   public characters(args?: CharactersProps) {
-    return new SchemaField<string, CharactersProps>(
-      "character",
-      (a) => {
-        const len =
-          typeof a.length === "number" && a.length > 0 ? a.length : undefined;
+    return new SchemaField<string, CharactersProps>((a) => {
+      const len =
+        typeof a.length === "number" && a.length > 0 ? a.length : undefined;
 
-        let charactersToRet;
+      let charactersToRet;
 
-        if (a.case) {
-          if (a.case === "lower") {
-            charactersToRet = this.constants.lowerCharacters;
-          } else if (a.case === "upper") {
-            charactersToRet = this.constants.upperCharacters;
-          } else {
-            charactersToRet = this.constants.mixedCharacters;
-          }
+      if (a.case) {
+        if (a.case === "lower") {
+          charactersToRet = this.constants.lowerCharacters;
+        } else if (a.case === "upper") {
+          charactersToRet = this.constants.upperCharacters;
         } else {
           charactersToRet = this.constants.mixedCharacters;
         }
+      } else {
+        charactersToRet = this.constants.mixedCharacters;
+      }
 
-        if (len) {
-          let ret = "";
-          for (let i = 1; i <= len; i++) {
-            ret = ret.concat(this.utils.oneOfArray(charactersToRet));
-          }
-
-          return ret;
-        } else {
-          return this.utils.oneOfArray(charactersToRet);
+      if (len) {
+        let ret = "";
+        for (let i = 1; i <= len; i++) {
+          ret = ret.concat(this.utils.oneOfArray(charactersToRet));
         }
-      },
-      args || {},
-    );
+
+        return ret;
+      } else {
+        return this.utils.oneOfArray(charactersToRet);
+      }
+    }, args || {});
   }
 
   /**
@@ -366,23 +337,19 @@ export class DataTypeSchema {
    * @returns string
    */
   public binaryCode(args?: BinaryCodeProps) {
-    return new SchemaField<string, BinaryCodeProps>(
-      "binaryCode",
-      (a) => {
-        const length =
-          typeof a.length === "number" && a.length > 0
-            ? a.length
-            : this.int().getValue({ min: 4, max: 8 });
+    return new SchemaField<string, BinaryCodeProps>((a) => {
+      const length =
+        typeof a.length === "number" && a.length > 0
+          ? a.length
+          : this.int().getValue({ min: 4, max: 8 });
 
-        let ret = "";
-        for (let i = 1; i <= length; i++) {
-          ret = ret.concat(String(this.utils.oneOfArray([0, 1])));
-        }
+      let ret = "";
+      for (let i = 1; i <= length; i++) {
+        ret = ret.concat(String(this.utils.oneOfArray([0, 1])));
+      }
 
-        return ret;
-      },
-      args || {},
-    );
+      return ret;
+    }, args || {});
   }
 
   /**
@@ -393,56 +360,52 @@ export class DataTypeSchema {
    */
 
   public alphaNumeric(args?: AlphaNumericProps) {
-    return new SchemaField<string, AlphaNumericProps>(
-      "alphaNumeric",
-      (a) => {
-        const length =
-          typeof a.length === "number" && a.length > 0
-            ? a.length
-            : this.int().getValue({ min: 1, max: 20 });
+    return new SchemaField<string, AlphaNumericProps>((a) => {
+      const length =
+        typeof a.length === "number" && a.length > 0
+          ? a.length
+          : this.int().getValue({ min: 1, max: 20 });
 
-        const banned: string[] = [];
+      const banned: string[] = [];
 
-        const cass = typeof a.case === "string" ? a.case : undefined;
+      const cass = typeof a.case === "string" ? a.case : undefined;
 
-        if (a.banned) {
-          if (typeof a.banned === "string") {
-            for (let i = 0; i < a.banned.length; i++) {
-              banned.push(a.banned[i]);
-            }
-          } else if (Array.isArray(banned)) {
-            for (const c of a.banned) {
-              if (typeof c === "string") {
-                banned.push(c);
-              }
+      if (a.banned) {
+        if (typeof a.banned === "string") {
+          for (let i = 0; i < a.banned.length; i++) {
+            banned.push(a.banned[i]);
+          }
+        } else if (Array.isArray(banned)) {
+          for (const c of a.banned) {
+            if (typeof c === "string") {
+              banned.push(c);
             }
           }
         }
+      }
 
-        const selectNumbers = this.numbersArray().filter((el) => {
-          const is = banned.some((b) => b === el);
-          return !is;
+      const selectNumbers = this.numbersArray().filter((el) => {
+        const is = banned.some((b) => b === el);
+        return !is;
+      });
+
+      const characters = this.filterCharacters(cass);
+      const selectCharacters = characters.filter((el) => {
+        let is = true;
+        banned.forEach((b) => {
+          if (b === el) is = false;
         });
+        return is;
+      });
+      const selectValues = [...selectCharacters, ...selectNumbers];
 
-        const characters = this.filterCharacters(cass);
-        const selectCharacters = characters.filter((el) => {
-          let is = true;
-          banned.forEach((b) => {
-            if (b === el) is = false;
-          });
-          return is;
-        });
-        const selectValues = [...selectCharacters, ...selectNumbers];
+      let retString = "";
+      for (let i = 1; i <= length; i++) {
+        retString = retString.concat(this.utils.oneOfArray(selectValues));
+      }
 
-        let retString = "";
-        for (let i = 1; i <= length; i++) {
-          retString = retString.concat(this.utils.oneOfArray(selectValues));
-        }
-
-        return retString;
-      },
-      args || {},
-    );
+      return retString;
+    }, args || {});
   }
 
   private filterCharacters(fCase?: Case): string[] {

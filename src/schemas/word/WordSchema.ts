@@ -22,7 +22,6 @@ export class WordSchema {
    */
   adjective(args?: WordProps) {
     return new SchemaField<string, WordProps>(
-      "adjective",
       (a) => this.utils.oneOfArray(this.filterWords(a.language).adjectives),
       args || {},
     );
@@ -37,7 +36,6 @@ export class WordSchema {
    */
   conjuction(args?: WordProps) {
     return new SchemaField<string, WordProps>(
-      "conjuction",
       (a) => this.utils.oneOfArray(this.filterWords(a.language).conjuctions),
       args || {},
     );
@@ -52,7 +50,6 @@ export class WordSchema {
    */
   interjection(args?: WordProps) {
     return new SchemaField<string, WordProps>(
-      "interjection",
       (a) => this.utils.oneOfArray(this.filterWords(a.language).interjections),
       args || {},
     );
@@ -67,7 +64,6 @@ export class WordSchema {
    */
   preposition(args?: WordProps) {
     return new SchemaField<string, WordProps>(
-      "preposition",
       (a) => this.utils.oneOfArray(this.filterWords(a.language).prepositions),
       args || {},
     );
@@ -82,7 +78,6 @@ export class WordSchema {
    */
   adverb(args?: WordProps) {
     return new SchemaField<string, WordProps>(
-      "adverb",
       (a) => this.utils.oneOfArray(this.filterWords(a.language).adverbs),
       args || {},
     );
@@ -97,7 +92,6 @@ export class WordSchema {
    */
   verb(args?: WordProps) {
     return new SchemaField<string, WordProps>(
-      "verb",
       (a) => this.utils.oneOfArray(this.filterWords(a.language).verbs),
       args || {},
     );
@@ -112,7 +106,6 @@ export class WordSchema {
    */
   noun(args?: WordProps) {
     return new SchemaField<string, WordProps>(
-      "noun",
       (a) => this.utils.oneOfArray(this.filterWords(a.language).nouns),
       args || {},
     );
