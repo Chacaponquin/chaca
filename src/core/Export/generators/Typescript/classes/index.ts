@@ -1,5 +1,6 @@
 import { ChacaError } from "../../../../../errors/ChacaError.js";
 import { IdSchema } from "../../../../../schemas/id/IdSchema.js";
+import { InterfacesToCreate } from "./InterfacesToCreate.js";
 
 interface ObjectKeys {
   keyName: string;
@@ -11,7 +12,10 @@ export abstract class TypescriptInterface {
   public abstract equal(int: TypescriptInterface): boolean;
   public abstract getInterfaceCode(): string;
 
-  public static filterInterface(value: any): TypescriptInterface {
+  public static filterInterface(
+    value: any,
+    interfaces: InterfacesToCreate,
+  ): TypescriptInterface {
     let t: TypescriptInterface = new PrimitiveInterface("undefined");
 
     if (typeof value === "string") {
@@ -32,7 +36,7 @@ export abstract class TypescriptInterface {
       throw new ChacaError(`You can not export a Symbol to a typescript file.`);
     } else if (typeof value === "object") {
       if (Array.isArray(value)) {
-        t = new ArrayInterface(value);
+        t = new ArrayInterface(value, interfaces);
       } else if (value instanceof Date) {
         t = new PrimitiveInterface("Date");
       } else if (value === null) {
@@ -40,8 +44,8 @@ export abstract class TypescriptInterface {
       } else if (value instanceof RegExp) {
         t = new PrimitiveInterface("RegExp");
       } else {
-        const newObject = new ObjectInterface(value);
-        t = ObjectInterface.setObjectToCreate(newObject);
+        const newObject = new ObjectInterface(value, interfaces);
+        t = interfaces.setInterface(newObject);
       }
     }
 
@@ -81,69 +85,51 @@ export abstract class TypescriptInterface {
 }
 
 export class ObjectInterface extends TypescriptInterface {
-  private keys: Array<ObjectKeys> = [];
-  private idSchema = new IdSchema();
+  private _keys: Array<ObjectKeys> = [];
+  private readonly idSchema = new IdSchema();
   public readonly name: string =
     "Object" + this.idSchema.mongodbID().getValue();
+  private interfaces: InterfacesToCreate;
 
-  private static objectsToCreate: Array<ObjectInterface> = [];
-
-  constructor(value: any) {
+  constructor(value: any, interfaces: InterfacesToCreate) {
     super();
 
+    this.interfaces = interfaces;
+
     Object.entries(value).forEach(([key, fieldValue]) => {
-      this.keys.push({
-        fieldInterface: [TypescriptInterface.filterInterface(fieldValue)],
+      this._keys.push({
+        fieldInterface: [
+          TypescriptInterface.filterInterface(fieldValue, this.interfaces),
+        ],
         keyName: key,
       });
     });
   }
 
-  public static getObjectsToCreate() {
-    return this.objectsToCreate;
+  public get(index: number): ObjectKeys {
+    return this._keys[index];
   }
 
-  public static cleanObjectsToCreate(): void {
-    this.objectsToCreate = [];
+  public setKeys(array: Array<ObjectKeys>): void {
+    this._keys = array;
   }
 
-  public static setObjectToCreate(object: ObjectInterface): ObjectInterface {
-    let returnObject = object;
+  public length(): number {
+    return this._keys.length;
+  }
 
-    let found = false;
-    for (let i = 0; i < this.objectsToCreate.length && !found; i++) {
-      const areSimiliar = this.similarObjects(this.objectsToCreate[i], object);
-
-      if (areSimiliar) {
-        returnObject = this.objectsToCreate[i].compareAndUpdate(object);
-        found = true;
-      } else {
-        returnObject = object;
-      }
-    }
-
-    this.objectsToCreate.push(returnObject);
-
-    return returnObject;
+  public getInterface(): string {
+    return this.name;
   }
 
   public hasSameKeys(compareObject: ObjectInterface): boolean {
-    if (
-      this.getKeysInterfaces().length ===
-      compareObject.getKeysInterfaces().length
-    ) {
-      const { maxObject, minObject } = ObjectInterface.separateObjectsByLength(
-        this,
-        compareObject,
-      );
-
+    if (this.length() === compareObject.length()) {
       let areEqual = true;
 
-      const maxKeys = maxObject.getKeysInterfaces();
-      for (let i = 0; i < maxKeys.length && areEqual; i++) {
-        const cantWithThatKey = minObject
-          .getKeysInterfaces()
-          .filter((k) => k.keyName === maxKeys[i].keyName);
+      for (let i = 0; i < this.length() && areEqual; i++) {
+        const cantWithThatKey = compareObject
+          .keys()
+          .filter((k) => k.keyName === this.get(i).keyName);
 
         if (cantWithThatKey.length !== 1) {
           areEqual = false;
@@ -156,120 +142,28 @@ export class ObjectInterface extends TypescriptInterface {
     }
   }
 
-  public compareAndUpdate(
-    compareObjectInterface: ObjectInterface,
-  ): ObjectInterface {
-    const { maxObject, minObject } = ObjectInterface.separateObjectsByLength(
-      this,
-      compareObjectInterface,
-    );
-
+  public compareAndUpdate(compareInterface: ObjectInterface): void {
     const newKeysInterfaces: Array<ObjectKeys> = [];
 
-    maxObject.getKeysInterfaces().forEach((maxKey) => {
-      const found = minObject.keys.find((k) => k.keyName === maxKey.keyName);
+    this.keys().forEach((thisKey) => {
+      const found = compareInterface
+        .keys()
+        .find((k) => k.keyName === thisKey.keyName);
 
       if (found) {
         const communInterfaces = this.communInterfaces(
-          maxKey.fieldInterface,
+          thisKey.fieldInterface,
           found.fieldInterface,
         );
 
         newKeysInterfaces.push({
-          keyName: maxKey.keyName,
+          keyName: thisKey.keyName,
           fieldInterface: communInterfaces,
         });
-      } else {
-        newKeysInterfaces.push({
-          keyName: maxKey.keyName,
-          fieldInterface: [
-            ...maxKey.fieldInterface.filter((k) => k !== minObject),
-            new PrimitiveInterface("undefined"),
-          ],
-        });
       }
     });
 
-    minObject.getKeysInterfaces().forEach((minKey) => {
-      const existsInMax = newKeysInterfaces.some(
-        (k) => k.keyName === minKey.keyName,
-      );
-
-      if (!existsInMax) {
-        newKeysInterfaces.push({
-          keyName: minKey.keyName,
-          fieldInterface: [
-            ...minKey.fieldInterface.filter((k) => k !== minObject),
-            new PrimitiveInterface("undefined"),
-          ],
-        });
-      }
-    });
-
-    maxObject.setKeysInterfaces(newKeysInterfaces);
-
-    ObjectInterface.deleteObjectToCreateByName(minObject.name);
-    ObjectInterface.deleteObjectToCreateByName(maxObject.name);
-
-    return maxObject;
-  }
-
-  public static similarObjects(
-    objInterfaceOne: ObjectInterface,
-    objInterfaceTwo: ObjectInterface,
-  ): boolean {
-    const { maxObject, minObject } = this.separateObjectsByLength(
-      objInterfaceOne,
-      objInterfaceTwo,
-    );
-
-    let cont = 0;
-
-    const maxKeysInterfaces = maxObject.getKeysInterfaces();
-    for (
-      let i = 0;
-      i < maxKeysInterfaces.length && cont < maxKeysInterfaces.length / 2;
-      i++
-    ) {
-      const exists = minObject
-        .getKeysInterfaces()
-        .some((k) => maxKeysInterfaces[i].keyName === k.keyName);
-
-      if (exists) {
-        cont++;
-      }
-    }
-
-    return cont >= maxKeysInterfaces.length / 2;
-  }
-
-  private static separateObjectsByLength(
-    objInterfaceOne: ObjectInterface,
-    objInterfaceTwo: ObjectInterface,
-  ) {
-    let maxObject: ObjectInterface;
-    let minObject: ObjectInterface;
-
-    const len1 = objInterfaceOne.getKeysInterfaces().length;
-    const len2 = objInterfaceTwo.getKeysInterfaces().length;
-
-    if (len1 > len2 || len1 === len2) {
-      maxObject = objInterfaceOne;
-      minObject = objInterfaceTwo;
-    } else {
-      maxObject = objInterfaceTwo;
-      minObject = objInterfaceOne;
-    }
-
-    return { maxObject, minObject };
-  }
-
-  public static deleteObjectToCreateByName(name: string): void {
-    this.objectsToCreate = this.objectsToCreate.filter((o) => o.name !== name);
-  }
-
-  public getInterface(): string {
-    return this.name;
+    this.setKeys(newKeysInterfaces);
   }
 
   public getInterfaceCode(): string {
@@ -296,14 +190,14 @@ export class ObjectInterface extends TypescriptInterface {
 
     const returnInterface =
       `interface ${this.name}{` +
-      `${this.keys.map(createDataInterface).join(";")}` +
+      `${this.keys().map(createDataInterface).join(";")}` +
       "}";
 
     return returnInterface;
   }
 
-  public getKeysInterfaces() {
-    return this.keys;
+  public keys() {
+    return this._keys;
   }
 
   private communInterfaces(
@@ -318,24 +212,17 @@ export class ObjectInterface extends TypescriptInterface {
     return returnArray;
   }
 
-  public setKeysInterfaces(array: Array<ObjectKeys>): void {
-    this.keys = array;
-  }
-
   public equal(int: TypescriptInterface): boolean {
     if (int instanceof ObjectInterface) {
       let isEqual = true;
 
       if (this.name !== int.name) {
-        const compareKeysInterfaces = int.getKeysInterfaces();
-
-        for (let i = 0; i < compareKeysInterfaces.length && isEqual; i++) {
-          const areEqual = this.keys.some((k) => {
-            const hasTheSameKey =
-              k.keyName === compareKeysInterfaces[i].keyName;
+        for (let i = 0; i < int.length() && isEqual; i++) {
+          const areEqual = this.keys().some((k) => {
+            const hasTheSameKey = k.keyName === int.get(i).keyName;
 
             const hasSameInterface = this.equalArrayInterfaces(
-              compareKeysInterfaces[i].fieldInterface,
+              int.get(i).fieldInterface,
               k.fieldInterface,
             );
 
@@ -382,10 +269,14 @@ export class PrimitiveInterface extends TypescriptInterface {
 
 export class ArrayInterface extends TypescriptInterface {
   private values: Array<TypescriptInterface> = [];
+  private interfaces: InterfacesToCreate;
 
-  constructor(array: any) {
+  constructor(array: any, interfaces: InterfacesToCreate) {
     super();
-    this.values = array.map((v: any) => TypescriptInterface.filterInterface(v));
+    this.interfaces = interfaces;
+    this.values = array.map((v: any) =>
+      TypescriptInterface.filterInterface(v, this.interfaces),
+    );
     this.updateValuesInterfaces();
   }
 

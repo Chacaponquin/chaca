@@ -7,7 +7,7 @@ yargs.command({
   builder: {
     format: {
       describe:
-        "Export file export format ('java' | 'yaml' | 'postgresql' | 'javascript' | 'typescript' | 'json' | 'csv')",
+        "Export file export format ('java' | 'yaml' | 'postgresql' | 'javascript' | 'typescript' | 'json' | 'csv' | 'python')",
       type: "string",
       default: "json",
     },
