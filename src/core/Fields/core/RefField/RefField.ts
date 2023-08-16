@@ -41,14 +41,14 @@ export class RefField {
   private refField: FieldToRefObject;
 
   constructor(refField: FieldToRef, config?: FieldRefInputConfig) {
-    this.refField = this.validateFieldToRef(refField, config);
+    this.refField = this.validate(refField, config);
   }
 
   public getRefField() {
     return this.refField;
   }
 
-  private validateFieldToRef(
+  private validate(
     refField: FieldToRef,
     config?: FieldRefInputConfig,
   ): FieldToRefObject {

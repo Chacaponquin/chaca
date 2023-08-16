@@ -21,16 +21,14 @@ export class KeyField<A = any, C = any> {
   private fieldType: KeyFieldProps<A, C>;
 
   constructor(fieldType: KeyFieldProps<A, C>) {
-    this.fieldType = this.validateFieldFunction(fieldType);
+    this.fieldType = this.validate(fieldType);
   }
 
   public getFieldType() {
     return this.fieldType;
   }
 
-  private validateFieldFunction(
-    fieldFunction: KeyFieldProps<A, C>,
-  ): KeyFieldProps<A, C> {
+  private validate(fieldFunction: KeyFieldProps<A, C>): KeyFieldProps<A, C> {
     if (
       fieldFunction instanceof SchemaField ||
       fieldFunction instanceof RefField ||
