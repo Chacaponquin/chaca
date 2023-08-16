@@ -12,6 +12,7 @@ What's more, Chaca allows you to export the generated data to various formats, m
 
 ```shell
 npm install chaca
+
 ```
 
 ## 📘 Documentation
@@ -41,9 +42,10 @@ const movieSchema = chaca.schema({
   },
 });
 
+// Generate 20 objects with the defined schema
 const docs = postSchema.generate(20);
 
-// Generate 20 objects with the defined schema
+/*
 [
   {
     id: "4136cd0b-d90b-4af7-b485-5d1ded8db252",
@@ -56,6 +58,7 @@ const docs = postSchema.generate(20);
   },
   ...rest, // 19 more documents
 ];
+*/
 
 // Generate 20 objects and export them in a json file
 await postSchema.generateAndExport(20, {
@@ -63,6 +66,7 @@ await postSchema.generateAndExport(20, {
   format: "json",
   location: "./folder",
 });
+
 ```
 
 ## 🕹️ CLI
@@ -79,7 +83,7 @@ Detailed changes for each release are documented in the [CHANGELOG.md](https://g
 
 ## Contributing
 
-The Chaca project welcomes all constructive contributions. Contributions take many forms, from code for bug fixes and enhancements, to additions and fixes to documentation, additional tests, triaging incoming pull requests and issues, and more!
+The Chaca project welcomes all constructive contributions. Contributions take many forms, from code for bug fixes and enhancements, to additions and fixes to documentation, additional tests, triaging incoming pull requests and issues, and more!. [See CONTRIBUTING.md](https://github.com/Chacaponquin/chaca/blob/chaca-dev/CONTRIBUTING.md)
 
 ## License
 
