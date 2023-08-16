@@ -2,7 +2,7 @@ import { ChacaError } from "../../../errors/ChacaError.js";
 import { EnumField } from "../../Fields/core/EnumField/EnumField.js";
 import { EnumFieldResolver } from "../../Resolvers/core/index.js";
 
-export class Enum<R> {
+export class InputEnumField<R> {
   private _resolver: EnumFieldResolver<R>;
 
   constructor(key: string, enumField: EnumField<R>) {
