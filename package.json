@@ -29,7 +29,7 @@
   "scripts": {
     "prepare": "husky install",
     "clean": "rm -rf ./lib",
-    "build": "npm run lint-fix && npm run prettier-format && npm run build:lib",
+    "build": "npm run fix && npm run build:lib",
     "build:lib": "npm run clean && npm run rollup && npm run build:types",
     "build:types": "tsc -p ./tsconfig.types.json",
     "build:esm": "tsc --p tsconfig.esm.json",
@@ -43,7 +43,8 @@
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "lint-fix": "eslint --fix src/**/*.ts",
     "lint": "eslint src/**/*.ts",
-    "rollup": "rollup -c"
+    "rollup": "rollup -c",
+    "fix": "npm run lint-fix && npm run prettier-format"
   },
   "repository": {
     "type": "git",

@@ -13,6 +13,8 @@ Pull requests are welcome for bug fixes, new features, and supporting new platfo
 
 ## Testing
 
+To get up and running, install the dependencies and run the tests:
+
 ```shell
 npm run test
 npm run test:cases  # test examples schema cases
@@ -22,3 +24,7 @@ npm run test:library # test library functions, utils, schemas
 npm run test:utils # test library utils
 
 ```
+
+## Code Style
+
+The project uses ESLint for linting and Prettier for formatting. If your editor isn't set up to work with them, you can lint and format all files from the command line using `npm run fix` or `yarn fix`.
