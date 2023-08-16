@@ -4,6 +4,33 @@
 
 - Add CLI commands for export dataset from schemas configuration file
 - 🐍 Add Python code generator
+- Add `loop` configuration in `chaca.sequential` field
+
+  ```js
+  // Before
+  const schema = chaca.schema({
+    favoriteNumber: chaca.sequential([1, 2, 3]),
+  });
+
+  schema.generate(5); // Throws an error because there are only 3 values for 5 documents to create
+
+  // Now
+  const schema = chaca.schema({
+    favoriteNumbers: chaca.sequential([1, 2, 3], { loop: true }),
+  });
+
+  schema.generate(5);
+
+  /*
+  [
+    { favoriteNumber: 1 },
+    { favoriteNumber: 2 },
+    { favoriteNumber: 3 },
+    { favoriteNumber: 1 },
+    { favoriteNumber: 2 },
+  ];
+  */
+  ```
 
 ### 🪛 Fix
 

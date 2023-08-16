@@ -95,7 +95,10 @@ export class InputSchemaResolver {
         schemaToSave = {
           ...schemaToSave,
           [key]: {
-            type: new SequentialFieldResolver(schema.getValuesArray()),
+            type: new SequentialFieldResolver(
+              schema.getValuesArray(),
+              schema.getConfig(),
+            ),
             ...defaultConfig,
           },
         };

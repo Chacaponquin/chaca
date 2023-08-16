@@ -6,4 +6,6 @@ export const CORRECT_SEQUENTIAL_SCHEMA = chaca.schema({
   favoriteNumber: chaca.sequential([1, 2, 3, 4]),
 });
 
-export const CORRECT_SEQUENTIAL_DATA = CORRECT_SEQUENTIAL_SCHEMA.generate(4);
+export const CORRECT_LOOP_SEQUENTIAL_SCHEMA = chaca.schema({
+  favoriteNumber: chaca.sequential([1, 2, 3, 4], { loop: true }),
+});

@@ -97,12 +97,12 @@ export class ChacaInputTree {
       this.refToResolve.push(newRefNode);
       returnNode = newRefNode;
     } else if (object.type instanceof SequentialFieldResolver) {
-      returnNode = new SequentialValueNode(
-        actualRoute,
-        object.type.valuesArray,
-      );
+      returnNode = new SequentialValueNode({
+        fieldTreeRoute: actualRoute,
+        valuesArray: object.type.valuesArray,
+        config: object.type.config,
+      });
     } else if (object.type instanceof SequenceFieldResolver) {
-      object.type.getConfig();
       returnNode = new SequenceValueNode(actualRoute, object.type.getConfig());
     } else if (object.type instanceof KeyFieldResolver) {
       if (object.type.fieldType instanceof SchemaFieldResolver) {

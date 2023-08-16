@@ -13,7 +13,10 @@ import {
   SequenceField,
   SequenceFieldProps,
 } from "./core/Fields/core/SequenceField/SequenceField.js";
-import { SequentialField } from "./core/Fields/core/SequentialField/SequentialField.js";
+import {
+  SequentialField,
+  SequentialFieldConfig,
+} from "./core/Fields/core/SequentialField/SequentialField.js";
 import { ChacaUtils } from "./core/ChacaUtils/ChacaUtils.js";
 import { SchemaInput } from "./core/ChacaSchema/interfaces/schema.interface.js";
 import { SchemaField } from "./schemas/SchemaField.js";
@@ -75,8 +78,8 @@ export class Chaca {
    *   favoriteNumber: chaca.sequential([1, 2, 3])
    * }
    */
-  sequential<K = any>(valuesArray: Array<K>) {
-    return new SequentialField(valuesArray);
+  sequential<K = any>(valuesArray: Array<K>, config?: SequentialFieldConfig) {
+    return new SequentialField(valuesArray, config);
   }
 
   /**

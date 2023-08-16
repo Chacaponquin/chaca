@@ -40,7 +40,10 @@ import {
   RefFieldWhere,
 } from "./core/Fields/core/RefField/RefField.js";
 
-import { SequentialField } from "./core/Fields/core/SequentialField/SequentialField.js";
+import {
+  SequentialField,
+  SequentialFieldConfig,
+} from "./core/Fields/core/SequentialField/SequentialField.js";
 import {
   KeyField,
   KeyFieldProps,
@@ -97,4 +100,5 @@ export type {
   InputIsArrayConfig,
   InputPossibleNull,
   CustomFieldProps,
+  SequentialFieldConfig,
 };
