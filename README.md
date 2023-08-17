@@ -82,7 +82,7 @@ Detailed changes for each release are documented in the [CHANGELOG.md](https://g
 
 ## Contributing
 
-The Chaca project welcomes all constructive contributions. Contributions take many forms, from code for bug fixes and enhancements, to additions and fixes to documentation, additional tests, triaging incoming pull requests and issues, and more!. [See CONTRIBUTING.md](https://github.com/Chacaponquin/chaca/blob/chaca-dev/CONTRIBUTING.md)
+The Chaca project welcomes all constructive contributions. Contributions take many forms, from code for bug fixes and enhancements, to additions and fixes to documentation, additional tests, triaging incoming pull requests and issues, and more!. [See CONTRIBUTING.md](https://github.com/Chacaponquin/chaca/blob/main/CONTRIBUTING.md)
 
 ## License
 
