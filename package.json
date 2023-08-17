@@ -9,7 +9,7 @@
     "node": ">=14.0.0"
   },
   "bin": {
-    "chaca": "./bin/index.js"
+    "chaca": "./bin/bin.js"
   },
   "exports": {
     ".": {
