@@ -1,5 +1,4 @@
 import { chaca } from "../../../../src";
-import { createTestFolder } from "../../../utils/functions/folder";
 import { COMPLETE_SCHEMA } from "../../../utils/schemas/schemaComplete";
 import { NESTED_OBJECT_SCHEMA } from "../../../utils/schemas/schemaNestedObjects";
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../../../utils/schemas/schemaWithArray";
@@ -14,8 +13,6 @@ describe("# Java Export Test", () => {
   let ARRAY_FIELDS_DATA: any;
 
   beforeAll(() => {
-    createTestFolder("java");
-
     SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.generate(50);
     COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
     NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);

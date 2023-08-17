@@ -27,13 +27,9 @@ export class TypescriptGenerator extends Generator {
     const codeInterface = dataInterface.getInterface();
 
     const code = `const ${variableName}: ${codeInterface} = ${javascriptCode}`;
-    const interfaceCode = this.createInterfaceCode();
+    const finalCode = this.createFinalCode(code);
 
-    await fs.promises.writeFile(
-      this.route,
-      interfaceCode + "\n\n" + code,
-      "utf8",
-    );
+    await fs.promises.writeFile(this.route, finalCode, "utf8");
 
     return this.route;
   }
@@ -44,6 +40,19 @@ export class TypescriptGenerator extends Generator {
     const data = resolver.resolve();
     const route = await this.generateFile(data);
     return route;
+  }
+
+  private createFinalCode(code: string): string {
+    const interfaceCode = this.createInterfaceCode();
+
+    let finalCode: string;
+    if (interfaceCode) {
+      finalCode = interfaceCode + "\n\n" + code;
+    } else {
+      finalCode = code;
+    }
+
+    return finalCode;
   }
 
   private createInterfaceCode(): string {

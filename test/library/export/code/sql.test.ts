@@ -1,5 +1,4 @@
 import { ChacaError, chaca } from "../../../../src";
-import { createTestFolder } from "../../../utils/functions/folder";
 import { COMPLETE_SCHEMA } from "../../../utils/schemas/schemaComplete";
 import { NESTED_OBJECT_SCHEMA } from "../../../utils/schemas/schemaNestedObjects";
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../../../utils/schemas/schemaWithArray";
@@ -15,8 +14,6 @@ describe("# SQL Export Test", () => {
   let SIMPLE_SCHEMA_DATA: any;
 
   beforeAll(() => {
-    createTestFolder("postgresql");
-
     ARRAY_FIELDS_DATA = SCHEMA_WITH_ARRAY_FIELDS.generate(50);
     COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
     NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
@@ -34,6 +31,7 @@ describe("# SQL Export Test", () => {
           },
         ],
         { fileName: "simpleSchema", format: "postgresql", location: ROOT },
+        { verbose: false },
       );
     });
 
@@ -51,6 +49,7 @@ describe("# SQL Export Test", () => {
           format: "postgresql",
           location: ROOT,
         },
+        { verbose: false },
       );
     });
 
@@ -88,6 +87,7 @@ describe("# SQL Export Test", () => {
           format: "postgresql",
           location: ROOT,
         },
+        { verbose: false },
       );
     });
   });

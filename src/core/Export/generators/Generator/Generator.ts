@@ -1,5 +1,6 @@
 import { FileConfig } from "../../interfaces/export.interface.js";
 import path from "path";
+import fs from "fs";
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver.js";
 import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils.js";
 
@@ -18,6 +19,10 @@ export abstract class Generator {
   protected baseLocation: string;
 
   constructor({ config, extension }: GeneratorProps) {
+    if (!fs.existsSync(config.location)) {
+      fs.mkdirSync(config.location, { recursive: true });
+    }
+
     this.ext = extension;
     this.config = config;
     this.fileName = `${this.config.fileName}.${this.ext}`;

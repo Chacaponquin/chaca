@@ -43,7 +43,7 @@ describe("# Nested Object field tests", () => {
         isArray: 20,
       },
       buenas: schemas.address.country(),
-      custom: (a) => {
+      custom: () => {
         return "Hola";
       },
     });

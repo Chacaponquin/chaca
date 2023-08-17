@@ -1,15 +1,10 @@
 import { chaca } from "../../../../src";
-import { createTestFolder } from "../../../utils/functions/folder";
 import { VARIANT_ARRAY } from "../utils/array_variate";
 
 const objectFileName = "pythonExport";
 const ROOT = "./data/python";
 
 describe("# Python Export Test", () => {
-  beforeAll(() => {
-    createTestFolder("python");
-  });
-
   describe("Export Primitive values", () => {
     it("Export string", async () => {
       await chaca.export("String Test", {
