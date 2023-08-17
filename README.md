@@ -1,6 +1,6 @@
 <p align="center"><img align="center" width="200" src="https://res.cloudinary.com/chaca-sa/image/upload/v1681924431/Logopit_1681682634889_hywzcu.png" style="max-width: 100%"/></p>
 
-<p align="center" style="font-size: 20px; font-weight: 600">🌚 Think your data and let Chaca create it.</p>
+<h1 align="center" style="font-size: 20px; font-weight: 600">🌚 Think your data and let Chaca create it.</h1>
 
 ## 😀 Intro
 
@@ -66,7 +66,6 @@ await movieSchema.generateAndExport(20, {
   format: "json",
   location: "./folder",
 });
-
 ```
 
 ## 🕹️ CLI
