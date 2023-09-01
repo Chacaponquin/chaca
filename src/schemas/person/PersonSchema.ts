@@ -1,5 +1,11 @@
 import { SchemaField } from "../SchemaField.js";
-import { ILanguageNames, NAMES, GENDERS, JOBS } from "./constants/index.js";
+import {
+  ILanguageNames,
+  NAMES,
+  GENDERS,
+  JOBS,
+  LANGUAGES,
+} from "./constants/index.js";
 import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
@@ -29,7 +35,21 @@ export class PersonSchema {
     jobAreas: JOBS.JOBS_AREAS,
     genders: GENDERS,
     names: NAMES,
+    languages: LANGUAGES,
   };
+
+  /**
+   * @example
+   * schemas.person.language() // Schema
+   * schemas.person.language() // 'Georgian'
+   *
+   * @returns string
+   */
+  language() {
+    return new SchemaField(() => {
+      return this.utils.oneOfArray(this.constants.languages);
+    });
+  }
 
   /**
    * Returns a Job Level

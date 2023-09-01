@@ -1,3 +1,13 @@
+## chaca@1.7.0
+
+### 🌚 Features
+
+- Add `browser`, `oauthProvider`, `locale`, `emailProvider` options in `internet` schema
+- Add more values for the `protocol` option in `internet` schema
+- Add `transaction`, `subscriptionPlan` options in `finance` schema
+- Add more values for `manufacturer` and `model` options in `vehicle` schema
+- Add `language` option in `person` schema
+
 ## chaca@1.6.0
 
 ### 🌚 Features

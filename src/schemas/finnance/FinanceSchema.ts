@@ -1,6 +1,12 @@
 import { SchemaField } from "../SchemaField.js";
 import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { ACCOUNT_TYPES, IBAN, MONEY_INFO } from "./constants/index.js";
+import {
+  ACCOUNT_TYPES,
+  IBAN,
+  MONEY_INFO,
+  SUBSCRIPTION_PLAN,
+  TRANSACTION_TYPE,
+} from "./constants/index.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 
 type AmountProps = {
@@ -22,7 +28,39 @@ export class FinanceSchema {
     accountTypes: ACCOUNT_TYPES,
     ibans: IBAN,
     moneyInfo: MONEY_INFO,
+    transactionTypes: TRANSACTION_TYPE,
+    subscriptionPlans: SUBSCRIPTION_PLAN,
   };
+
+  /**
+   * Returns a transaction type
+   *
+   * @example
+   * schemas.finance.transaction() // Schema
+   * schemas.finance.transaction().getValue() 'payment'
+   *
+   * @returns string
+   */
+  transaction() {
+    return new SchemaField(() => {
+      return this.utils.oneOfArray(this.constants.transactionTypes);
+    });
+  }
+
+  /**
+   * Returns a suscription plan type
+   *
+   * @example
+   * schemas.finance.subscriptionPlan() // Schema
+   * schemas.finance.subscriptionPlan().getValue() // 'Free'
+   *
+   * @returns string
+   */
+  subscriptionPlan() {
+    return new SchemaField(() => {
+      return this.utils.oneOfArray(this.constants.subscriptionPlans);
+    });
+  }
 
   /**
    * Returns a PIN number.
@@ -93,7 +131,7 @@ export class FinanceSchema {
       }
 
       return retString;
-    }, {});
+    });
   }
 
   /**
@@ -106,12 +144,8 @@ export class FinanceSchema {
    * @returns string
    */
   ethereumAddress(): SchemaField<string> {
-    return new SchemaField(
-      () =>
-        this.dataTypeSchema
-          .hexadecimal()
-          .getValue({ length: 40, case: "lower" }),
-      {},
+    return new SchemaField(() =>
+      this.dataTypeSchema.hexadecimal().getValue({ length: 40, case: "lower" }),
     );
   }
 
@@ -122,10 +156,7 @@ export class FinanceSchema {
    * @returns string
    */
   accountType(): SchemaField<string> {
-    return new SchemaField<string>(
-      () => this.utils.oneOfArray(ACCOUNT_TYPES),
-      {},
-    );
+    return new SchemaField<string>(() => this.utils.oneOfArray(ACCOUNT_TYPES));
   }
 
   /**
@@ -180,7 +211,7 @@ export class FinanceSchema {
       }
 
       return `${routingNumber}${Math.ceil(sum / 10) * 10 - sum}`;
-    }, {});
+    });
   }
 
   /**
@@ -202,7 +233,7 @@ export class FinanceSchema {
           .toString();
       }
       return cvv;
-    }, {});
+    });
   }
 
   /**
@@ -254,10 +285,8 @@ export class FinanceSchema {
    * @returns string
    */
   currencyMoneyName() {
-    return new SchemaField<string>(
-      () =>
-        this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name)),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name)),
     );
   }
 

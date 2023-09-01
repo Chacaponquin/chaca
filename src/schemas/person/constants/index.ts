@@ -2,6 +2,7 @@ import { SPANISH_NAMES } from "./spanish.js";
 import { ENGLISH_NAMES } from "./english.js";
 import { GENDERS as G } from "./genders.js";
 import { JOBS_AREAS, JOB_LEVELS } from "./jobs.js";
+import { LANGUAGES } from "./language.js";
 
 export interface ILanguageNames {
   male: string[];
@@ -15,3 +16,4 @@ export const JOBS = {
   JOBS_AREAS,
   JOB_LEVELS,
 };
+export { LANGUAGES };

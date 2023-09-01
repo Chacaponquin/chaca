@@ -8,6 +8,11 @@ import { GenerateUserAgent } from "./helpers/userAgent.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
 import { PersonSchema } from "../person/PersonSchema.js";
 import { WordSchema } from "../word/WordSchema.js";
+import { PROTOCOL } from "./constants/protocol.js";
+import { OAUTH_PROVIDER } from "./constants/oauth.js";
+import { LOCALE } from "./constants/locale.js";
+import { EMAIL_PROVIDER } from "./constants/email_provider.js";
+import { BROWSERS } from "./constants/browser.js";
 
 export type HttpStatus = {
   informational: number[];
@@ -67,7 +72,72 @@ export class InternetSchema {
     domainSuffixs: DOMAIN_SUFFIX,
     httpStatus: HTTP_STATUS,
     httpMethods: HTTP_METHODS,
+    protocols: PROTOCOL,
+    oauthProviders: OAUTH_PROVIDER,
+    locales: LOCALE,
+    emailProviders: EMAIL_PROVIDER,
+    browsers: BROWSERS,
   };
+
+  /**
+   * Returns a browser name
+   *
+   * @example
+   * schemas.internet.browser() // Schema
+   * schemas.internet.browser().getValue() // 'Opera'
+   *
+   * @returns string
+   */
+  browser() {
+    return new SchemaField(() => {
+      return this.utils.oneOfArray(this.constants.browsers);
+    });
+  }
+
+  /**
+   * Generate a random OAuth provider
+   *
+   * @example
+   * schemas.internet.oauthProvider() // Schema
+   * schemas.internet.oauthProvider().getValue() // 'Amazon'
+   *
+   * @returns string
+   */
+  oauthProvider() {
+    return new SchemaField(() => {
+      return this.utils.oneOfArray(this.constants.oauthProviders);
+    });
+  }
+
+  /**
+   * Returns a random locale
+   *
+   * @example
+   * schemas.internet.locale() // Schema
+   * schemas.internet.locale().getValue() // 'es_MX'
+   *
+   * @returns string
+   */
+  locale() {
+    return new SchemaField(() => {
+      return this.utils.oneOfArray(this.constants.locales);
+    });
+  }
+
+  /**
+   * Returns a random email provider
+   *
+   * @example
+   * schemas.internet.emailProvider() // Schema
+   * schemas.internet.emailProvider().getValue() // 'gmail'
+   *
+   * @returns string
+   */
+  emailProvider() {
+    return new SchemaField(() => {
+      return this.utils.oneOfArray(this.constants.emailProviders);
+    });
+  }
 
   /**
    * Returns a user email
@@ -87,16 +157,16 @@ export class InternetSchema {
       const provider =
         typeof a.provider === "string"
           ? a.provider
-          : this.utils.oneOfArray(["gmail.com", "yahoo.com", "hotmail.com"]);
+          : this.utils.oneOfArray(this.constants.emailProviders);
 
       const userName = this.userName({
         firstName: a.firstName,
         lastName: a.lastName,
-      })
-        .getValue()
-        .toLowerCase();
+      }).getValue();
 
-      return `${userName}@${provider}`;
+      const email = `${userName}@${provider}`;
+
+      return email.toLowerCase();
     }, args || {});
   }
 
@@ -191,7 +261,7 @@ export class InternetSchema {
    * schemas.internet.userName().getValue({firstName: 'pedro', lastName: 'Scott'}) // 'pedro_scott'
    * @returns string
    */
-  public userName(args?: UserNameArgs) {
+  userName(args?: UserNameArgs) {
     return new SchemaField<string, UserNameArgs>((a) => {
       const firstName =
         typeof a.firstName === "string"
@@ -400,9 +470,8 @@ export class InternetSchema {
    * @returns string
    */
   public protocol(): SchemaField<string> {
-    return new SchemaField<string>(
-      () => this.utils.oneOfArray(["http", "https"]),
-      {},
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(this.constants.protocols),
     );
   }
 
