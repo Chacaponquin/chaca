@@ -35,6 +35,9 @@ export class PersonSchema {
     jobAreas: JOBS.JOBS_AREAS,
     genders: GENDERS,
     names: NAMES,
+    maleNames: [...NAMES.en.male, ...NAMES.es.male],
+    femaleNames: [...NAMES.en.female, ...NAMES.es.female],
+    lastNames: [...NAMES.en.lastNames, ...NAMES.es.lastNames],
     languages: LANGUAGES,
   };
 
@@ -132,8 +135,9 @@ export class PersonSchema {
    * Returns a full name from a selected lenguage
    * @param args.language (`en` | `es`). Default `en`
    * @param args.sex (`male` | `female`)
-   * @example schemas.person.fullName() // Schema
-   * @example schemas.person.fullName().getValue() // 'Juan Rodriguez Perez'
+   * @example
+   * schemas.person.fullName() // Schema
+   * schemas.person.fullName().getValue() // 'Juan Rodriguez Perez'
    * @returns string
    */
   fullName(args?: NameProps) {

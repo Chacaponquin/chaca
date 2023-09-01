@@ -79,7 +79,7 @@ export {
   SequentialField,
 };
 
-export { ChacaSchema, DatasetStore, Chaca, ChacaUtils };
+export { ChacaSchema, DatasetStore, Chaca, ChacaUtils, Schemas };
 
 export type {
   CustomField,
