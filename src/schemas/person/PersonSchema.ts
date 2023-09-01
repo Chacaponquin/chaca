@@ -5,6 +5,7 @@ import {
   GENDERS,
   JOBS,
   LANGUAGES,
+  PREFIXES,
 } from "./constants/index.js";
 import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
 import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
@@ -39,6 +40,7 @@ export class PersonSchema {
     femaleNames: [...NAMES.en.female, ...NAMES.es.female],
     lastNames: [...NAMES.en.lastNames, ...NAMES.es.lastNames],
     languages: LANGUAGES,
+    prefixes: PREFIXES,
   };
 
   /**
@@ -85,7 +87,9 @@ export class PersonSchema {
    * @returns string
    */
   gender() {
-    return new SchemaField<string>(() => this.utils.oneOfArray(GENDERS));
+    return new SchemaField<string>(() =>
+      this.utils.oneOfArray(this.constants.genders),
+    );
   }
 
   /**
@@ -176,15 +180,22 @@ export class PersonSchema {
   prefix(args?: SexProps) {
     return new SchemaField<string, SexProps>((a) => {
       const sex = typeof a.sex === "string" ? a.sex : undefined;
-
-      const male = ["Mr.", "Mrs.", "Dr."];
-      const female = ["Ms.", "Miss"];
+      const all = [
+        ...this.constants.prefixes.male,
+        ...this.constants.prefixes.female,
+      ];
 
       if (sex) {
-        if (sex === "male") return this.utils.oneOfArray(male);
-        else if (sex === "female") return this.utils.oneOfArray(female);
-        else return this.utils.oneOfArray([...male, ...female]);
-      } else return this.utils.oneOfArray([...male, ...female]);
+        if (sex === "male") {
+          return this.utils.oneOfArray(this.constants.prefixes.male);
+        } else if (sex === "female") {
+          return this.utils.oneOfArray(this.constants.prefixes.female);
+        } else {
+          return this.utils.oneOfArray(all);
+        }
+      } else {
+        return this.utils.oneOfArray(all);
+      }
     }, args || {});
   }
 

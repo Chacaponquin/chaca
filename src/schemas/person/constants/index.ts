@@ -3,6 +3,7 @@ import { ENGLISH_NAMES } from "./english.js";
 import { GENDERS as G } from "./genders.js";
 import { JOBS_AREAS, JOB_LEVELS } from "./jobs.js";
 import { LANGUAGES } from "./language.js";
+import { PREFIXES } from "./prefix.js";
 
 export interface ILanguageNames {
   male: string[];
@@ -16,4 +17,4 @@ export const JOBS = {
   JOBS_AREAS,
   JOB_LEVELS,
 };
-export { LANGUAGES };
+export { LANGUAGES, PREFIXES };
