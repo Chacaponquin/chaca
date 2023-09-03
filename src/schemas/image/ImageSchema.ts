@@ -60,7 +60,7 @@ export class ImageSchema {
    * schemas.image.treeDimension().getValue()
    * @returns string
    */
-  treeDimension() {
+  threeDimension() {
     return new SchemaField<string>(
       () => this.utils.oneOfArray(IMAGES_DEFINITIONS["3d"]),
       {},

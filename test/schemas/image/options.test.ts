@@ -6,6 +6,11 @@ describe("# Image schema tests", () => {
     expect(schemas.image.constants.animal.includes(value)).toBe(true);
   });
 
+  it("3D test", () => {
+    const value = schemas.image.threeDimension().getValue();
+    expect(schemas.image.constants["3d"].includes(value)).toBe(true);
+  });
+
   it("Animate avatar test", () => {
     const value = schemas.image.animateAvatar().getValue();
     expect(typeof value).toBe("string");

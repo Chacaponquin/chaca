@@ -57,7 +57,7 @@ export class VideoSchema {
    * schemas.video.treeDimension().getValue()
    * @returns string
    */
-  treeDimension() {
+  threeDimension() {
     return new SchemaField<string>(() =>
       this.utils.oneOfArray(VIDEOS_DEFINITIONS["3d"]),
     );
