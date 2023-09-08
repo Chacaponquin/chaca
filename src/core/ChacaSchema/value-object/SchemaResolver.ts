@@ -10,22 +10,28 @@ import {
 import {
   CustomFieldResolver,
   MixedFieldResolver,
-  RefFieldResolver,
   SchemaFieldResolver,
   SequenceFieldResolver,
   SequentialFieldResolver,
 } from "../../Resolvers/core/index.js";
+import { IResolver } from "../../Resolvers/interfaces/resolvers.interface.js";
 import { ChacaSchema } from "../ChacaSchema.js";
 import {
   FieldIsArrayConfig,
+  FieldObjectInput,
+  FieldTypes,
   SchemaInput,
   SchemaToResolve,
 } from "../interfaces/schema.interface.js";
 import { InputEnumField } from "./Enum.js";
 import { FieldIsArray } from "./FieldIsArray.js";
 import { FieldPossibleNull } from "./FieldPossibleNull.js";
-import { InputFieldType } from "./FieldType.js";
 import { InputKeyField } from "./Key.js";
+
+interface Filter {
+  key?: string;
+  config?: FieldTypes;
+}
 
 interface CommonSchema {
   isArray: FieldIsArrayConfig;
@@ -51,6 +57,42 @@ export class InputSchemaResolver {
     }
   }
 
+  private filter({ config, key }: Filter): IResolver {
+    let returnResolver: IResolver;
+
+    if (config) {
+      if (config instanceof ChacaSchema) {
+        returnResolver = new MixedFieldResolver(config);
+      } else if (typeof config === "function") {
+        returnResolver = new CustomFieldResolver(config);
+      } else if (config instanceof SchemaField) {
+        returnResolver = new SchemaFieldResolver(config);
+      } else if (config instanceof RefField) {
+        returnResolver = config;
+      } else if (config instanceof SequentialField) {
+        returnResolver = new SequentialFieldResolver(
+          config.getValuesArray(),
+          config.getConfig(),
+        );
+      } else if (config instanceof KeyField) {
+        returnResolver = new InputKeyField(config).resolver();
+      } else if (config instanceof SequenceField) {
+        returnResolver = new SequenceFieldResolver(config.getConfig());
+      } else if (config instanceof EnumField) {
+        returnResolver = new InputEnumField({
+          key,
+          enumField: config,
+        }).resolver();
+      } else {
+        throw new ChacaError(`Is not a valid field type`);
+      }
+    } else {
+      throw new ChacaError(`Is not a valid field type`);
+    }
+
+    return returnResolver;
+  }
+
   private validate(obj: SchemaInput): SchemaToResolve {
     this.validateObject(obj);
 
@@ -62,102 +104,31 @@ export class InputSchemaResolver {
     };
 
     for (const [key, schema] of Object.entries(obj)) {
-      if (schema instanceof ChacaSchema) {
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: { type: new MixedFieldResolver(schema), ...defaultConfig },
-        };
-      } else if (typeof schema === "function") {
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            type: new CustomFieldResolver(schema),
-            ...defaultConfig,
-          },
-        };
-      } else if (schema instanceof SchemaField) {
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            type: new SchemaFieldResolver(schema),
-            ...defaultConfig,
-          },
-        };
-      } else if (schema instanceof RefField) {
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            type: new RefFieldResolver(schema.getRefField()),
-            ...defaultConfig,
-          },
-        };
-      } else if (schema instanceof SequentialField) {
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            type: new SequentialFieldResolver(
-              schema.getValuesArray(),
-              schema.getConfig(),
-            ),
-            ...defaultConfig,
-          },
-        };
-      } else if (schema instanceof KeyField) {
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            type: new InputKeyField(schema).resolver(),
-            ...defaultConfig,
-          },
-        };
-      } else if (schema instanceof SequenceField) {
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            type: new SequenceFieldResolver(schema.getConfig()),
-            ...defaultConfig,
-          },
-        };
-      } else if (schema instanceof EnumField) {
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            type: new InputEnumField(key, schema).resolver(),
-            ...defaultConfig,
-          },
-        };
-      } else {
-        if (typeof schema === "object" && schema !== null) {
-          if (schema.type) {
-            if (schema.type instanceof RefFieldResolver) {
-              schemaToSave = {
-                ...schemaToSave,
-                [key]: {
-                  type: schema.type,
-                  ...defaultConfig,
-                },
-              };
-            } else {
-              schemaToSave = {
-                ...schemaToSave,
-                [key]: {
-                  type: new InputFieldType(key, schema.type).resolver(),
-                  ...defaultConfig,
-                },
-              };
-            }
-          } else {
-            throw new ChacaError(
-              `The field ${key} dosen't have a resolve method`,
-            );
-          }
+      if (
+        typeof schema === "object" &&
+        schema !== null &&
+        !Array.isArray(schema)
+      ) {
+        const fieldObject = schema as FieldObjectInput;
+
+        if (fieldObject.type instanceof SequenceField) {
+          throw new ChacaError(`A sequence field can not be modificated`);
+        } else if (fieldObject.type instanceof SequentialField) {
+          throw new ChacaError(`A sequential field can not be modificated`);
+        } else if (fieldObject.type instanceof KeyField) {
+          throw new ChacaError(`A key field can not be modificated`);
+        } else {
+          const type = this.filter({ config: fieldObject.type });
+          schemaToSave.type = { ...defaultConfig, type };
         }
 
         schemaToSave = {
           ...schemaToSave,
           [key]: {
             ...schemaToSave[key],
-            possibleNull: new FieldPossibleNull(schema.posibleNull).value(),
+            possibleNull: new FieldPossibleNull(
+              fieldObject.posibleNull,
+            ).value(),
           },
         };
 
@@ -165,7 +136,7 @@ export class InputSchemaResolver {
           ...schemaToSave,
           [key]: {
             ...schemaToSave[key],
-            isArray: new FieldIsArray(schema.isArray).value(),
+            isArray: new FieldIsArray(fieldObject.isArray).value(),
           },
         };
       }

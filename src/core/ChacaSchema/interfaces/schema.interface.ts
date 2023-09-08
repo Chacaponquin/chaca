@@ -10,27 +10,22 @@ import {
 } from "../../Fields/core/index.js";
 import { IResolver } from "../../Resolvers/interfaces/resolvers.interface.js";
 
-/**
- * Posible fields configurations in a schema
- */
-export type SchemaInputField =
-  | FieldSchemaConfig
-  | SequentialField
-  | KeyField
-  | SequenceField;
-
-export type FieldSchemaConfig<R = any> =
-  | FieldObjectInput<R>
+export type FieldTypes<R = any> =
   | CustomField<any, R>
   | SchemaField<R, any>
   | ChacaSchema<R>
   | RefField
-  | EnumField<R>;
+  | EnumField<R>
+  | SequentialField
+  | KeyField
+  | SequenceField;
+
+export type FieldSchemaConfig<R = any> = FieldObjectInput<R> | FieldTypes<R>;
 
 /**
  * Input schema config
  */
-export type SchemaInput = Record<string, SchemaInputField>;
+export type SchemaInput = Record<string, FieldSchemaConfig>;
 
 export type SchemaToResolve = Record<string, ResolverObject>;
 
@@ -53,7 +48,7 @@ export type FieldIsArrayConfig = ArrayLimitObject | null;
 export type InputIsArrayConfig = boolean | number | Partial<ArrayLimitObject>;
 export type InputPossibleNull = boolean | number;
 
-export type FieldObjectInput<R> = {
+export type FieldObjectInput<R = any> = {
   /** Schema field type*/
   type?: FieldTypeInput<R>;
   /** Array schema field configuration

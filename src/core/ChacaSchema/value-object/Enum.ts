@@ -2,10 +2,15 @@ import { ChacaError } from "../../../errors/ChacaError.js";
 import { EnumField } from "../../Fields/core/EnumField/EnumField.js";
 import { EnumFieldResolver } from "../../Resolvers/core/index.js";
 
+interface EnumProps<R> {
+  key?: string;
+  enumField: EnumField<R>;
+}
+
 export class InputEnumField<R> {
   private _resolver: EnumFieldResolver<R>;
 
-  constructor(key: string, enumField: EnumField<R>) {
+  constructor({ enumField, key }: EnumProps<R>) {
     if (Array.isArray(enumField.valuesArray)) {
       if (enumField.valuesArray.length > 0) {
         this._resolver = new EnumFieldResolver(enumField.valuesArray);
