@@ -4,6 +4,8 @@ describe("# Video schema tests", () => {
   it("Animal test", () => {
     const value = schemas.video.animal().getValue();
     expect(schemas.video.constants.animal.includes(value));
+
+    schemas.address.country();
   });
 
   it("Architecture test", () => {

@@ -31,7 +31,7 @@ export class AddressSchema {
 
   /**
    * Returns a zip code
-   * @param args.format format of the zip code
+   * @param args.format format of the zip code. Default '#####'
    * @example schemas.address.zipCode() // Schema
    * @example
    * schemas.address.zipCode().getValue() // '62581'
