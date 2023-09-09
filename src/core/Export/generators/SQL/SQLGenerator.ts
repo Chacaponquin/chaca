@@ -41,7 +41,7 @@ import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResol
 export class SQLGenerator extends Generator {
   private schemasPrimaryKeys: Array<KeyValueNode> = [];
   private schemasForeignKeys: Array<RefValueNode> = [];
-  private schemasPosibleNull: Array<ChacaTreeNode> = [];
+  private schemaspossibleNull: Array<ChacaTreeNode> = [];
   private allTables: Array<SQLTable> = [];
   private dataGenerator: SQLDataGenerator;
 
@@ -402,8 +402,8 @@ export class SQLGenerator extends Generator {
       const allRefs = r.getRefNodes();
       allRefs.forEach((r) => this.schemasForeignKeys.push(r));
 
-      const allPosibleNull = r.getPosibleNullNodes();
-      allPosibleNull.forEach((n) => this.schemasPosibleNull.push(n));
+      const allpossibleNull = r.getpossibleNullNodes();
+      allpossibleNull.forEach((n) => this.schemaspossibleNull.push(n));
     });
 
     resolvers.getResolvers().forEach((r) => {

@@ -11,7 +11,7 @@ export abstract class ChacaTreeNode {
   public getResultNodeConfig(): FieldNodeProps {
     return {
       name: this.getNodeName(),
-      isPosibleNull: this.getPosibleNull(),
+      ispossibleNull: this.getpossibleNull(),
     };
   }
 
@@ -36,7 +36,7 @@ export abstract class ChacaTreeNode {
     return this.nodeConfig.fieldTreeRoute.join(".");
   }
 
-  public getPosibleNull() {
-    return this.nodeConfig.posibleNull;
+  public getpossibleNull() {
+    return this.nodeConfig.possibleNull;
   }
 }

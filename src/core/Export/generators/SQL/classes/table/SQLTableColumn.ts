@@ -11,7 +11,7 @@ import { SQLTable } from "./SQLTable.js";
 interface ColumnConfig {
   isPrimaryKey: boolean;
   isForeignKey: false | ColumnForeignKeyConfig;
-  posibleNull: boolean;
+  possibleNull: boolean;
 }
 
 export interface ColumnForeignKeyConfig {
@@ -25,7 +25,7 @@ export class SQLTableColumn {
   private columnConfig: ColumnConfig = {
     isPrimaryKey: false,
     isForeignKey: false,
-    posibleNull: false,
+    possibleNull: false,
   };
 
   constructor(columnName: string) {
@@ -48,7 +48,7 @@ export class SQLTableColumn {
     this.rows.push(value);
 
     if (value instanceof SQLNull) {
-      this.columnConfig.posibleNull = true;
+      this.columnConfig.possibleNull = true;
     }
   }
 
@@ -60,8 +60,8 @@ export class SQLTableColumn {
     return this.rows[index];
   }
 
-  public changeToPosibleNull(): void {
-    this.columnConfig.posibleNull = true;
+  public changeTopossibleNull(): void {
+    this.columnConfig.possibleNull = true;
   }
 
   public isPrimaryKey() {
@@ -72,8 +72,8 @@ export class SQLTableColumn {
     return this.columnConfig.isForeignKey;
   }
 
-  public posibleNull() {
-    return this.columnConfig.posibleNull;
+  public possibleNull() {
+    return this.columnConfig.possibleNull;
   }
 
   public changeForeignKeyConfig(config: ColumnForeignKeyConfig) {

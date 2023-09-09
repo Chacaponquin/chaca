@@ -15,7 +15,7 @@ export const CONTRACT_SCHEMA = chaca.schema({
       .getValue({ from: fields.start_date, to: new Date() });
   },
   pay_method_id: chaca.ref("Pay_Method.id"),
-  driver_dni: { type: chaca.ref("Driver.dni"), posibleNull: 50 },
+  driver_dni: { type: chaca.ref("Driver.dni"), possibleNull: 50 },
   end_km: ({ currentFields: fields, store }) => {
     const allCars = store.getValue("Car");
     const restDocuments = store.getSchemaDocuments();

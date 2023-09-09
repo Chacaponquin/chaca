@@ -79,11 +79,11 @@ export class SchemaResolver<K = any> {
     return keys;
   }
 
-  public getPosibleNullNodes(): Array<ChacaTreeNode> {
+  public getpossibleNullNodes(): Array<ChacaTreeNode> {
     let nodes = [] as Array<ChacaTreeNode>;
 
     if (this.inputTree) {
-      nodes = this.inputTree.getPosibleNullNodes();
+      nodes = this.inputTree.getpossibleNullNodes();
     }
 
     return nodes;

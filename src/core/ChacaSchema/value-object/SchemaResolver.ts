@@ -10,6 +10,7 @@ import {
 import {
   CustomFieldResolver,
   MixedFieldResolver,
+  RefFieldResolver,
   SchemaFieldResolver,
   SequenceFieldResolver,
   SequentialFieldResolver,
@@ -17,9 +18,9 @@ import {
 import { IResolver } from "../../Resolvers/interfaces/resolvers.interface.js";
 import { ChacaSchema } from "../ChacaSchema.js";
 import {
-  FieldIsArrayConfig,
   FieldObjectInput,
   FieldTypes,
+  ResolverObject,
   SchemaInput,
   SchemaToResolve,
 } from "../interfaces/schema.interface.js";
@@ -31,11 +32,6 @@ import { InputKeyField } from "./Key.js";
 interface Filter {
   key?: string;
   config?: FieldTypes;
-}
-
-interface CommonSchema {
-  isArray: FieldIsArrayConfig;
-  possibleNull: number;
 }
 
 export class InputSchemaResolver {
@@ -68,7 +64,7 @@ export class InputSchemaResolver {
       } else if (config instanceof SchemaField) {
         returnResolver = new SchemaFieldResolver(config);
       } else if (config instanceof RefField) {
-        returnResolver = config;
+        returnResolver = new RefFieldResolver(config.getRefField());
       } else if (config instanceof SequentialField) {
         returnResolver = new SequentialFieldResolver(
           config.getValuesArray(),
@@ -98,48 +94,40 @@ export class InputSchemaResolver {
 
     let schemaToSave = {} as SchemaToResolve;
 
-    const defaultConfig: CommonSchema = {
-      isArray: null,
-      possibleNull: 0,
-    };
+    for (const [key, field] of Object.entries(obj)) {
+      const resolverObject = {
+        isArray: null,
+        possibleNull: 0,
+      } as ResolverObject;
 
-    for (const [key, schema] of Object.entries(obj)) {
-      if (
-        typeof schema === "object" &&
-        schema !== null &&
-        !Array.isArray(schema)
-      ) {
-        const fieldObject = schema as FieldObjectInput;
+      if ("type" in field) {
+        const fieldObject = field as FieldObjectInput;
+        const type = this.filter({ config: fieldObject.type, key });
 
-        if (fieldObject.type instanceof SequenceField) {
+        resolverObject.type = type;
+
+        const configArray = new FieldIsArray(fieldObject.isArray);
+        const configNull = new FieldPossibleNull(fieldObject.possibleNull);
+
+        resolverObject.possibleNull = configNull.value();
+        resolverObject.isArray = configArray.value();
+
+        if (resolverObject.type instanceof SequenceField) {
           throw new ChacaError(`A sequence field can not be modificated`);
-        } else if (fieldObject.type instanceof SequentialField) {
+        } else if (resolverObject.type instanceof SequentialField) {
           throw new ChacaError(`A sequential field can not be modificated`);
-        } else if (fieldObject.type instanceof KeyField) {
+        } else if (resolverObject.type instanceof KeyField) {
           throw new ChacaError(`A key field can not be modificated`);
-        } else {
-          const type = this.filter({ config: fieldObject.type });
-          schemaToSave.type = { ...defaultConfig, type };
         }
-
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            ...schemaToSave[key],
-            possibleNull: new FieldPossibleNull(
-              fieldObject.posibleNull,
-            ).value(),
-          },
-        };
-
-        schemaToSave = {
-          ...schemaToSave,
-          [key]: {
-            ...schemaToSave[key],
-            isArray: new FieldIsArray(fieldObject.isArray).value(),
-          },
-        };
+      } else {
+        const type = this.filter({ config: field, key });
+        resolverObject.type = type;
       }
+
+      schemaToSave = {
+        ...schemaToSave,
+        [key]: resolverObject,
+      };
     }
 
     return schemaToSave;

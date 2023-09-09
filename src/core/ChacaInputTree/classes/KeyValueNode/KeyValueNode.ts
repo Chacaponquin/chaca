@@ -17,7 +17,7 @@ export class KeyValueNode extends ChacaTreeNode {
     fieldTreeRoute: Array<string>,
     private readonly fieldNode: KeyValueNodeProps,
   ) {
-    super({ fieldTreeRoute, isArray: null, posibleNull: 0 });
+    super({ fieldTreeRoute, isArray: null, possibleNull: 0 });
   }
 
   public getNoArrayNode(): ChacaTreeNode {

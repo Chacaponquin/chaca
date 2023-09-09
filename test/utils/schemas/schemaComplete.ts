@@ -34,7 +34,7 @@ export const COMPLETE_SCHEMA = chaca.schema({
           movieName: schemas.person.firstName(),
           image: schemas.image.event(),
         }),
-        posibleNull: 50,
+        possibleNull: 50,
       },
       email: schemas.internet.email(),
     }),

@@ -50,7 +50,7 @@ export type InputPossibleNull = boolean | number;
 
 export type FieldObjectInput<R = any> = {
   /** Schema field type*/
-  type?: FieldTypeInput<R>;
+  type: FieldTypeInput<R>;
   /** Array schema field configuration
    * - `boolean`- array length between 1 and 10
    * - `number` - specific array length
@@ -61,7 +61,7 @@ export type FieldObjectInput<R = any> = {
    * - `boolean` - `true` 50% chances to be null, `false` 0% chances
    * - `number` specific porcent of chances
    */
-  posibleNull?: InputPossibleNull;
+  possibleNull?: InputPossibleNull;
 };
 
 /**

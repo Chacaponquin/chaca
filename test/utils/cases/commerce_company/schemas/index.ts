@@ -142,7 +142,7 @@ export const CHARGE_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
   name: schemas.word.noun(),
   need_refrigeration: schemas.dataType.boolean(),
-  expire_date: { type: schemas.date.future(), posibleNull: true },
+  expire_date: { type: schemas.date.future(), possibleNull: true },
   weight: schemas.dataType.int({ min: 40, max: 1000 }),
   client_id: chaca.ref("Client.id"),
   warehouse_id: chaca.ref("Warehouse.id", {

@@ -105,6 +105,6 @@ export const BOOK_LOAN_SCHEMA = chaca.schema({
         .between()
         .getValue({ from: currentFields.init_date, to: new Date() });
     },
-    posibleNull: 40,
+    possibleNull: 40,
   },
 });

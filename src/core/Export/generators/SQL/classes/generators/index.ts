@@ -55,7 +55,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
 
         code += `\t${column.getSQLColumnName()} ${columnType.getSQLDefinition()}`;
 
-        if (!column.posibleNull()) {
+        if (!column.possibleNull()) {
           code += ` NOT NULL`;
         }
 

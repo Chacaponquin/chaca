@@ -3,5 +3,5 @@ import { FieldIsArrayConfig } from "../../ChacaSchema/interfaces/schema.interfac
 export interface ChacaTreeNodeConfig {
   fieldTreeRoute: Array<string>;
   isArray: FieldIsArrayConfig;
-  posibleNull: number;
+  possibleNull: number;
 }

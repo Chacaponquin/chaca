@@ -22,7 +22,7 @@ export class SequentialValueNode extends ChacaTreeNode {
     fieldTreeRoute,
     valuesArray,
   }: SequentialValueNodeProps) {
-    super({ fieldTreeRoute, isArray: null, posibleNull: 0 });
+    super({ fieldTreeRoute, isArray: null, possibleNull: 0 });
     this.valuesArray = valuesArray;
     this.config = config;
 

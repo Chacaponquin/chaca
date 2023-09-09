@@ -6,6 +6,6 @@ export const NESTED_OBJECT_SCHEMA = chaca.schema({
   name: schemas.person.firstName({ language: "es" }),
   currentMovie: chaca.schema({
     name: schemas.person.firstName(),
-    image: { type: schemas.image.event(), posibleNull: 60 },
+    image: { type: schemas.image.event(), possibleNull: 60 },
   }),
 });
