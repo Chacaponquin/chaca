@@ -31,7 +31,7 @@ export class InputFieldType {
     } else if (type instanceof SchemaField) {
       return new SchemaFieldResolver(type);
     } else if (type instanceof EnumField) {
-      return new InputEnumField(key, type).resolver();
+      return new InputEnumField({ key: key, enumField: type }).resolver();
     } else if (typeof type === "function") {
       return new CustomFieldResolver(type);
     } else {
