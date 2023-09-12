@@ -9,6 +9,7 @@ import {
 } from "../../Fields/core/index.js";
 import {
   CustomFieldResolver,
+  KeyFieldResolver,
   MixedFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
@@ -112,13 +113,7 @@ export class InputSchemaResolver {
         resolverObject.possibleNull = configNull.value();
         resolverObject.isArray = configArray.value();
 
-        if (resolverObject.type instanceof SequenceField) {
-          throw new ChacaError(`A sequence field can not be modificated`);
-        } else if (resolverObject.type instanceof SequentialField) {
-          throw new ChacaError(`A sequential field can not be modificated`);
-        } else if (resolverObject.type instanceof KeyField) {
-          throw new ChacaError(`A key field can not be modificated`);
-        }
+        this.validateResolver(resolverObject);
       } else {
         const type = this.filter({ config: field, key });
         resolverObject.type = type;
@@ -131,5 +126,32 @@ export class InputSchemaResolver {
     }
 
     return schemaToSave;
+  }
+
+  private validateResolver(config: ResolverObject): void {
+    // sequence
+    if (config.type instanceof SequenceFieldResolver) {
+      if (config.isArray !== null) {
+        throw new ChacaError(`A sequence field can not be an array field`);
+      }
+    }
+
+    // sequential
+    else if (config.type instanceof SequentialFieldResolver) {
+      if (config.isArray !== null) {
+        throw new ChacaError(`A sequential field can not be an array field`);
+      }
+    }
+
+    // key
+    else if (config.type instanceof KeyFieldResolver) {
+      if (config.isArray !== null) {
+        throw new ChacaError(`A key field can not be an array field`);
+      }
+
+      if (config.possibleNull > 0) {
+        throw new ChacaError(`A key field can not be a null field`);
+      }
+    }
   }
 }

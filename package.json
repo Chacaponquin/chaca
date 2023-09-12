@@ -1,6 +1,6 @@
 {
   "name": "chaca",
-  "version": "1.6.0",
+  "version": "1.6.1",
   "description": "Create and export mock data with your rules",
   "main": "./lib/cjs/index.js",
   "module": "./lib/esm/index.mjs",
