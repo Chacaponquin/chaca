@@ -5,6 +5,8 @@ import {
   InputIsArrayConfig,
   InputPossibleNull,
   CustomFieldProps,
+  FieldTypes,
+  FieldSchemaConfig,
 } from "./core/ChacaSchema/interfaces/schema.interface.js";
 import {
   ExportFormat,
@@ -101,4 +103,6 @@ export type {
   CustomFieldProps,
   SequentialFieldConfig,
   RefFieldWhereProps,
+  FieldTypes,
+  FieldSchemaConfig,
 };

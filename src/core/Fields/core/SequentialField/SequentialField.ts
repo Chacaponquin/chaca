@@ -7,7 +7,7 @@ export class SequentialField<K = any> {
   private config: Required<SequentialFieldConfig>;
 
   constructor(valuesArray: Array<K>, config?: SequentialFieldConfig) {
-    if (Array.isArray(valuesArray)) {
+    if (Array.isArray(valuesArray) && valuesArray.length > 0) {
       this.valuesArray = valuesArray;
     } else {
       throw new ChacaError("The sequential field must be an array of values.");

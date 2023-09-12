@@ -55,6 +55,7 @@ export class SequentialValueNode extends ChacaTreeNode {
 
       const returnValue = this.valuesArray[this.index];
       this.index++;
+
       return returnValue;
     } else {
       if (this.index >= this.valuesArray.length) {
@@ -62,6 +63,7 @@ export class SequentialValueNode extends ChacaTreeNode {
       } else {
         const returnValue = this.valuesArray[this.index];
         this.index++;
+
         return returnValue;
       }
     }

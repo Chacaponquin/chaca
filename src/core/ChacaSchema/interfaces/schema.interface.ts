@@ -35,13 +35,6 @@ export type ResolverObject = {
   possibleNull: number;
 };
 
-export type FieldTypeInput<R = any> =
-  | SchemaField<R, any>
-  | ChacaSchema<R>
-  | RefField
-  | CustomField<any, R>
-  | EnumField<R>;
-
 export type ArrayLimitObject = { min: number; max: number };
 export type FieldIsArrayConfig = ArrayLimitObject | null;
 
@@ -50,7 +43,7 @@ export type InputPossibleNull = boolean | number;
 
 export type FieldObjectInput<R = any> = {
   /** Schema field type*/
-  type: FieldTypeInput<R>;
+  type: FieldTypes<R>;
   /** Array schema field configuration
    * - `boolean`- array length between 1 and 10
    * - `number` - specific array length

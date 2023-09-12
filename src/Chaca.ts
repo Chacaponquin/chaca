@@ -34,16 +34,19 @@ export class Chaca {
   /**
    * @param inputObj The object with the keys and type of each field
    * @example
-   * { id: schemas.id.numberRow(), image: schemas.image.film(), name: schemas.person.firstName() }
+   * {
+   *    id: schemas.id.numberRow(),
+   *    image: schemas.image.film(),
+   *    name: schemas.person.firstName()
+   * }
    */
-  schema<K = any>(inputObj: SchemaInput): ChacaSchema<K> {
-    const newSchema = new ChacaSchema<K>(inputObj);
+  schema<K = any>(input: SchemaInput): ChacaSchema<K> {
+    const newSchema = new ChacaSchema<K>(input);
     return newSchema;
   }
 
   /**
    * Define your ouwn type schema for create your data
-   * @param name schema field name
    * @param valueFunction function that returns a value
    */
   schemaField<K = any, T = any>(
