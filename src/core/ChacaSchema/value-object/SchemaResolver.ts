@@ -93,7 +93,7 @@ export class InputSchemaResolver {
   private validate(obj: SchemaInput): SchemaToResolve {
     this.validateObject(obj);
 
-    let schemaToSave = {} as SchemaToResolve;
+    const schemaToSave = {} as SchemaToResolve;
 
     for (const [key, field] of Object.entries(obj)) {
       const resolverObject = {
@@ -119,10 +119,7 @@ export class InputSchemaResolver {
         resolverObject.type = type;
       }
 
-      schemaToSave = {
-        ...schemaToSave,
-        [key]: resolverObject,
-      };
+      schemaToSave[key] = resolverObject;
     }
 
     return schemaToSave;

@@ -2,24 +2,35 @@ import { TryRefANoKeyFieldError } from "../../../../errors/ChacaError.js";
 import { SequenceFieldProps } from "../../../Fields/core/SequenceField/SequenceField.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 
+interface SequenceProps {
+  fieldTreeRoute: Array<string>;
+  config: Required<SequenceFieldProps>;
+  possibleNull: number;
+}
+
 export class SequenceValueNode extends ChacaTreeNode {
   private actualValue: number;
+  private _config: Required<SequenceFieldProps>;
+  private _possibleNull: number;
 
-  constructor(
-    fieldTreeRoute: Array<string>,
-    private config: Required<SequenceFieldProps>,
-  ) {
-    super({ isArray: null, fieldTreeRoute: fieldTreeRoute, possibleNull: 0 });
+  constructor({ config, fieldTreeRoute, possibleNull }: SequenceProps) {
+    super({
+      isArray: null,
+      fieldTreeRoute: fieldTreeRoute,
+      possibleNull: possibleNull,
+    });
+    this._config = config;
     this.actualValue = config.starsWith;
+    this._possibleNull = possibleNull;
   }
 
   public getConfig() {
-    return this.config;
+    return this._config;
   }
 
   public getNextValue() {
     const returnValue = this.actualValue;
-    this.actualValue += this.config.step;
+    this.actualValue += this._config.step;
 
     return returnValue;
   }
@@ -33,9 +44,10 @@ export class SequenceValueNode extends ChacaTreeNode {
   }
 
   public getNoArrayNode(): ChacaTreeNode {
-    return new SequenceValueNode(
-      this.getNodeConfig().fieldTreeRoute,
-      this.config,
-    );
+    return new SequenceValueNode({
+      fieldTreeRoute: this.getNodeConfig().fieldTreeRoute,
+      config: this._config,
+      possibleNull: this._possibleNull,
+    });
   }
 }

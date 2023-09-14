@@ -11,7 +11,7 @@ export abstract class ChacaTreeNode {
   public getResultNodeConfig(): FieldNodeProps {
     return {
       name: this.getNodeName(),
-      ispossibleNull: this.getpossibleNull(),
+      isPossibleNull: this.getpossibleNull(),
     };
   }
 

@@ -103,7 +103,11 @@ export class ChacaInputTree {
         config: object.type.config,
       });
     } else if (object.type instanceof SequenceFieldResolver) {
-      returnNode = new SequenceValueNode(actualRoute, object.type.getConfig());
+      returnNode = new SequenceValueNode({
+        fieldTreeRoute: actualRoute,
+        config: object.type.getConfig(),
+        possibleNull: object.possibleNull,
+      });
     } else if (object.type instanceof KeyFieldResolver) {
       if (object.type.fieldType instanceof SchemaFieldResolver) {
         const schemaValueNode = new SchemaValueNode(
@@ -117,10 +121,11 @@ export class ChacaInputTree {
 
         returnNode = new KeyValueNode(actualRoute, schemaValueNode);
       } else if (object.type.fieldType instanceof SequenceFieldResolver) {
-        const schemaValueNode = new SequenceValueNode(
-          actualRoute,
-          object.type.fieldType.getConfig(),
-        );
+        const schemaValueNode = new SequenceValueNode({
+          fieldTreeRoute: actualRoute,
+          config: object.type.fieldType.getConfig(),
+          possibleNull: 0,
+        });
 
         returnNode = new KeyValueNode(actualRoute, schemaValueNode);
       } else if (object.type.fieldType instanceof CustomFieldResolver) {

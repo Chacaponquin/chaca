@@ -3,7 +3,7 @@ import { SIMPLE_SCHEMA } from "../../utils/schemas/simpleSchema";
 
 const root = "./data";
 
-describe("#Export Test", () => {
+describe("# Export Test", () => {
   describe("export with incorrrect arguments", () => {
     it("No file name. Should throw an error", async () => {
       await expect(() =>

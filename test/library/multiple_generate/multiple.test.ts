@@ -2,7 +2,7 @@ import { ChacaError, TryRefANoKeyFieldError } from "../../../src";
 import { REF_REF_VALUE_DATA } from "./utils/ref-ref/schemas";
 import { REPEAT_NAMES_DATA } from "./utils/repeat_names/schemas";
 
-describe("Multiple Generation Test", () => {
+describe("# Multiple Generation Test", () => {
   describe("Incorrect declaration of reference field", () => {
     it("Repeat names in the declaration. Should throw an error", () => {
       expect(REPEAT_NAMES_DATA).toThrowError(ChacaError);

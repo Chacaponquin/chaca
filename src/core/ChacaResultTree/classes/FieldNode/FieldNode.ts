@@ -2,7 +2,7 @@ import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
 
 export interface FieldNodeProps {
   name: string;
-  ispossibleNull: number;
+  isPossibleNull: number;
 }
 
 export abstract class FieldNode {
@@ -29,7 +29,7 @@ export abstract class FieldNode {
   }
 
   private nullPosibility(): boolean {
-    const possibleNull = this.nodeConfig.ispossibleNull;
+    const possibleNull = this.nodeConfig.isPossibleNull;
     if (possibleNull > 0 && possibleNull < 100) {
       const randomVal = Math.floor(Math.random() * 101); // Genera un número aleatorio del 0 al 100
 
