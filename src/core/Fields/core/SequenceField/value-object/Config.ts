@@ -19,6 +19,8 @@ export class Config {
         } else {
           throw new ChacaError(`The sequence step must be an positive number`);
         }
+      } else {
+        throw new ChacaError(`The sequence step must be an positive number`);
       }
     }
   }

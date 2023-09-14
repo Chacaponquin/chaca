@@ -7,7 +7,6 @@ describe("# Sequence field tests", () => {
     });
 
     const data = schema.generate(5);
-
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
 
@@ -34,10 +33,16 @@ describe("# Sequence field tests", () => {
       test: { type: chaca.sequence(), possibleNull: 50 },
     });
 
-    console.log(schema.getSchemaObject());
+    const data = schema.generate(5);
+    expect(data.some((o) => o.test === null)).toBe(true);
+  });
+
+  it("Create a sequence field as key field", () => {
+    const schema = chaca.schema({
+      test: chaca.key(chaca.sequence()),
+    });
 
     const data = schema.generate(5);
-
-    expect(data.some((o) => o.test === null)).toBe(true);
+    expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
 });
