@@ -6,12 +6,13 @@
 
 Welcome to Chaca a powerful TypeScript library that revolutionizes mock data generation for testing and development processes. With Chaca, you can effortlessly generate realistic and diverse fake data to simulate different scenarios. Whether you're building a web application, a mobile app, or an API, Chaca's extensive support ensures seamless integration into your projects.
 
-What's more, Chaca allows you to export the generated data to various formats, making it easy to share and analyze. Boost your development workflow and eliminate tedious manual data creation with Chaca."
+What's more, Chaca allows you to export the generated data to various formats, making it easy to share and analyze. Boost your development workflow and eliminate tedious manual data creation with Chaca.
 
 ## 📦 Installation
 
 ```shell
 npm install chaca
+
 
 ```
 
@@ -66,6 +67,7 @@ await movieSchema.generateAndExport(20, {
   format: "json",
   location: "./folder",
 });
+
 ```
 
 ## 🕹️ CLI
