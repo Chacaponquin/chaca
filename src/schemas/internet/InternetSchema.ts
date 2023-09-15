@@ -272,31 +272,35 @@ export class InternetSchema {
 
       const ran = this.dataTypeSchema.int().getValue({ min: 0, max: 2 });
 
+      const genNumbers = (): string => {
+        const countNumbers = this.dataTypeSchema
+          .int()
+          .getValue({ min: 1, max: 5 });
+
+        return Array.from({ length: countNumbers })
+          .map(() => "#")
+          .join("");
+      };
+
       let result: string;
-      switch (ran) {
-        case 0:
-          result = `${firstName}${lastName}${this.utils.replaceSymbols("###")}`;
-          break;
+      if (ran === 0) {
+        const numbers = this.utils.replaceSymbols(genNumbers());
+        result = `${firstName}${lastName}${numbers}`;
+      } else if (ran === 1) {
+        const symbol = this.dataTypeSchema.specialCharacter().getValue();
+        result = `${firstName}${symbol}${lastName}`;
+      } else if (ran === 2) {
+        const symbol = this.dataTypeSchema.specialCharacter().getValue();
+        result = `${symbol}${firstName}${lastName}`;
+      } else if (ran === 3) {
+        const symbol = this.dataTypeSchema.specialCharacter().getValue();
+        const symbol2 = this.dataTypeSchema.specialCharacter().getValue();
+        result = `${symbol}${firstName}${lastName}${symbol2}`;
+      } else {
+        const symbol = this.dataTypeSchema.specialCharacter().getValue();
+        const number = this.utils.replaceSymbols(genNumbers());
 
-        case 1:
-          result = `${firstName}${this.utils.oneOfArray([
-            ".",
-            "_",
-          ])}${lastName}`;
-          break;
-
-        case 2:
-          result = result = `${firstName}${this.utils.oneOfArray([
-            ".",
-            "_",
-          ])}${lastName}${this.utils.replaceSymbols("###")}`;
-          break;
-
-        default:
-          result = result = `${firstName}${lastName}${this.utils.replaceSymbols(
-            "###",
-          )}`;
-          break;
+        result = `${firstName}${symbol}${lastName}${number}`;
       }
 
       return result;
