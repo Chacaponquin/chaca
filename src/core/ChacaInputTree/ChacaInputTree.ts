@@ -101,6 +101,7 @@ export class ChacaInputTree {
         fieldTreeRoute: actualRoute,
         valuesArray: object.type.valuesArray,
         config: object.type.config,
+        possibleNull: object.possibleNull,
       });
     } else if (object.type instanceof SequenceFieldResolver) {
       returnNode = new SequenceValueNode({
@@ -204,16 +205,16 @@ export class ChacaInputTree {
     this.refToResolve.forEach((r) => r.searchSchemaRef());
   }
 
-  public getpossibleNullNodes(): Array<ChacaTreeNode> {
+  public getPossibleNullNodes(): Array<ChacaTreeNode> {
     const nodes = [] as Array<ChacaTreeNode>;
 
     this.nodes.forEach((n) => {
-      if (n.getpossibleNull() > 0) {
+      if (n.getPossibleNull() > 0) {
         nodes.push(n);
       }
 
       if (n instanceof MixedValueNode) {
-        const subNodes = n.getpossibleNullNodes();
+        const subNodes = n.getPossibleNullNodes();
         subNodes.forEach((s) => nodes.push(s));
       }
     });

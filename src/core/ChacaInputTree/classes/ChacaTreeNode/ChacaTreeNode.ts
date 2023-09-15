@@ -11,12 +11,11 @@ export abstract class ChacaTreeNode {
   public getResultNodeConfig(): FieldNodeProps {
     return {
       name: this.getNodeName(),
-      isPossibleNull: this.getpossibleNull(),
+      isPossibleNull: this.getPossibleNull(),
     };
   }
 
   public abstract getNoArrayNode(): ChacaTreeNode;
-
   public abstract checkIfFieldExists(fieldTreeRoute: Array<string>): boolean;
 
   public getNodeName(): string {
@@ -36,7 +35,7 @@ export abstract class ChacaTreeNode {
     return this.nodeConfig.fieldTreeRoute.join(".");
   }
 
-  public getpossibleNull() {
+  public getPossibleNull() {
     return this.nodeConfig.possibleNull;
   }
 }

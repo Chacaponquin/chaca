@@ -15,12 +15,12 @@ describe("# Sequential Field test", () => {
     ).toThrow(ChacaError);
   });
 
-  it("Try create an possible null sequence field", () => {
+  it("Try create an possible null sequential field", () => {
     const schema = chaca.schema({
       test: { type: chaca.sequential([1, 2, 3, 4, 5]), possibleNull: 50 },
     });
 
-    const data = schema.generate(5);
+    const data = schema.generate(10);
 
     expect(data.map((d) => d.test).some((v) => v === null)).toBe(true);
   });

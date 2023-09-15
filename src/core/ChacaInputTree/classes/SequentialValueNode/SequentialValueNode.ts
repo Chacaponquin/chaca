@@ -9,6 +9,7 @@ export interface SequentialValueNodeProps {
   fieldTreeRoute: Array<string>;
   valuesArray: Array<unknown>;
   config: Required<SequentialFieldConfig>;
+  possibleNull: number;
 }
 
 export class SequentialValueNode extends ChacaTreeNode {
@@ -16,15 +17,18 @@ export class SequentialValueNode extends ChacaTreeNode {
 
   private valuesArray: Array<unknown>;
   private config: Required<SequentialFieldConfig>;
+  private possibleNull: number;
 
   constructor({
     config,
     fieldTreeRoute,
     valuesArray,
+    possibleNull,
   }: SequentialValueNodeProps) {
-    super({ fieldTreeRoute, isArray: null, possibleNull: 0 });
+    super({ fieldTreeRoute, isArray: null, possibleNull: possibleNull });
     this.valuesArray = valuesArray;
     this.config = config;
+    this.possibleNull = possibleNull;
 
     if (this.valuesArray.length === 0) {
       throw new EmptySequentialValuesError(this.getFieldRoute());
@@ -36,6 +40,7 @@ export class SequentialValueNode extends ChacaTreeNode {
       fieldTreeRoute: this.getFieldRoute(),
       valuesArray: this.valuesArray,
       config: this.config,
+      possibleNull: this.possibleNull,
     });
   }
 

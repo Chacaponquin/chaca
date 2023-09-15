@@ -402,7 +402,7 @@ export class SQLGenerator extends Generator {
       const allRefs = r.getRefNodes();
       allRefs.forEach((r) => this.schemasForeignKeys.push(r));
 
-      const allpossibleNull = r.getpossibleNullNodes();
+      const allpossibleNull = r.getPossibleNullNodes();
       allpossibleNull.forEach((n) => this.schemaspossibleNull.push(n));
     });
 

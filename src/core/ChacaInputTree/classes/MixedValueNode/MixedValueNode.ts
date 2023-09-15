@@ -25,16 +25,16 @@ export class MixedValueNode extends ChacaTreeNode {
     );
   }
 
-  public getpossibleNullNodes(): Array<ChacaTreeNode> {
+  public getPossibleNullNodes(): Array<ChacaTreeNode> {
     const nodes = [] as Array<ChacaTreeNode>;
 
     this.nodes.forEach((n) => {
-      if (n.getpossibleNull() > 0) {
+      if (n.getPossibleNull() > 0) {
         nodes.push(n);
       }
 
       if (n instanceof MixedValueNode) {
-        const subNodes = n.getpossibleNullNodes();
+        const subNodes = n.getPossibleNullNodes();
         subNodes.forEach((s) => nodes.push(s));
       }
     });
