@@ -1,9 +1,9 @@
-import { ChacaError, EmptySequentialValuesError, chaca } from "../../../src";
 import {
-  CORRECT_LOOP_SEQUENTIAL_SCHEMA,
-  CORRECT_SEQUENTIAL_SCHEMA,
-} from "./schemas/correct_schema";
-import { TOO_MUCH_VALUES_SEQUENTIAL_DATA } from "./schemas/too_much_values_schema";
+  ChacaError,
+  EmptySequentialValuesError,
+  chaca,
+  schemas,
+} from "../../../src";
 
 describe("# Sequential Field test", () => {
   it("Try create an array sequential field. Should throw an error", () => {
@@ -25,7 +25,11 @@ describe("# Sequential Field test", () => {
   });
 
   it("Correct define of a schema with sequential field", () => {
-    const CORRECT_SEQUENTIAL_DATA = CORRECT_SEQUENTIAL_SCHEMA.generate(4);
+    const CORRECT_SEQUENTIAL_DATA = chaca
+      .schema({
+        favoriteNumber: chaca.sequential([1, 2, 3, 4]),
+      })
+      .generate(4);
 
     expect(CORRECT_SEQUENTIAL_DATA.length).toBe(4);
     expect(CORRECT_SEQUENTIAL_DATA[0].favoriteNumber).toBe(1);
@@ -35,7 +39,11 @@ describe("# Sequential Field test", () => {
   });
 
   it("Correct define of a schema with sequential loop field", () => {
-    const DATA = CORRECT_LOOP_SEQUENTIAL_SCHEMA.generate(6);
+    const DATA = chaca
+      .schema({
+        favoriteNumber: chaca.sequential([1, 2, 3, 4], { loop: true }),
+      })
+      .generate(6);
 
     expect(DATA.length).toBe(6);
     expect(DATA[0].favoriteNumber).toBe(1);
@@ -47,6 +55,16 @@ describe("# Sequential Field test", () => {
   });
 
   it("Too much sequential values test", () => {
+    const TOO_MUCH_VALUES_SEQUENTIAL_DATA = chaca
+      .schema({
+        id: schemas.id.uuid(),
+        name: schemas.person.fullName(),
+        favoriteNumber: chaca.sequential([
+          1, 2, 3, 4, 5, 4, 5, 6, 6, 5, 1, 5, 5,
+        ]),
+      })
+      .generate(4);
+
     expect(TOO_MUCH_VALUES_SEQUENTIAL_DATA.length).toBe(4);
     expect(TOO_MUCH_VALUES_SEQUENTIAL_DATA[0].favoriteNumber).toBe(1);
     expect(TOO_MUCH_VALUES_SEQUENTIAL_DATA[1].favoriteNumber).toBe(2);
