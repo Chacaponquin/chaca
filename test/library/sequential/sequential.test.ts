@@ -3,7 +3,6 @@ import {
   CORRECT_LOOP_SEQUENTIAL_SCHEMA,
   CORRECT_SEQUENTIAL_SCHEMA,
 } from "./schemas/correct_schema";
-import { FEW_VALUES_SEQUENTIAL_SCHEMA } from "./schemas/incorrect_schemas";
 import { TOO_MUCH_VALUES_SEQUENTIAL_DATA } from "./schemas/too_much_values_schema";
 
 describe("# Sequential Field test", () => {
@@ -17,10 +16,10 @@ describe("# Sequential Field test", () => {
 
   it("Try create an possible null sequential field", () => {
     const schema = chaca.schema({
-      test: { type: chaca.sequential([1, 2, 3, 4, 5]), possibleNull: 50 },
+      test: { type: chaca.sequential([1, 2, 3, 4, 5]), possibleNull: 70 },
     });
 
-    const data = schema.generate(10);
+    const data = schema.generate(5);
 
     expect(data.map((d) => d.test).some((v) => v === null)).toBe(true);
   });
@@ -56,9 +55,9 @@ describe("# Sequential Field test", () => {
   });
 
   it("Not enought values for the generate data. Should return an error", () => {
-    expect(() => FEW_VALUES_SEQUENTIAL_SCHEMA.generate(10)).toThrowError(
-      EmptySequentialValuesError,
-    );
+    expect(() =>
+      chaca.schema({ test: chaca.sequential([1, 2]) }).generate(10),
+    ).toThrowError(EmptySequentialValuesError);
   });
 
   it("Pass a string as a the sequential values. Should return an error", () => {

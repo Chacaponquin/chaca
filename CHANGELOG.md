@@ -8,6 +8,11 @@
 - Add more values for `manufacturer` and `model` options in `vehicle` schema
 - Add `language` option in `person` schema
 
+### 🪛 Fix
+
+- Allow `possibleNull` config for sequence and sequential fields
+- Add more results for `internet.userName`
+
 ## chaca@1.6.0
 
 ### 🌚 Features
@@ -42,7 +47,6 @@ schema.generate(5);
   { favoriteNumber: 2 },
 ];
 */
-
 ```
 
 - Remove names from `schema field` declaration
@@ -57,7 +61,6 @@ const customField = chaca.schemaField("customField", (args) => {
 const customField = chaca.schemaField((args) => {
   // return value
 });
-
 ```
 
 ### 🪛 Fix

@@ -12,8 +12,6 @@ What's more, Chaca allows you to export the generated data to various formats, m
 
 ```shell
 npm install chaca
-
-
 ```
 
 ## 📘 Documentation
@@ -67,7 +65,6 @@ await movieSchema.generateAndExport(20, {
   format: "json",
   location: "./folder",
 });
-
 ```
 
 ## 🕹️ CLI
