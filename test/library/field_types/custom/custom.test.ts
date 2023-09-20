@@ -1,7 +1,7 @@
-import { chaca, schemas } from "../../../src";
+import { chaca, schemas } from "../../../../src";
 
 describe("# Custom field tests", () => {
-  it("custom function return a string", () => {
+  it("Custom function return a string", () => {
     const schema = chaca.schema({
       id: { type: schemas.id.mongodbID() },
       custom: {
@@ -13,7 +13,7 @@ describe("# Custom field tests", () => {
     expect(docs["custom"]).toBe("Foo");
   });
 
-  it("custom function return undefined. Should return null as value", () => {
+  it("Custom function return undefined. Should return null as value", () => {
     const schema = chaca.schema({
       id: { type: schemas.id.mongodbID() },
       custom: {
@@ -25,7 +25,7 @@ describe("# Custom field tests", () => {
     expect(docs["custom"]).toBe(null);
   });
 
-  it("custom function access to this property", () => {
+  it("Custom function access to this property", () => {
     const schema = chaca.schema({
       id: { type: schemas.id.mongodbID() },
       custom: {
@@ -40,7 +40,7 @@ describe("# Custom field tests", () => {
     expect(docs["custom"]).toBe(docs["id"]);
   });
 
-  it("custom function in a nested schema", () => {
+  it("Custom function in a nested schema", () => {
     const schema = chaca.schema({
       id: schemas.id.mongodbID(),
       user: chaca.schema({
@@ -59,7 +59,7 @@ describe("# Custom field tests", () => {
     expect(doc["user"]["followersInf"][0]).toBe(doc["id"]);
   });
 
-  it("custom function in a nested schema inside an other nested schema", () => {
+  it("Custom function in a nested schema inside an other nested schema", () => {
     const schema = chaca.schema({
       id: schemas.id.mongodbID(),
       user: chaca.schema({
