@@ -1,4 +1,4 @@
-import { chaca } from "../../../src";
+import { chaca } from "../../../../src";
 
 describe("# Schema Field test", () => {
   it("Create an schema and use it in creation of data. Should return always 'a'", () => {

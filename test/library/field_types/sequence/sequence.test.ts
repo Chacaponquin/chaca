@@ -1,4 +1,4 @@
-import { ChacaError, chaca } from "../../../src";
+import { ChacaError, chaca } from "../../../../src";
 
 describe("# Sequence field tests", () => {
   it("Simple sequence definition", () => {

@@ -1,3 +1,4 @@
+import { SchemaFieldType } from "../../../ChacaSchema/interfaces/schema.interface.js";
 import {
   FieldRefInputConfig,
   FieldToRef,
@@ -12,10 +13,11 @@ export interface FieldToRefObject {
   where: RefFieldWhere | null;
 }
 
-export class RefField {
+export class RefField extends SchemaFieldType {
   private refField: FieldToRefObject;
 
   constructor(refField: FieldToRef, config?: FieldRefInputConfig) {
+    super();
     this.refField = this.validate(refField, config);
   }
 

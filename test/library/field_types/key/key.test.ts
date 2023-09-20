@@ -1,4 +1,4 @@
-import { ChacaError, chaca } from "../../../src";
+import { ChacaError, chaca } from "../../../../src";
 
 describe("# Key fields tests", () => {
   it("Define an array key field. Should throw an error", () => {

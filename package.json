@@ -35,6 +35,7 @@
     "build:esm": "tsc --p tsconfig.esm.json",
     "build:cjs": "tsc --p tsconfig.cjs.json",
     "test": "jest",
+    "test:field_types": "jest --testPathPattern=test/library/field_types",
     "test:cases": "jest --testPathPattern=test/library/cases",
     "test:schemas": "jest --testPathPattern=test/schemas",
     "test:library": "jest --testPathPattern=test/library",

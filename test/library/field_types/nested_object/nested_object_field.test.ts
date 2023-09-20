@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../src";
+import { chaca, schemas } from "../../../../src";
 
 describe("# Nested Object field tests", () => {
   it("should return an object with user field as an object", () => {

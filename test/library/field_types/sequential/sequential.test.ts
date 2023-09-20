@@ -3,7 +3,7 @@ import {
   EmptySequentialValuesError,
   chaca,
   schemas,
-} from "../../../src";
+} from "../../../../src";
 
 describe("# Sequential Field test", () => {
   it("Try create an array sequential field. Should throw an error", () => {

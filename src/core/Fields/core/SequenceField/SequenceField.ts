@@ -1,10 +1,12 @@
+import { SchemaFieldType } from "../../../ChacaSchema/interfaces/schema.interface.js";
 import { SequenceFieldProps } from "./interfaces/sequence.interface.js";
 import { Config } from "./value-object/index.js";
 
-export class SequenceField {
+export class SequenceField extends SchemaFieldType {
   private config: Required<SequenceFieldProps>;
 
   constructor(config?: SequenceFieldProps) {
+    super();
     this.config = new Config(config).value();
   }
 

@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../src";
+import { chaca, schemas } from "../../../../src";
 
 describe("# Array Field tests", () => {
   it("Pass an empty object. Should return an array with length between 1 and 10", () => {

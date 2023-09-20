@@ -19,6 +19,7 @@ import {
 import { IResolver } from "../../Resolvers/interfaces/resolvers.interface.js";
 import { ChacaSchema } from "../ChacaSchema.js";
 import {
+  CustomField,
   FieldObjectInput,
   FieldTypes,
   ResolverObject,
@@ -49,29 +50,31 @@ export class InputSchemaResolver {
     let returnResolver: IResolver;
 
     if (config) {
-      if (config instanceof ChacaSchema) {
-        returnResolver = new MixedFieldResolver(config);
-      } else if (typeof config === "function") {
-        returnResolver = new CustomFieldResolver(config);
-      } else if (config instanceof SchemaField) {
-        returnResolver = new SchemaFieldResolver(config);
-      } else if (config instanceof RefField) {
-        returnResolver = new RefFieldResolver(config.getRefField());
-      } else if (config instanceof SequentialField) {
-        returnResolver = new SequentialFieldResolver(
-          config.getValuesArray(),
-          config.getConfig(),
-        );
-      } else if (config instanceof KeyField) {
-        returnResolver = new InputKeyField(config).resolver();
-      } else if (config instanceof SequenceField) {
-        returnResolver = new SequenceFieldResolver(config.getConfig());
-      } else if (config instanceof EnumField) {
-        returnResolver = new InputEnumField({
-          enumField: config,
-        }).resolver();
+      if (typeof config === "function") {
+        returnResolver = new CustomFieldResolver(config as CustomField);
       } else {
-        throw new ChacaError(`Is not a valid field type`);
+        if (config instanceof ChacaSchema) {
+          returnResolver = new MixedFieldResolver(config);
+        } else if (config instanceof SchemaField) {
+          returnResolver = new SchemaFieldResolver(config);
+        } else if (config instanceof RefField) {
+          returnResolver = new RefFieldResolver(config.getRefField());
+        } else if (config instanceof SequentialField) {
+          returnResolver = new SequentialFieldResolver(
+            config.getValuesArray(),
+            config.getConfig(),
+          );
+        } else if (config instanceof KeyField) {
+          returnResolver = new InputKeyField(config).resolver();
+        } else if (config instanceof SequenceField) {
+          returnResolver = new SequenceFieldResolver(config.getConfig());
+        } else if (config instanceof EnumField) {
+          returnResolver = new InputEnumField({
+            enumField: config,
+          }).resolver();
+        } else {
+          throw new ChacaError(`Is not a valid field type`);
+        }
       }
     } else {
       throw new ChacaError(`Is not a valid field type`);

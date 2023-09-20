@@ -1,4 +1,4 @@
-import { ChacaError, chaca } from "../../../src";
+import { ChacaError, chaca } from "../../../../src";
 
 describe("# Enum field tests", () => {
   it("with empty array as argument. Should throw an error", () => {

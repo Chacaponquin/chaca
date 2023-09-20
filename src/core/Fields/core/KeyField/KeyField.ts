@@ -1,6 +1,9 @@
 import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SchemaField } from "../../../../schemas/SchemaField.js";
-import { CustomField } from "../../../ChacaSchema/interfaces/schema.interface.js";
+import {
+  CustomField,
+  SchemaFieldType,
+} from "../../../ChacaSchema/interfaces/schema.interface.js";
 import { RefField } from "../RefField/RefField.js";
 import { SequenceField } from "../SequenceField/SequenceField.js";
 
@@ -17,10 +20,11 @@ export type KeyFieldProps<A, C> =
   | SequenceField
   | CustomField<C, KeyAllowDataTypes>;
 
-export class KeyField<A = any, C = any> {
+export class KeyField<A = any, C = any> extends SchemaFieldType {
   private fieldType: KeyFieldProps<A, C>;
 
   constructor(fieldType: KeyFieldProps<A, C>) {
+    super();
     this.fieldType = this.validate(fieldType);
   }
 

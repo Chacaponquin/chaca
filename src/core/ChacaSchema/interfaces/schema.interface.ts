@@ -1,24 +1,25 @@
-import { SchemaField } from "../../../schemas/SchemaField.js";
-import { ChacaSchema } from "../ChacaSchema.js";
 import { DatasetStore } from "../../DatasetStore/DatasetStore.js";
-import {
-  EnumField,
-  KeyField,
-  RefField,
-  SequenceField,
-  SequentialField,
-} from "../../Fields/core/index.js";
 import { IResolver } from "../../Resolvers/interfaces/resolvers.interface.js";
 
-export type FieldTypes<R = any> =
-  | CustomField<any, R>
-  | SchemaField<R, any>
-  | ChacaSchema<R>
-  | RefField
-  | EnumField<R>
-  | SequentialField
-  | KeyField
-  | SequenceField;
+export abstract class SchemaFieldType {}
+
+export type FieldTypes<R = any> = CustomField<any, R> | SchemaFieldType;
+
+export type FieldObjectInput<R = any> = {
+  /** Schema field type*/
+  type: FieldTypes<R>;
+  /** Array schema field configuration
+   * - `boolean`- array length between 1 and 10
+   * - `number` - specific array length
+   * - `config.min` and `config.max` - limits of array length
+   */
+  isArray?: InputIsArrayConfig;
+  /** Null schema field configuration
+   * - `boolean` - `true` 50% chances to be null, `false` 0% chances
+   * - `number` specific porcent of chances
+   */
+  possibleNull?: InputPossibleNull;
+};
 
 export type FieldSchemaConfig<R = any> = FieldObjectInput<R> | FieldTypes<R>;
 
@@ -40,22 +41,6 @@ export type FieldIsArrayConfig = ArrayLimitObject | null;
 
 export type InputIsArrayConfig = boolean | number | Partial<ArrayLimitObject>;
 export type InputPossibleNull = boolean | number;
-
-export type FieldObjectInput<R = any> = {
-  /** Schema field type*/
-  type: FieldTypes<R>;
-  /** Array schema field configuration
-   * - `boolean`- array length between 1 and 10
-   * - `number` - specific array length
-   * - `config.min` and `config.max` - limits of array length
-   */
-  isArray?: InputIsArrayConfig;
-  /** Null schema field configuration
-   * - `boolean` - `true` 50% chances to be null, `false` 0% chances
-   * - `number` specific porcent of chances
-   */
-  possibleNull?: InputPossibleNull;
-};
 
 /**
  * Function that returns a value depending on the state of the current document and the dataset

@@ -1,4 +1,4 @@
-import { ChacaError, ChacaSchema, chaca } from "../../../src";
+import { ChacaError, ChacaSchema, chaca } from "../../../../src";
 
 function valid(schema: ChacaSchema, step: number): boolean {
   const data = schema.generate(10);
