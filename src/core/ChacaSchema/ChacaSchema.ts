@@ -1,4 +1,3 @@
-import { IdSchema } from "../../schemas/id/IdSchema.js";
 import { ExportResolver } from "../Export/ExportResolver.js";
 import { SchemaInput, SchemaToResolve } from "./interfaces/schema.interface.js";
 import { FileConfig } from "../Export/interfaces/export.interface.js";
@@ -6,14 +5,14 @@ import { InputSchemaResolver } from "./value-object/SchemaResolver.js";
 import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
 
 export class ChacaSchema<K = any> {
-  private schemaObj: SchemaToResolve;
+  private schemaResolver: SchemaToResolve;
 
   constructor(inputObj: SchemaInput) {
-    this.schemaObj = new InputSchemaResolver(inputObj).schema();
+    this.schemaResolver = new InputSchemaResolver(inputObj).schema();
   }
 
   public getSchemaObject() {
-    return this.schemaObj;
+    return this.schemaResolver;
   }
 
   /**
@@ -48,11 +47,9 @@ export class ChacaSchema<K = any> {
    * @param cantDocuments number of documents that you want to create
    */
   public generate(cantDocuments: number): K[] {
-    const idSchema = new IdSchema();
-
     const schemaToResolve = new SchemaResolver<K>({
-      schemaName: idSchema.uuid().getValue(),
-      schemaObject: this.schemaObj,
+      schemaName: "Schema",
+      schemaObject: this.schemaResolver,
       countDoc: cantDocuments,
       schemaIndex: 0,
       consoleVerbose: false,

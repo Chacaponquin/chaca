@@ -31,7 +31,6 @@ import { FieldPossibleNull } from "./FieldPossibleNull.js";
 import { InputKeyField } from "./Key.js";
 
 interface Filter {
-  key?: string;
   config?: FieldTypes;
 }
 
@@ -46,15 +45,7 @@ export class InputSchemaResolver {
     return this._schema;
   }
 
-  private validateObject(obj?: SchemaInput): void {
-    if (!obj || (typeof obj === "object" && Array.isArray(obj))) {
-      throw new ChacaError(
-        "Your schema has to be an object with the fields descriptions",
-      );
-    }
-  }
-
-  private filter({ config, key }: Filter): IResolver {
+  private filter({ config }: Filter): IResolver {
     let returnResolver: IResolver;
 
     if (config) {
@@ -77,7 +68,6 @@ export class InputSchemaResolver {
         returnResolver = new SequenceFieldResolver(config.getConfig());
       } else if (config instanceof EnumField) {
         returnResolver = new InputEnumField({
-          key,
           enumField: config,
         }).resolver();
       } else {
@@ -91,8 +81,6 @@ export class InputSchemaResolver {
   }
 
   private validate(obj: SchemaInput): SchemaToResolve {
-    this.validateObject(obj);
-
     const schemaToSave = {} as SchemaToResolve;
 
     for (const [key, field] of Object.entries(obj)) {
@@ -103,7 +91,7 @@ export class InputSchemaResolver {
 
       if ("type" in field) {
         const fieldObject = field as FieldObjectInput;
-        const type = this.filter({ config: fieldObject.type, key });
+        const type = this.filter({ config: fieldObject.type });
 
         resolverObject.type = type;
 
@@ -115,7 +103,7 @@ export class InputSchemaResolver {
 
         this.validateResolver(resolverObject);
       } else {
-        const type = this.filter({ config: field, key });
+        const type = this.filter({ config: field });
         resolverObject.type = type;
       }
 

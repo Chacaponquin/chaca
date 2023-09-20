@@ -3,24 +3,23 @@ import { EnumField } from "../../Fields/core/EnumField/EnumField.js";
 import { EnumFieldResolver } from "../../Resolvers/core/index.js";
 
 interface EnumProps<R> {
-  key?: string;
   enumField: EnumField<R>;
 }
 
 export class InputEnumField<R> {
   private _resolver: EnumFieldResolver<R>;
 
-  constructor({ enumField, key }: EnumProps<R>) {
+  constructor({ enumField }: EnumProps<R>) {
     if (Array.isArray(enumField.valuesArray)) {
       if (enumField.valuesArray.length > 0) {
         this._resolver = new EnumFieldResolver(enumField.valuesArray);
       } else
         throw new ChacaError(
-          `For the field ${key} you must provide some values to choce`,
+          `You must provide some values to choce in a enum field`,
         );
     } else {
       throw new ChacaError(
-        `If the field ${key} is a enum type so this one muste be an array of values`,
+        `If your field is a enum so this one must be an array of values`,
       );
     }
   }
