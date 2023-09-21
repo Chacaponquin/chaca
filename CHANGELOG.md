@@ -1,3 +1,10 @@
+## chaca@1.6.2
+
+### 🪛 Fix
+
+- Change `internet.userName` to `internet.username`
+- Fix `intener.username` and `internet.email` values generator
+
 ## chaca@1.6.1
 
 ### 🌚 Features

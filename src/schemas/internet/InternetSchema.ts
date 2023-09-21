@@ -55,7 +55,7 @@ type UrlArgs = {
   secure?: boolean;
 };
 
-type UserNameArgs = {
+type usernameArgs = {
   firstName?: string;
   lastName?: string;
 };
@@ -159,12 +159,12 @@ export class InternetSchema {
           ? a.provider
           : this.utils.oneOfArray(this.constants.emailProviders);
 
-      const userName = this.userName({
+      const username = this.username({
         firstName: a.firstName,
         lastName: a.lastName,
       }).getValue();
 
-      const email = `${userName}@${provider}`;
+      const email = `${username}@${provider}.com`;
 
       return email.toLowerCase();
     }, args || {});
@@ -255,14 +255,14 @@ export class InternetSchema {
    * Returns a profile user name
    * @param args.firstName owner first name
    * @param args.lastName owner last name
-   * @example schemas.internet.userName() // Schema
+   * @example schemas.internet.username() // Schema
    * @example
-   * schemas.internet.userName().getValue() // 'juan527134'
-   * schemas.internet.userName().getValue({firstName: 'pedro', lastName: 'Scott'}) // 'pedro_scott'
+   * schemas.internet.username().getValue() // 'juan527134'
+   * schemas.internet.username().getValue({firstName: 'pedro', lastName: 'Scott'}) // 'pedro_scott'
    * @returns string
    */
-  userName(args?: UserNameArgs) {
-    return new SchemaField<string, UserNameArgs>((a) => {
+  username(args?: usernameArgs) {
+    return new SchemaField<string, usernameArgs>((a) => {
       const firstName =
         typeof a.firstName === "string"
           ? this.utils.camelCase(a.firstName)
@@ -270,16 +270,22 @@ export class InternetSchema {
       const lastName =
         typeof a.lastName === "string" ? this.utils.camelCase(a.lastName) : "";
 
-      const ran = this.dataTypeSchema.int().getValue({ min: 0, max: 2 });
+      const ran = this.dataTypeSchema.int().getValue({ min: 0, max: 3 });
 
       const genNumbers = (): string => {
         const countNumbers = this.dataTypeSchema
           .int()
           .getValue({ min: 1, max: 5 });
 
-        return Array.from({ length: countNumbers })
-          .map(() => "#")
-          .join("");
+        return this.utils.replaceSymbols(
+          Array.from({ length: countNumbers })
+            .map(() => "#")
+            .join(""),
+        );
+      };
+
+      const genSymbol = (): string => {
+        return this.utils.oneOfArray([".", "-", "_"]);
       };
 
       let result: string;
@@ -287,18 +293,14 @@ export class InternetSchema {
         const numbers = this.utils.replaceSymbols(genNumbers());
         result = `${firstName}${lastName}${numbers}`;
       } else if (ran === 1) {
-        const symbol = this.dataTypeSchema.specialCharacter().getValue();
+        const symbol = genSymbol();
         result = `${firstName}${symbol}${lastName}`;
       } else if (ran === 2) {
-        const symbol = this.dataTypeSchema.specialCharacter().getValue();
-        result = `${symbol}${firstName}${lastName}`;
-      } else if (ran === 3) {
-        const symbol = this.dataTypeSchema.specialCharacter().getValue();
-        const symbol2 = this.dataTypeSchema.specialCharacter().getValue();
-        result = `${symbol}${firstName}${lastName}${symbol2}`;
+        const numbers = genNumbers();
+        result = `${firstName}${numbers}${lastName}`;
       } else {
-        const symbol = this.dataTypeSchema.specialCharacter().getValue();
-        const number = this.utils.replaceSymbols(genNumbers());
+        const symbol = genSymbol();
+        const number = genNumbers();
 
         result = `${firstName}${symbol}${lastName}${number}`;
       }

@@ -2,7 +2,7 @@ const { chaca, schemas } = require("../../lib/cjs/index");
 
 const USER_SCHEMA = chaca.schema({
   id: chaca.key(schemas.id.uuid()),
-  username: schemas.internet.userName(),
+  username: schemas.internet.username(),
 });
 
 const POST_SCHEMA = chaca.schema({

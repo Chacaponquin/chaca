@@ -6,7 +6,7 @@ describe("# Nested Object field tests", () => {
       id: schemas.id.mongodbID(),
       image: schemas.image.people(),
       user: chaca.schema({
-        userName: schemas.internet.userName(),
+        username: schemas.internet.username(),
         image: schemas.image.fashion(),
         custom: (a) => {},
       }),
@@ -14,7 +14,7 @@ describe("# Nested Object field tests", () => {
 
     const doc = schema.generateObject();
 
-    expect(doc["user"]).toHaveProperty("userName");
+    expect(doc["user"]).toHaveProperty("username");
     expect(doc["user"]).toHaveProperty("image");
   });
 
@@ -23,7 +23,7 @@ describe("# Nested Object field tests", () => {
       id: schemas.id.mongodbID(),
       image: schemas.image.people(),
       user: chaca.schema({
-        userName: schemas.internet.userName(),
+        username: schemas.internet.username(),
         images: { type: schemas.image.fashion(), isArray: 10 },
       }),
     });
@@ -33,11 +33,11 @@ describe("# Nested Object field tests", () => {
     expect(doc.images.length).toBe(10);
   });
 
-  it("should return an object with a user field as an array of objects with image and userName property", () => {
+  it("should return an object with a user field as an array of objects with image and username property", () => {
     const schema = chaca.schema({
       user: {
         type: chaca.schema({
-          userName: schemas.person.firstName(),
+          username: schemas.person.firstName(),
           image: schemas.image.food(),
         }),
         isArray: 20,

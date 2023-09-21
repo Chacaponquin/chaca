@@ -2,7 +2,7 @@ const { chaca, schemas } = require("../../lib/cjs/index.js");
 
 module.exports = chaca.schema({
   id: schemas.id.uuid(),
-  username: schemas.internet.userName(),
+  username: schemas.internet.username(),
   image: { type: schemas.image.people(), possibleNull: 50 },
   posts: {
     type: schemas.id.uuid(),
