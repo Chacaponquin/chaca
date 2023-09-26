@@ -6,7 +6,7 @@ export class ChacaError extends Error {
 }
 
 export class EmptySequentialValuesError extends ChacaError {
-  constructor(fieldRoute: Array<string>) {
+  constructor(public readonly fieldRoute: Array<string>) {
     super(
       `There are no more sequential values for the field '${fieldRoute.join(
         ".",
@@ -18,7 +18,7 @@ export class EmptySequentialValuesError extends ChacaError {
 }
 
 export class TryRefANoKeyFieldError extends ChacaError {
-  constructor(fieldRoute: Array<string>) {
+  constructor(public readonly fieldRoute: Array<string>) {
     super(
       `The field '${fieldRoute.join(
         ".",
@@ -30,7 +30,10 @@ export class TryRefANoKeyFieldError extends ChacaError {
 }
 
 export class NotEnoughValuesForRefError extends ChacaError {
-  constructor(refFieldRoute: Array<string>, keyFieldRoute: Array<string>) {
+  constructor(
+    public readonly refFieldRoute: Array<string>,
+    public readonly keyFieldRoute: Array<string>,
+  ) {
     super(
       `Not enough values of '${keyFieldRoute.join(
         ".",
@@ -45,5 +48,15 @@ export class CyclicAccessDataError extends ChacaError {
   constructor(message: string) {
     super(message);
     this.name = "ChacaError.CyclicAccessDataError";
+  }
+}
+
+export class NotExistFieldError extends ChacaError {
+  constructor(
+    public readonly fieldRoute: string,
+    public readonly refFieldRoute: string,
+  ) {
+    super(`From ${fieldRoute}, The field ${refFieldRoute} does not exists`);
+    this.name = "ChacaError.NotExistFieldError";
   }
 }

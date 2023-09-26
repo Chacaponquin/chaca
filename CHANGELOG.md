@@ -1,3 +1,25 @@
+## chaca@1.6.3
+
+### 🪛 Fix
+
+- Add more information of fields routes in exceptions
+- Add new exception `NotExistFieldError`
+
+  ```ts
+  const dataset1 = chaca.schema({
+    id: chaca.key(schemas.id.uuid()),
+  });
+
+  const dataset2 = chaca.schema({
+    id: chaca.ref("Dataset1.customId"), // not exist that field
+  });
+
+  const data = chaca.multiGenerate([
+    { name: "Dataset1", documents: 30, schema: dataset1 },
+    { name: "Dataset2", documents: 30, schema: dataset2 },
+  ]); // throw a NotExistFieldError because 'customId' not exist
+  ```
+
 ## chaca@1.6.2
 
 ### 🪛 Fix

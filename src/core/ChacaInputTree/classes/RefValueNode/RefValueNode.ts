@@ -2,6 +2,7 @@ import {
   ChacaError,
   CyclicAccessDataError,
   NotEnoughValuesForRefError,
+  NotExistFieldError,
   TryRefANoKeyFieldError,
 } from "../../../../errors/ChacaError.js";
 import { SchemaResolver } from "../../../SchemaResolver/SchemaResolver.js";
@@ -53,10 +54,9 @@ export class RefValueNode extends ChacaTreeNode {
     }
 
     if (exists === -1) {
-      throw new ChacaError(
-        `From ${this.getFieldRouteString()}, The field ${
-          this.refField.refField
-        } does not exists`,
+      throw new NotExistFieldError(
+        this.getFieldRouteString(),
+        this.refField.refField,
       );
     } else {
       this.schemaRefIndex = exists;

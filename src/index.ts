@@ -25,6 +25,7 @@ import {
   TryRefANoKeyFieldError,
   NotEnoughValuesForRefError,
   CyclicAccessDataError,
+  NotExistFieldError,
 } from "./errors/ChacaError.js";
 
 import { GetStoreValueInput } from "./core/SchemasStore/interfaces/store.interface.js";
@@ -69,6 +70,7 @@ export {
   CyclicAccessDataError,
   ChacaError,
   NotEnoughValuesForRefError,
+  NotExistFieldError,
 };
 
 export {
