@@ -37,6 +37,10 @@ export class RefValueNode extends ChacaTreeNode {
     return this.refFieldTreeRoute;
   }
 
+  public getRefFieldRouteString(): string {
+    return ChacaTreeNode.getRouteString(this.refFieldTreeRoute);
+  }
+
   public searchSchemaRef(): void {
     let exists = -1;
 
@@ -55,7 +59,7 @@ export class RefValueNode extends ChacaTreeNode {
 
     if (exists === -1) {
       throw new NotExistFieldError(
-        this.getFieldRouteString(),
+        this.getRouteString(),
         this.refField.refField,
       );
     } else {
@@ -83,7 +87,7 @@ export class RefValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.getFieldRoute());
+      throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
       return false;
     }
@@ -158,8 +162,8 @@ export class RefValueNode extends ChacaTreeNode {
 
           if (noTakenValues.length === 0) {
             throw new NotEnoughValuesForRefError(
-              this.getFieldRoute(),
-              this.refFieldTreeRoute,
+              this.getRouteString(),
+              this.getRefFieldRouteString(),
             );
           } else {
             const node = this.utils.oneOfArray(noTakenValues);
@@ -170,22 +174,21 @@ export class RefValueNode extends ChacaTreeNode {
         } else {
           if (allValues.length === 0) {
             throw new NotEnoughValuesForRefError(
-              this.getNodeConfig().fieldTreeRoute,
-              this.refFieldTreeRoute,
+              this.getRouteString(),
+              this.getRefFieldRouteString(),
             );
           }
 
           return this.utils.oneOfArray(allValues).getRealValue();
         }
       } else {
-        const refFieldName = this.refFieldTreeRoute.join(".");
         throw new CyclicAccessDataError(
-          `The field ${this.getFieldRouteString()} is trying to access ${refFieldName}, and it uses that field to create itself`,
+          `The field ${this.getRouteString()} is trying to access ${this.getRefFieldRouteString()}, and it uses that field to create itself`,
         );
       }
     } else {
       throw new ChacaError(
-        `First find the schema resolver for the ref field '${this.getFieldRouteString()}'`,
+        `First find the schema resolver for the ref field '${this.getRouteString()}'`,
       );
     }
   }

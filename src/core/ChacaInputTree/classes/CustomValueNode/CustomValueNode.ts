@@ -7,7 +7,7 @@ import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
   constructor(
     config: ChacaTreeNodeConfig,
-    private readonly valueFunction: CustomField<C, R>,
+    private readonly func: CustomField<C, R>,
   ) {
     super(config);
   }
@@ -15,12 +15,12 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
   public getNoArrayNode(): ChacaTreeNode {
     return new CustomValueNode<C, R>(
       { ...this.getNodeConfig(), isArray: null },
-      this.valueFunction,
+      this.func,
     );
   }
 
   public getValue(fields: C, datasetStore: DatasetStore): R {
-    const value = this.valueFunction({
+    const value = this.func({
       store: datasetStore,
       currentFields: fields,
     });
@@ -34,7 +34,7 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.getNodeConfig().fieldTreeRoute);
+      throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
       return false;
     }

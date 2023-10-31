@@ -64,7 +64,7 @@ export class MixedValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.getNodeConfig().fieldTreeRoute);
+      throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
       let found = false;
       for (let i = 0; i < this.nodes.length && !found; i++) {

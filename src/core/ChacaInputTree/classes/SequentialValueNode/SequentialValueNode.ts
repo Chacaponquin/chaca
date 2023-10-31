@@ -31,7 +31,7 @@ export class SequentialValueNode extends ChacaTreeNode {
     this.possibleNull = possibleNull;
 
     if (this.valuesArray.length === 0) {
-      throw new EmptySequentialValuesError(this.getFieldRoute());
+      throw new EmptySequentialValuesError(this.getRouteString());
     }
   }
 
@@ -46,7 +46,7 @@ export class SequentialValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.getFieldRoute());
+      throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
       return false;
     }
@@ -64,7 +64,7 @@ export class SequentialValueNode extends ChacaTreeNode {
       return returnValue;
     } else {
       if (this.index >= this.valuesArray.length) {
-        throw new EmptySequentialValuesError(this.getFieldRoute());
+        throw new EmptySequentialValuesError(this.getRouteString());
       } else {
         const returnValue = this.valuesArray[this.index];
         this.index++;

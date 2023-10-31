@@ -59,11 +59,11 @@ export class KeyValueNode extends ChacaTreeNode {
       return resultValue;
     } else if (resultValue === null) {
       throw new ChacaError(
-        `The key value ${this.getFieldRouteString()} can not be null`,
+        `The key value ${this.getRouteString()} can not be null`,
       );
     } else {
       throw new ChacaError(
-        `The key value ${this.getFieldRouteString()} has to be an string, number or Date`,
+        `The key value ${this.getRouteString()} has to be an string, number or Date`,
       );
     }
   }

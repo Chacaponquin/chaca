@@ -37,7 +37,7 @@ export class SequenceValueNode extends ChacaTreeNode {
 
   public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
-      throw new TryRefANoKeyFieldError(this.getNodeConfig().fieldTreeRoute);
+      throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
       return false;
     }

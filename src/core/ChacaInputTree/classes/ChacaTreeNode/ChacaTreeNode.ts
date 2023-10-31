@@ -4,6 +4,14 @@ import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 export abstract class ChacaTreeNode {
   constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {}
 
+  public static getRouteString(route: Array<string>): string {
+    return route.join(".");
+  }
+
+  public getRouteString(): string {
+    return ChacaTreeNode.getRouteString(this.getFieldRoute());
+  }
+
   public getNodeConfig(): ChacaTreeNodeConfig {
     return this.nodeConfig;
   }
@@ -29,10 +37,6 @@ export abstract class ChacaTreeNode {
 
   public getIsArray() {
     return this.nodeConfig.isArray;
-  }
-
-  public getFieldRouteString() {
-    return this.nodeConfig.fieldTreeRoute.join(".");
   }
 
   public getPossibleNull() {
