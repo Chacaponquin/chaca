@@ -281,7 +281,7 @@ export class SchemaResolver<K = any> {
     field: ChacaTreeNode,
     indexDoc: number,
   ) {
-    const fieldIsArray = field.getNodeConfig().isArray;
+    const fieldIsArray = field.getIsArray();
     if (fieldIsArray !== null) {
       // limite del arreglo de valores
       const limit = this.dataTypeSchema.int().getValue({
@@ -329,7 +329,7 @@ export class SchemaResolver<K = any> {
     indexDoc: number,
   ): FieldNode {
     // en caso de ser un array
-    if (field.getNodeConfig().isArray) {
+    if (field.getIsArray()) {
       return new ArrayResultNode(field.getResultNodeConfig(), field);
     }
 
