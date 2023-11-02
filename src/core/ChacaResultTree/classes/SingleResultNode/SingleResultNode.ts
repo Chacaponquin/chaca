@@ -1,5 +1,5 @@
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode.js";
+import { ChacaError } from "../../../../errors";
+import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode";
 
 export class SingleResultNode extends FieldNode {
   private value: unknown;

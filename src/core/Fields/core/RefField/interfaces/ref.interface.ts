@@ -1,4 +1,4 @@
-import { DatasetStore } from "../../../../DatasetStore/DatasetStore.js";
+import { DatasetStore } from "../../../../DatasetStore/DatasetStore";
 
 /**
  * Field to ref types

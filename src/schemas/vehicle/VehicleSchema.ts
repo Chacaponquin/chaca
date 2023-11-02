@@ -1,6 +1,6 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
-import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants/index.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
+import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants";
 
 export class VehicleSchema {
   private utils = new ChacaUtils();

@@ -1,3 +1,3 @@
-import { GenerateConfigObject } from "./GenerateConfig.js";
+import { GenerateConfigObject } from "./GenerateConfig";
 
 export { GenerateConfigObject };

@@ -1,32 +1,29 @@
-import { ChacaSchema } from "./core/ChacaSchema/ChacaSchema.js";
-import { EnumField } from "./core/Fields/core/EnumField/EnumField.js";
-import {
-  KeyField,
-  KeyFieldProps,
-} from "./core/Fields/core/KeyField/KeyField.js";
+import { ChacaSchema } from "./core/ChacaSchema/ChacaSchema";
+import { EnumField } from "./core/Fields/core/EnumField/EnumField";
+import { KeyField, KeyFieldProps } from "./core/Fields/core/KeyField/KeyField";
 import {
   FieldRefInputConfig,
   FieldToRef,
   RefField,
-} from "./core/Fields/core/RefField/RefField.js";
+} from "./core/Fields/core/RefField/RefField";
 import {
   SequenceField,
   SequenceFieldProps,
-} from "./core/Fields/core/SequenceField/SequenceField.js";
+} from "./core/Fields/core/SequenceField/SequenceField";
 import {
   SequentialField,
   SequentialFieldConfig,
-} from "./core/Fields/core/SequentialField/SequentialField.js";
-import { ChacaUtils } from "./core/ChacaUtils/ChacaUtils.js";
-import { SchemaInput } from "./core/ChacaSchema/interfaces/schema.interface.js";
-import { SchemaField } from "./schemas/SchemaField.js";
+} from "./core/Fields/core/SequentialField/SequentialField";
+import { ChacaUtils } from "./core/ChacaUtils/ChacaUtils";
+import { SchemaInput } from "./core/ChacaSchema/interfaces/schema";
+import { SchemaField } from "./schemas/SchemaField";
 import {
   GenerateConfig,
   MultiGenerateSchema,
-} from "./core/MultiGenerate/interfaces/multiGenerate.interface.js";
-import { ExportResolver } from "./core/Export/ExportResolver.js";
-import { FileConfig } from "./core/Export/interfaces/export.interface.js";
-import { MultiGenerateResolver } from "./core/MultiGenerate/MultiGenerateResolver.js";
+} from "./core/MultiGenerate/interfaces/multi-generate";
+import { ExportResolver } from "./core/Export/ExportResolver";
+import { FileConfig } from "./core/Export/interfaces/export";
+import { MultiGenerateResolver } from "./core/MultiGenerate/MultiGenerateResolver";
 
 export class Chaca {
   utils = new ChacaUtils();
@@ -50,9 +47,9 @@ export class Chaca {
    * @param valueFunction function that returns a value
    */
   schemaField<K = any, T = any>(
-    valueFunction: (args: T) => K,
+    func: (args: T) => K,
   ): (args?: T) => SchemaField<K, T> {
-    return (args) => new SchemaField<K, T>(valueFunction, args);
+    return (args) => new SchemaField<K, T>(func, args);
   }
 
   /**

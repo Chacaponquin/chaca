@@ -1,10 +1,7 @@
-import { SchemaResolver } from "../../../SchemaResolver/SchemaResolver.js";
-import {
-  ExportSQLFormat,
-  FileConfig,
-} from "../../interfaces/export.interface.js";
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { Generator } from "../Generator/Generator.js";
+import { SchemaResolver } from "../../../SchemaResolver/SchemaResolver";
+import { ExportSQLFormat, FileConfig } from "../../interfaces/export";
+import { ChacaError } from "../../../../errors";
+import { Generator } from "../Generator/Generator";
 import {
   SQLBoolean,
   SQLDate,
@@ -16,8 +13,8 @@ import {
   SQLFloatNumber,
   SQLIntegerNumber,
   SQLBigint,
-} from "./classes/sqlTypes/index.js";
-import { SQLTable } from "./classes/table/index.js";
+} from "./classes/sqlTypes";
+import { SQLTable } from "./classes/table";
 import {
   ArrayType,
   BigintType,
@@ -28,15 +25,15 @@ import {
   NumberType,
   ObjectType,
   StringType,
-} from "./classes/types/index.js";
+} from "./classes/types";
 import fs from "fs";
 import {
   ChacaTreeNode,
   KeyValueNode,
   RefValueNode,
-} from "../../../ChacaInputTree/classes/index.js";
-import { SQLDataGenerator } from "./classes/generators/index.js";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver.js";
+} from "../../../ChacaInputTree/classes";
+import { SQLDataGenerator } from "./classes/generators";
+import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 
 export class SQLGenerator extends Generator {
   private schemasPrimaryKeys: Array<KeyValueNode> = [];

@@ -1,6 +1,6 @@
-import { ChacaError } from "../../../../../errors/ChacaError.js";
-import { IdSchema } from "../../../../../schemas/id/IdSchema.js";
-import { InterfacesToCreate } from "./InterfacesToCreate.js";
+import { ChacaError } from "../../../../../errors";
+import { IdSchema } from "../../../../../schemas/id/IdSchema";
+import { InterfacesToCreate } from "./InterfacesToCreate";
 
 interface ObjectKeys {
   keyName: string;

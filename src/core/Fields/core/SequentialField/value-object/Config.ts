@@ -1,4 +1,4 @@
-import { SequentialFieldConfig } from "../interfaces/sequential.interface.js";
+import { SequentialFieldConfig } from "../interfaces/sequential.interface";
 
 export class Config {
   private _config: Required<SequentialFieldConfig> = { loop: false };

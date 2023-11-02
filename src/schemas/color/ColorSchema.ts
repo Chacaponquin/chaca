@@ -1,18 +1,8 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
-import {
-  CSSSpace,
-  CSS_FUNCTIONS,
-  CSS_SPACES,
-  CSSFunction,
-} from "./constants/index.js";
-import {
-  Casing,
-  ColorFormat,
-  toColorFormat,
-  formatHexColor,
-} from "./helpers/index.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
+import { CSSSpace, CSS_FUNCTIONS, CSS_SPACES, CSSFunction } from "./constants";
+import { Casing, ColorFormat, toColorFormat, formatHexColor } from "./helpers";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
 
 type RgbProps = {
   prefix: string;

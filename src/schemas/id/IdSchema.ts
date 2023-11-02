@@ -1,5 +1,5 @@
-import { SchemaField } from "../SchemaField.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
+import { SchemaField } from "../SchemaField";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
 
 export class IdSchema {
   private dataTypeSchema = new DataTypeSchema();

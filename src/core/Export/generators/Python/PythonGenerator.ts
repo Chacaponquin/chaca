@@ -1,7 +1,7 @@
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver.js";
-import { FileConfig } from "../../interfaces/export.interface.js";
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { Generator } from "../Generator/Generator.js";
+import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+import { FileConfig } from "../../interfaces/export";
+import { ChacaError } from "../../../../errors";
+import { Generator } from "../Generator/Generator";
 import fs from "fs";
 
 export class PythonGenerator extends Generator {

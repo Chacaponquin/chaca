@@ -1,8 +1,8 @@
-import { IResolver } from "../../interfaces/resolvers.interface.js";
-import { CustomFieldResolver } from "../CustomFieldResolver/CustomFieldResolver.js";
-import { RefFieldResolver } from "../RefFieldResolver/RefFieldResolver.js";
-import { SchemaFieldResolver } from "../SchemaFieldResolver/SchemaFieldResolver.js";
-import { SequenceFieldResolver } from "../SequenceFieldResolver/SequenceFieldResolver.js";
+import { IResolver } from "../../interfaces/resolvers";
+import { CustomFieldResolver } from "../CustomFieldResolver/CustomFieldResolver";
+import { RefFieldResolver } from "../RefFieldResolver/RefFieldResolver";
+import { SchemaFieldResolver } from "../SchemaFieldResolver/SchemaFieldResolver";
+import { SequenceFieldResolver } from "../SequenceFieldResolver/SequenceFieldResolver";
 
 export type KeyFieldResolverProps =
   | SchemaFieldResolver

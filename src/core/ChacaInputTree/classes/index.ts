@@ -1,12 +1,12 @@
-import { ChacaTreeNode } from "./ChacaTreeNode/ChacaTreeNode.js";
-import { CustomValueNode } from "./CustomValueNode/CustomValueNode.js";
-import { EnumValueNode } from "./EnumValueNode/EnumValueNode.js";
-import { MixedValueNode } from "./MixedValueNode/MixedValueNode.js";
-import { SchemaValueNode } from "./SchemaValueNode/SchemaValueNode.js";
-import { RefValueNode } from "./RefValueNode/RefValueNode.js";
-import { SequentialValueNode } from "./SequentialValueNode/SequentialValueNode.js";
-import { KeyValueNode } from "./KeyValueNode/KeyValueNode.js";
-import { SequenceValueNode } from "./SequenceValueNode/SequenceValueNode.js";
+import { ChacaTreeNode } from "./ChacaTreeNode/ChacaTreeNode";
+import { CustomValueNode } from "./CustomValueNode/CustomValueNode";
+import { EnumValueNode } from "./EnumValueNode/EnumValueNode";
+import { MixedValueNode } from "./MixedValueNode/MixedValueNode";
+import { SchemaValueNode } from "./SchemaValueNode/SchemaValueNode";
+import { RefValueNode } from "./RefValueNode/RefValueNode";
+import { SequentialValueNode } from "./SequentialValueNode/SequentialValueNode";
+import { KeyValueNode } from "./KeyValueNode/KeyValueNode";
+import { SequenceValueNode } from "./SequenceValueNode/SequenceValueNode";
 
 export {
   ChacaTreeNode,

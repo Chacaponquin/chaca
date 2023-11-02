@@ -1,12 +1,12 @@
-import { ChacaError } from "../../../errors/ChacaError.js";
-import { SchemaField } from "../../../schemas/SchemaField.js";
+import { ChacaError } from "../../../errors";
+import { SchemaField } from "../../../schemas/SchemaField";
 import {
   EnumField,
   KeyField,
   RefField,
   SequenceField,
   SequentialField,
-} from "../../Fields/core/index.js";
+} from "../../Fields/core";
 import {
   CustomFieldResolver,
   KeyFieldResolver,
@@ -15,9 +15,9 @@ import {
   SchemaFieldResolver,
   SequenceFieldResolver,
   SequentialFieldResolver,
-} from "../../Resolvers/core/index.js";
-import { IResolver } from "../../Resolvers/interfaces/resolvers.interface.js";
-import { ChacaSchema } from "../ChacaSchema.js";
+} from "../../Resolvers/core";
+import { IResolver } from "../../Resolvers/interfaces/resolvers";
+import { ChacaSchema } from "../ChacaSchema";
 import {
   CustomField,
   FieldObjectInput,
@@ -25,11 +25,11 @@ import {
   ResolverObject,
   SchemaInput,
   SchemaToResolve,
-} from "../interfaces/schema.interface.js";
-import { InputEnumField } from "./Enum.js";
-import { FieldIsArray } from "./FieldIsArray.js";
-import { FieldPossibleNull } from "./FieldPossibleNull.js";
-import { InputKeyField } from "./Key.js";
+} from "../interfaces/schema";
+import { InputEnumField } from "./Enum";
+import { FieldIsArray } from "./FieldIsArray";
+import { FieldPossibleNull } from "./FieldPossibleNull";
+import { InputKeyField } from "./Key";
 
 interface Filter {
   config?: FieldTypes;

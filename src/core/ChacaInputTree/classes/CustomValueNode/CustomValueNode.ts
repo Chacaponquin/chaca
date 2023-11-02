@@ -1,8 +1,8 @@
-import { TryRefANoKeyFieldError } from "../../../../errors/ChacaError.js";
-import { CustomField } from "../../../ChacaSchema/interfaces/schema.interface.js";
-import { DatasetStore } from "../../../DatasetStore/DatasetStore.js";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
-import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
+import { TryRefANoKeyFieldError } from "../../../../errors";
+import { CustomField } from "../../../ChacaSchema/interfaces/schema";
+import { DatasetStore } from "../../../DatasetStore/DatasetStore";
+import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
+import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
 
 export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
   constructor(

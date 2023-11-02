@@ -1,10 +1,10 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
 import {
   PERIODIC_TABLE_ELEMETNS,
   PERIODIC_TABLE_SYMBOLS,
-} from "./constants/periodicTable.js";
-import { UNITS } from "./constants/units.js";
+} from "./constants/periodicTable";
+import { UNITS } from "./constants/units";
 
 type PeriodicTableProps = {
   type?: "symbol" | "name";

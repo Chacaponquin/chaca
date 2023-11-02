@@ -1,11 +1,11 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
-import { SPECIAL_CHARACTERS } from "./constants/special_characters.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
+import { SPECIAL_CHARACTERS } from "./constants/special_characters";
 import {
   LOWER_CHARACTERS,
   MIXED_CHARACTERS,
   UPPER_CHARACTERS,
-} from "./constants/characters.js";
+} from "./constants/characters";
 
 type Case = "lower" | "upper" | "mixed";
 

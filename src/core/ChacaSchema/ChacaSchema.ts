@@ -1,12 +1,12 @@
-import { ExportResolver } from "../Export/ExportResolver.js";
+import { ExportResolver } from "../Export/ExportResolver";
 import {
   SchemaFieldType,
   SchemaInput,
   SchemaToResolve,
-} from "./interfaces/schema.interface.js";
-import { FileConfig } from "../Export/interfaces/export.interface.js";
-import { InputSchemaResolver } from "./value-object/SchemaResolver.js";
-import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
+} from "./interfaces/schema";
+import { FileConfig } from "../Export/interfaces/export";
+import { InputSchemaResolver } from "./value-object/SchemaResolver";
+import { SchemaResolver } from "../SchemaResolver/SchemaResolver";
 
 export class ChacaSchema<K = any> extends SchemaFieldType {
   private schemaResolver: SchemaToResolve;

@@ -1,7 +1,7 @@
-import { ChacaError, CyclicAccessDataError } from "../../errors/ChacaError.js";
-import { DocumentTree, FieldNode } from "../ChacaResultTree/classes/index.js";
-import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
-import { GetStoreValueConfig } from "./interfaces/store.interface.js";
+import { ChacaError, CyclicAccessDataError } from "../../errors";
+import { DocumentTree, FieldNode } from "../ChacaResultTree/classes";
+import { SchemaResolver } from "../SchemaResolver/SchemaResolver";
+import { GetStoreValueConfig } from "./interfaces/store";
 
 export class SchemaStore {
   private schemas: Array<SchemaResolver>;

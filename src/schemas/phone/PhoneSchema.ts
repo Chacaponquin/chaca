@@ -1,7 +1,7 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
-import { PHONE_PREFIX } from "./constants/phonePrefix.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
+import { PHONE_PREFIX } from "./constants/phonePrefix";
 
 type CallDurationProps = {
   min?: number;

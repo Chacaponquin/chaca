@@ -1,11 +1,11 @@
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { SchemaField } from "../../../../schemas/SchemaField.js";
+import { ChacaError } from "../../../../errors";
+import { SchemaField } from "../../../../schemas/SchemaField";
 import {
   CustomField,
   SchemaFieldType,
-} from "../../../ChacaSchema/interfaces/schema.interface.js";
-import { RefField } from "../RefField/RefField.js";
-import { SequenceField } from "../SequenceField/SequenceField.js";
+} from "../../../ChacaSchema/interfaces/schema";
+import { RefField } from "../RefField/RefField";
+import { SequenceField } from "../SequenceField/SequenceField";
 
 /**
  * Posible types for key schema field

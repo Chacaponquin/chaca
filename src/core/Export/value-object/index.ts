@@ -1,5 +1,5 @@
-import { FileFormat } from "./FileFormat.js";
-import { FileName } from "./FileName.js";
-import { Location } from "./Location.js";
+import { FileFormat } from "./FileFormat";
+import { FileName } from "./FileName";
+import { Location } from "./Location";
 
 export { FileName, Location, FileFormat };

@@ -1,8 +1,8 @@
-import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
-import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
-import { InputTreeUtils } from "../../utils/input_tree_utils.js";
-import { TryRefANoKeyFieldError } from "../../../../errors/ChacaError.js";
-import { KeyValueNode } from "../KeyValueNode/KeyValueNode.js";
+import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
+import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
+import { InputTreeUtils } from "../../utils/input_tree_utils";
+import { TryRefANoKeyFieldError } from "../../../../errors";
+import { KeyValueNode } from "../KeyValueNode/KeyValueNode";
 
 export class MixedValueNode extends ChacaTreeNode {
   private nodes: Array<ChacaTreeNode> = [];

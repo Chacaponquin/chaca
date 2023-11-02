@@ -4,16 +4,16 @@ import {
   NotEnoughValuesForRefError,
   NotExistFieldError,
   TryRefANoKeyFieldError,
-} from "../../../../errors/ChacaError.js";
-import { SchemaResolver } from "../../../SchemaResolver/SchemaResolver.js";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
-import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
-import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils.js";
-import { FieldToRefObject } from "../../../Fields/core/RefField/RefField.js";
-import { SchemaStore } from "../../../SchemasStore/SchemaStore.js";
-import { SingleResultNode } from "../../../ChacaResultTree/classes/index.js";
-import { DatasetStore } from "../../../DatasetStore/DatasetStore.js";
-import { SearchedRefValue } from "./interfaces/refNode.interface.js";
+} from "../../../../errors";
+import { SchemaResolver } from "../../../SchemaResolver/SchemaResolver";
+import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
+import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
+import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils";
+import { FieldToRefObject } from "../../../Fields/core/RefField/RefField";
+import { SchemaStore } from "../../../SchemasStore/SchemaStore";
+import { SingleResultNode } from "../../../ChacaResultTree/classes";
+import { DatasetStore } from "../../../DatasetStore/DatasetStore";
+import { SearchedRefValue } from "./interfaces/ref";
 
 export class RefValueNode extends ChacaTreeNode {
   private refFieldTreeRoute: Array<string>;

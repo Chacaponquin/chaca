@@ -1,7 +1,7 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
-import { IMAGES_DEFINITIONS } from "./constants/images.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
+import { IMAGES_DEFINITIONS } from "./constants/images";
 
 export class ImageSchema {
   private utils = new ChacaUtils();

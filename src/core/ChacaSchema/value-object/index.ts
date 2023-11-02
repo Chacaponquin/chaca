@@ -1,8 +1,8 @@
-import { InputEnumField } from "./Enum.js";
-import { FieldIsArray } from "./FieldIsArray.js";
-import { FieldPossibleNull } from "./FieldPossibleNull.js";
-import { InputKeyField } from "./Key.js";
-import { InputSchemaResolver } from "./SchemaResolver.js";
+import { InputEnumField } from "./Enum";
+import { FieldIsArray } from "./FieldIsArray";
+import { FieldPossibleNull } from "./FieldPossibleNull";
+import { InputKeyField } from "./Key";
+import { InputSchemaResolver } from "./SchemaResolver";
 
 export {
   FieldIsArray,

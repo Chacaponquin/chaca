@@ -1,11 +1,11 @@
-import { SchemaStore } from "../SchemasStore/SchemaStore.js";
-import { DocumentTree } from "../ChacaResultTree/classes/DocumentTree/DocumentTree.js";
+import { SchemaStore } from "../SchemasStore/SchemaStore";
+import { DocumentTree } from "../ChacaResultTree/classes/DocumentTree/DocumentTree";
 import {
   GetStoreValueConfig,
   GetStoreValueInput,
-} from "../SchemasStore/interfaces/store.interface.js";
-import { FieldNode } from "../ChacaResultTree/classes/index.js";
-import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
+} from "../SchemasStore/interfaces/store";
+import { FieldNode } from "../ChacaResultTree/classes";
+import { SchemaResolver } from "../SchemaResolver/SchemaResolver";
 
 /** Store to interact with all datasets */
 export class DatasetStore {

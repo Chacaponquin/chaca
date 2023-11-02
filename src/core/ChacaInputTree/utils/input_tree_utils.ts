@@ -3,7 +3,7 @@ import {
   CustomValueNode,
   KeyValueNode,
   RefValueNode,
-} from "../classes/index.js";
+} from "../classes";
 
 export class InputTreeUtils {
   public orderNodesByPriority(

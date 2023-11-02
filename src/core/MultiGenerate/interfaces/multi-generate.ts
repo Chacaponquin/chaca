@@ -1,4 +1,4 @@
-import { ChacaSchema } from "../../ChacaSchema/ChacaSchema.js";
+import { ChacaSchema } from "../../ChacaSchema/ChacaSchema";
 
 export interface MultiGenerateSchema {
   /**

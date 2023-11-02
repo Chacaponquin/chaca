@@ -1,4 +1,4 @@
-import { SQLTable } from "./SQLTable.js";
-import { SQLTableColumn } from "./SQLTableColumn.js";
+import { SQLTable } from "./SQLTable";
+import { SQLTableColumn } from "./SQLTableColumn";
 
 export { SQLTable, SQLTableColumn };

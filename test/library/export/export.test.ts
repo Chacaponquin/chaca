@@ -1,10 +1,10 @@
-import { ChacaError } from "../../../src/errors/ChacaError";
+import { ChacaError } from "../../../src/errors";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simpleSchema";
 
 const root = "./data";
 
 describe("# Export Test", () => {
-  describe("export with incorrrect arguments", () => {
+  describe("Export with incorrrect arguments", () => {
     it("No file name. Should throw an error", async () => {
       await expect(() =>
         SIMPLE_SCHEMA.generateAndExport(1, {
@@ -15,7 +15,7 @@ describe("# Export Test", () => {
       ).rejects.toThrowError(ChacaError);
     });
 
-    it("incorrect format file. Should throw an error", async () => {
+    it("Incorrect format file. Should throw an error", async () => {
       await expect(() =>
         SIMPLE_SCHEMA.generateAndExport(1, {
           fileName: "quetal",

@@ -1,9 +1,9 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
-import { MIME_TYPES } from "./constants/mimeTypes.js";
-import { FILE_EXTENSIONS } from "./constants/fileExtensions.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
-import { WordSchema } from "../word/WordSchema.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
+import { MIME_TYPES } from "./constants/mimeTypes";
+import { FILE_EXTENSIONS } from "./constants/fileExtensions";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
+import { WordSchema } from "../word/WordSchema";
 
 export type FileExtensions = {
   audio: string[];

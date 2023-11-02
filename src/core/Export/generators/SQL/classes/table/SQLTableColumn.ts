@@ -5,8 +5,8 @@ import {
   SQLString,
   SQLTextString,
   SQLType,
-} from "../sqlTypes/index.js";
-import { SQLTable } from "./SQLTable.js";
+} from "../sqlTypes";
+import { SQLTable } from "./SQLTable";
 
 interface ColumnConfig {
   isPrimaryKey: boolean;

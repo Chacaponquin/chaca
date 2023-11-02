@@ -1,10 +1,10 @@
-import { FileConfig } from "../../../Export/interfaces/export.interface.js";
-import { Generator } from "../Generator/Generator.js";
-import { JavascriptGenerator } from "../Javascript/JavascriptGenerator.js";
+import { FileConfig } from "../../interfaces/export";
+import { Generator } from "../Generator/Generator";
+import { JavascriptGenerator } from "../Javascript/JavascriptGenerator";
 import fs from "fs";
-import { TypescriptInterface } from "./classes/index.js";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver.js";
-import { InterfacesToCreate } from "./classes/InterfacesToCreate.js";
+import { TypescriptInterface } from "./classes";
+import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+import { InterfacesToCreate } from "./classes/InterfacesToCreate";
 
 export class TypescriptGenerator extends Generator {
   private interfaces = new InterfacesToCreate();

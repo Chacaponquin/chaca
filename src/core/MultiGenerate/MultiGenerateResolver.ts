@@ -1,10 +1,10 @@
-import { ChacaError } from "../../errors/ChacaError.js";
-import { SchemaResolver } from "../SchemaResolver/SchemaResolver.js";
+import { ChacaError } from "../../errors";
+import { SchemaResolver } from "../SchemaResolver/SchemaResolver";
 import {
   GenerateConfig,
   MultiGenerateSchema,
-} from "./interfaces/multiGenerate.interface.js";
-import { GenerateConfigObject } from "./value-object/index.js";
+} from "./interfaces/multi-generate";
+import { GenerateConfigObject } from "./value-object";
 
 export class MultiGenerateResolver<K = any> {
   private resolversArray: Array<SchemaResolver> = [];

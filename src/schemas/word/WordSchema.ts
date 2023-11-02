@@ -1,6 +1,6 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
-import WORDS, { ILanguageWord } from "./constants/index.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
+import WORDS, { ILanguageWord } from "./constants";
 
 type Languages = "es" | "en";
 

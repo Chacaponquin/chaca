@@ -1,4 +1,4 @@
-import { FieldIsArrayConfig } from "../../ChacaSchema/interfaces/schema.interface.js";
+import { FieldIsArrayConfig } from "../../ChacaSchema/interfaces/schema";
 
 export interface ChacaTreeNodeConfig {
   fieldTreeRoute: Array<string>;

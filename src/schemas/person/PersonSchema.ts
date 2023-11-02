@@ -1,4 +1,4 @@
-import { SchemaField } from "../SchemaField.js";
+import { SchemaField } from "../SchemaField";
 import {
   ILanguageNames,
   NAMES,
@@ -6,9 +6,9 @@ import {
   JOBS,
   LANGUAGES,
   PREFIXES,
-} from "./constants/index.js";
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
+} from "./constants";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
 
 type AllLanguages = "es" | "en";
 

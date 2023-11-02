@@ -1,4 +1,4 @@
-import { ObjectInterface } from "./index.js";
+import { ObjectInterface } from ".";
 
 export class InterfacesToCreate {
   private _interfaces: Array<ObjectInterface> = [];

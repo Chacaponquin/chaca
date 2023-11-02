@@ -1,6 +1,6 @@
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { FieldNode } from "../FieldNode/FieldNode.js";
-import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
+import { ChacaError } from "../../../../errors";
+import { FieldNode } from "../FieldNode/FieldNode";
+import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
 
 export class MixedFieldNode extends FieldNode {
   public nodes: Array<FieldNode> = [];

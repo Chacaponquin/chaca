@@ -1,4 +1,4 @@
-import { GenerateConfig } from "../interfaces/multiGenerate.interface.js";
+import { GenerateConfig } from "../interfaces/multi-generate";
 
 export class GenerateConfigObject {
   private _value: Required<GenerateConfig>;

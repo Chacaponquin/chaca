@@ -1,5 +1,5 @@
-import { FieldNodeProps } from "../../../ChacaResultTree/classes/FieldNode/FieldNode.js";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
+import { FieldNodeProps } from "../../../ChacaResultTree/classes/FieldNode/FieldNode";
+import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
 
 export abstract class ChacaTreeNode {
   constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {}

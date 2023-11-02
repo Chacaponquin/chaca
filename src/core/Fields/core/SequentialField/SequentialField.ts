@@ -1,6 +1,6 @@
-import { SchemaFieldType } from "../../../ChacaSchema/interfaces/schema.interface.js";
-import { SequentialFieldConfig } from "./interfaces/sequential.interface.js";
-import { Config } from "./value-object/index.js";
+import { SchemaFieldType } from "../../../ChacaSchema/interfaces/schema";
+import { SequentialFieldConfig } from "./interfaces/sequential.interface";
+import { Config } from "./value-object";
 
 export class SequentialField<K = any> extends SchemaFieldType {
   private valuesArray: Array<K>;

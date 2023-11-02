@@ -1,4 +1,4 @@
-import { InputPossibleNull } from "../interfaces/schema.interface.js";
+import { InputPossibleNull } from "../interfaces/schema";
 
 export class FieldPossibleNull {
   private _value: number;

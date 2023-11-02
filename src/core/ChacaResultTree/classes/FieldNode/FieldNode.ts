@@ -1,4 +1,4 @@
-import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
+import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
 
 export interface FieldNodeProps {
   name: string;

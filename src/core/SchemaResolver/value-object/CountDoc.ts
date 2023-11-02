@@ -1,4 +1,4 @@
-import { ChacaError } from "../../../errors/ChacaError.js";
+import { ChacaError } from "../../../errors";
 
 export class CountDoc {
   private _value: number;

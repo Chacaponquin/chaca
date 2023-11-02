@@ -1,10 +1,10 @@
-import { FileConfig } from "../../interfaces/export.interface.js";
-import { Generator } from "../Generator/Generator.js";
+import { FileConfig } from "../../interfaces/export";
+import { Generator } from "../Generator/Generator";
 import fs from "fs";
 import path from "path";
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver.js";
-import { CSVArray, CSVDataType, CSVObject } from "./core/types.js";
+import { ChacaError } from "../../../../errors";
+import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+import { CSVArray, CSVDataType, CSVObject } from "./core/types";
 import AdmZip from "adm-zip";
 
 export class CSVGenerator extends Generator {

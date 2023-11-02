@@ -1,7 +1,4 @@
-import {
-  FieldIsArrayConfig,
-  InputIsArrayConfig,
-} from "../interfaces/schema.interface.js";
+import { FieldIsArrayConfig, InputIsArrayConfig } from "../interfaces/schema";
 
 export class FieldIsArray {
   private _value: FieldIsArrayConfig = null;

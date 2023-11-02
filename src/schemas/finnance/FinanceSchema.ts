@@ -1,13 +1,13 @@
-import { SchemaField } from "../SchemaField.js";
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
+import { SchemaField } from "../SchemaField";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
 import {
   ACCOUNT_TYPES,
   IBAN,
   MONEY_INFO,
   SUBSCRIPTION_PLAN,
   TRANSACTION_TYPE,
-} from "./constants/index.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
+} from "./constants";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
 
 type AmountProps = {
   min?: number;

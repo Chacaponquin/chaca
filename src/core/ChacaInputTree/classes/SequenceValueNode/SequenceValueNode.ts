@@ -1,6 +1,6 @@
-import { TryRefANoKeyFieldError } from "../../../../errors/ChacaError.js";
-import { SequenceFieldProps } from "../../../Fields/core/SequenceField/SequenceField.js";
-import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
+import { TryRefANoKeyFieldError } from "../../../../errors";
+import { SequenceFieldProps } from "../../../Fields/core/SequenceField/SequenceField";
+import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
 
 interface SequenceProps {
   fieldTreeRoute: Array<string>;

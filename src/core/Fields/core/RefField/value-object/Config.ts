@@ -1,7 +1,7 @@
 import {
   FieldRefInputConfig,
   RefFieldWhere,
-} from "../interfaces/ref.interface.js";
+} from "../interfaces/ref.interface";
 
 export class Config {
   private _unique = false;

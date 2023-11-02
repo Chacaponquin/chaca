@@ -1,5 +1,5 @@
-import { SequentialFieldConfig } from "../../../Fields/core/SequentialField/SequentialField.js";
-import { IResolver } from "../../interfaces/resolvers.interface.js";
+import { SequentialFieldConfig } from "../../../Fields/core/SequentialField/SequentialField";
+import { IResolver } from "../../interfaces/resolvers";
 
 export class SequentialFieldResolver<K = any> extends IResolver {
   constructor(

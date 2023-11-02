@@ -1,4 +1,4 @@
-import { Config } from "./Config.js";
-import { InputRefField } from "./InputRefField.js";
+import { Config } from "./Config";
+import { InputRefField } from "./InputRefField";
 
 export { InputRefField, Config };

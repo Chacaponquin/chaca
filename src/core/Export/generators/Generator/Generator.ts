@@ -1,8 +1,8 @@
-import { FileConfig } from "../../interfaces/export.interface.js";
+import { FileConfig } from "../../interfaces/export";
 import path from "path";
 import fs from "fs";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver.js";
-import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils.js";
+import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils";
 
 export interface GeneratorProps {
   extension: string;

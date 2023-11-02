@@ -1,3 +1,3 @@
-import { Config } from "./Config.js";
+import { Config } from "./Config";
 
 export { Config };

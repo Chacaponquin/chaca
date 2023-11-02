@@ -1,8 +1,8 @@
-import { SchemaField } from "../SchemaField.js";
-import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries.js";
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { TIME_ZONE } from "./constants/timeZone.js";
-import { CARDINAL_DIRECTIONS } from "./constants/cardinal_directions.js";
+import { SchemaField } from "../SchemaField";
+import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { TIME_ZONE } from "./constants/timeZone";
+import { CARDINAL_DIRECTIONS } from "./constants/cardinal_directions";
 
 type ZipCodeProps = {
   format?: string;

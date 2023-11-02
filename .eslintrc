@@ -20,9 +20,7 @@
   ],
   "rules": {
     "no-duplicate-imports": "error",
-    "import/no-unresolved": "off",
-    "import/extensions": ["error", "ignorePackages"],
-    "file-extension-in-import-ts/file-extension-in-import-ts": "error",
+    "import/no-unresolved": "error",
     "@typescript-eslint/no-explicit-any": "off",
     "require-yield": "error",
     "no-console": "error",
@@ -30,9 +28,6 @@
     "eqeqeq": "error"
   },
   "settings": {
-    "import/extensions": [".js", "ts"],
-    "extensionAlias": {
-      "ts": ["js"]
-    }
+    "import/extensions": [".js", "ts"]
   }
 }

@@ -1,9 +1,9 @@
 import {
   EmptySequentialValuesError,
   TryRefANoKeyFieldError,
-} from "../../../../errors/ChacaError.js";
-import { SequentialFieldConfig } from "../../../Fields/core/SequentialField/SequentialField.js";
-import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
+} from "../../../../errors";
+import { SequentialFieldConfig } from "../../../Fields/core/SequentialField/SequentialField";
+import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
 
 export interface SequentialValueNodeProps {
   fieldTreeRoute: Array<string>;

@@ -1,5 +1,5 @@
-import { ChacaError } from "../../../../../errors/ChacaError.js";
-import { SequenceFieldProps } from "../interfaces/sequence.interface.js";
+import { ChacaError } from "../../../../../errors";
+import { SequenceFieldProps } from "../interfaces/sequence.interface";
 
 export class Config {
   private _config: Required<SequenceFieldProps> = {

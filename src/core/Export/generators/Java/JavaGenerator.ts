@@ -1,5 +1,5 @@
-import { FileConfig } from "../../interfaces/export.interface.js";
-import { Generator } from "../Generator/Generator.js";
+import { FileConfig } from "../../interfaces/export";
+import { Generator } from "../Generator/Generator";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
@@ -17,9 +17,9 @@ import {
   ObjectType,
   RegExpType,
   StringType,
-} from "./classes/types/index.js";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver.js";
-import { IdSchema } from "../../../../schemas/id/IdSchema.js";
+} from "./classes/types";
+import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+import { IdSchema } from "../../../../schemas/id/IdSchema";
 
 interface JavaClassCreated {
   className: string;

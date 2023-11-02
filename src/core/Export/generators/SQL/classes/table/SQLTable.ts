@@ -1,7 +1,7 @@
-import { ChacaError } from "../../../../../../errors/ChacaError.js";
-import { IdSchema } from "../../../../../../schemas/id/IdSchema.js";
-import { SQLType, SQLNumber, SQLIntegerNumber } from "../sqlTypes/index.js";
-import { ColumnForeignKeyConfig, SQLTableColumn } from "./SQLTableColumn.js";
+import { ChacaError } from "../../../../../../errors";
+import { IdSchema } from "../../../../../../schemas/id/IdSchema";
+import { SQLType, SQLNumber, SQLIntegerNumber } from "../sqlTypes";
+import { ColumnForeignKeyConfig, SQLTableColumn } from "./SQLTableColumn";
 
 export class SQLTable {
   private columns: Array<SQLTableColumn> = [];

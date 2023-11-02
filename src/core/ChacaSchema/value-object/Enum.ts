@@ -1,5 +1,5 @@
-import { EnumField } from "../../Fields/core/EnumField/EnumField.js";
-import { EnumFieldResolver } from "../../Resolvers/core/index.js";
+import { EnumField } from "../../Fields/core/EnumField/EnumField";
+import { EnumFieldResolver } from "../../Resolvers/core";
 
 interface EnumProps<R> {
   enumField: EnumField<R>;

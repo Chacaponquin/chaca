@@ -1,5 +1,5 @@
-import { IResolver } from "../../interfaces/resolvers.interface.js";
-import { FieldToRefObject } from "../../../Fields/core/RefField/RefField.js";
+import { IResolver } from "../../interfaces/resolvers";
+import { FieldToRefObject } from "../../../Fields/core/RefField/RefField";
 
 export class RefFieldResolver extends IResolver {
   constructor(public readonly refField: FieldToRefObject) {

@@ -8,8 +8,6 @@ describe("# Internet email tests", () => {
       schemas.internet.email().getValue(),
     );
 
-    console.log(emails);
-
     expect(emails.every((e) => emailRegex.test(e) === true)).toBe(true);
   });
 });

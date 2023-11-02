@@ -1,6 +1,6 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
-import { VIDEOS_DEFINITIONS } from "./constants/videos.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
+import { VIDEOS_DEFINITIONS } from "./constants/videos";
 
 export class VideoSchema {
   private utils = new ChacaUtils();

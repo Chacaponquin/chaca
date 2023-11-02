@@ -1,5 +1,5 @@
-import { DatasetStore } from "../../DatasetStore/DatasetStore.js";
-import { IResolver } from "../../Resolvers/interfaces/resolvers.interface.js";
+import { DatasetStore } from "../../DatasetStore/DatasetStore";
+import { IResolver } from "../../Resolvers/interfaces/resolvers";
 
 export abstract class SchemaFieldType {}
 

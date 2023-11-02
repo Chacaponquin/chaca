@@ -1,4 +1,4 @@
-import { ChacaError } from "../../../../../../errors/ChacaError.js";
+import { ChacaError } from "../../../../../../errors";
 
 interface ObjectTypeField {
   key: string;

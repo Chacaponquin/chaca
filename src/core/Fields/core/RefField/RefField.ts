@@ -1,11 +1,11 @@
-import { SchemaFieldType } from "../../../ChacaSchema/interfaces/schema.interface.js";
+import { SchemaFieldType } from "../../../ChacaSchema/interfaces/schema";
 import {
   FieldRefInputConfig,
   FieldToRef,
   RefFieldWhere,
   RefFieldWhereProps,
-} from "./interfaces/ref.interface.js";
-import { InputRefField, Config } from "./value-object/index.js";
+} from "./interfaces/ref.interface";
+import { InputRefField, Config } from "./value-object";
 
 export interface FieldToRefObject {
   refField: string;

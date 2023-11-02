@@ -1,8 +1,8 @@
-import { ChacaError } from "../../errors/ChacaError.js";
+import { ChacaError } from "../../errors";
 import {
   ResolverObject,
   SchemaToResolve,
-} from "../ChacaSchema/interfaces/schema.interface.js";
+} from "../ChacaSchema/interfaces/schema";
 import {
   CustomFieldResolver,
   EnumFieldResolver,
@@ -11,8 +11,8 @@ import {
   RefFieldResolver,
   SchemaFieldResolver,
   SequenceFieldResolver,
-} from "../Resolvers/core/index.js";
-import { ChacaSchema } from "../ChacaSchema/ChacaSchema.js";
+} from "../Resolvers/core";
+import { ChacaSchema } from "../ChacaSchema/ChacaSchema";
 import {
   ChacaTreeNode,
   CustomValueNode,
@@ -23,10 +23,10 @@ import {
   SchemaValueNode,
   SequenceValueNode,
   SequentialValueNode,
-} from "./classes/index.js";
-import { InputTreeUtils } from "./utils/input_tree_utils.js";
-import { SequentialFieldResolver } from "../Resolvers/core/SequentialFieldResolver/SequentialFieldResolver.js";
-import { SchemaStore } from "../SchemasStore/SchemaStore.js";
+} from "./classes";
+import { InputTreeUtils } from "./utils/input_tree_utils";
+import { SequentialFieldResolver } from "../Resolvers/core/SequentialFieldResolver/SequentialFieldResolver";
+import { SchemaStore } from "../SchemasStore/SchemaStore";
 
 export class ChacaInputTree {
   private inputTreeUtils = new InputTreeUtils();

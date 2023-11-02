@@ -1,18 +1,18 @@
-import { SchemaField } from "../SchemaField.js";
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { EMOJIS } from "./constants/emojis.js";
-import { DOMAIN_SUFFIX } from "./constants/domainSuffix.js";
-import { HTTP_STATUS } from "./constants/httpStatus.js";
-import { HTTP_METHODS } from "./constants/http_method.js";
-import { GenerateUserAgent } from "./helpers/userAgent.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
-import { PersonSchema } from "../person/PersonSchema.js";
-import { WordSchema } from "../word/WordSchema.js";
-import { PROTOCOL } from "./constants/protocol.js";
-import { OAUTH_PROVIDER } from "./constants/oauth.js";
-import { LOCALE } from "./constants/locale.js";
-import { EMAIL_PROVIDER } from "./constants/email_provider.js";
-import { BROWSERS } from "./constants/browser.js";
+import { SchemaField } from "../SchemaField";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { EMOJIS } from "./constants/emojis";
+import { DOMAIN_SUFFIX } from "./constants/domainSuffix";
+import { HTTP_STATUS } from "./constants/httpStatus";
+import { HTTP_METHODS } from "./constants/http_method";
+import { GenerateUserAgent } from "./helpers/userAgent";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
+import { PersonSchema } from "../person/PersonSchema";
+import { WordSchema } from "../word/WordSchema";
+import { PROTOCOL } from "./constants/protocol";
+import { OAUTH_PROVIDER } from "./constants/oauth";
+import { LOCALE } from "./constants/locale";
+import { EMAIL_PROVIDER } from "./constants/email_provider";
+import { BROWSERS } from "./constants/browser";
 
 export type HttpStatus = {
   informational: number[];

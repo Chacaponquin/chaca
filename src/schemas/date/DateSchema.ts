@@ -1,9 +1,9 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { ChacaError } from "../../errors/ChacaError.js";
-import { SchemaField } from "../SchemaField.js";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
-import { MONTHS } from "./constants/month.js";
-import { WEEKDAYS } from "./constants/weekday.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { ChacaError } from "../../errors";
+import { SchemaField } from "../SchemaField";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
+import { MONTHS } from "./constants/month";
+import { WEEKDAYS } from "./constants/weekday";
 
 type ArgDate = Date | string;
 

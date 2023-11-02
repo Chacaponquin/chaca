@@ -1,7 +1,7 @@
-import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
-import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
-import { SchemaField } from "../../../../schemas/SchemaField.js";
-import { TryRefANoKeyFieldError } from "../../../../errors/ChacaError.js";
+import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
+import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
+import { SchemaField } from "../../../../schemas/SchemaField";
+import { TryRefANoKeyFieldError } from "../../../../errors";
 
 export class SchemaValueNode extends ChacaTreeNode {
   constructor(

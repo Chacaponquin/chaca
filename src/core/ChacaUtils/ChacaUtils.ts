@@ -1,10 +1,10 @@
-import { ChacaError } from "../../errors/ChacaError.js";
+import { ChacaError } from "../../errors";
 import {
   LOWER_CHARACTERS,
   MIXED_CHARACTERS,
   UPPER_CHARACTERS,
-} from "../../schemas/dataType/constants/characters.js";
-import { SPECIAL_CHARACTERS } from "../../schemas/dataType/constants/special_characters.js";
+} from "../../schemas/dataType/constants/characters";
+import { SPECIAL_CHARACTERS } from "../../schemas/dataType/constants/special_characters";
 
 type TimeUnits = "years" | "seconds" | "minutes" | "days" | "hours" | "months";
 

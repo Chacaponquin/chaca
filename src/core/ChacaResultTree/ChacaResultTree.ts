@@ -1,6 +1,6 @@
-import { SearchedRefValue } from "../ChacaInputTree/classes/RefValueNode/interfaces/refNode.interface.js";
-import { GetStoreValueConfig } from "../SchemasStore/interfaces/store.interface.js";
-import { DocumentTree, FieldNode } from "./classes/index.js";
+import { SearchedRefValue } from "../ChacaInputTree/classes/RefValueNode/interfaces/ref";
+import { GetStoreValueConfig } from "../SchemasStore/interfaces/store";
+import { DocumentTree, FieldNode } from "./classes";
 
 export class ChacaResultTree<D> {
   constructor(public readonly schemaName: string) {}

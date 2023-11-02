@@ -1,10 +1,10 @@
-import { ExportSQLFormat } from "../../../../interfaces/export.interface.js";
-import { ChacaError } from "../../../../../../errors/ChacaError.js";
-import { SQLTable } from "../table/SQLTable.js";
+import { ExportSQLFormat } from "../../../../interfaces/export";
+import { ChacaError } from "../../../../../../errors";
+import { SQLTable } from "../table/SQLTable";
 import {
   ColumnForeignKeyConfig,
   SQLTableColumn,
-} from "../table/SQLTableColumn.js";
+} from "../table/SQLTableColumn";
 
 export class SQLDataGenerator {
   constructor(

@@ -1,10 +1,10 @@
 import {
   EmptyEnumValuesError,
   TryRefANoKeyFieldError,
-} from "../../../../errors/ChacaError.js";
-import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils.js";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
-import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
+} from "../../../../errors";
+import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils";
+import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
+import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
 
 export class EnumValueNode extends ChacaTreeNode {
   constructor(

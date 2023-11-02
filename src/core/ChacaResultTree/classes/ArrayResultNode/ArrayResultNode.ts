@@ -1,7 +1,7 @@
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { ChacaTreeNode } from "../../../ChacaInputTree/classes/index.js";
-import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode.js";
-import { SingleResultNode } from "../SingleResultNode/SingleResultNode.js";
+import { ChacaError } from "../../../../errors";
+import { ChacaTreeNode } from "../../../ChacaInputTree/classes";
+import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode";
+import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
 
 export class ArrayResultNode extends FieldNode {
   private arrayNodes: Array<FieldNode> = [];

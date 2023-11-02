@@ -1,14 +1,14 @@
-import { ChacaError } from "../../../errors/ChacaError.js";
-import { SchemaField } from "../../../schemas/SchemaField.js";
-import { KeyField, RefField, SequenceField } from "../../Fields/core/index.js";
-import { KeyFieldResolverProps } from "../../Resolvers/core/KeyFieldResolver/KeyFieldResolver.js";
+import { ChacaError } from "../../../errors";
+import { SchemaField } from "../../../schemas/SchemaField";
+import { KeyField, RefField, SequenceField } from "../../Fields/core";
+import { KeyFieldResolverProps } from "../../Resolvers/core/KeyFieldResolver/KeyFieldResolver";
 import {
   CustomFieldResolver,
   KeyFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
   SequenceFieldResolver,
-} from "../../Resolvers/core/index.js";
+} from "../../Resolvers/core";
 
 export class InputKeyField {
   private _resolver: KeyFieldResolver;

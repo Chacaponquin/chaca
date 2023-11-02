@@ -1,11 +1,11 @@
-import { CustomFieldResolver } from "./CustomFieldResolver/CustomFieldResolver.js";
-import { EnumFieldResolver } from "./EnumFieldResolver/EnumFieldResolver.js";
-import { SchemaFieldResolver } from "./SchemaFieldResolver/SchemaFieldResolver.js";
-import { MixedFieldResolver } from "./MixedFieldResolver/MixedFieldResolver.js";
-import { RefFieldResolver } from "./RefFieldResolver/RefFieldResolver.js";
-import { SequentialFieldResolver } from "./SequentialFieldResolver/SequentialFieldResolver.js";
-import { KeyFieldResolver } from "./KeyFieldResolver/KeyFieldResolver.js";
-import { SequenceFieldResolver } from "./SequenceFieldResolver/SequenceFieldResolver.js";
+import { CustomFieldResolver } from "./CustomFieldResolver/CustomFieldResolver";
+import { EnumFieldResolver } from "./EnumFieldResolver/EnumFieldResolver";
+import { SchemaFieldResolver } from "./SchemaFieldResolver/SchemaFieldResolver";
+import { MixedFieldResolver } from "./MixedFieldResolver/MixedFieldResolver";
+import { RefFieldResolver } from "./RefFieldResolver/RefFieldResolver";
+import { SequentialFieldResolver } from "./SequentialFieldResolver/SequentialFieldResolver";
+import { KeyFieldResolver } from "./KeyFieldResolver/KeyFieldResolver";
+import { SequenceFieldResolver } from "./SequenceFieldResolver/SequenceFieldResolver";
 
 export {
   CustomFieldResolver,

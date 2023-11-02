@@ -1,10 +1,10 @@
-import { ChacaError } from "../../../../errors/ChacaError.js";
-import { DatasetStore } from "../../../DatasetStore/DatasetStore.js";
-import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
-import { CustomValueNode } from "../CustomValueNode/CustomValueNode.js";
-import { RefValueNode } from "../RefValueNode/RefValueNode.js";
-import { SchemaValueNode } from "../SchemaValueNode/SchemaValueNode.js";
-import { SequenceValueNode } from "../SequenceValueNode/SequenceValueNode.js";
+import { ChacaError } from "../../../../errors";
+import { DatasetStore } from "../../../DatasetStore/DatasetStore";
+import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
+import { CustomValueNode } from "../CustomValueNode/CustomValueNode";
+import { RefValueNode } from "../RefValueNode/RefValueNode";
+import { SchemaValueNode } from "../SchemaValueNode/SchemaValueNode";
+import { SequenceValueNode } from "../SequenceValueNode/SequenceValueNode";
 
 export type KeyValueNodeProps =
   | RefValueNode

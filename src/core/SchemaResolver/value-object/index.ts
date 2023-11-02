@@ -1,4 +1,4 @@
-import { CountDoc } from "./CountDoc.js";
-import { SchemaName } from "./SchemaName.js";
+import { CountDoc } from "./CountDoc";
+import { SchemaName } from "./SchemaName";
 
 export { CountDoc, SchemaName };

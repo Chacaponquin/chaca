@@ -1,4 +1,4 @@
-import { SchemaFieldType } from "../core/ChacaSchema/interfaces/schema.interface.js";
+import { SchemaFieldType } from "../core/ChacaSchema/interfaces/schema";
 
 interface ISchemaField<T, K> {
   getValue(args: T): K;

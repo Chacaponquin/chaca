@@ -1,4 +1,4 @@
-import { CSSFunction, CSSSpace } from "../constants/index.js";
+import { CSSFunction, CSSSpace } from "../constants";
 
 export type StringColorFormat = "css" | "binary";
 export type NumberColorFormat = "decimal";

@@ -1,4 +1,4 @@
-import { ChacaError } from "../../errors/ChacaError.js";
+import { ChacaError } from "../../errors";
 import {
   CSVGenerator,
   Generator,
@@ -9,14 +9,14 @@ import {
   SQLGenerator,
   TypescriptGenerator,
   YamlGenerator,
-} from "./generators/index.js";
-import { FileConfig } from "./interfaces/export.interface.js";
+} from "./generators";
+import { FileConfig } from "./interfaces/export";
 import {
   GenerateConfig,
   MultiGenerateSchema,
-} from "../MultiGenerate/interfaces/multiGenerate.interface.js";
-import { MultiGenerateResolver } from "../MultiGenerate/MultiGenerateResolver.js";
-import { FileFormat, FileName, Location } from "./value-object/index.js";
+} from "../MultiGenerate/interfaces/multi-generate";
+import { MultiGenerateResolver } from "../MultiGenerate/MultiGenerateResolver";
+import { FileFormat, FileName, Location } from "./value-object";
 
 export class ExportResolver {
   private config: FileConfig;

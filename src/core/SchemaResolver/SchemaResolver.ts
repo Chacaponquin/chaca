@@ -1,7 +1,7 @@
-import { ChacaError, CyclicAccessDataError } from "../../errors/ChacaError.js";
-import { ChacaUtils } from "../ChacaUtils/ChacaUtils.js";
-import { SchemaToResolve } from "../ChacaSchema/interfaces/schema.interface.js";
-import { ChacaInputTree } from "../ChacaInputTree/ChacaInputTree.js";
+import { ChacaError, CyclicAccessDataError } from "../../errors";
+import { ChacaUtils } from "../ChacaUtils/ChacaUtils";
+import { SchemaToResolve } from "../ChacaSchema/interfaces/schema";
+import { ChacaInputTree } from "../ChacaInputTree/ChacaInputTree";
 import {
   ChacaTreeNode,
   CustomValueNode,
@@ -12,21 +12,21 @@ import {
   KeyValueNode,
   SequentialValueNode,
   SequenceValueNode,
-} from "../ChacaInputTree/classes/index.js";
-import { ChacaResultTree } from "../ChacaResultTree/ChacaResultTree.js";
+} from "../ChacaInputTree/classes";
+import { ChacaResultTree } from "../ChacaResultTree/ChacaResultTree";
 import {
   DocumentTree,
   FieldNode,
   ArrayResultNode,
   MixedFieldNode,
   SingleResultNode,
-} from "../ChacaResultTree/classes/index.js";
-import { SchemaStore } from "../SchemasStore/SchemaStore.js";
-import { GetStoreValueConfig } from "../SchemasStore/interfaces/store.interface.js";
-import { DatasetStore } from "../DatasetStore/DatasetStore.js";
-import { SearchedRefValue } from "../ChacaInputTree/classes/RefValueNode/interfaces/refNode.interface.js";
-import { DataTypeSchema } from "../../schemas/dataType/DataTypeSchema.js";
-import { CountDoc, SchemaName } from "./value-object/index.js";
+} from "../ChacaResultTree/classes";
+import { SchemaStore } from "../SchemasStore/SchemaStore";
+import { GetStoreValueConfig } from "../SchemasStore/interfaces/store";
+import { DatasetStore } from "../DatasetStore/DatasetStore";
+import { SearchedRefValue } from "../ChacaInputTree/classes/RefValueNode/interfaces/ref";
+import { DataTypeSchema } from "../../schemas/dataType/DataTypeSchema";
+import { CountDoc, SchemaName } from "./value-object";
 
 interface SchemaResolverProps {
   schemaName: string;

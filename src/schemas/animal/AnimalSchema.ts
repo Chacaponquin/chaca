@@ -1,5 +1,5 @@
-import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils.js";
-import { SchemaField } from "../SchemaField.js";
+import { ChacaUtils } from "../../core/ChacaUtils/ChacaUtils";
+import { SchemaField } from "../SchemaField";
 import {
   ANIMAL_TYPE,
   BEAR,
@@ -16,7 +16,7 @@ import {
   RODENT,
   SNAKE,
   FISH,
-} from "./constants/index.js";
+} from "./constants";
 
 export class AnimalSchema {
   private utils = new ChacaUtils();

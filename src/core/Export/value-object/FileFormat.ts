@@ -1,5 +1,5 @@
-import { ExportFormat } from "../../Export/interfaces/export.interface.js";
-import { ChacaError } from "../../../errors/ChacaError.js";
+import { ExportFormat } from "../interfaces/export";
+import { ChacaError } from "../../../errors";
 
 export class FileFormat {
   private _value: ExportFormat;

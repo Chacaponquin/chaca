@@ -1,6 +1,6 @@
-import { SchemaField } from "../SchemaField.js";
+import { SchemaField } from "../SchemaField";
 import { loremIpsum } from "lorem-ipsum";
-import { DataTypeSchema } from "../dataType/DataTypeSchema.js";
+import { DataTypeSchema } from "../dataType/DataTypeSchema";
 
 type WordsProps = {
   count?: number;

@@ -1,6 +1,6 @@
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver.js";
-import { FileConfig } from "../../interfaces/export.interface.js";
-import { Generator } from "../Generator/Generator.js";
+import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+import { FileConfig } from "../../interfaces/export";
+import { Generator } from "../Generator/Generator";
 import fs from "fs";
 
 export class JsonGenerator extends Generator {
