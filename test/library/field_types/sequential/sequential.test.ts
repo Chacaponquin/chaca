@@ -79,19 +79,23 @@ describe("# Sequential Field test", () => {
   });
 
   it("Pass a string as a the sequential values. Should return an error", () => {
-    expect(() =>
-      chaca.schema({
-        favoriteNumber: chaca.sequential("" as any),
-      }),
-    ).toThrowError(ChacaError);
+    expect(() => {
+      chaca
+        .schema({
+          favoriteNumber: chaca.sequential("" as any),
+        })
+        .generateObject();
+    }).toThrowError(EmptySequentialValuesError);
   });
 
   it("Pass a number as a the sequential values. Should return an error", () => {
-    expect(() =>
-      chaca.schema({
-        favoriteNumber: chaca.sequential(5 as any),
-      }),
-    ).toThrowError(ChacaError);
+    expect(() => {
+      chaca
+        .schema({
+          favoriteNumber: chaca.sequential(5 as any),
+        })
+        .generate(5);
+    }).toThrowError(EmptySequentialValuesError);
   });
 
   it("Pass false in config.loop and generate 10 docuements. Should throw an error", () => {
@@ -100,5 +104,15 @@ describe("# Sequential Field test", () => {
     });
 
     expect(() => NO_LOOP_SEQUENTIAL_SCHEMA.generate(10)).toThrow(ChacaError);
+  });
+
+  it("Pass an empty array as sequential values. Should return an error", () => {
+    expect(() => {
+      chaca
+        .schema({
+          favoriteNumber: chaca.sequential([]),
+        })
+        .generate(5);
+    }).toThrowError(EmptySequentialValuesError);
   });
 });

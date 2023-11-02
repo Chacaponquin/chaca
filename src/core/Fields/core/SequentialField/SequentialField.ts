@@ -1,4 +1,3 @@
-import { ChacaError } from "../../../../errors/ChacaError.js";
 import { SchemaFieldType } from "../../../ChacaSchema/interfaces/schema.interface.js";
 import { SequentialFieldConfig } from "./interfaces/sequential.interface.js";
 import { Config } from "./value-object/index.js";
@@ -10,12 +9,7 @@ export class SequentialField<K = any> extends SchemaFieldType {
   constructor(valuesArray: Array<K>, config?: SequentialFieldConfig) {
     super();
 
-    if (Array.isArray(valuesArray) && valuesArray.length > 0) {
-      this.valuesArray = valuesArray;
-    } else {
-      throw new ChacaError("The sequential field must be an array of values.");
-    }
-
+    this.valuesArray = valuesArray;
     this.config = new Config(config).value();
   }
 

@@ -48,7 +48,14 @@ export class NotExistFieldError extends ChacaError {
     public readonly fieldRoute: string,
     public readonly refFieldRoute: string,
   ) {
-    super(`From ${fieldRoute}, The field ${refFieldRoute} does not exists`);
+    super(`From '${fieldRoute}', The field '${refFieldRoute}' does not exists`);
     this.name = "ChacaError.NotExistFieldError";
+  }
+}
+
+export class EmptyEnumValuesError extends ChacaError {
+  constructor(public readonly fieldRoute: string) {
+    super(`There are no values for the enum field '${fieldRoute}'`);
+    this.name = "ChacaError.EmptyEnumValuesError";
   }
 }

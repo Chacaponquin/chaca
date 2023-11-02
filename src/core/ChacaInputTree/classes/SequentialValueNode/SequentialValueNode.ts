@@ -30,7 +30,11 @@ export class SequentialValueNode extends ChacaTreeNode {
     this.config = config;
     this.possibleNull = possibleNull;
 
-    if (this.valuesArray.length === 0) {
+    if (Array.isArray(this.valuesArray)) {
+      if (this.valuesArray.length === 0) {
+        throw new EmptySequentialValuesError(this.getRouteString());
+      }
+    } else {
       throw new EmptySequentialValuesError(this.getRouteString());
     }
   }

@@ -104,7 +104,7 @@ export class InputSchemaResolver {
         resolverObject.possibleNull = configNull.value();
         resolverObject.isArray = configArray.value();
 
-        this.validateResolver(resolverObject);
+        this._validateResolver(resolverObject);
       } else {
         const type = this.filter({ config: field });
         resolverObject.type = type;
@@ -116,7 +116,7 @@ export class InputSchemaResolver {
     return schemaToSave;
   }
 
-  private validateResolver(config: ResolverObject): void {
+  private _validateResolver(config: ResolverObject): void {
     // sequence
     if (config.type instanceof SequenceFieldResolver) {
       if (config.isArray !== null) {

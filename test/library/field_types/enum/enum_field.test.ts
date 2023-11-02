@@ -1,10 +1,10 @@
-import { ChacaError, chaca } from "../../../../src";
+import { EmptyEnumValuesError, chaca } from "../../../../src";
 
 describe("# Enum field tests", () => {
   it("with empty array as argument. Should throw an error", () => {
     expect(() => {
-      chaca.schema({ id: chaca.enum([]) });
-    }).toThrowError(ChacaError);
+      chaca.schema({ id: chaca.enum([]) }).generate(5);
+    }).toThrowError(EmptyEnumValuesError);
   });
 
   it("with an array [1, 2, 3, 4, 5]. Should return one of this elements", () => {

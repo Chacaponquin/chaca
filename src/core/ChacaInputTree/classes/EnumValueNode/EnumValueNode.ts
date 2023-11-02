@@ -1,4 +1,7 @@
-import { TryRefANoKeyFieldError } from "../../../../errors/ChacaError.js";
+import {
+  EmptyEnumValuesError,
+  TryRefANoKeyFieldError,
+} from "../../../../errors/ChacaError.js";
 import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils.js";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface.js";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
@@ -6,12 +9,20 @@ import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode.js";
 export class EnumValueNode extends ChacaTreeNode {
   constructor(
     config: ChacaTreeNodeConfig,
-    public readonly enumOptions: Array<any>,
+    public readonly enumOptions: Array<unknown>,
   ) {
     super(config);
+
+    if (Array.isArray(enumOptions)) {
+      if (enumOptions.length === 0) {
+        throw new EmptyEnumValuesError(this.getRouteString());
+      }
+    } else {
+      throw new EmptyEnumValuesError(this.getRouteString());
+    }
   }
 
-  public getValue(): any {
+  public getValue() {
     const selectOption = new ChacaUtils().oneOfArray(this.enumOptions);
     return selectOption ? selectOption : null;
   }
