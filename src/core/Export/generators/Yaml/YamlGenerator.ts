@@ -1,18 +1,26 @@
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
-import { FileConfig } from "../../interfaces/export";
 import { ChacaError } from "../../../../errors";
 import { Generator } from "../Generator/Generator";
 import fs from "fs";
 
+interface Props {
+  fileName: string;
+  location: string;
+}
+
 export class YamlGenerator extends Generator {
   private actualMargin = 0;
 
-  constructor(config: FileConfig) {
-    super({ extension: "yaml", config });
+  constructor(config: Props) {
+    super({
+      extension: "yaml",
+      fileName: config.fileName,
+      location: config.location,
+    });
   }
 
   public async generateFile(data: any): Promise<string> {
-    let returnCode = ``;
+    let returnCode = "";
 
     if (Array.isArray(data)) {
       returnCode += this.generateArray(data);

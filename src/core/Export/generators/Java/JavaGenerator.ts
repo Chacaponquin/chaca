@@ -1,4 +1,3 @@
-import { FileConfig } from "../../interfaces/export";
 import { Generator } from "../Generator/Generator";
 import AdmZip from "adm-zip";
 import fs from "fs";
@@ -21,6 +20,11 @@ import {
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 import { IdSchema } from "../../../../schemas/id/IdSchema";
 
+interface Props {
+  fileName: string;
+  location: string;
+}
+
 interface JavaClassCreated {
   className: string;
   classType: ObjectType;
@@ -36,8 +40,12 @@ export class JavaGenerator extends Generator {
 
   private classesCreated: Array<JavaClassCreated> = [];
 
-  constructor(config: FileConfig) {
-    super({ extension: "java", config });
+  constructor(config: Props) {
+    super({
+      extension: "java",
+      fileName: config.fileName,
+      location: config.location,
+    });
   }
 
   public async generateRelationalDataFile(
@@ -61,7 +69,7 @@ export class JavaGenerator extends Generator {
     this.classesCreated = [];
     const dataType = this.createDataTypes(data);
     const mainContent = this.generateMainContent([
-      { dataType, variableName: this.config.fileName },
+      { dataType, variableName: this.fileName },
     ]);
 
     return await this.createAllFiles(mainContent);
@@ -97,7 +105,7 @@ export class JavaGenerator extends Generator {
     }
 
     const zp = new AdmZip();
-    const zipName = `${this.config.fileName}.zip`;
+    const zipName = `${this.fileName}.zip`;
     const zipPath = path.join(this.baseLocation, zipName);
 
     for (let i = 0; i < filesRoutes.length; i++) {

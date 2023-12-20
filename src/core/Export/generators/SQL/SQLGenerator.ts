@@ -1,5 +1,5 @@
 import { SchemaResolver } from "../../../SchemaResolver/SchemaResolver";
-import { ExportSQLFormat, FileConfig } from "../../interfaces/export";
+import { ExportSQLFormat } from "../../interfaces/export";
 import { ChacaError } from "../../../../errors";
 import { Generator } from "../Generator/Generator";
 import {
@@ -35,6 +35,12 @@ import {
 import { SQLDataGenerator } from "./classes/generators";
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 
+interface Props {
+  fileName: string;
+  location: string;
+  format: ExportSQLFormat;
+}
+
 export class SQLGenerator extends Generator {
   private schemasPrimaryKeys: Array<KeyValueNode> = [];
   private schemasForeignKeys: Array<RefValueNode> = [];
@@ -44,13 +50,14 @@ export class SQLGenerator extends Generator {
 
   private readonly NAMES_DIVISOR = "_";
 
-  constructor(config: FileConfig) {
-    super({ extension: "sql", config });
+  constructor(config: Props) {
+    super({
+      extension: "sql",
+      fileName: config.fileName,
+      location: config.location,
+    });
 
-    this.dataGenerator = new SQLDataGenerator(
-      this.config.format as ExportSQLFormat,
-      this.allTables,
-    );
+    this.dataGenerator = new SQLDataGenerator(config.format, this.allTables);
   }
 
   public async generateFile(data: any): Promise<string> {
@@ -62,7 +69,7 @@ export class SQLGenerator extends Generator {
       sqlData = [data];
     }
 
-    this.createData(this.config.fileName, sqlData);
+    this.createData(this.fileName, sqlData);
     // change tables id columns
     this.allTables.forEach((t) => {
       t.updateIdColumnName();

@@ -12,6 +12,7 @@ import {
   ExportFormat,
   FileConfig,
   ExportSQLFormat,
+  JsonFormatConfig,
 } from "./core/Export/interfaces/export";
 
 import { Schemas } from "./schemas";
@@ -109,4 +110,5 @@ export type {
   RefFieldWhereProps,
   FieldTypes,
   FieldSchemaConfig,
+  JsonFormatConfig,
 };

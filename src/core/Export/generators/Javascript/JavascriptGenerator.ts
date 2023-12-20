@@ -1,12 +1,20 @@
-import { FileConfig } from "../../interfaces/export";
 import { Generator } from "../Generator/Generator";
 import fs from "fs";
 import { ChacaError } from "../../../../errors";
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 
+interface Props {
+  fileName: string;
+  location: string;
+}
+
 export class JavascriptGenerator extends Generator {
-  constructor(config: FileConfig) {
-    super({ extension: "js", config });
+  constructor(config: Props) {
+    super({
+      extension: "js",
+      fileName: config.fileName,
+      location: config.location,
+    });
   }
 
   public async generateRelationalDataFile(
@@ -17,7 +25,7 @@ export class JavascriptGenerator extends Generator {
   }
 
   public async generateFile(data: any): Promise<string> {
-    const variableName = this.utils.camelCase(this.config.fileName);
+    const variableName = this.utils.camelCase(this.fileName);
     const returnData = `const ${variableName} = ${this.filterTypeValue(data)}`;
 
     await fs.promises.writeFile(this.route, returnData, "utf-8");

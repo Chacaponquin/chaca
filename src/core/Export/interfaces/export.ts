@@ -1,5 +1,7 @@
 /** Export files extendsions */
-export type ExportFormat =
+export type ExportFormat = Extensions | ExtensionConfigs;
+
+export type Extensions =
   | "json"
   | "java"
   | "typescript"
@@ -31,3 +33,10 @@ export interface FileConfig {
    */
   format: ExportFormat;
 }
+
+export type ExtensionConfigs = JsonFormatConfig;
+
+export type JsonFormatConfig = {
+  ext: "json";
+  separate: boolean;
+};

@@ -1,4 +1,7 @@
-import { FileConfig } from "../../interfaces/export";
+interface Props {
+  fileName: string;
+  location: string;
+}
 import { Generator } from "../Generator/Generator";
 import fs from "fs";
 import path from "path";
@@ -7,9 +10,18 @@ import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResol
 import { CSVArray, CSVDataType, CSVObject } from "./core/types";
 import AdmZip from "adm-zip";
 
+interface Props {
+  fileName: string;
+  location: string;
+}
+
 export class CSVGenerator extends Generator {
-  constructor(config: FileConfig) {
-    super({ extension: "csv", config });
+  constructor(config: Props) {
+    super({
+      extension: "csv",
+      fileName: config.fileName,
+      location: config.location,
+    });
   }
 
   public async generateRelationalDataFile(
@@ -19,11 +31,11 @@ export class CSVGenerator extends Generator {
 
     if (allResolvers.length === 1) {
       const schemaData = allResolvers[0].resolve();
-      const route = await this.createFile(this.config.fileName, schemaData);
+      const route = await this.createFile(this.fileName, schemaData);
       return route;
     } else {
       const zp = new AdmZip();
-      const zipName = `${this.config.fileName}.zip`;
+      const zipName = `${this.fileName}.zip`;
       const zipPath = path.join(this.baseLocation, zipName);
 
       const allRoutes = [] as Array<string>;
@@ -46,7 +58,7 @@ export class CSVGenerator extends Generator {
   }
 
   public async generateFile(data: any): Promise<string> {
-    const fileRoute = await this.createFile(this.config.fileName, data);
+    const fileRoute = await this.createFile(this.fileName, data);
     return fileRoute;
   }
 

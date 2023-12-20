@@ -1,4 +1,3 @@
-import { FileConfig } from "../../interfaces/export";
 import { Generator } from "../Generator/Generator";
 import { JavascriptGenerator } from "../Javascript/JavascriptGenerator";
 import fs from "fs";
@@ -6,16 +5,28 @@ import { TypescriptInterface } from "./classes";
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 import { InterfacesToCreate } from "./classes/InterfacesToCreate";
 
+interface Props {
+  fileName: string;
+  location: string;
+}
+
 export class TypescriptGenerator extends Generator {
   private interfaces = new InterfacesToCreate();
 
-  constructor(config: FileConfig) {
-    super({ extension: "ts", config });
+  constructor(config: Props) {
+    super({
+      extension: "ts",
+      fileName: config.fileName,
+      location: config.location,
+    });
   }
 
   public async generateFile(data: any): Promise<string> {
-    const javascriptCodeGenerator = new JavascriptGenerator(this.config);
-    const variableName = this.utils.camelCase(this.config.fileName);
+    const javascriptCodeGenerator = new JavascriptGenerator({
+      fileName: this.fileName,
+      location: this.location,
+    });
+    const variableName = this.utils.camelCase(this.fileName);
 
     const javascriptCode = javascriptCodeGenerator.filterTypeValue(data);
 

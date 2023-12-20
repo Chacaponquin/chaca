@@ -1,33 +1,37 @@
-import { FileConfig } from "../../interfaces/export";
 import path from "path";
 import fs from "fs";
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils";
 
-export interface GeneratorProps {
+export interface Props {
   extension: string;
-  config: FileConfig;
+  fileName: string;
+  location: string;
 }
 
 export abstract class Generator {
   protected utils = new ChacaUtils();
 
-  protected ext: string;
-  protected config: FileConfig;
-  protected route: string;
   protected fileName: string;
+  protected location: string;
+
+  protected ext: string;
+  protected route: string;
+  protected saveFileName: string;
   protected baseLocation: string;
 
-  constructor({ config, extension }: GeneratorProps) {
-    if (!fs.existsSync(config.location)) {
-      fs.mkdirSync(config.location, { recursive: true });
+  constructor({ fileName, location, extension }: Props) {
+    if (!fs.existsSync(location)) {
+      fs.mkdirSync(location, { recursive: true });
     }
 
+    this.fileName = fileName;
+    this.location = location;
+
     this.ext = extension;
-    this.config = config;
-    this.fileName = `${this.config.fileName}.${this.ext}`;
-    this.baseLocation = path.join("./", this.config.location);
-    this.route = this.generateRoute(this.config.fileName);
+    this.saveFileName = `${fileName}.${this.ext}`;
+    this.baseLocation = path.join("./", location);
+    this.route = this.generateRoute(fileName);
   }
 
   public abstract generateFile(data: any): Promise<string>;

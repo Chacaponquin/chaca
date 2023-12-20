@@ -1,18 +1,26 @@
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
-import { FileConfig } from "../../interfaces/export";
 import { ChacaError } from "../../../../errors";
 import { Generator } from "../Generator/Generator";
 import fs from "fs";
 
+interface Props {
+  fileName: string;
+  location: string;
+}
+
 export class PythonGenerator extends Generator {
   private importLibraries = [] as Array<string>;
 
-  constructor(config: FileConfig) {
-    super({ extension: "py", config });
+  constructor(config: Props) {
+    super({
+      extension: "py",
+      fileName: config.fileName,
+      location: config.location,
+    });
   }
 
   public async generateFile(data: any): Promise<string> {
-    const pythonCode = this.createDataCode(this.config.fileName, data);
+    const pythonCode = this.createDataCode(this.fileName, data);
     const finalCode = this.buildFinalCode(pythonCode);
 
     await fs.promises.writeFile(this.route, finalCode, "utf-8");

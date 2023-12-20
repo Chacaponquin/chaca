@@ -49,34 +49,52 @@ export class ExportResolver {
 
   private filterGenerator(): Generator {
     let gen: Generator;
+    const format = this.config.format;
 
-    switch (this.config.format) {
-      case "json":
-        gen = new JsonGenerator(this.config);
-        break;
-      case "javascript":
-        gen = new JavascriptGenerator(this.config);
-        break;
-      case "csv":
-        gen = new CSVGenerator(this.config);
-        break;
-      case "java":
-        gen = new JavaGenerator(this.config);
-        break;
-      case "typescript":
-        gen = new TypescriptGenerator(this.config);
-        break;
-      case "yaml":
-        gen = new YamlGenerator(this.config);
-        break;
-      case "postgresql":
-        gen = new SQLGenerator(this.config);
-        break;
-      case "python":
-        gen = new PythonGenerator(this.config);
-        break;
-      default:
+    if (format === "json") {
+      if (typeof this.config.format === "string") {
+        gen = new JsonGenerator({
+          config: this.config,
+          extConfig: { separate: false },
+        });
+      } else {
+        gen = new JsonGenerator({
+          config: this.config,
+          extConfig: { separate: false },
+        });
+      }
+    } else if (format === "javascript") {
+      gen = new JavascriptGenerator(this.config);
+    } else if (format === "csv") {
+      gen = new CSVGenerator(this.config);
+    } else if (format === "java") {
+      gen = new JavaGenerator(this.config);
+    } else if (format === "typescript") {
+      gen = new TypescriptGenerator(this.config);
+    } else if (format === "yaml") {
+      gen = new YamlGenerator(this.config);
+    } else if (format === "postgresql") {
+      gen = new SQLGenerator({
+        fileName: this.config.fileName,
+        format: format,
+        location: this.config.location,
+      });
+    } else if (format === "python") {
+      gen = new PythonGenerator(this.config);
+    }
+
+    // object config
+    else if (typeof format === "object") {
+      if (format.ext === "json") {
+        gen = new JsonGenerator({
+          config: this.config,
+          extConfig: { separate: format.separate },
+        });
+      } else {
         throw new ChacaError(`Format '${this.config.format}' invalid`);
+      }
+    } else {
+      throw new ChacaError(`Format '${this.config.format}' invalid`);
     }
 
     return gen;
