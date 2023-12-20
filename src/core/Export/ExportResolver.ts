@@ -54,12 +54,14 @@ export class ExportResolver {
     if (format === "json") {
       if (typeof this.config.format === "string") {
         gen = new JsonGenerator({
-          config: this.config,
+          fileName: this.config.fileName,
+          location: this.config.location,
           extConfig: { separate: false },
         });
       } else {
         gen = new JsonGenerator({
-          config: this.config,
+          fileName: this.config.fileName,
+          location: this.config.location,
           extConfig: { separate: false },
         });
       }
@@ -87,7 +89,8 @@ export class ExportResolver {
     else if (typeof format === "object") {
       if (format.ext === "json") {
         gen = new JsonGenerator({
-          config: this.config,
+          fileName: this.config.fileName,
+          location: this.config.location,
           extConfig: { separate: format.separate },
         });
       } else {

@@ -1,28 +1,30 @@
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
-import { FileConfig } from "../../interfaces/export";
 import { Generator } from "../Generator/Generator";
 import fs from "fs";
+import path from "path";
+import AdmZip from "adm-zip";
 
 interface ExtProps {
   separate: boolean;
 }
 
 interface Props {
-  config: FileConfig;
+  fileName: string;
+  location: string;
   extConfig: ExtProps;
 }
 
 export class JsonGenerator extends Generator {
-  // private config: ExtProps;
+  private config: ExtProps;
 
-  constructor({ config }: Props) {
+  constructor({ extConfig, fileName, location }: Props) {
     super({
       extension: "json",
-      fileName: config.fileName,
-      location: config.location,
+      fileName: fileName,
+      location: location,
     });
 
-    //this.config = extConfig;
+    this.config = extConfig;
   }
 
   public async generateFile(data: any): Promise<string> {
@@ -34,7 +36,26 @@ export class JsonGenerator extends Generator {
   public async generateRelationalDataFile(
     resolver: MultiGenerateResolver,
   ): Promise<string> {
-    const data = resolver.resolve();
-    return await this.generateFile(data);
+    const objectData = resolver.resolve();
+
+    if (this.config.separate) {
+      const zp = new AdmZip();
+      const zipName = `${this.fileName}.zip`;
+      const zipPath = path.join(this.baseLocation, zipName);
+
+      for (const [key, data] of Object.entries(objectData)) {
+        const route = this.generateRoute(key);
+        const jsonContent = JSON.stringify(data);
+        await fs.promises.writeFile(route, jsonContent, "utf-8");
+
+        zp.addLocalFile(route);
+      }
+
+      zp.writeZip(zipPath);
+
+      return zipPath;
+    } else {
+      return await this.generateFile(objectData);
+    }
   }
 }

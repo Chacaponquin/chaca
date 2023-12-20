@@ -1,7 +1,7 @@
-import { chaca, ChacaError } from "../../../../src";
-import { COMPLETE_SCHEMA } from "../../../utils/schemas/schemaComplete";
-import { NESTED_OBJECT_SCHEMA } from "../../../utils/schemas/schemaNestedObjects";
-import { SIMPLE_SCHEMA } from "../../../utils/schemas/simpleSchema";
+import { chaca, ChacaError } from "../../../src";
+import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
+import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects";
+import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 
 const objectFileName = "csvExport";
 const ROOT = "./data/csv";

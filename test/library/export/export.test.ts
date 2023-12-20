@@ -1,5 +1,5 @@
 import { ChacaError } from "../../../src/errors";
-import { SIMPLE_SCHEMA } from "../../utils/schemas/simpleSchema";
+import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 
 const root = "./data";
 
@@ -12,7 +12,7 @@ describe("# Export Test", () => {
           format: "json",
           location: root,
         }),
-      ).rejects.toThrowError(ChacaError);
+      ).rejects.toThrow(ChacaError);
     });
 
     it("Incorrect format file. Should throw an error", async () => {

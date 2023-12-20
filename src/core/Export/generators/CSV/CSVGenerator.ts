@@ -1,7 +1,3 @@
-interface Props {
-  fileName: string;
-  location: string;
-}
 import { Generator } from "../Generator/Generator";
 import fs from "fs";
 import path from "path";

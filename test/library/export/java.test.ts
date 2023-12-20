@@ -1,8 +1,8 @@
-import { chaca } from "../../../../src";
-import { COMPLETE_SCHEMA } from "../../../utils/schemas/schemaComplete";
-import { NESTED_OBJECT_SCHEMA } from "../../../utils/schemas/schemaNestedObjects";
-import { SCHEMA_WITH_ARRAY_FIELDS } from "../../../utils/schemas/schemaWithArray";
-import { SIMPLE_SCHEMA } from "../../../utils/schemas/simpleSchema";
+import { chaca } from "../../../src";
+import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
+import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects";
+import { SCHEMA_WITH_ARRAY_FIELDS } from "../../utils/schemas/schema-with-array";
+import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 
 const ROOT = "./data/java";
 
