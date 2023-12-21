@@ -42,7 +42,7 @@ export class InputSchemaResolver {
     this._schema = this.validate(obj);
   }
 
-  public schema() {
+  public value() {
     return this._schema;
   }
 
@@ -137,7 +137,8 @@ export class InputSchemaResolver {
         throw new ChacaError(`A key field can not be an array field`);
       }
 
-      if (config.possibleNull > 0) {
+      const possibleNull = config.possibleNull;
+      if (typeof possibleNull === "number" && possibleNull > 0) {
         throw new ChacaError(`A key field can not be a null field`);
       }
     }

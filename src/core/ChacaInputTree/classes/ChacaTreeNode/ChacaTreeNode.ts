@@ -1,5 +1,11 @@
-import { FieldNodeProps } from "../../../ChacaResultTree/classes/FieldNode/FieldNode";
+import { DocumentTree } from "../../../ChacaResultTree/classes";
+import { DatasetStore } from "../../../DatasetStore/DatasetStore";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
+
+interface IsNullProps<K> {
+  store: DatasetStore;
+  currentDocument: DocumentTree<K>;
+}
 
 export abstract class ChacaTreeNode {
   constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {}
@@ -14,13 +20,6 @@ export abstract class ChacaTreeNode {
 
   public getNodeConfig(): ChacaTreeNodeConfig {
     return this.nodeConfig;
-  }
-
-  public getResultNodeConfig(): FieldNodeProps {
-    return {
-      name: this.getNodeName(),
-      isPossibleNull: this.getPossibleNull(),
-    };
   }
 
   public abstract getNoArrayNode(): ChacaTreeNode;
@@ -41,5 +40,45 @@ export abstract class ChacaTreeNode {
 
   public getPossibleNull() {
     return this.nodeConfig.possibleNull;
+  }
+
+  public isPossibleNull(): boolean {
+    const pos = this.nodeConfig.possibleNull;
+    return typeof pos === "number" && pos > 0;
+  }
+
+  private nullPossibility(num: number): boolean {
+    if (num > 0 && num < 100) {
+      const randomVal = Math.floor(Math.random() * 101); // Genera un número aleatorio del 0 al 100
+
+      if (randomVal <= num) {
+        return true; // Devuelve null si el número aleatorio es menor o igual que la probabilidad
+      } else {
+        return false;
+      }
+    } else if (num === 100) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  public isNull<K>(props: IsNullProps<K>): boolean {
+    const possibleNull = this.nodeConfig.possibleNull;
+
+    if (typeof possibleNull === "number") {
+      return this.nullPossibility(possibleNull);
+    } else {
+      const result = possibleNull({
+        currentFields: props.currentDocument.getDocumentObject(),
+        store: props.store,
+      });
+
+      if (typeof result === "number") {
+        return this.nullPossibility(result);
+      } else {
+        return Boolean(result);
+      }
+    }
   }
 }

@@ -1,17 +1,18 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
+import { FieldPossibleNullConfig } from "../../../ChacaSchema/interfaces/schema";
 import { SequenceFieldProps } from "../../../Fields/core/SequenceField/SequenceField";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
 
 interface SequenceProps {
   fieldTreeRoute: Array<string>;
   config: Required<SequenceFieldProps>;
-  possibleNull: number;
+  possibleNull: FieldPossibleNullConfig;
 }
 
 export class SequenceValueNode extends ChacaTreeNode {
   private actualValue: number;
   private _config: Required<SequenceFieldProps>;
-  private _possibleNull: number;
+  private _possibleNull: FieldPossibleNullConfig;
 
   constructor({ config, fieldTreeRoute, possibleNull }: SequenceProps) {
     super({

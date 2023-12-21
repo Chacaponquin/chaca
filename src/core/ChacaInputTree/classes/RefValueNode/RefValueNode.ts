@@ -118,11 +118,11 @@ export class RefValueNode extends ChacaTreeNode {
     for (const refNode of allValues) {
       if (this.refField.where) {
         const isAccepted = this.refField.where({
-          store: new DatasetStore(
-            this.schemasStore,
-            refNode.document,
-            currentSchemaResolver,
-          ),
+          store: new DatasetStore({
+            schemasStore: this.schemasStore,
+            omitCurrentDocument: refNode.document,
+            omitResolver: currentSchemaResolver,
+          }),
           refFields: refNode.document.getDocumentObject(),
           currentFields,
         });

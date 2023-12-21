@@ -4,6 +4,11 @@ import { DatasetStore } from "../../../DatasetStore/DatasetStore";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
 
+interface Props<C> {
+  fields: C;
+  datasetStore: DatasetStore;
+}
+
 export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
   constructor(
     config: ChacaTreeNodeConfig,
@@ -19,7 +24,7 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
     );
   }
 
-  public getValue(fields: C, datasetStore: DatasetStore): R {
+  public getValue({ fields, datasetStore }: Props<C>): R {
     const value = this.func({
       store: datasetStore,
       currentFields: fields,

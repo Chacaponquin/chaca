@@ -7,6 +7,8 @@ import {
   CustomFieldProps,
   FieldTypes,
   FieldSchemaConfig,
+  PossibleNullFunction,
+  PossibleNullFunctionProps,
 } from "./core/ChacaSchema/interfaces/schema";
 import {
   ExportFormat,
@@ -111,4 +113,6 @@ export type {
   FieldTypes,
   FieldSchemaConfig,
   JsonFormatConfig,
+  PossibleNullFunction,
+  PossibleNullFunctionProps,
 };

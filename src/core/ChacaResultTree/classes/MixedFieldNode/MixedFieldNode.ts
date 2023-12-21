@@ -13,7 +13,7 @@ export class MixedFieldNode extends FieldNode {
     let resultObject = {};
 
     this.nodes.forEach((n) => {
-      resultObject = { ...resultObject, [n.nodeConfig.name]: n.getRealValue() };
+      resultObject = { ...resultObject, [n.name]: n.getRealValue() };
     });
 
     return resultObject;
@@ -23,7 +23,7 @@ export class MixedFieldNode extends FieldNode {
     let returnNode = undefined;
 
     for (let i = 0; i < this.nodes.length && returnNode === undefined; i++) {
-      if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
+      if (this.nodes[i].name === fieldTreeRoute[0]) {
         returnNode = this.nodes[i].getNodeByRoute(fieldTreeRoute.slice(1));
       }
     }
@@ -43,7 +43,7 @@ export class MixedFieldNode extends FieldNode {
     let returnNode = undefined;
 
     for (let i = 0; i < this.nodes.length && returnNode === undefined; i++) {
-      if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
+      if (this.nodes[i].name === fieldTreeRoute[0]) {
         returnNode = this.nodes[i].getRefValueByRoute(fieldTreeRoute.slice(1));
       }
     }

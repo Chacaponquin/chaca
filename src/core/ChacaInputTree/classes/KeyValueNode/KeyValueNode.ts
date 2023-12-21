@@ -12,6 +12,12 @@ export type KeyValueNodeProps =
   | SequenceValueNode
   | CustomValueNode;
 
+interface Props {
+  currentDocument: number;
+  store: DatasetStore;
+  currentSchemaResolver: number;
+}
+
 export class KeyValueNode extends ChacaTreeNode {
   constructor(
     fieldTreeRoute: Array<string>,
@@ -31,11 +37,11 @@ export class KeyValueNode extends ChacaTreeNode {
     return fieldTreeRoute.length === 0;
   }
 
-  public getValue(
-    currentDocument: number,
-    store: DatasetStore,
-    currentSchemaResolver: number,
-  ): unknown {
+  public getValue({
+    currentDocument,
+    currentSchemaResolver,
+    store,
+  }: Props): unknown {
     let resultValue: unknown;
 
     if (this.fieldNode instanceof RefValueNode) {
@@ -46,7 +52,10 @@ export class KeyValueNode extends ChacaTreeNode {
     } else if (this.fieldNode instanceof SchemaValueNode) {
       resultValue = this.fieldNode.getValue();
     } else if (this.fieldNode instanceof CustomValueNode) {
-      resultValue = this.fieldNode.getValue(currentDocument, store);
+      resultValue = this.fieldNode.getValue({
+        datasetStore: store,
+        fields: currentDocument,
+      });
     } else {
       resultValue = this.fieldNode.getNextValue();
     }

@@ -21,13 +21,18 @@ export class ChacaResultTree<D> {
   ): Array<FieldNode> {
     const whereFunction = config.where;
 
-    const filterDocuemnts = whereFunction
-      ? this.documents.filter((d) => {
-          const isValid =
-            d !== config.omitDocument && whereFunction(d.getDocumentObject());
-          return isValid;
-        })
-      : this.documents;
+    let filterDocuemnts: Array<DocumentTree<D>>;
+
+    if (whereFunction) {
+      filterDocuemnts = this.documents.filter((d) => {
+        const isValid =
+          d !== config.omitDocument && whereFunction(d.getDocumentObject());
+
+        return isValid;
+      });
+    } else {
+      filterDocuemnts = this.documents;
+    }
 
     const allNodes = [] as Array<FieldNode>;
 

@@ -17,7 +17,7 @@ export class DocumentTree<D> {
     let returnObject = {} as D;
 
     for (const n of this.nodes) {
-      const nodeName = n.nodeConfig.name;
+      const nodeName = n.name;
       const nodeValue = n.getRealValue();
 
       returnObject = { ...returnObject, [nodeName]: nodeValue };
@@ -30,7 +30,7 @@ export class DocumentTree<D> {
     let returnValue = undefined;
 
     for (let i = 0; i < this.nodes.length && returnValue === undefined; i++) {
-      if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
+      if (this.nodes[i].name === fieldTreeRoute[0]) {
         returnValue = this.nodes[i].getNodeByRoute(fieldTreeRoute.slice(1));
       }
     }
@@ -50,7 +50,7 @@ export class DocumentTree<D> {
     let returnValue = undefined;
 
     for (let i = 0; i < this.nodes.length && returnValue === undefined; i++) {
-      if (this.nodes[i].nodeConfig.name === fieldTreeRoute[0]) {
+      if (this.nodes[i].name === fieldTreeRoute[0]) {
         returnValue = this.nodes[i].getRefValueByRoute(fieldTreeRoute.slice(1));
       }
     }

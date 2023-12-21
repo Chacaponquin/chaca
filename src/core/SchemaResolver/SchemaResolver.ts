@@ -103,11 +103,11 @@ export class SchemaResolver<K = any> {
 
   public buildInputTree(): void {
     if (this.inputTree === null) {
-      this.inputTree = new ChacaInputTree(
-        this.schemaName,
-        this.schemaObject,
-        this.schemasStore,
-      );
+      this.inputTree = new ChacaInputTree({
+        schemaName: this.schemaName,
+        schemaToResolve: this.schemaObject,
+        schemasStore: this.schemasStore,
+      });
     }
   }
 
@@ -328,85 +328,121 @@ export class SchemaResolver<K = any> {
     field: ChacaTreeNode,
     indexDoc: number,
   ): FieldNode {
-    // en caso de ser un array
-    if (field.getIsArray()) {
-      return new ArrayResultNode(field.getResultNodeConfig(), field);
-    }
+    const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
+    const store = new DatasetStore({
+      schemasStore: this.schemasStore,
+      omitCurrentDocument: currentDocument,
+      omitResolver: this,
+    });
 
-    // en caso de no ser un array
-    else {
-      // en caso de ser un schema field
-      if (field instanceof SchemaValueNode) {
-        return new SingleResultNode(
-          field.getResultNodeConfig(),
-          field.getValue(),
-        );
+    const isNull = field.isNull({
+      store: store,
+      currentDocument: currentDocument,
+    });
+
+    if (!isNull) {
+      // en caso de ser un array
+      if (field.getIsArray()) {
+        return new ArrayResultNode({
+          name: field.getNodeName(),
+          fieldNode: field,
+        });
       }
 
-      // en caso de ser un field sequential
-      else if (field instanceof SequentialValueNode) {
-        const value = field.getSequentialValue();
-        return new SingleResultNode(field.getResultNodeConfig(), value);
-      }
-
-      // en caso de ser un custom field
-      else if (field instanceof CustomValueNode) {
-        const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-
-        // obtener el valor de la funcion pasando como parametro el documento actual del ciclo
-        const value = field.getValue(
-          currentDocument.getDocumentObject(),
-          new DatasetStore(this.schemasStore, currentDocument, this),
-        );
-
-        return new SingleResultNode(field.getResultNodeConfig(), value);
-      }
-
-      // en caso de ser un ref field
-      else if (field instanceof RefValueNode) {
-        const refValue = field.getValue(indexDoc, this.schemaIndex);
-        return new SingleResultNode(field.getResultNodeConfig(), refValue);
-      }
-
-      // en caso de ser un key field
-      else if (field instanceof KeyValueNode) {
-        const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-        const keyValue = field.getValue(
-          indexDoc,
-          new DatasetStore(this.schemasStore, currentDocument, this),
-          this.schemaIndex,
-        );
-
-        return new SingleResultNode(field.getResultNodeConfig(), keyValue);
-      }
-
-      // en caso de ser un sequence
-      else if (field instanceof SequenceValueNode) {
-        return new SingleResultNode(
-          field.getResultNodeConfig(),
-          field.getNextValue(),
-        );
-      }
-
-      // en caso de ser un mixed field
-      else if (field instanceof MixedValueNode) {
-        return new MixedFieldNode(field.getResultNodeConfig());
-      }
-
-      // en caso de ser un enum field
-      else if (field instanceof EnumValueNode) {
-        return new SingleResultNode(
-          field.getResultNodeConfig(),
-          this.utils.oneOfArray(field.enumOptions),
-        );
-      }
-
-      // en caso de no ser ninguno de los anteriores
+      // en caso de no ser un array
       else {
-        throw new ChacaError(
-          `'${field.getNodeName()}' has an invalid method of solution`,
-        );
+        // en caso de ser un schema field
+        if (field instanceof SchemaValueNode) {
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: field.getValue(),
+          });
+        }
+
+        // en caso de ser un field sequential
+        else if (field instanceof SequentialValueNode) {
+          const value = field.getSequentialValue();
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: value,
+          });
+        }
+
+        // en caso de ser un custom field
+        else if (field instanceof CustomValueNode) {
+          // obtener el valor de la funcion pasando como parametro el documento actual del ciclo
+          const value = field.getValue({
+            fields: currentDocument.getDocumentObject(),
+            datasetStore: store,
+          });
+
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: value,
+          });
+        }
+
+        // en caso de ser un ref field
+        else if (field instanceof RefValueNode) {
+          const refValue = field.getValue(indexDoc, this.schemaIndex);
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: refValue,
+          });
+        }
+
+        // en caso de ser un key field
+        else if (field instanceof KeyValueNode) {
+          const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
+          const keyValue = field.getValue({
+            currentDocument: indexDoc,
+            store: new DatasetStore({
+              schemasStore: this.schemasStore,
+              omitCurrentDocument: currentDocument,
+              omitResolver: this,
+            }),
+            currentSchemaResolver: this.schemaIndex,
+          });
+
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: keyValue,
+          });
+        }
+
+        // en caso de ser un sequence
+        else if (field instanceof SequenceValueNode) {
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: field.getNextValue(),
+          });
+        }
+
+        // en caso de ser un mixed field
+        else if (field instanceof MixedValueNode) {
+          return new MixedFieldNode(field.getNodeName());
+        }
+
+        // en caso de ser un enum field
+        else if (field instanceof EnumValueNode) {
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: this.utils.oneOfArray(field.enumOptions),
+          });
+        }
+
+        // en caso de no ser ninguno de los anteriores
+        else {
+          throw new ChacaError(
+            `'${field.getNodeName()}' has an invalid method of solution`,
+          );
+        }
       }
+    } else {
+      return new SingleResultNode({
+        value: null,
+        name: field.getNodeName(),
+      });
     }
   }
 }

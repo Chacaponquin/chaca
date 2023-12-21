@@ -2,6 +2,7 @@ import {
   EmptySequentialValuesError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
+import { FieldPossibleNullConfig } from "../../../ChacaSchema/interfaces/schema";
 import { SequentialFieldConfig } from "../../../Fields/core/SequentialField/SequentialField";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
 
@@ -9,7 +10,7 @@ export interface SequentialValueNodeProps {
   fieldTreeRoute: Array<string>;
   valuesArray: Array<unknown>;
   config: Required<SequentialFieldConfig>;
-  possibleNull: number;
+  possibleNull: FieldPossibleNullConfig;
 }
 
 export class SequentialValueNode extends ChacaTreeNode {
@@ -17,7 +18,7 @@ export class SequentialValueNode extends ChacaTreeNode {
 
   private valuesArray: Array<unknown>;
   private config: Required<SequentialFieldConfig>;
-  private possibleNull: number;
+  private possibleNull: FieldPossibleNullConfig;
 
   constructor({
     config,

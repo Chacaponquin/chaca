@@ -7,13 +7,23 @@ import {
 import { FieldNode } from "../ChacaResultTree/classes";
 import { SchemaResolver } from "../SchemaResolver/SchemaResolver";
 
+interface Props {
+  schemasStore: SchemaStore;
+  omitCurrentDocument: DocumentTree<any>;
+  omitResolver: SchemaResolver;
+}
+
 /** Store to interact with all datasets */
 export class DatasetStore {
-  constructor(
-    private readonly schemasStore: SchemaStore,
-    private readonly omitCurrentDocument: DocumentTree<any>,
-    private readonly omitResolver: SchemaResolver,
-  ) {}
+  private readonly schemasStore: SchemaStore;
+  private readonly omitCurrentDocument: DocumentTree<any>;
+  private readonly omitResolver: SchemaResolver;
+
+  constructor({ omitCurrentDocument, omitResolver, schemasStore }: Props) {
+    this.omitResolver = omitResolver;
+    this.omitCurrentDocument = omitCurrentDocument;
+    this.schemasStore = schemasStore;
+  }
 
   private validateGetValueConfig(
     config?: GetStoreValueInput,

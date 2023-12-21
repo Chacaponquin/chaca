@@ -28,6 +28,12 @@ import { InputTreeUtils } from "./utils/input_tree_utils";
 import { SequentialFieldResolver } from "../Resolvers/core/SequentialFieldResolver/SequentialFieldResolver";
 import { SchemaStore } from "../SchemasStore/SchemaStore";
 
+interface Props {
+  schemaName: string;
+  schemaToResolve: SchemaToResolve;
+  schemasStore: SchemaStore;
+}
+
 export class ChacaInputTree {
   private inputTreeUtils = new InputTreeUtils();
 
@@ -38,11 +44,7 @@ export class ChacaInputTree {
   // ref nodes
   private refToResolve: Array<RefValueNode> = [];
 
-  constructor(
-    schemaName: string,
-    schemaToResolve: SchemaToResolve,
-    schemasStore: SchemaStore,
-  ) {
+  constructor({ schemaName, schemaToResolve, schemasStore }: Props) {
     this.schemasStore = schemasStore;
     this.schemaName = schemaName;
 
@@ -209,7 +211,7 @@ export class ChacaInputTree {
     const nodes = [] as Array<ChacaTreeNode>;
 
     this.nodes.forEach((n) => {
-      if (n.getPossibleNull() > 0) {
+      if (n.isPossibleNull()) {
         nodes.push(n);
       }
 

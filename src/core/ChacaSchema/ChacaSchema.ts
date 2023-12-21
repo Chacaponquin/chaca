@@ -13,7 +13,7 @@ export class ChacaSchema<K = any> extends SchemaFieldType {
 
   constructor(inputObj: SchemaInput) {
     super();
-    this.schemaResolver = new InputSchemaResolver(inputObj).schema();
+    this.schemaResolver = new InputSchemaResolver(inputObj).value();
   }
 
   public getSchemaObject() {

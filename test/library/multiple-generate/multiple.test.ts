@@ -5,11 +5,11 @@ import { REPEAT_NAMES_DATA } from "./utils/repeat_names/schemas";
 describe("# Multiple Generation Test", () => {
   describe("Incorrect declaration of reference field", () => {
     it("Repeat names in the declaration. Should throw an error", () => {
-      expect(REPEAT_NAMES_DATA).toThrowError(ChacaError);
+      expect(REPEAT_NAMES_DATA).toThrow(ChacaError);
     });
 
     it("Trying reference a reference field.", () => {
-      expect(REF_REF_VALUE_DATA).toThrowError(TryRefANoKeyFieldError);
+      expect(REF_REF_VALUE_DATA).toThrow(TryRefANoKeyFieldError);
     });
   });
 });

@@ -29,7 +29,7 @@ export class MixedValueNode extends ChacaTreeNode {
     const nodes = [] as Array<ChacaTreeNode>;
 
     this.nodes.forEach((n) => {
-      if (n.getPossibleNull() > 0) {
+      if (n.isPossibleNull()) {
         nodes.push(n);
       }
 

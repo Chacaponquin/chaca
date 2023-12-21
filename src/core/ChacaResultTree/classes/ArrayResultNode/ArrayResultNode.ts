@@ -1,19 +1,24 @@
 import { ChacaError } from "../../../../errors";
 import { ChacaTreeNode } from "../../../ChacaInputTree/classes";
-import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode";
+import { FieldNode } from "../FieldNode/FieldNode";
 import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
+
+interface Props {
+  name: string;
+  fieldNode: ChacaTreeNode;
+}
 
 export class ArrayResultNode extends FieldNode {
   private arrayNodes: Array<FieldNode> = [];
+  private fieldNode: ChacaTreeNode;
 
-  constructor(
-    config: FieldNodeProps,
-    public readonly fieldInfo: ChacaTreeNode,
-  ) {
-    super(config);
+  constructor({ name, fieldNode }: Props) {
+    super(name);
+
+    this.fieldNode = fieldNode;
   }
 
-  public getValue(): unknown[] {
+  public getValue(): Array<unknown> {
     return this.arrayNodes.map((n) => n.getRealValue());
   }
 
@@ -41,5 +46,9 @@ export class ArrayResultNode extends FieldNode {
         `The field ${fieldTreeRoute.join(".")} do not exists`,
       );
     }
+  }
+
+  public getFieldNode() {
+    return this.fieldNode;
   }
 }

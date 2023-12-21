@@ -1,12 +1,17 @@
 import { ChacaError } from "../../../../errors";
-import { FieldNode, FieldNodeProps } from "../FieldNode/FieldNode";
+import { FieldNode } from "../FieldNode/FieldNode";
+
+interface Props {
+  name: string;
+  value: unknown;
+}
 
 export class SingleResultNode extends FieldNode {
   private value: unknown;
   private taken: Array<string> = [];
 
-  constructor(config: FieldNodeProps, value: unknown) {
-    super(config);
+  constructor({ name, value }: Props) {
+    super(name);
     this.value = value;
   }
 

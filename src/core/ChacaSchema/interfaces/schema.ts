@@ -33,14 +33,24 @@ export type SchemaToResolve = Record<string, ResolverObject>;
 export type ResolverObject = {
   type: IResolver;
   isArray: FieldIsArrayConfig;
-  possibleNull: number;
+  possibleNull: FieldPossibleNullConfig;
 };
 
 export type ArrayLimitObject = { min: number; max: number };
 export type FieldIsArrayConfig = ArrayLimitObject | null;
+export type FieldPossibleNullConfig = number | PossibleNullFunction;
+export type PossibleNullFunction = (
+  props: PossibleNullFunctionProps,
+) => number | boolean;
+export type PossibleNullFunctionProps<C = any> = {
+  /** Current schema document fields */
+  currentFields: C;
+  /** Store to interact with all datasets */
+  store: DatasetStore;
+};
 
 export type InputIsArrayConfig = boolean | number | Partial<ArrayLimitObject>;
-export type InputPossibleNull = boolean | number;
+export type InputPossibleNull = boolean | number | PossibleNullFunction;
 
 /**
  * Function that returns a value depending on the state of the current document and the dataset
