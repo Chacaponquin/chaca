@@ -22,9 +22,11 @@ describe("# Sequence field tests", () => {
 
   it("Create an array sequence field. Should throw an error", () => {
     expect(() =>
-      chaca.schema({
-        test: { type: chaca.sequence(), isArray: 20 },
-      }),
+      chaca
+        .schema({
+          test: { type: chaca.sequence(), isArray: 20 },
+        })
+        .generate(20),
     ).toThrow(ChacaError);
   });
 

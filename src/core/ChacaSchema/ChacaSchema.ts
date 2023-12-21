@@ -11,9 +11,9 @@ import { SchemaResolver } from "../SchemaResolver/SchemaResolver";
 export class ChacaSchema<K = any> extends SchemaFieldType {
   private schemaResolver: SchemaToResolve;
 
-  constructor(inputObj: SchemaInput) {
+  constructor(input: SchemaInput) {
     super();
-    this.schemaResolver = new InputSchemaResolver(inputObj).value();
+    this.schemaResolver = new InputSchemaResolver(input).value();
   }
 
   public getSchemaObject() {

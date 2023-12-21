@@ -69,6 +69,8 @@ export class ChacaInputTree {
   ): ChacaTreeNode {
     let returnNode: ChacaTreeNode;
 
+    this.validateResolver(actualRoute, object);
+
     const nodeConfig = {
       fieldTreeRoute: actualRoute,
       isArray: object.isArray,
@@ -159,14 +161,46 @@ export class ChacaInputTree {
     return returnNode;
   }
 
+  private validateResolver(route: Array<string>, config: ResolverObject): void {
+    const name = ChacaTreeNode.getRouteString(route);
+
+    if (config.type instanceof SequenceFieldResolver) {
+      if (config.isArray !== null) {
+        throw new ChacaError(
+          `The sequence field ${name} can not be an array field`,
+        );
+      }
+    }
+
+    // sequential
+    else if (config.type instanceof SequentialFieldResolver) {
+      if (config.isArray !== null) {
+        throw new ChacaError(
+          `The sequential field ${name} can not be an array field`,
+        );
+      }
+    }
+
+    // key
+    else if (config.type instanceof KeyFieldResolver) {
+      if (config.isArray !== null) {
+        throw new ChacaError(`The key field ${name} can not be an array field`);
+      }
+
+      const possibleNull = config.possibleNull;
+      if (typeof possibleNull === "number" && possibleNull > 0) {
+        throw new ChacaError(`The key field ${name} can not be a null field`);
+      }
+    }
+  }
+
   private createSubNodesOfMixedField(
     actualRoute: Array<string>,
     parentNode: MixedValueNode,
     schema: ChacaSchema,
   ) {
-    for (const [key, obj] of Object.entries<ResolverObject>(
-      schema.getSchemaObject(),
-    )) {
+    const object = schema.getSchemaObject();
+    for (const [key, obj] of Object.entries<ResolverObject>(object)) {
       const fieldRoute = [...actualRoute, key];
       const newNode = this.createNodeByType(fieldRoute, obj);
       parentNode.insertNode(newNode);

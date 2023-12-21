@@ -9,7 +9,6 @@ import {
 } from "../../Fields/core";
 import {
   CustomFieldResolver,
-  KeyFieldResolver,
   MixedFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
@@ -103,8 +102,6 @@ export class InputSchemaResolver {
 
         resolverObject.possibleNull = configNull.value();
         resolverObject.isArray = configArray.value();
-
-        this._validateResolver(resolverObject);
       } else {
         const type = this.filter({ config: field });
         resolverObject.type = type;
@@ -114,33 +111,5 @@ export class InputSchemaResolver {
     }
 
     return schemaToSave;
-  }
-
-  private _validateResolver(config: ResolverObject): void {
-    // sequence
-    if (config.type instanceof SequenceFieldResolver) {
-      if (config.isArray !== null) {
-        throw new ChacaError(`A sequence field can not be an array field`);
-      }
-    }
-
-    // sequential
-    else if (config.type instanceof SequentialFieldResolver) {
-      if (config.isArray !== null) {
-        throw new ChacaError(`A sequential field can not be an array field`);
-      }
-    }
-
-    // key
-    else if (config.type instanceof KeyFieldResolver) {
-      if (config.isArray !== null) {
-        throw new ChacaError(`A key field can not be an array field`);
-      }
-
-      const possibleNull = config.possibleNull;
-      if (typeof possibleNull === "number" && possibleNull > 0) {
-        throw new ChacaError(`A key field can not be a null field`);
-      }
-    }
   }
 }

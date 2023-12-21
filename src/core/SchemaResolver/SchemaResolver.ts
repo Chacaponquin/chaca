@@ -69,6 +69,12 @@ export class SchemaResolver<K = any> {
     this.consoleVerbose = consoleVerbose;
   }
 
+  public resolve(): Array<K> {
+    this.buildInputTree();
+    this.buildTrees();
+    return this.getDocumentsArray();
+  }
+
   public getKeyNodes(): Array<KeyValueNode> {
     let keys = [] as Array<KeyValueNode>;
 
@@ -242,12 +248,6 @@ export class SchemaResolver<K = any> {
         );
       }
     }
-  }
-
-  public resolve(): Array<K> {
-    this.buildInputTree();
-    this.buildTrees();
-    return this.getDocumentsArray();
   }
 
   public getDocumentsArray(omitDocument?: DocumentTree<K>): Array<K> {

@@ -8,9 +8,11 @@ import {
 describe("# Sequential Field test", () => {
   it("Try create an array sequential field. Should throw an error", () => {
     expect(() =>
-      chaca.schema({
-        test: { type: chaca.sequential([1, 2, 3]), isArray: 20 },
-      }),
+      chaca
+        .schema({
+          test: { type: chaca.sequential([1, 2, 3]), isArray: 20 },
+        })
+        .generate(50),
     ).toThrow(ChacaError);
   });
 
