@@ -10,6 +10,7 @@ import {
   PossibleNullFunction,
   PossibleNullFunctionProps,
 } from "./core/ChacaSchema/interfaces/schema";
+
 import {
   ExportFormat,
   FileConfig,
@@ -51,19 +52,30 @@ import {
   SequentialField,
   SequentialFieldConfig,
 } from "./core/Fields/core/SequentialField/SequentialField";
+
 import {
   KeyField,
   KeyFieldProps,
   KeyAllowDataTypes,
 } from "./core/Fields/core/KeyField/KeyField";
+
 import {
   SequenceField,
   SequenceFieldProps,
 } from "./core/Fields/core/SequenceField/SequenceField";
+
 import { DatasetStore } from "./core/DatasetStore/DatasetStore";
 import { EnumField } from "./core/Fields/core/EnumField/EnumField";
 import { Chaca } from "./Chaca";
 import { ChacaUtils } from "./core/ChacaUtils/ChacaUtils";
+
+import {
+  ProbabilityField,
+  Chance,
+  ProbabilityOption,
+  ChanceFunction,
+  ChanceFunctionProps,
+} from "./core/Fields/core/ProbabilityField/ProbabilityField";
 
 export const chaca = new Chaca();
 export const schemas = new Schemas();
@@ -85,6 +97,7 @@ export {
   EnumField,
   SequenceField,
   SequentialField,
+  ProbabilityField,
 };
 
 export { ChacaSchema, DatasetStore, Chaca, ChacaUtils, Schemas };
@@ -115,4 +128,8 @@ export type {
   JsonFormatConfig,
   PossibleNullFunction,
   PossibleNullFunctionProps,
+  Chance,
+  ProbabilityOption,
+  ChanceFunction,
+  ChanceFunctionProps,
 };

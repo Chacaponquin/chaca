@@ -12,6 +12,7 @@ import {
   KeyValueNode,
   SequentialValueNode,
   SequenceValueNode,
+  ProbabilityValueNode,
 } from "../ChacaInputTree/classes";
 import { ChacaResultTree } from "../ChacaResultTree/ChacaResultTree";
 import {
@@ -173,9 +174,7 @@ export class SchemaResolver<K = any> {
   public getAllRefValuesByNodeRoute(
     fieldTreeRoute: Array<string>,
   ): Array<SearchedRefValue> {
-    const allValues =
-      this.resultTree.getAllRefValuesByNodeRoute(fieldTreeRoute);
-    return allValues;
+    return this.resultTree.getAllRefValuesByNodeRoute(fieldTreeRoute);
   }
 
   public searchRefNodes() {
@@ -356,6 +355,19 @@ export class SchemaResolver<K = any> {
           return new SingleResultNode({
             name: field.getNodeName(),
             value: field.getValue(),
+          });
+        }
+
+        // en caso de ser un probability field
+        else if (field instanceof ProbabilityValueNode) {
+          const value = field.getValue({
+            store: store,
+            currentDocument: currentDocument,
+          });
+
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: value,
           });
         }
 

@@ -3,6 +3,7 @@ import { SchemaField } from "../../../schemas/SchemaField";
 import {
   EnumField,
   KeyField,
+  ProbabilityField,
   RefField,
   SequenceField,
   SequentialField,
@@ -10,6 +11,7 @@ import {
 import {
   CustomFieldResolver,
   MixedFieldResolver,
+  ProbabilityFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
   SequenceFieldResolver,
@@ -63,6 +65,8 @@ export class InputSchemaResolver {
             config.getValuesArray(),
             config.getConfig(),
           );
+        } else if (config instanceof ProbabilityField) {
+          returnResolver = new ProbabilityFieldResolver(config.getValues());
         } else if (config instanceof KeyField) {
           returnResolver = new InputKeyField(config).resolver();
         } else if (config instanceof SequenceField) {

@@ -24,6 +24,10 @@ import {
 import { ExportResolver } from "./core/Export/ExportResolver";
 import { FileConfig } from "./core/Export/interfaces/export";
 import { MultiGenerateResolver } from "./core/MultiGenerate/MultiGenerateResolver";
+import {
+  ProbabilityOption,
+  ProbabilityField,
+} from "./core/Fields/core/ProbabilityField/ProbabilityField";
 
 export class Chaca {
   utils = new ChacaUtils();
@@ -159,5 +163,9 @@ export class Chaca {
   ) {
     const resolver = new MultiGenerateResolver<K>(schemas, config);
     return resolver.resolve();
+  }
+
+  probability(options: Array<ProbabilityOption>) {
+    return new ProbabilityField(options);
   }
 }

@@ -7,6 +7,7 @@ import { RefValueNode } from "./RefValueNode/RefValueNode";
 import { SequentialValueNode } from "./SequentialValueNode/SequentialValueNode";
 import { KeyValueNode } from "./KeyValueNode/KeyValueNode";
 import { SequenceValueNode } from "./SequenceValueNode/SequenceValueNode";
+import { ProbabilityValueNode } from "./ProbailityValueNode/ProbabilityValueNode";
 
 export {
   ChacaTreeNode,
@@ -18,4 +19,5 @@ export {
   SequentialValueNode,
   KeyValueNode,
   SequenceValueNode,
+  ProbabilityValueNode,
 };

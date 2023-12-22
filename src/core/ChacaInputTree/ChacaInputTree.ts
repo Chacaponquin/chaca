@@ -8,6 +8,7 @@ import {
   EnumFieldResolver,
   KeyFieldResolver,
   MixedFieldResolver,
+  ProbabilityFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
   SequenceFieldResolver,
@@ -19,6 +20,7 @@ import {
   EnumValueNode,
   KeyValueNode,
   MixedValueNode,
+  ProbabilityValueNode,
   RefValueNode,
   SchemaValueNode,
   SequenceValueNode,
@@ -81,6 +83,8 @@ export class ChacaInputTree {
       returnNode = new CustomValueNode(nodeConfig, object.type.fun);
     } else if (object.type instanceof SchemaFieldResolver) {
       returnNode = new SchemaValueNode(nodeConfig, object.type.schema);
+    } else if (object.type instanceof ProbabilityFieldResolver) {
+      returnNode = new ProbabilityValueNode(nodeConfig, object.type.values);
     } else if (object.type instanceof EnumFieldResolver) {
       returnNode = new EnumValueNode(nodeConfig, object.type.array);
     } else if (object.type instanceof MixedFieldResolver) {
