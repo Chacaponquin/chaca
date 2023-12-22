@@ -82,7 +82,7 @@ export class ProbabilityValueNode extends ChacaTreeNode {
       const limit = quant * weights[i];
 
       for (let j = 0; j < limit; ++j) {
-        distribution.push(i);
+        distribution.push(array[i]);
       }
     }
 
