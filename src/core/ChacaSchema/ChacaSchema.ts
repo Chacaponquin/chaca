@@ -49,13 +49,13 @@ export class ChacaSchema<K = any> extends SchemaFieldType {
 
   /**
    * Generate an array of schema documents
-   * @param cantDocuments number of documents that you want to create
+   * @param countDocuments number of documents that you want to create
    */
-  public generate(cantDocuments: number): K[] {
+  public generate(countDocuments: number): K[] {
     const schemaToResolve = new SchemaResolver<K>({
       schemaName: "Schema",
       schemaObject: this.schemaResolver,
-      countDoc: cantDocuments,
+      countDoc: countDocuments,
       schemaIndex: 0,
       consoleVerbose: false,
     });
