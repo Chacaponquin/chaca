@@ -22,7 +22,7 @@ import { IdSchema } from "../../../../schemas/id/IdSchema";
 interface Props {
   fileName: string;
   location: string;
-  zip: boolean;
+  zip?: boolean;
 }
 
 interface JavaClassCreated {
@@ -49,7 +49,7 @@ export class JavaGenerator extends Generator {
       location: config.location,
     });
 
-    this.zip = config.zip;
+    this.zip = Boolean(config.zip);
   }
 
   public async generateRelationalDataFile(

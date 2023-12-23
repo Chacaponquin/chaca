@@ -30,7 +30,7 @@ export class FileFormat {
   }
 
   private validateCsv(format: CsvFormatConfig): CsvFormatConfig {
-    const config: CsvFormatConfig = { ext: "csv", zip: false };
+    const config: CsvFormatConfig = { ext: "csv" };
 
     if (typeof format === "object" && format !== null) {
       config.zip = Boolean(format.zip);
@@ -42,8 +42,6 @@ export class FileFormat {
   private validateJson(format: JsonFormatConfig): JsonFormatConfig {
     const config: JsonFormatConfig = {
       ext: "json",
-      separate: false,
-      zip: false,
     };
 
     if (typeof format === "object" && format !== null) {
@@ -55,7 +53,7 @@ export class FileFormat {
   }
 
   private validateJava(format: JavaFormatConfig): JavaFormatConfig {
-    const config: JavaFormatConfig = { ext: "java", zip: false };
+    const config: JavaFormatConfig = { ext: "java" };
 
     if (typeof format === "object" && format !== null) {
       config.zip = Boolean(format.zip);

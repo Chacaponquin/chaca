@@ -44,11 +44,11 @@ export type JsonFormatConfig = {
   /**
    * If is `true`, the data generated from each schema will be placed in independent files
    */
-  separate: boolean;
+  separate?: boolean;
   /**
    * Boolean indicating whether all generated files are compressed into a zip
    */
-  zip: boolean;
+  zip?: boolean;
 };
 
 export type CsvFormatConfig = {
@@ -56,7 +56,7 @@ export type CsvFormatConfig = {
   /**
    * Boolean indicating whether all generated files are compressed into a zip
    */
-  zip: boolean;
+  zip?: boolean;
 };
 
 export type JavaFormatConfig = {
@@ -64,5 +64,5 @@ export type JavaFormatConfig = {
   /**
    * Boolean indicating whether all generated files are compressed into a zip
    */
-  zip: boolean;
+  zip?: boolean;
 };

@@ -3,8 +3,8 @@ import { Generator } from "../Generator/Generator";
 import fs from "fs";
 
 interface ExtProps {
-  separate: boolean;
-  zip: boolean;
+  separate?: boolean;
+  zip?: boolean;
 }
 
 interface Props {

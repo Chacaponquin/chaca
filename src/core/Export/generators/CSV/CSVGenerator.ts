@@ -8,7 +8,7 @@ import { CSVArray, CSVDataType, CSVObject } from "./core/types";
 interface Props {
   fileName: string;
   location: string;
-  zip: boolean;
+  zip?: boolean;
 }
 
 export class CSVGenerator extends Generator {
@@ -21,7 +21,7 @@ export class CSVGenerator extends Generator {
       location: config.location,
     });
 
-    this.zip = config.zip;
+    this.zip = Boolean(config.zip);
   }
 
   public async generateRelationalDataFile(
