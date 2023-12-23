@@ -3,8 +3,61 @@
 ### 🪛 Fix
 
 - Fix some problems with `sequence` fields configuration
+- Upgrade error messages
 
 ### 🌚 Features
+
+- Add conditional value function to `possibleNull` configuration
+
+  ```ts
+  const schema = chaca.schema({
+    age: schemas.dataType.int({ min: 18, max: 90 }),
+    actual_school_year: {
+      type: schemas.dataType.int({ min: 10, max: 15 }),
+      possibleNull: ({ currentFields, store }) => {
+        if (currentFields.age > 25) {
+          return 90; // If the age is greater than 25 years, there will be a 90% probability that the field will be null
+        } else {
+          return 15; // Will be a 15% probability that the field will be null;
+        }
+      },
+    },
+  });
+  ```
+
+- Add `probability` field as alternative to `enum` field
+
+  ```ts
+  // Simple definition
+  const schema = chaca.schema({
+    prob: chaca.probability([
+      { chance: 0.9, value: 10 }, // There is a 90% chance of choosing the value 10
+      { chance: 0.5, value: 5 }, // There is a 50% chance of choosing the value 5
+      { chance: 0.1, value: 1 }, // There is a 10% chance of choosing the value 1
+    ]),
+  });
+
+  // Conditional definition
+  const schema = chaca.schema({
+    test: schemas.dataType.int({ min: 0, max: 10 }),
+    prob: chaca.probability([
+      {
+        chance: ({ currentFields, store }) => {
+          if (currentFields.test > 5) {
+            return 0.9;
+          } else {
+            return 0.2;
+          }
+        },
+        value: 10,
+      },
+      { chance: 0.5, value: 5 },
+      { chance: 0.1, value: 1 },
+    ]),
+  });
+  ```
+
+- Add export configurations for `json`, `java` and `csv` extensions
 
 ## chaca@1.6.3
 
