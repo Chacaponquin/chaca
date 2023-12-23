@@ -5,7 +5,7 @@ export class Location {
 
   constructor(location?: string) {
     if (typeof location !== "string") {
-      throw new ChacaError("The file needs a location");
+      throw new ChacaError("The file needs a location for exportation");
     }
 
     this._value = location;

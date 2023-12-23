@@ -70,6 +70,7 @@ export class SQLGenerator extends Generator {
     }
 
     this.createData(this.fileName, sqlData);
+
     // change tables id columns
     this.allTables.forEach((t) => {
       t.updateIdColumnName();

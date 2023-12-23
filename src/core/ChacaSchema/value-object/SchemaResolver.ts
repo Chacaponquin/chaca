@@ -10,6 +10,7 @@ import {
 } from "../../Fields/core";
 import {
   CustomFieldResolver,
+  EnumFieldResolver,
   MixedFieldResolver,
   ProbabilityFieldResolver,
   RefFieldResolver,
@@ -27,7 +28,6 @@ import {
   SchemaInput,
   SchemaToResolve,
 } from "../interfaces/schema";
-import { InputEnumField } from "./Enum";
 import { FieldIsArray } from "./FieldIsArray";
 import { FieldPossibleNull } from "./FieldPossibleNull";
 import { InputKeyField } from "./Key";
@@ -72,15 +72,13 @@ export class InputSchemaResolver {
         } else if (config instanceof SequenceField) {
           returnResolver = new SequenceFieldResolver(config.getConfig());
         } else if (config instanceof EnumField) {
-          returnResolver = new InputEnumField({
-            enumField: config,
-          }).resolver();
+          returnResolver = new EnumFieldResolver(config.values);
         } else {
-          throw new ChacaError(`Is not a valid field type`);
+          throw new ChacaError(`${config} is not a valid field type`);
         }
       }
     } else {
-      throw new ChacaError(`Is not a valid field type`);
+      throw new ChacaError(`${config} is not a valid field type`);
     }
 
     return returnResolver;
