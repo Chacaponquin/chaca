@@ -1,6 +1,7 @@
 import {
   CsvFormatConfig,
   ExportFormat,
+  JavaFormatConfig,
   JsonFormatConfig,
 } from "../interfaces/export";
 import { ChacaError } from "../../../errors";
@@ -16,6 +17,8 @@ export class FileFormat {
         this._value = this.validateJson(format);
       } else if (format.ext === "csv") {
         this._value = this.validateCsv(format);
+      } else if (format.ext === "java") {
+        this._value = this.validateJava(format);
       } else {
         throw new ChacaError(`Invalid format for exportation`);
       }
@@ -45,6 +48,16 @@ export class FileFormat {
 
     if (typeof format === "object" && format !== null) {
       config.separate = Boolean(format.separate);
+      config.zip = Boolean(format.zip);
+    }
+
+    return config;
+  }
+
+  private validateJava(format: JavaFormatConfig): JavaFormatConfig {
+    const config: JavaFormatConfig = { ext: "java", zip: false };
+
+    if (typeof format === "object" && format !== null) {
       config.zip = Boolean(format.zip);
     }
 

@@ -66,7 +66,11 @@ export class ExportResolver {
         zip: false,
       });
     } else if (format === "java") {
-      gen = new JavaGenerator(this.config);
+      gen = new JavaGenerator({
+        fileName: this.config.fileName,
+        location: this.config.location,
+        zip: false,
+      });
     } else if (format === "typescript") {
       gen = new TypescriptGenerator(this.config);
     } else if (format === "yaml") {
@@ -96,10 +100,14 @@ export class ExportResolver {
           zip: format.zip,
         });
       } else {
-        throw new ChacaError(`Format '${this.config.format}' invalid`);
+        throw new ChacaError(
+          `Format '${this.config.format}' invalid for exportation`,
+        );
       }
     } else {
-      throw new ChacaError(`Format '${this.config.format}' invalid`);
+      throw new ChacaError(
+        `Format '${this.config.format}' invalid for exportation`,
+      );
     }
 
     return gen;

@@ -34,7 +34,10 @@ export interface FileConfig {
   format: ExportFormat;
 }
 
-export type ExtensionConfigs = JsonFormatConfig | CsvFormatConfig;
+export type ExtensionConfigs =
+  | JsonFormatConfig
+  | CsvFormatConfig
+  | JavaFormatConfig;
 
 export type JsonFormatConfig = {
   ext: "json";
@@ -50,6 +53,14 @@ export type JsonFormatConfig = {
 
 export type CsvFormatConfig = {
   ext: "csv";
+  /**
+   * Boolean indicating whether all generated files are compressed into a zip
+   */
+  zip: boolean;
+};
+
+export type JavaFormatConfig = {
+  ext: "java";
   /**
    * Boolean indicating whether all generated files are compressed into a zip
    */

@@ -58,6 +58,13 @@
   ```
 
 - Add export configurations for `json`, `java` and `csv` extensions
+  ```ts
+  chaca.export(data, {
+    fileName: "Data",
+    localtion: "./data",
+    format: { ext: "json", zip: false, separate: true },
+  });
+  ```
 
 ## chaca@1.6.3
 

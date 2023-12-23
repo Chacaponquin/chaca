@@ -1,5 +1,4 @@
 import { Generator } from "../Generator/Generator";
-import AdmZip from "adm-zip";
 import fs from "fs";
 import path from "path";
 
@@ -23,6 +22,7 @@ import { IdSchema } from "../../../../schemas/id/IdSchema";
 interface Props {
   fileName: string;
   location: string;
+  zip: boolean;
 }
 
 interface JavaClassCreated {
@@ -38,6 +38,8 @@ interface MainContentData {
 export class JavaGenerator extends Generator {
   private idSchema = new IdSchema();
 
+  private zip: boolean;
+
   private classesCreated: Array<JavaClassCreated> = [];
 
   constructor(config: Props) {
@@ -46,12 +48,15 @@ export class JavaGenerator extends Generator {
       fileName: config.fileName,
       location: config.location,
     });
+
+    this.zip = config.zip;
   }
 
   public async generateRelationalDataFile(
-    resolver: MultiGenerateResolver<any>,
+    resolver: MultiGenerateResolver,
   ): Promise<string> {
     this.classesCreated = [];
+
     const resolversData = [] as Array<MainContentData>;
     resolver.getResolvers().forEach((r) => {
       resolversData.push({
@@ -104,19 +109,20 @@ export class JavaGenerator extends Generator {
       }
     }
 
-    const zp = new AdmZip();
-    const zipName = `${this.fileName}.zip`;
-    const zipPath = path.join(this.baseLocation, zipName);
+    if (this.zip) {
+      const { zip, zipPath } = this.createZip(this.fileName);
 
-    for (let i = 0; i < filesRoutes.length; i++) {
-      const r = filesRoutes[i];
-      zp.addLocalFile(r);
-      await fs.promises.unlink(r);
+      for (const r of filesRoutes) {
+        zip.addLocalFile(r);
+        await fs.promises.unlink(r);
+      }
+
+      zip.writeZip(zipPath);
+
+      return zipPath;
+    } else {
+      return this.baseLocation;
     }
-
-    zp.writeZip(zipPath);
-
-    return zipPath;
   }
 
   private createDataTypes(data: any): DataType {
