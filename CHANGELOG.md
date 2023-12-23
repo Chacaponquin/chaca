@@ -1,3 +1,11 @@
+## chaca@1.7.0
+
+### 🪛 Fix
+
+- Fix some problems with `sequence` fields configuration
+
+### 🌚 Features
+
 ## chaca@1.6.3
 
 ### 🪛 Fix

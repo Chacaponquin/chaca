@@ -38,11 +38,20 @@ export type ExtensionConfigs = JsonFormatConfig | CsvFormatConfig;
 
 export type JsonFormatConfig = {
   ext: "json";
+  /**
+   * If is `true`, the data generated from each schema will be placed in independent files
+   */
   separate: boolean;
+  /**
+   * Boolean indicating whether all generated files are compressed into a zip
+   */
   zip: boolean;
 };
 
 export type CsvFormatConfig = {
   ext: "csv";
+  /**
+   * Boolean indicating whether all generated files are compressed into a zip
+   */
   zip: boolean;
 };

@@ -165,6 +165,17 @@ export class Chaca {
     return resolver.resolve();
   }
 
+  /**
+   * Probability field
+   * @param options Array of options to choose from. Where each one has the 'chance' parameter to indicate the probability of being chosen.
+   *
+   * @example
+   * chaca.probability([
+   *   { chance: 0.9, value: 10 },
+   *   { chance: 0.5, value: 5 },
+   *   { chance: 0.1, value: 1 },
+   * ])
+   */
   probability(options: Array<ProbabilityOption>) {
     return new ProbabilityField(options);
   }

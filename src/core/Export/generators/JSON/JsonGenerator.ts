@@ -1,8 +1,6 @@
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 import { Generator } from "../Generator/Generator";
 import fs from "fs";
-import path from "path";
-import AdmZip from "adm-zip";
 
 interface ExtProps {
   separate: boolean;

@@ -17,6 +17,7 @@ export type FieldObjectInput<R = any> = {
   /** Null schema field configuration
    * - `boolean` - `true` 50% chances to be null, `false` 0% chances
    * - `number` specific porcent of chances
+   * - `function` function that returns a number between 0 and 100 or a boolean. Receive 'currentFields' and 'store' as parameters
    */
   possibleNull?: InputPossibleNull;
 };

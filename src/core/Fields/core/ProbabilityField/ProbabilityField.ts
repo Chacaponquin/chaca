@@ -13,7 +13,15 @@ export type ChanceFunctionProps<C = any> = {
 };
 
 export interface ProbabilityOption {
+  /**
+   * Probability of being chosen
+   * - `number` Value between 0 and 1
+   * - `function` Function that returns a probability value between 0 and 1. Receive 'currentFields' and 'store' as parameters
+   */
   chance: Chance;
+  /**
+   * Option value
+   */
   value: unknown;
 }
 
