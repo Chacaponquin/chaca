@@ -29,7 +29,7 @@ describe("# JSON Export Test", () => {
       ],
       {
         fileName: fileName + "NotSeparate",
-        format: { ext: "json", separate: false },
+        format: { ext: "json", separate: false, zip: false },
         location: ROOT,
       },
       { verbose: false },
@@ -57,7 +57,7 @@ describe("# JSON Export Test", () => {
       ],
       {
         fileName: fileName + "Separate",
-        format: { ext: "json", separate: true },
+        format: { ext: "json", separate: true, zip: false },
         location: ROOT,
       },
       { verbose: false },
