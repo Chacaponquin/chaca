@@ -2,8 +2,9 @@ import { TryRefANoKeyFieldError } from "../../../../errors";
 import { FieldPossibleNullConfig } from "../../../ChacaSchema/interfaces/schema";
 import { SequenceFieldProps } from "../../../Fields/core/SequenceField/SequenceField";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
+import { Config } from "./value-object";
 
-interface SequenceProps {
+interface Props {
   fieldTreeRoute: Array<string>;
   config: Required<SequenceFieldProps>;
   possibleNull: FieldPossibleNullConfig;
@@ -14,13 +15,18 @@ export class SequenceValueNode extends ChacaTreeNode {
   private _config: Required<SequenceFieldProps>;
   private _possibleNull: FieldPossibleNullConfig;
 
-  constructor({ config, fieldTreeRoute, possibleNull }: SequenceProps) {
+  constructor({ config, fieldTreeRoute, possibleNull }: Props) {
     super({
       isArray: null,
       fieldTreeRoute: fieldTreeRoute,
       possibleNull: possibleNull,
     });
-    this._config = config;
+
+    this._config = new Config({
+      config: config,
+      route: this.getRouteString(),
+    }).value();
+
     this.actualValue = config.starsWith;
     this._possibleNull = possibleNull;
   }

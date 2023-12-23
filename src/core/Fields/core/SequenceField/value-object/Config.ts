@@ -1,4 +1,3 @@
-import { ChacaError } from "../../../../../errors";
 import { SequenceFieldProps } from "../interfaces/sequence.interface";
 
 export class Config {
@@ -14,13 +13,7 @@ export class Config {
       }
 
       if (typeof config.step === "number") {
-        if (config.step > 0) {
-          this._config.step = config.step;
-        } else {
-          throw new ChacaError(`The sequence step must be an positive number`);
-        }
-      } else {
-        throw new ChacaError(`The sequence step must be an positive number`);
+        this._config.step = config.step;
       }
     }
   }

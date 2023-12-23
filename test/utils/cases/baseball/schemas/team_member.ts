@@ -11,6 +11,26 @@ export const TEAM_MEMBER_SCHEMA = chaca.schema({
   member_number: schemas.dataType.int({ min: 1, max: 99 }),
   years_in_team: schemas.dataType.int({ min: 1, max: 20 }),
   member_type: chaca.sequential([...ARRAY_PLAYERS, ...ARRAY_COACHS]),
+  /*teams_record: {
+    type: chaca.schema({
+      team_id: chaca.ref("Team.team_id"),
+      year_init: chaca.sequence({
+        starsWith: schemas.dataType.int().getValue({
+          min: 2010,
+          max: new Date().getFullYear(),
+        }),
+      }),
+      year_finish: {
+        possibleNull: 50,
+        type: () => {
+          return schemas.dataType
+            .int()
+            .getValue({ min: 2010, max: new Date().getFullYear() });
+        },
+      },
+    }),
+    isArray: { min: 1, max: 3 },
+  },*/
 });
 
 export const PLAYER_SCHEMA = chaca.schema({

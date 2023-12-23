@@ -24,20 +24,20 @@ describe("# Sequence field setp config tests", () => {
   });
 
   it("Define step=-1. Should throw an error", () => {
-    expect(() => chaca.schema({ test: chaca.sequence({ step: -1 }) })).toThrow(
-      ChacaError,
-    );
+    expect(() =>
+      chaca.schema({ test: chaca.sequence({ step: -1 }) }).generate(20),
+    ).toThrow(ChacaError);
   });
 
   it("Define step=0. Should throw an error", () => {
-    expect(() => chaca.schema({ test: chaca.sequence({ step: 0 }) })).toThrow(
-      ChacaError,
-    );
+    expect(() =>
+      chaca.schema({ test: chaca.sequence({ step: 0 }) }).generate(20),
+    ).toThrow(ChacaError);
   });
 
-  it("Define step as no number argument. Should throw an error", () => {
-    expect(() =>
-      chaca.schema({ test: chaca.sequence({ step: "" as any }) }),
-    ).toThrow(ChacaError);
+  it("Define step as no number argument. Should set step=1", () => {
+    const schema = chaca.schema({ test: chaca.sequence({ step: "" as any }) });
+
+    expect(valid(schema, 1)).toBe(true);
   });
 });
