@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs";
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils";
+import AdmZip from "adm-zip";
 
 export interface Props {
   extension: string;
@@ -45,5 +46,13 @@ export abstract class Generator {
 
   protected generateRoute(name: string): string {
     return `${path.join(this.baseLocation, `${name}.${this.ext}`)}`;
+  }
+
+  protected createZip(name: string) {
+    const zip = new AdmZip();
+    const zipName = `${name}.zip`;
+    const zipPath = path.join(this.baseLocation, zipName);
+
+    return { zip, zipPath };
   }
 }

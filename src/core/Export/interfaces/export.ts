@@ -34,9 +34,15 @@ export interface FileConfig {
   format: ExportFormat;
 }
 
-export type ExtensionConfigs = JsonFormatConfig;
+export type ExtensionConfigs = JsonFormatConfig | CsvFormatConfig;
 
 export type JsonFormatConfig = {
   ext: "json";
   separate: boolean;
+  zip: boolean;
+};
+
+export type CsvFormatConfig = {
+  ext: "csv";
+  zip: boolean;
 };

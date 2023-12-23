@@ -4,20 +4,24 @@ import path from "path";
 import { ChacaError } from "../../../../errors";
 import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
 import { CSVArray, CSVDataType, CSVObject } from "./core/types";
-import AdmZip from "adm-zip";
 
 interface Props {
   fileName: string;
   location: string;
+  zip: boolean;
 }
 
 export class CSVGenerator extends Generator {
+  private zip: boolean;
+
   constructor(config: Props) {
     super({
       extension: "csv",
       fileName: config.fileName,
       location: config.location,
     });
+
+    this.zip = config.zip;
   }
 
   public async generateRelationalDataFile(
@@ -28,12 +32,9 @@ export class CSVGenerator extends Generator {
     if (allResolvers.length === 1) {
       const schemaData = allResolvers[0].resolve();
       const route = await this.createFile(this.fileName, schemaData);
+
       return route;
     } else {
-      const zp = new AdmZip();
-      const zipName = `${this.fileName}.zip`;
-      const zipPath = path.join(this.baseLocation, zipName);
-
       const allRoutes = [] as Array<string>;
 
       for (const r of allResolvers) {
@@ -42,14 +43,20 @@ export class CSVGenerator extends Generator {
         allRoutes.push(route);
       }
 
-      for (const route of allRoutes) {
-        zp.addLocalFile(route);
-        await fs.promises.unlink(route);
+      if (this.zip) {
+        const { zip, zipPath } = this.createZip(this.fileName);
+
+        for (const route of allRoutes) {
+          zip.addLocalFile(route);
+          await fs.promises.unlink(route);
+        }
+
+        zip.writeZip(zipPath);
+
+        return zipPath;
+      } else {
+        return this.baseLocation;
       }
-
-      zp.writeZip(zipPath);
-
-      return zipPath;
     }
   }
 
@@ -64,19 +71,40 @@ export class CSVGenerator extends Generator {
     const dataType = CSVDataType.filterTypeByValue(data);
 
     let content = "";
+
+    // array
     if (dataType instanceof CSVArray) {
       content = dataType.getCSVValue();
-    } else if (dataType instanceof CSVObject) {
+    }
+
+    // object
+    else if (dataType instanceof CSVObject) {
       const array = [dataType.object];
       const newArrayType = new CSVArray(array);
+
       content = newArrayType.getCSVValue();
-    } else {
+    }
+
+    // other
+    else {
       throw new ChacaError(
         `Your export data must be an array of objects or a single object.`,
       );
     }
 
     await fs.promises.writeFile(fileRoute, content, "utf-8");
-    return fileRoute;
+
+    if (this.zip) {
+      const { zip, zipPath } = this.createZip(this.fileName);
+
+      zip.addLocalFile(fileRoute);
+      await fs.promises.unlink(fileRoute);
+
+      zip.writeZip(zipPath);
+
+      return zipPath;
+    } else {
+      return fileRoute;
+    }
   }
 }

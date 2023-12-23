@@ -6,6 +6,7 @@ import AdmZip from "adm-zip";
 
 interface ExtProps {
   separate: boolean;
+  zip: boolean;
 }
 
 interface Props {
@@ -39,23 +40,40 @@ export class JsonGenerator extends Generator {
     const objectData = resolver.resolve();
 
     if (this.config.separate) {
-      const zp = new AdmZip();
-      const zipName = `${this.fileName}.zip`;
-      const zipPath = path.join(this.baseLocation, zipName);
+      const allRoutes: Array<string> = [];
 
       for (const [key, data] of Object.entries(objectData)) {
         const route = this.generateRoute(key);
         const jsonContent = JSON.stringify(data);
         await fs.promises.writeFile(route, jsonContent, "utf-8");
-
-        zp.addLocalFile(route);
       }
 
-      zp.writeZip(zipPath);
+      if (this.config.zip) {
+        const { zip, zipPath } = this.createZip(this.fileName);
 
-      return zipPath;
+        for (const route of allRoutes) {
+          zip.addLocalFile(route);
+          await fs.promises.unlink(route);
+        }
+
+        zip.writeZip(zipPath);
+
+        return zipPath;
+      } else {
+        return this.baseLocation;
+      }
     } else {
-      return await this.generateFile(objectData);
+      if (this.config.zip) {
+        const { zip, zipPath } = this.createZip(this.fileName);
+
+        const route = await this.generateFile(objectData);
+        zip.addLocalFile(route);
+        zip.writeZip(zipPath);
+
+        return zipPath;
+      } else {
+        return await this.generateFile(objectData);
+      }
     }
   }
 }

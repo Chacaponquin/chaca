@@ -52,23 +52,19 @@ export class ExportResolver {
     const format = this.config.format;
 
     if (format === "json") {
-      if (typeof this.config.format === "string") {
-        gen = new JsonGenerator({
-          fileName: this.config.fileName,
-          location: this.config.location,
-          extConfig: { separate: false },
-        });
-      } else {
-        gen = new JsonGenerator({
-          fileName: this.config.fileName,
-          location: this.config.location,
-          extConfig: { separate: false },
-        });
-      }
+      gen = new JsonGenerator({
+        fileName: this.config.fileName,
+        location: this.config.location,
+        extConfig: { separate: false, zip: false },
+      });
     } else if (format === "javascript") {
       gen = new JavascriptGenerator(this.config);
     } else if (format === "csv") {
-      gen = new CSVGenerator(this.config);
+      gen = new CSVGenerator({
+        fileName: this.config.fileName,
+        location: this.config.location,
+        zip: false,
+      });
     } else if (format === "java") {
       gen = new JavaGenerator(this.config);
     } else if (format === "typescript") {
@@ -91,7 +87,13 @@ export class ExportResolver {
         gen = new JsonGenerator({
           fileName: this.config.fileName,
           location: this.config.location,
-          extConfig: { separate: format.separate },
+          extConfig: { separate: format.separate, zip: format.zip },
+        });
+      } else if (format.ext === "csv") {
+        gen = new CSVGenerator({
+          fileName: this.config.fileName,
+          location: this.config.location,
+          zip: format.zip,
         });
       } else {
         throw new ChacaError(`Format '${this.config.format}' invalid`);
