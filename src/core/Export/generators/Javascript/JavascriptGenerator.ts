@@ -6,15 +6,20 @@ import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResol
 interface Props {
   fileName: string;
   location: string;
+  zip?: boolean;
 }
 
 export class JavascriptGenerator extends Generator {
+  private zip: boolean;
+
   constructor(config: Props) {
     super({
       extension: "js",
       fileName: config.fileName,
       location: config.location,
     });
+
+    this.zip = Boolean(config.zip);
   }
 
   public async generateRelationalDataFile(
@@ -30,7 +35,11 @@ export class JavascriptGenerator extends Generator {
 
     await fs.promises.writeFile(this.route, returnData, "utf-8");
 
-    return this.route;
+    if (this.zip) {
+      return await this.createFileZip();
+    } else {
+      return this.route;
+    }
   }
 
   public generateSchemaArray(

@@ -48,11 +48,22 @@ export abstract class Generator {
     return `${path.join(this.baseLocation, `${name}.${this.ext}`)}`;
   }
 
-  protected createZip(name: string) {
+  protected createZip() {
     const zip = new AdmZip();
-    const zipName = `${name}.zip`;
+    const zipName = `${this.fileName}.zip`;
     const zipPath = path.join(this.baseLocation, zipName);
 
     return { zip, zipPath };
+  }
+
+  protected async createFileZip(): Promise<string> {
+    const { zip, zipPath } = this.createZip();
+
+    zip.addLocalFile(this.route);
+    zip.writeZip();
+
+    await fs.promises.unlink(this.route);
+
+    return zipPath;
   }
 }

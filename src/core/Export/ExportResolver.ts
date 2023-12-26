@@ -99,12 +99,52 @@ export class ExportResolver {
           location: this.config.location,
           zip: format.zip,
         });
+      } else if (format.ext === "java") {
+        gen = new JavaGenerator({
+          fileName: this.config.fileName,
+          location: this.config.location,
+          zip: format.zip,
+        });
+      } else if (format.ext === "javascript") {
+        gen = new JavascriptGenerator({
+          fileName: this.config.fileName,
+          location: this.config.location,
+          zip: format.zip,
+        });
+      } else if (format.ext === "postgresql") {
+        gen = new SQLGenerator({
+          fileName: this.config.fileName,
+          location: this.config.location,
+          zip: format.zip,
+          format: format.ext,
+        });
+      } else if (format.ext === "python") {
+        gen = new PythonGenerator({
+          fileName: this.config.fileName,
+          location: this.config.location,
+          zip: format.zip,
+        });
+      } else if (format.ext === "typescript") {
+        gen = new TypescriptGenerator({
+          fileName: this.config.fileName,
+          location: this.config.location,
+          zip: format.zip,
+        });
+      } else if (format.ext === "yaml") {
+        gen = new YamlGenerator({
+          fileName: this.config.fileName,
+          location: this.config.location,
+          zip: format.zip,
+        });
       } else {
         throw new ChacaError(
           `Format '${this.config.format}' invalid for exportation`,
         );
       }
-    } else {
+    }
+
+    // else
+    else {
       throw new ChacaError(
         `Format '${this.config.format}' invalid for exportation`,
       );

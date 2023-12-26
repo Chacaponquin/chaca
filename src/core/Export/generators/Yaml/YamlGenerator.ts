@@ -6,10 +6,22 @@ import fs from "fs";
 interface Props {
   fileName: string;
   location: string;
+  zip?: boolean;
+}
+
+interface GenObjectProps {
+  doc: Record<string, any>;
+  onArray: boolean;
+}
+
+interface GenValueProps {
+  value: any;
+  onArray: boolean;
 }
 
 export class YamlGenerator extends Generator {
   private actualMargin = 0;
+  private zip: boolean;
 
   constructor(config: Props) {
     super({
@@ -17,6 +29,8 @@ export class YamlGenerator extends Generator {
       fileName: config.fileName,
       location: config.location,
     });
+
+    this.zip = Boolean(config.zip);
   }
 
   public async generateFile(data: any): Promise<string> {
@@ -25,12 +39,16 @@ export class YamlGenerator extends Generator {
     if (Array.isArray(data)) {
       returnCode += this.generateArray(data);
     } else {
-      returnCode += this.generateObject(data, false);
+      returnCode += this.generateObject({ doc: data, onArray: false });
     }
 
     await fs.promises.writeFile(this.route, returnCode, "utf-8");
 
-    return this.route;
+    if (this.zip) {
+      return await this.createFileZip();
+    } else {
+      return this.route;
+    }
   }
 
   public async generateRelationalDataFile(
@@ -40,7 +58,7 @@ export class YamlGenerator extends Generator {
     return await this.generateFile(relationalData);
   }
 
-  private generateObject(doc: Record<string, any>, onArray: boolean): string {
+  private generateObject({ doc, onArray }: GenObjectProps): string {
     let returnCode = `${onArray ? "" : "\n"}`;
 
     Object.entries(doc).forEach(([key, value], index) => {
@@ -52,7 +70,10 @@ export class YamlGenerator extends Generator {
         }
       }
 
-      returnCode += `${key}: ${this.generateValue(value, false)}`;
+      returnCode += `${key}: ${this.generateValue({
+        value: value,
+        onArray: false,
+      })}`;
 
       if (index !== Object.entries(this.createKeyName(key)).length - 1) {
         returnCode += "\n";
@@ -74,7 +95,10 @@ export class YamlGenerator extends Generator {
         returnCode += `\t`;
       }
 
-      returnCode += `- ${this.generateValue(array[i], true)}`;
+      returnCode += `- ${this.generateValue({
+        value: array[i],
+        onArray: true,
+      })}`;
 
       if (i !== array.length - 1) {
         returnCode += `\n`;
@@ -84,7 +108,7 @@ export class YamlGenerator extends Generator {
     return returnCode;
   }
 
-  private generateValue(value: any, onArray: boolean): string {
+  private generateValue({ onArray, value }: GenValueProps): string {
     let returnValue = "null";
 
     if (typeof value === "string") {
@@ -123,7 +147,10 @@ export class YamlGenerator extends Generator {
       } else {
         this.actualMargin++;
 
-        const objectCreated = this.generateObject(value, onArray);
+        const objectCreated = this.generateObject({
+          doc: value,
+          onArray: onArray,
+        });
         returnValue = objectCreated;
 
         this.actualMargin--;

@@ -39,6 +39,7 @@ interface Props {
   fileName: string;
   location: string;
   format: ExportSQLFormat;
+  zip?: boolean;
 }
 
 export class SQLGenerator extends Generator {
@@ -47,6 +48,8 @@ export class SQLGenerator extends Generator {
   private schemaspossibleNull: Array<ChacaTreeNode> = [];
   private allTables: Array<SQLTable> = [];
   private dataGenerator: SQLDataGenerator;
+
+  private zip: boolean;
 
   private readonly NAMES_DIVISOR = "_";
 
@@ -58,6 +61,8 @@ export class SQLGenerator extends Generator {
     });
 
     this.dataGenerator = new SQLDataGenerator(config.format, this.allTables);
+
+    this.zip = Boolean(config.zip);
   }
 
   public async generateFile(data: any): Promise<string> {
@@ -82,7 +87,11 @@ export class SQLGenerator extends Generator {
       "utf-8",
     );
 
-    return this.route;
+    if (this.zip) {
+      return await this.createFileZip();
+    } else {
+      return this.route;
+    }
   }
 
   private filterTypeByValue(

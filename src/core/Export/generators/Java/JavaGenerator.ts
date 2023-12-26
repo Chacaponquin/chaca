@@ -110,7 +110,7 @@ export class JavaGenerator extends Generator {
     }
 
     if (this.zip) {
-      const { zip, zipPath } = this.createZip(this.fileName);
+      const { zip, zipPath } = this.createZip();
 
       for (const r of filesRoutes) {
         zip.addLocalFile(r);

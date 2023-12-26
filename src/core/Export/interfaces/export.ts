@@ -37,7 +37,52 @@ export interface FileConfig {
 export type ExtensionConfigs =
   | JsonFormatConfig
   | CsvFormatConfig
-  | JavaFormatConfig;
+  | JavaFormatConfig
+  | TypescriptFormatConfig
+  | JavascriptFormatConfig
+  | YamlFormatConfig
+  | PythonFormatConfig
+  | PostgresqlFormatConfig;
+
+export type PostgresqlFormatConfig = {
+  ext: "postgresql";
+  /**
+   * Boolean indicating whether all generated files are compressed into a zip
+   */
+  zip?: boolean;
+};
+
+export type PythonFormatConfig = {
+  ext: "python";
+  /**
+   * Boolean indicating whether all generated files are compressed into a zip
+   */
+  zip?: boolean;
+};
+
+export type YamlFormatConfig = {
+  ext: "yaml";
+  /**
+   * Boolean indicating whether all generated files are compressed into a zip
+   */
+  zip?: boolean;
+};
+
+export type JavascriptFormatConfig = {
+  ext: "javascript";
+  /**
+   * Boolean indicating whether all generated files are compressed into a zip
+   */
+  zip?: boolean;
+};
+
+export type TypescriptFormatConfig = {
+  ext: "typescript";
+  /**
+   * Boolean indicating whether all generated files are compressed into a zip
+   */
+  zip?: boolean;
+};
 
 export type JsonFormatConfig = {
   ext: "json";

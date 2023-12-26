@@ -16,6 +16,15 @@ import {
   FileConfig,
   ExportSQLFormat,
   JsonFormatConfig,
+  CsvFormatConfig,
+  JavaFormatConfig,
+  JavascriptFormatConfig,
+  ExtensionConfigs,
+  Extensions,
+  PostgresqlFormatConfig,
+  PythonFormatConfig,
+  TypescriptFormatConfig,
+  YamlFormatConfig,
 } from "./core/Export/interfaces/export";
 
 import { Schemas } from "./schemas";
@@ -125,11 +134,23 @@ export type {
   RefFieldWhereProps,
   FieldTypes,
   FieldSchemaConfig,
-  JsonFormatConfig,
   PossibleNullFunction,
   PossibleNullFunctionProps,
   Chance,
   ProbabilityOption,
   ChanceFunction,
   ChanceFunctionProps,
+};
+
+export type {
+  JsonFormatConfig,
+  CsvFormatConfig,
+  JavaFormatConfig,
+  JavascriptFormatConfig,
+  ExtensionConfigs,
+  Extensions,
+  PostgresqlFormatConfig,
+  PythonFormatConfig,
+  TypescriptFormatConfig,
+  YamlFormatConfig,
 };

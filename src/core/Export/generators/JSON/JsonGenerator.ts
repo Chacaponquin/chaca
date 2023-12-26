@@ -47,7 +47,7 @@ export class JsonGenerator extends Generator {
       }
 
       if (this.config.zip) {
-        const { zip, zipPath } = this.createZip(this.fileName);
+        const { zip, zipPath } = this.createZip();
 
         for (const route of allRoutes) {
           zip.addLocalFile(route);
@@ -62,7 +62,7 @@ export class JsonGenerator extends Generator {
       }
     } else {
       if (this.config.zip) {
-        const { zip, zipPath } = this.createZip(this.fileName);
+        const { zip, zipPath } = this.createZip();
 
         const route = await this.generateFile(objectData);
         zip.addLocalFile(route);

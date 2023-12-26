@@ -44,7 +44,7 @@ export class CSVGenerator extends Generator {
       }
 
       if (this.zip) {
-        const { zip, zipPath } = this.createZip(this.fileName);
+        const { zip, zipPath } = this.createZip();
 
         for (const route of allRoutes) {
           zip.addLocalFile(route);
@@ -95,7 +95,7 @@ export class CSVGenerator extends Generator {
     await fs.promises.writeFile(fileRoute, content, "utf-8");
 
     if (this.zip) {
-      const { zip, zipPath } = this.createZip(this.fileName);
+      const { zip, zipPath } = this.createZip();
 
       zip.addLocalFile(fileRoute);
       await fs.promises.unlink(fileRoute);

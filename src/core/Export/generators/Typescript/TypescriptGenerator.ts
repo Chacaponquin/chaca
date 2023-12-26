@@ -8,10 +8,12 @@ import { InterfacesToCreate } from "./classes/InterfacesToCreate";
 interface Props {
   fileName: string;
   location: string;
+  zip?: boolean;
 }
 
 export class TypescriptGenerator extends Generator {
   private interfaces = new InterfacesToCreate();
+  private zip: boolean;
 
   constructor(config: Props) {
     super({
@@ -19,6 +21,8 @@ export class TypescriptGenerator extends Generator {
       fileName: config.fileName,
       location: config.location,
     });
+
+    this.zip = Boolean(config.zip);
   }
 
   public async generateFile(data: any): Promise<string> {
@@ -34,7 +38,6 @@ export class TypescriptGenerator extends Generator {
       data,
       this.interfaces,
     );
-
     const codeInterface = dataInterface.getInterface();
 
     const code = `const ${variableName}: ${codeInterface} = ${javascriptCode}`;
@@ -42,11 +45,15 @@ export class TypescriptGenerator extends Generator {
 
     await fs.promises.writeFile(this.route, finalCode, "utf8");
 
-    return this.route;
+    if (this.zip) {
+      return await this.createFileZip();
+    } else {
+      return this.route;
+    }
   }
 
   public async generateRelationalDataFile(
-    resolver: MultiGenerateResolver<any>,
+    resolver: MultiGenerateResolver,
   ): Promise<string> {
     const data = resolver.resolve();
     const route = await this.generateFile(data);
