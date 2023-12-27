@@ -1,15 +1,31 @@
 import { chaca } from "../../../src";
 import { VARIANT_ARRAY } from "./utils/array-variate";
+import { checkFile } from "./utils/export-util";
 
-const objectFileName = "python";
+const fileName = "python";
 const ROOT = "./data/python";
 
 describe("# Python Export Test", () => {
+  describe("Export configuration", () => {
+    it("Pass zip=true. Should create a zip file", async () => {
+      const route = await chaca.export(
+        {},
+        {
+          fileName: fileName + "Zip",
+          format: { ext: "python", zip: true },
+          location: ROOT,
+        },
+      );
+
+      expect(checkFile(route)).toBe(true);
+    });
+  });
+
   describe("Export Primitive values", () => {
     it("Export string", async () => {
       await chaca.export("String Test", {
         format: "python",
-        fileName: objectFileName + "String",
+        fileName: fileName + "String",
         location: ROOT,
       });
     });
@@ -17,7 +33,7 @@ describe("# Python Export Test", () => {
     it("Export null", async () => {
       await chaca.export(null, {
         format: "python",
-        fileName: objectFileName + "Null",
+        fileName: fileName + "Null",
         location: ROOT,
       });
     });
@@ -25,7 +41,7 @@ describe("# Python Export Test", () => {
     it("Export number", async () => {
       await chaca.export(10, {
         format: "python",
-        fileName: objectFileName + "Number",
+        fileName: fileName + "Number",
         location: ROOT,
       });
     });
@@ -33,7 +49,7 @@ describe("# Python Export Test", () => {
     it("Export boolean", async () => {
       await chaca.export(true, {
         format: "python",
-        fileName: objectFileName + "Boolean",
+        fileName: fileName + "Boolean",
         location: ROOT,
       });
     });
@@ -43,7 +59,7 @@ describe("# Python Export Test", () => {
     it("Export an array of numbers", async () => {
       await chaca.export([1, 2, 3, 4], {
         format: "python",
-        fileName: objectFileName + "ArrayNumbers",
+        fileName: fileName + "ArrayNumbers",
         location: ROOT,
       });
     });
@@ -51,7 +67,7 @@ describe("# Python Export Test", () => {
     it("Export an array of any elements", async () => {
       await chaca.export(VARIANT_ARRAY, {
         format: "python",
-        fileName: objectFileName + "ArrayAnyElements",
+        fileName: fileName + "ArrayAnyElements",
         location: ROOT,
       });
     });
@@ -61,7 +77,7 @@ describe("# Python Export Test", () => {
     it("Export a new Date", async () => {
       await chaca.export(new Date(), {
         format: "python",
-        fileName: objectFileName + "DateNow",
+        fileName: fileName + "DateNow",
         location: ROOT,
       });
     });
@@ -73,7 +89,7 @@ describe("# Python Export Test", () => {
         {},
         {
           format: "python",
-          fileName: objectFileName + "EmptyObject",
+          fileName: fileName + "EmptyObject",
           location: ROOT,
         },
       );

@@ -26,10 +26,19 @@ export class JsonGenerator extends Generator {
     this.config = extConfig;
   }
 
+  private async createFile(route: string, content: any): Promise<void> {
+    const jsonContent = JSON.stringify(content);
+    await fs.promises.writeFile(route, jsonContent, "utf-8");
+  }
+
   public async generateFile(data: any): Promise<string> {
-    const jsonContent = JSON.stringify(data);
-    await fs.promises.writeFile(this.route, jsonContent, "utf-8");
-    return this.route;
+    await this.createFile(this.route, data);
+
+    if (this.config.zip) {
+      return this.createFileZip();
+    } else {
+      return this.route;
+    }
   }
 
   public async generateRelationalDataFile(
@@ -42,8 +51,9 @@ export class JsonGenerator extends Generator {
 
       for (const [key, data] of Object.entries(objectData)) {
         const route = this.generateRoute(key);
-        const jsonContent = JSON.stringify(data);
-        await fs.promises.writeFile(route, jsonContent, "utf-8");
+        await this.createFile(route, data);
+
+        allRoutes.push(route);
       }
 
       if (this.config.zip) {
@@ -61,17 +71,7 @@ export class JsonGenerator extends Generator {
         return this.baseLocation;
       }
     } else {
-      if (this.config.zip) {
-        const { zip, zipPath } = this.createZip();
-
-        const route = await this.generateFile(objectData);
-        zip.addLocalFile(route);
-        zip.writeZip(zipPath);
-
-        return zipPath;
-      } else {
-        return await this.generateFile(objectData);
-      }
+      return await this.generateFile(objectData);
     }
   }
 }

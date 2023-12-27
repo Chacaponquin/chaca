@@ -55,26 +55,33 @@ export class ExportResolver {
       gen = new JsonGenerator({
         fileName: this.config.fileName,
         location: this.config.location,
-        extConfig: { separate: false, zip: false },
+        extConfig: {},
       });
     } else if (format === "javascript") {
-      gen = new JavascriptGenerator(this.config);
+      gen = new JavascriptGenerator({
+        fileName: this.config.fileName,
+        location: this.config.location,
+      });
     } else if (format === "csv") {
       gen = new CSVGenerator({
         fileName: this.config.fileName,
         location: this.config.location,
-        zip: false,
       });
     } else if (format === "java") {
       gen = new JavaGenerator({
         fileName: this.config.fileName,
         location: this.config.location,
-        zip: false,
       });
     } else if (format === "typescript") {
-      gen = new TypescriptGenerator(this.config);
+      gen = new TypescriptGenerator({
+        fileName: this.config.fileName,
+        location: this.config.location,
+      });
     } else if (format === "yaml") {
-      gen = new YamlGenerator(this.config);
+      gen = new YamlGenerator({
+        fileName: this.config.fileName,
+        location: this.config.location,
+      });
     } else if (format === "postgresql") {
       gen = new SQLGenerator({
         fileName: this.config.fileName,
@@ -82,7 +89,10 @@ export class ExportResolver {
         location: this.config.location,
       });
     } else if (format === "python") {
-      gen = new PythonGenerator(this.config);
+      gen = new PythonGenerator({
+        fileName: this.config.fileName,
+        location: this.config.location,
+      });
     }
 
     // object config

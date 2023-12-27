@@ -30,12 +30,12 @@ describe("# Sequence field tests", () => {
     ).toThrow(ChacaError);
   });
 
-  it("Object definition of possible null sequence field", () => {
+  it("Object definition of possible null sequence field. At least one value should be null", () => {
     const schema = chaca.schema({
       test: { type: chaca.sequence(), possibleNull: 50 },
     });
 
-    const data = schema.generate(5);
+    const data = schema.generate(20);
     expect(data.some((o) => o.test === null)).toBe(true);
   });
 

@@ -2,14 +2,28 @@ import { chaca } from "../../../src";
 import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
 import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
+import { checkFile } from "./utils/export-util";
 
 const fileName = "json";
 const ROOT = "./data/json";
 const COUNT_DOCUMENTS = 50;
 
 describe("# JSON Export Test", () => {
-  it("Pass separate=false. Should create a single json file", () => {
-    chaca.exportFromSchemas(
+  it("Pass zip=true. Should create a zip file", async () => {
+    const route = await chaca.export(
+      {},
+      {
+        fileName: fileName + "Zip",
+        format: { ext: "json", zip: true },
+        location: ROOT,
+      },
+    );
+
+    expect(checkFile(route)).toBe(true);
+  });
+
+  it("Pass separate=false. Should create a single json file", async () => {
+    await chaca.exportFromSchemas(
       [
         {
           documents: COUNT_DOCUMENTS,
@@ -36,8 +50,10 @@ describe("# JSON Export Test", () => {
     );
   });
 
-  it("Pass separate=true. Should create multiple files", () => {
-    chaca.exportFromSchemas(
+  it("Pass separate=true. Should create multiple files", async () => {
+    const file = fileName + "Separate";
+
+    await chaca.exportFromSchemas(
       [
         {
           documents: COUNT_DOCUMENTS,
@@ -56,8 +72,8 @@ describe("# JSON Export Test", () => {
         },
       ],
       {
-        fileName: fileName + "Separate",
-        format: { ext: "json", separate: true, zip: false },
+        fileName: file,
+        format: { ext: "json", separate: true, zip: true },
         location: ROOT,
       },
       { verbose: false },

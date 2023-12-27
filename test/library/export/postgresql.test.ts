@@ -3,6 +3,7 @@ import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
 import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects";
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../../utils/schemas/schema-with-array";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
+import { checkFile } from "./utils/export-util";
 
 const ROOT = "./data/postgresql";
 const COUNT_DOCUMENTS = 50;
@@ -18,6 +19,21 @@ describe("# PostgreSQL Export Test", () => {
     COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
     NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
     SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.generate(50);
+  });
+
+  describe("Export configuration", () => {
+    it("Pass zip=true. Should create a zip file", async () => {
+      const route = await chaca.export(
+        {},
+        {
+          fileName: "conf" + "Zip",
+          format: { ext: "postgresql", zip: true },
+          location: ROOT,
+        },
+      );
+
+      expect(checkFile(route)).toBe(true);
+    });
   });
 
   describe("Export Schemas (with exportFromSchemas)", () => {
@@ -70,7 +86,7 @@ describe("# PostgreSQL Export Test", () => {
           },
           { verbose: false },
         ),
-      ).rejects.toThrowError(ChacaError);
+      ).rejects.toThrow(ChacaError);
     });
 
     it("Export Complete Schema", async () => {
@@ -116,7 +132,7 @@ describe("# PostgreSQL Export Test", () => {
           location: ROOT,
           format: "postgresql",
         }),
-      ).rejects.toThrowError(ChacaError);
+      ).rejects.toThrow(ChacaError);
     });
 
     it("Export Complete Schema Array", async () => {

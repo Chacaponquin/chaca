@@ -3,8 +3,9 @@ import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
 import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects";
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../../utils/schemas/schema-with-array";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
+import { checkFile } from "./utils/export-util";
 
-const objectFileName = "typescriptExport";
+const fileName = "typescriptExport";
 const ROOT = "./data/typescript";
 
 describe("# Export Typescript", () => {
@@ -16,11 +17,26 @@ describe("# Export Typescript", () => {
     NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
   });
 
+  describe("Export configuration", () => {
+    it("Pass zip=true. Should create a zip file", async () => {
+      const route = await chaca.export(
+        {},
+        {
+          fileName: fileName + "Zip",
+          format: { ext: "typescript", zip: true },
+          location: ROOT,
+        },
+      );
+
+      expect(checkFile(route)).toBe(true);
+    });
+  });
+
   describe("Export primitive values", () => {
     it("Export number", async () => {
       await chaca.export(10, {
         format: "typescript",
-        fileName: objectFileName + "Number",
+        fileName: fileName + "Number",
         location: ROOT,
       });
     });
@@ -28,7 +44,7 @@ describe("# Export Typescript", () => {
     it("Export boolean", async () => {
       await chaca.export(false, {
         format: "typescript",
-        fileName: objectFileName + "Boolean",
+        fileName: fileName + "Boolean",
         location: ROOT,
       });
     });
@@ -36,7 +52,7 @@ describe("# Export Typescript", () => {
     it("Export String", async () => {
       await chaca.export("Hi", {
         format: "typescript",
-        fileName: objectFileName + "String",
+        fileName: fileName + "String",
         location: ROOT,
       });
     });
@@ -51,7 +67,7 @@ describe("# Export Typescript", () => {
 
       await chaca.export(data, {
         format: "typescript",
-        fileName: objectFileName + "ArrayDiferentObject",
+        fileName: fileName + "ArrayDiferentObject",
         location: ROOT,
       });
     });
@@ -59,7 +75,7 @@ describe("# Export Typescript", () => {
     it("Array of Complete Schema", async () => {
       await chaca.export(COMPLETE_SCHEMA_DATA, {
         format: "typescript",
-        fileName: objectFileName + "ArrayCompleteSchema",
+        fileName: fileName + "ArrayCompleteSchema",
         location: ROOT,
       });
     });
@@ -67,7 +83,7 @@ describe("# Export Typescript", () => {
     it("Array of Schema with Nested Objects", async () => {
       await chaca.export(NESTED_OBJECTS_DATA, {
         format: "typescript",
-        fileName: objectFileName + "ArrayNestedObjectsSchema",
+        fileName: fileName + "ArrayNestedObjectsSchema",
         location: ROOT,
       });
     });
@@ -79,7 +95,7 @@ describe("# Export Typescript", () => {
         {},
         {
           format: "typescript",
-          fileName: objectFileName + "EmptyObject",
+          fileName: fileName + "EmptyObject",
           location: ROOT,
         },
       );
@@ -88,7 +104,7 @@ describe("# Export Typescript", () => {
     it("Export simple object", async () => {
       await chaca.export(SIMPLE_SCHEMA.generateObject(), {
         format: "typescript",
-        fileName: objectFileName + "SimpleObject",
+        fileName: fileName + "SimpleObject",
         location: ROOT,
       });
     });
@@ -96,7 +112,7 @@ describe("# Export Typescript", () => {
     it("Export complete schema object", async () => {
       await chaca.export(COMPLETE_SCHEMA.generateObject(), {
         format: "typescript",
-        fileName: objectFileName + "CompleteSchemaObject",
+        fileName: fileName + "CompleteSchemaObject",
         location: ROOT,
       });
     });
@@ -104,7 +120,7 @@ describe("# Export Typescript", () => {
     it("Export nested object schema object", async () => {
       await chaca.export(NESTED_OBJECT_SCHEMA.generateObject(), {
         format: "typescript",
-        fileName: objectFileName + "NestedObjectsSchemaObject",
+        fileName: fileName + "NestedObjectsSchemaObject",
         location: ROOT,
       });
     });
@@ -112,7 +128,7 @@ describe("# Export Typescript", () => {
     it("Export schema with array fields object", async () => {
       await chaca.export(SCHEMA_WITH_ARRAY_FIELDS.generateObject(), {
         format: "typescript",
-        fileName: objectFileName + "FieldsWithArrayObject",
+        fileName: fileName + "FieldsWithArrayObject",
         location: ROOT,
       });
     });

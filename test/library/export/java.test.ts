@@ -3,6 +3,7 @@ import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
 import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects";
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../../utils/schemas/schema-with-array";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
+import { checkFile } from "./utils/export-util";
 
 const ROOT = "./data/java";
 
@@ -17,6 +18,18 @@ describe("# Java Export Test", () => {
     COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
     NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
     ARRAY_FIELDS_DATA = SCHEMA_WITH_ARRAY_FIELDS.generate(50);
+  });
+
+  describe("Export configuration", () => {
+    it("Pass zip=true. Should create a zip file", async () => {
+      const route = await chaca.export([], {
+        fileName: "conf" + "Zip",
+        format: { ext: "java", zip: true },
+        location: ROOT,
+      });
+
+      expect(checkFile(route)).toBe(true);
+    });
   });
 
   describe("Export Schemas", () => {

@@ -1,4 +1,4 @@
-import { JsonGenerator } from "./JSON/JsonGenerator";
+import { JsonGenerator } from "./Json/JsonGenerator";
 import { Generator } from "./Generator/Generator";
 import { JavascriptGenerator } from "./Javascript/JavascriptGenerator";
 import { CSVGenerator } from "./CSV/CSVGenerator";

@@ -60,7 +60,7 @@ export abstract class Generator {
     const { zip, zipPath } = this.createZip();
 
     zip.addLocalFile(this.route);
-    zip.writeZip();
+    zip.writeZip(zipPath);
 
     await fs.promises.unlink(this.route);
 

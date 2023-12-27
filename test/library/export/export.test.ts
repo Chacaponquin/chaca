@@ -22,7 +22,7 @@ describe("# Export Test", () => {
           format: "buenas" as any,
           location: root,
         }),
-      ).rejects.toThrowError(ChacaError);
+      ).rejects.toThrow(ChacaError);
     });
   });
 });
