@@ -40,7 +40,7 @@ describe("# Car Case Test", () => {
       {
         location: EXPORT_ROUTE,
         fileName: FILE_NAME_FROM_SCHEMAS + "CSV",
-        format: "csv",
+        format: { ext: "csv", zip: true },
       },
       { verbose: false },
     );
@@ -74,7 +74,7 @@ describe("# Car Case Test", () => {
     await chaca.export(CAR_CASE_DATA, {
       location: EXPORT_ROUTE,
       fileName: FILE_NAME,
-      format: "java",
+      format: { ext: "java", zip: true },
     });
   });
 
@@ -86,7 +86,7 @@ describe("# Car Case Test", () => {
     });
   });
 
-  it("SQL Export From Schemas", async () => {
+  it("Postgresql Export From Schemas", async () => {
     await chaca.exportFromSchemas(
       CASE_SCHEMAS,
       {
@@ -104,7 +104,7 @@ describe("# Car Case Test", () => {
       {
         fileName: FILE_NAME_FROM_SCHEMAS,
         location: EXPORT_ROUTE,
-        format: "java",
+        format: { ext: "java", zip: true },
       },
       { verbose: false },
     );

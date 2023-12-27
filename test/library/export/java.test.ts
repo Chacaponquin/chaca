@@ -34,35 +34,43 @@ describe("# Java Export Test", () => {
 
   describe("Export Schemas", () => {
     it("Array Fields Schema", async () => {
-      await chaca.export(ARRAY_FIELDS_DATA, {
-        format: "java",
-        fileName: "ArrayFieldsSchemaArray",
+      const route = await chaca.export(ARRAY_FIELDS_DATA, {
+        format: { ext: "java", zip: true },
+        fileName: "ArrayFieldsSchema",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Simple Schema", async () => {
-      await chaca.export(SIMPLE_SCHEMA_DATA, {
-        format: "java",
-        fileName: "SimpleSchemaArray",
+      const route = await chaca.export(SIMPLE_SCHEMA_DATA, {
+        format: { ext: "java", zip: true },
+        fileName: "SimpleSchema",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Schema Nested Objects", async () => {
-      await chaca.export(NESTED_OBJECTS_DATA, {
-        format: "java",
-        fileName: "SchemaNestedObjectsArray",
+      const route = await chaca.export(NESTED_OBJECTS_DATA, {
+        format: { ext: "java", zip: true },
+        fileName: "SchemaNestedObjects",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Complete Schema", async () => {
-      await chaca.export(COMPLETE_SCHEMA_DATA, {
-        format: "java",
-        fileName: "CompleteSchemaArray",
+      const route = await chaca.export(COMPLETE_SCHEMA_DATA, {
+        format: { ext: "java", zip: true },
+        fileName: "CompleteSchema",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
   });
 });

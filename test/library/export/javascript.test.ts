@@ -23,60 +23,72 @@ describe("# Javascript Export Test", () => {
 
   describe("Export Primitive values", () => {
     it("Export string", async () => {
-      await chaca.export("Javascript Test", {
+      const route = await chaca.export("Javascript Test", {
         format: "javascript",
         fileName: fileName + "String",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Export null", async () => {
-      await chaca.export(null, {
+      const route = await chaca.export(null, {
         format: "javascript",
         fileName: fileName + "Null",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Export number", async () => {
-      await chaca.export(10, {
+      const route = await chaca.export(10, {
         format: "javascript",
         fileName: fileName + "Number",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Export boolean", async () => {
-      await chaca.export(true, {
+      const route = await chaca.export(true, {
         format: "javascript",
         fileName: fileName + "Boolean",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
   });
 
   describe("Export an Array", () => {
     it("Export an array of any elements", async () => {
-      await chaca.export(VARIANT_ARRAY, {
+      const route = await chaca.export(VARIANT_ARRAY, {
         format: "javascript",
         fileName: fileName + "ArrayAnyElements",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
   });
 
   describe("Export an Date", () => {
     it("Export a new Date", async () => {
-      await chaca.export(new Date(), {
+      const route = await chaca.export(new Date(), {
         format: "javascript",
         fileName: fileName + "DateNow",
         location: ROOT,
       });
+
+      expect(checkFile(route)).toBe(true);
     });
   });
 
   it("Export empty object", async () => {
-    await chaca.export(
+    const route = await chaca.export(
       {},
       {
         format: "javascript",
@@ -84,5 +96,7 @@ describe("# Javascript Export Test", () => {
         location: ROOT,
       },
     );
+
+    expect(checkFile(route)).toBe(true);
   });
 });

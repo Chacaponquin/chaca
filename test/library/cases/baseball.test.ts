@@ -45,7 +45,7 @@ describe("# Baseball Case Test", () => {
       {
         fileName: FILE_NAME,
         location: EXPORT_ROUTE,
-        format: "csv",
+        format: { ext: "csv", zip: true },
       },
       { verbose: false },
     );
@@ -70,7 +70,7 @@ describe("# Baseball Case Test", () => {
   it("Java", async () => {
     await chaca.export(BASEBALL_CASE_DATA, {
       fileName: FILE_NAME,
-      format: "java",
+      format: { ext: "java", zip: true },
       location: EXPORT_ROUTE,
     });
   });

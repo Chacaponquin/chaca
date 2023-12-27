@@ -38,7 +38,7 @@ describe("# PostgreSQL Export Test", () => {
 
   describe("Export Schemas (with exportFromSchemas)", () => {
     it("Export Simple Schema", async () => {
-      await chaca.exportFromSchemas(
+      const route = await chaca.exportFromSchemas(
         [
           {
             name: "SimpleSchema",
@@ -49,10 +49,12 @@ describe("# PostgreSQL Export Test", () => {
         { fileName: "simpleSchema", format: "postgresql", location: ROOT },
         { verbose: false },
       );
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Export Nested Object Schema", async () => {
-      await chaca.exportFromSchemas(
+      const route = await chaca.exportFromSchemas(
         [
           {
             name: "NestedObjectSchema",
@@ -67,6 +69,8 @@ describe("# PostgreSQL Export Test", () => {
         },
         { verbose: false },
       );
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Export Array Fields Schema", async () => {
@@ -90,7 +94,7 @@ describe("# PostgreSQL Export Test", () => {
     });
 
     it("Export Complete Schema", async () => {
-      await chaca.exportFromSchemas(
+      const route = await chaca.exportFromSchemas(
         [
           {
             name: "CompleteSchema",
@@ -105,24 +109,30 @@ describe("# PostgreSQL Export Test", () => {
         },
         { verbose: false },
       );
+
+      expect(checkFile(route)).toBe(true);
     });
   });
 
   describe("Export Schemas (with export)", () => {
     it("Export Simple Schema Array", async () => {
-      await chaca.export(SIMPLE_SCHEMA_DATA, {
+      const route = await chaca.export(SIMPLE_SCHEMA_DATA, {
         fileName: "simpleSchemaExport",
         location: ROOT,
         format: "postgresql",
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Export Nested Object Schema Array", async () => {
-      await chaca.export(NESTED_OBJECTS_DATA, {
+      const route = await chaca.export(NESTED_OBJECTS_DATA, {
         fileName: "nestedObjectSchemaExport",
         location: ROOT,
         format: "postgresql",
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Export Array Fields Schema Array", async () => {
@@ -136,11 +146,13 @@ describe("# PostgreSQL Export Test", () => {
     });
 
     it("Export Complete Schema Array", async () => {
-      await chaca.export(COMPLETE_SCHEMA_DATA, {
+      const route = await chaca.export(COMPLETE_SCHEMA_DATA, {
         fileName: "completeSchemaExport",
         location: ROOT,
         format: "postgresql",
       });
+
+      expect(checkFile(route)).toBe(true);
     });
   });
 });

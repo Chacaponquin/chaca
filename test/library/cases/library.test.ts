@@ -21,7 +21,7 @@ describe("# Library Case Test", () => {
     expect(DATA).toHaveProperty("Book_Loan");
   });
 
-  it("SQL", async () => {
+  it("Postgresql", async () => {
     await chaca.exportFromSchemas(
       LIBRARY_CASE_SCHEMA,
       {
@@ -52,7 +52,7 @@ describe("# Library Case Test", () => {
   it("Java", async () => {
     await chaca.export(CASE_DATA, {
       fileName: FILE_NAME,
-      format: "java",
+      format: { ext: "java", zip: true },
       location: EXPORT_ROUTE,
     });
   });

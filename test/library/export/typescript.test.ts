@@ -34,27 +34,33 @@ describe("# Export Typescript", () => {
 
   describe("Export primitive values", () => {
     it("Export number", async () => {
-      await chaca.export(10, {
+      const route = await chaca.export(10, {
         format: "typescript",
         fileName: fileName + "Number",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
 
     it("Export boolean", async () => {
-      await chaca.export(false, {
+      const route = await chaca.export(false, {
         format: "typescript",
         fileName: fileName + "Boolean",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
 
     it("Export String", async () => {
-      await chaca.export("Hi", {
+      const route = await chaca.export("Hi", {
         format: "typescript",
         fileName: fileName + "String",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
   });
 
@@ -65,33 +71,39 @@ describe("# Export Typescript", () => {
         { fullName: "Pquito antonio", favoriteNumber: 50 },
       ];
 
-      await chaca.export(data, {
+      const route = await chaca.export(data, {
         format: "typescript",
         fileName: fileName + "ArrayDiferentObject",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
 
     it("Array of Complete Schema", async () => {
-      await chaca.export(COMPLETE_SCHEMA_DATA, {
+      const route = await chaca.export(COMPLETE_SCHEMA_DATA, {
         format: "typescript",
         fileName: fileName + "ArrayCompleteSchema",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
 
     it("Array of Schema with Nested Objects", async () => {
-      await chaca.export(NESTED_OBJECTS_DATA, {
+      const route = await chaca.export(NESTED_OBJECTS_DATA, {
         format: "typescript",
         fileName: fileName + "ArrayNestedObjectsSchema",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
   });
 
   describe("Export Object", () => {
     it("Export empty object", async () => {
-      await chaca.export(
+      const route = await chaca.export(
         {},
         {
           format: "typescript",
@@ -99,38 +111,48 @@ describe("# Export Typescript", () => {
           location: ROOT,
         },
       );
+
+       expect(checkFile(route)).toBe(true);
     });
 
     it("Export simple object", async () => {
-      await chaca.export(SIMPLE_SCHEMA.generateObject(), {
+      const route = await chaca.export(SIMPLE_SCHEMA.generateObject(), {
         format: "typescript",
         fileName: fileName + "SimpleObject",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
 
     it("Export complete schema object", async () => {
-      await chaca.export(COMPLETE_SCHEMA.generateObject(), {
+      const route = await chaca.export(COMPLETE_SCHEMA.generateObject(), {
         format: "typescript",
         fileName: fileName + "CompleteSchemaObject",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
 
     it("Export nested object schema object", async () => {
-      await chaca.export(NESTED_OBJECT_SCHEMA.generateObject(), {
+      const route = await chaca.export(NESTED_OBJECT_SCHEMA.generateObject(), {
         format: "typescript",
         fileName: fileName + "NestedObjectsSchemaObject",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
 
     it("Export schema with array fields object", async () => {
-      await chaca.export(SCHEMA_WITH_ARRAY_FIELDS.generateObject(), {
+      const route = await chaca.export(SCHEMA_WITH_ARRAY_FIELDS.generateObject(), {
         format: "typescript",
         fileName: fileName + "FieldsWithArrayObject",
         location: ROOT,
       });
+
+       expect(checkFile(route)).toBe(true);
     });
   });
 });

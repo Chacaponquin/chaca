@@ -62,7 +62,19 @@ export class CSVGenerator extends Generator {
 
   public async generateFile(data: any): Promise<string> {
     const fileRoute = await this.createFile(this.fileName, data);
-    return fileRoute;
+
+    if (this.zip) {
+      const { zip, zipPath } = this.createZip();
+
+      zip.addLocalFile(fileRoute);
+      zip.writeZip(zipPath);
+
+      await fs.promises.unlink(fileRoute);
+
+      return zipPath;
+    } else {
+      return fileRoute;
+    }
   }
 
   private async createFile(filename: string, data: any): Promise<string> {
@@ -94,17 +106,6 @@ export class CSVGenerator extends Generator {
 
     await fs.promises.writeFile(fileRoute, content, "utf-8");
 
-    if (this.zip) {
-      const { zip, zipPath } = this.createZip();
-
-      zip.addLocalFile(fileRoute);
-      await fs.promises.unlink(fileRoute);
-
-      zip.writeZip(zipPath);
-
-      return zipPath;
-    } else {
-      return fileRoute;
-    }
+    return fileRoute;
   }
 }

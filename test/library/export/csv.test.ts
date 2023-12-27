@@ -64,11 +64,13 @@ describe("#Export CSV test", () => {
 
   describe("Export Array", () => {
     it("Export simple object", async () => {
-      await chaca.export(SIMPLE_SCHEMA_DATA, {
+      const route = await chaca.export(SIMPLE_SCHEMA_DATA, {
         fileName: fileName + "SimpleObject",
         location: ROOT,
         format: "csv",
       });
+
+      expect(checkFile(route)).toBe(true);
     });
 
     it("Array of similar objects", async () => {
