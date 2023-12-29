@@ -11,7 +11,7 @@ interface Props {
   zip?: boolean;
 }
 
-export class CSVGenerator extends Generator {
+export class CsvGenerator extends Generator {
   private zip: boolean;
 
   constructor(config: Props) {
