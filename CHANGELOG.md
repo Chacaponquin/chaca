@@ -1,3 +1,9 @@
+## chaca@1.7.1
+
+### 🌚 Features
+
+- Add export configurations to all formats (`java` | `csv` | `typescript` | `json` | `javascript` | `yaml` | `postgresql` | `python`)
+
 ## chaca@1.7.0
 
 ### 🪛 Fix
