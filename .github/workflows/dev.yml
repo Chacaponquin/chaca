@@ -7,7 +7,7 @@ on:
 jobs:
   release:
     name: 🖥️ Dev
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
