@@ -1,6 +1,6 @@
 import { ChacaError } from "../../errors";
 import {
-  CSVGenerator,
+  CsvGenerator,
   Generator,
   JavaGenerator,
   JavascriptGenerator,
@@ -63,7 +63,7 @@ export class ExportResolver {
         location: this.config.location,
       });
     } else if (format === "csv") {
-      gen = new CSVGenerator({
+      gen = new CsvGenerator({
         fileName: this.config.fileName,
         location: this.config.location,
       });
@@ -104,7 +104,7 @@ export class ExportResolver {
           extConfig: { separate: format.separate, zip: format.zip },
         });
       } else if (format.ext === "csv") {
-        gen = new CSVGenerator({
+        gen = new CsvGenerator({
           fileName: this.config.fileName,
           location: this.config.location,
           zip: format.zip,

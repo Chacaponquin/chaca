@@ -2,8 +2,8 @@ node_modules/
 
 package-lock.json
 
-#library
+# library
 lib/
 
-#folder with test file creation
+# folder with test file creation
 data/

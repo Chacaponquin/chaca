@@ -1,7 +1,7 @@
 import { JsonGenerator } from "./Json/JsonGenerator";
 import { Generator } from "./Generator/Generator";
 import { JavascriptGenerator } from "./Javascript/JavascriptGenerator";
-import { CSVGenerator } from "./CSV/CSVGenerator";
+import { CsvGenerator } from "./Csv/CsvGenerator";
 import { JavaGenerator } from "./Java/JavaGenerator";
 import { TypescriptGenerator } from "./Typescript/TypescriptGenerator";
 import { YamlGenerator } from "./Yaml/YamlGenerator";
@@ -12,7 +12,7 @@ export {
   JsonGenerator,
   Generator,
   JavascriptGenerator,
-  CSVGenerator,
+  CsvGenerator,
   JavaGenerator,
   TypescriptGenerator,
   YamlGenerator,
