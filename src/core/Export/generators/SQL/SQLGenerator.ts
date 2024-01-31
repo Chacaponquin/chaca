@@ -65,6 +65,42 @@ export class SQLGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
+  public async generateRelationalDataFile(
+    resolvers: MultiGenerateResolver,
+  ): Promise<string> {
+    resolvers.getResolvers().forEach((r) => {
+      const allKeys = r.getKeyNodes();
+      allKeys.forEach((k) => this.schemasPrimaryKeys.push(k));
+
+      const allRefs = r.getRefNodes();
+      allRefs.forEach((r) => this.schemasForeignKeys.push(r));
+
+      const allpossibleNull = r.getPossibleNullNodes();
+      allpossibleNull.forEach((n) => this.schemaspossibleNull.push(n));
+    });
+
+    resolvers.getResolvers().forEach((r) => {
+      this.createData(r.getSchemaName(), r.resolve());
+    });
+
+    // change tables id columns
+    this.allTables.forEach((t) => {
+      t.updateIdColumnName();
+    });
+
+    await fs.promises.writeFile(
+      this.route,
+      this.dataGenerator.getData(),
+      "utf-8",
+    );
+
+    if (this.zip) {
+      return await this.createFileZip();
+    } else {
+      return this.route;
+    }
+  }
+
   public async generateFile(data: any): Promise<string> {
     let sqlData: Array<any> = [];
 
@@ -404,37 +440,5 @@ export class SQLGenerator extends Generator {
         }
       }
     }
-  }
-
-  public async generateRelationalDataFile(
-    resolvers: MultiGenerateResolver,
-  ): Promise<string> {
-    resolvers.getResolvers().forEach((r) => {
-      const allKeys = r.getKeyNodes();
-      allKeys.forEach((k) => this.schemasPrimaryKeys.push(k));
-
-      const allRefs = r.getRefNodes();
-      allRefs.forEach((r) => this.schemasForeignKeys.push(r));
-
-      const allpossibleNull = r.getPossibleNullNodes();
-      allpossibleNull.forEach((n) => this.schemaspossibleNull.push(n));
-    });
-
-    resolvers.getResolvers().forEach((r) => {
-      this.createData(r.getSchemaName(), r.resolve());
-    });
-
-    // change tables id columns
-    this.allTables.forEach((t) => {
-      t.updateIdColumnName();
-    });
-
-    await fs.promises.writeFile(
-      this.route,
-      this.dataGenerator.getData(),
-      "utf-8",
-    );
-
-    return this.route;
   }
 }

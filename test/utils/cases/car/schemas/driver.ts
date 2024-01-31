@@ -7,6 +7,7 @@ const dni = chaca.schemaField(() => {
 export const DRIVER_SCHEMA = chaca.schema({
   dni: chaca.key(dni()),
   name: schemas.person.fullName(),
-  category: chaca.ref("Category.id"),
+  category: schemas.dataType.int({ min: 0, max: 4 }),
   address: schemas.address.cardinalDirection(),
+  email: schemas.internet.email(),
 });

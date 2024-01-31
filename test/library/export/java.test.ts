@@ -28,7 +28,7 @@ describe("# Java Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext: "zip" })).toBe(true);
     });
   });
 
@@ -40,7 +40,7 @@ describe("# Java Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext: "zip" })).toBe(true);
     });
 
     it("Simple Schema", async () => {
@@ -50,7 +50,7 @@ describe("# Java Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext: "zip" })).toBe(true);
     });
 
     it("Schema Nested Objects", async () => {
@@ -60,7 +60,7 @@ describe("# Java Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext: "zip" })).toBe(true);
     });
 
     it("Complete Schema", async () => {
@@ -70,7 +70,7 @@ describe("# Java Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext: "zip" })).toBe(true);
     });
   });
 });

@@ -1,8 +1,8 @@
 import { chaca, schemas } from "../../../../../src";
 
 export const CONTRACT_SCHEMA = chaca.schema({
-  car_plate: chaca.key(chaca.ref("Car.plate")),
-  tourist_passport: chaca.ref("Turist.passport"),
+  plate: chaca.key(chaca.ref("Car.plate")),
+  passport: chaca.ref("Tourist.passport"),
   start_date: chaca.key(schemas.date.past()),
   end_date: ({ currentFields: fields }) => {
     return schemas.date
@@ -72,5 +72,25 @@ export const CONTRACT_SCHEMA = chaca.schema({
     } else {
       return schemas.dataType.int({ min: 0, max: fields.end_km }).getValue();
     }
+  },
+  value: ({ currentFields: fields }) => {
+    const calcDaysDiff = (date1: Date, date2: Date) => {
+      const fechaInicio = date1.getTime();
+      const fechaFin = date2.getTime();
+
+      const diff = fechaFin - fechaInicio;
+
+      return diff / (1000 * 60 * 60 * 24);
+    };
+
+    const end_date = fields.end_date;
+    const start_date = fields.start_date;
+    const delivery_date = fields.delivery_date;
+
+    const value =
+      calcDaysDiff(start_date, end_date) * 15 +
+      calcDaysDiff(end_date, delivery_date) * 30;
+
+    return value;
   },
 });
