@@ -195,19 +195,20 @@ export class InternetSchema {
 
       const len = typeof a.length === "number" && a.length > 0 ? a.length : 15;
       const memorable = typeof a.memorable === "boolean" ? a.memorable : false;
-      const pattern = a.pattern instanceof RegExp ? a.pattern : /w/;
+      const pattern = a.pattern instanceof RegExp ? a.pattern : consonant;
       const prefix = typeof a.prefix === "string" ? a.prefix : "";
 
       const _password = (
         length: number,
         memorable: boolean,
-        pattern: RegExp,
+        i_pattern: RegExp,
         prefix: string,
       ): string => {
         if (prefix.length >= length) {
           return prefix;
         }
 
+        let pattern: RegExp = i_pattern;
         if (memorable) {
           if (prefix.match(consonant)) {
             pattern = vowel;
