@@ -1,3 +1,10 @@
+## chaca@1.7.2
+
+### 🪛 Fix
+
+- Fix problems with zip exportation in `python` and `postgresql` formats
+- Fix `Internet.password` schema
+
 ## chaca@1.7.1
 
 ### 🌚 Features
