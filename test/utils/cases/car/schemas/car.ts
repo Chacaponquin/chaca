@@ -7,8 +7,7 @@ const placa = chaca.schemaField(() => {
 export const CAR_SCHEMA = chaca.schema({
   plate: chaca.key(placa()),
   model_id: chaca.ref("Model.id"),
-  color: chaca.enum(["rojo", "negro", "blanco", "amarillo"]),
-  cant_km: schemas.dataType.int({ min: 0, max: 15000 }),
-  situation: chaca.ref("Situation.id"),
-  brand_id: chaca.ref("Brand.id"),
+  color: schemas.color.rgb(),
+  km: schemas.dataType.int({ min: 0, max: 15000 }),
+  situation: schemas.dataType.int({ min: 0, max: 3 }),
 });

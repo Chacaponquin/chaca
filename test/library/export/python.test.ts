@@ -4,6 +4,7 @@ import { checkFile } from "./utils/export-util";
 
 const fileName = "python";
 const ROOT = "./data/python";
+const ext = "py";
 
 describe("# Python Export Test", () => {
   describe("Export configuration", () => {
@@ -17,7 +18,7 @@ describe("# Python Export Test", () => {
         },
       );
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route: route, ext: "zip" })).toBe(true);
     });
   });
 
@@ -29,7 +30,7 @@ describe("# Python Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route: route, ext })).toBe(true);
     });
 
     it("Export null", async () => {
@@ -39,7 +40,7 @@ describe("# Python Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export number", async () => {
@@ -49,7 +50,7 @@ describe("# Python Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export boolean", async () => {
@@ -59,7 +60,7 @@ describe("# Python Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 
@@ -71,7 +72,7 @@ describe("# Python Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 
@@ -83,7 +84,7 @@ describe("# Python Export Test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 
@@ -98,7 +99,7 @@ describe("# Python Export Test", () => {
         },
       );
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 });

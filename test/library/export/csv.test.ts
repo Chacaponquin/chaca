@@ -6,6 +6,7 @@ import { checkFile } from "./utils/export-util";
 
 const fileName = "csvExport";
 const ROOT = "./data/csv";
+const ext = "csv";
 
 describe("#Export CSV test", () => {
   let COMPLETE_SCHEMA_DATA: any;
@@ -26,7 +27,7 @@ describe("#Export CSV test", () => {
         location: ROOT,
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext: "zip" })).toBe(true);
     });
   });
 
@@ -70,7 +71,7 @@ describe("#Export CSV test", () => {
         format: "csv",
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Array of similar objects", async () => {

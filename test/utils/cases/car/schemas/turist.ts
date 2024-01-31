@@ -8,7 +8,8 @@ export const TURIST_SCHEMA = chaca.schema({
   passport: chaca.key(passport()),
   name: schemas.person.fullName(),
   age: schemas.dataType.int({ min: 15, max: 80 }),
-  sex: chaca.enum(["Male", "Woman"]),
-  country: chaca.ref("Country.id"),
-  contact: schemas.phone.number(),
+  gender: schemas.dataType.int({ min: 0, max: 2 }),
+  country: schemas.address.country(),
+  phone: schemas.phone.number(),
+  email: schemas.internet.email(),
 });

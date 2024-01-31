@@ -7,6 +7,7 @@ import { checkFile } from "./utils/export-util";
 
 const ROOT = "./data/postgresql";
 const COUNT_DOCUMENTS = 50;
+const ext = "sql";
 
 describe("# PostgreSQL Export Test", () => {
   let ARRAY_FIELDS_DATA: any;
@@ -26,13 +27,13 @@ describe("# PostgreSQL Export Test", () => {
       const route = await chaca.export(
         {},
         {
-          fileName: "conf" + "Zip",
+          fileName: "postgresql" + "Zip",
           format: { ext: "postgresql", zip: true },
           location: ROOT,
         },
       );
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext: "zip" })).toBe(true);
     });
   });
 
@@ -50,7 +51,7 @@ describe("# PostgreSQL Export Test", () => {
         { verbose: false },
       );
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export Nested Object Schema", async () => {
@@ -70,7 +71,7 @@ describe("# PostgreSQL Export Test", () => {
         { verbose: false },
       );
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export Array Fields Schema", async () => {
@@ -110,7 +111,7 @@ describe("# PostgreSQL Export Test", () => {
         { verbose: false },
       );
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 
@@ -122,7 +123,7 @@ describe("# PostgreSQL Export Test", () => {
         format: "postgresql",
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export Nested Object Schema Array", async () => {
@@ -132,7 +133,7 @@ describe("# PostgreSQL Export Test", () => {
         format: "postgresql",
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export Array Fields Schema Array", async () => {
@@ -152,7 +153,7 @@ describe("# PostgreSQL Export Test", () => {
         format: "postgresql",
       });
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 });

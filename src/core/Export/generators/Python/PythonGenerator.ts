@@ -49,7 +49,12 @@ export class PythonGenerator extends Generator {
 
     const finalCode = this.buildFinalCode(code);
     await fs.promises.writeFile(this.route, finalCode, "utf-8");
-    return this.route;
+
+    if (this.zip) {
+      return await this.createFileZip();
+    } else {
+      return this.route;
+    }
   }
 
   private buildFinalCode(pythonCode: string): string {

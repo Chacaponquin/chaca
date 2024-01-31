@@ -19,11 +19,11 @@ describe("# JSON Export Test", () => {
       },
     );
 
-    expect(checkFile(route)).toBe(true);
+    expect(checkFile({ route, ext: "zip" })).toBe(true);
   });
 
   it("Pass separate=false. Should create a single json file", async () => {
-    await chaca.exportFromSchemas(
+    const route = await chaca.exportFromSchemas(
       [
         {
           documents: COUNT_DOCUMENTS,
@@ -43,17 +43,19 @@ describe("# JSON Export Test", () => {
       ],
       {
         fileName: fileName + "NotSeparate",
-        format: { ext: "json", separate: false, zip: false },
+        format: { ext: "json", separate: false, zip: true },
         location: ROOT,
       },
       { verbose: false },
     );
+
+    expect(checkFile({ route, ext: "zip" })).toBe(true);
   });
 
   it("Pass separate=true. Should create multiple files", async () => {
     const file = fileName + "Separate";
 
-    await chaca.exportFromSchemas(
+    const route = await chaca.exportFromSchemas(
       [
         {
           documents: COUNT_DOCUMENTS,
@@ -78,5 +80,7 @@ describe("# JSON Export Test", () => {
       },
       { verbose: false },
     );
+
+    expect(checkFile({ route, ext: "zip" })).toBe(true);
   });
 });

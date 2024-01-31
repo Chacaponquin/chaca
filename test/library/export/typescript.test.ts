@@ -5,8 +5,9 @@ import { SCHEMA_WITH_ARRAY_FIELDS } from "../../utils/schemas/schema-with-array"
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 import { checkFile } from "./utils/export-util";
 
-const fileName = "typescriptExport";
+const fileName = "typescript";
 const ROOT = "./data/typescript";
+const ext = "ts";
 
 describe("# Export Typescript", () => {
   let COMPLETE_SCHEMA_DATA: any;
@@ -28,7 +29,7 @@ describe("# Export Typescript", () => {
         },
       );
 
-      expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext: "zip" })).toBe(true);
     });
   });
 
@@ -40,7 +41,7 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export boolean", async () => {
@@ -50,7 +51,7 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export String", async () => {
@@ -60,7 +61,7 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 
@@ -77,7 +78,7 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Array of Complete Schema", async () => {
@@ -87,7 +88,7 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Array of Schema with Nested Objects", async () => {
@@ -97,7 +98,7 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 
@@ -112,7 +113,7 @@ describe("# Export Typescript", () => {
         },
       );
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export simple object", async () => {
@@ -122,7 +123,7 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export complete schema object", async () => {
@@ -132,7 +133,7 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export nested object schema object", async () => {
@@ -142,17 +143,20 @@ describe("# Export Typescript", () => {
         location: ROOT,
       });
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
 
     it("Export schema with array fields object", async () => {
-      const route = await chaca.export(SCHEMA_WITH_ARRAY_FIELDS.generateObject(), {
-        format: "typescript",
-        fileName: fileName + "FieldsWithArrayObject",
-        location: ROOT,
-      });
+      const route = await chaca.export(
+        SCHEMA_WITH_ARRAY_FIELDS.generateObject(),
+        {
+          format: "typescript",
+          fileName: fileName + "FieldsWithArrayObject",
+          location: ROOT,
+        },
+      );
 
-       expect(checkFile(route)).toBe(true);
+      expect(checkFile({ route, ext })).toBe(true);
     });
   });
 });

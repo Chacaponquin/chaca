@@ -15,14 +15,11 @@ describe("# Car Case Test", () => {
   it("Creation", () => {
     const DATA = chaca.multiGenerate(CASE_SCHEMAS, { verbose: false });
     expect(DATA).toHaveProperty("Pay_Method");
-    expect(DATA).toHaveProperty("Situation");
-    expect(DATA).toHaveProperty("Category");
-    expect(DATA).toHaveProperty("Country");
     expect(DATA).toHaveProperty("Brand");
     expect(DATA).toHaveProperty("Model");
     expect(DATA).toHaveProperty("Car");
     expect(DATA).toHaveProperty("Driver");
-    expect(DATA).toHaveProperty("Turist");
+    expect(DATA).toHaveProperty("Tourist");
     expect(DATA).toHaveProperty("Contract");
   });
 
