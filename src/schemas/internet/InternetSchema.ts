@@ -207,6 +207,7 @@ export class InternetSchema {
         if (prefix.length >= length) {
           return prefix;
         }
+
         if (memorable) {
           if (prefix.match(consonant)) {
             pattern = vowel;
@@ -214,6 +215,7 @@ export class InternetSchema {
             pattern = consonant;
           }
         }
+
         const n = this.dataTypeSchema.int().getValue({ min: 0, max: 94 }) + 33;
         let char = String.fromCharCode(n);
 
