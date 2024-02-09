@@ -1,3 +1,11 @@
+## chaca@1.8.0
+
+### 🌚 Features
+
+- 🎉 The bundle size has been reduced by 50%
+- 🗑️ `Video` schema was deleted
+- 🗑️ The `constants` in `Image` schema were removed
+
 ## chaca@1.7.2
 
 ### 🪛 Fix

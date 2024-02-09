@@ -10,7 +10,6 @@ import { AddressSchema } from "./address/AddressSchema";
 import { VehicleSchema } from "./vehicle/VehicleSchema";
 import { DateSchema } from "./date/DateSchema";
 import { PersonSchema } from "./person/PersonSchema";
-import { VideoSchema } from "./video/VideoSchema";
 import { AnimalSchema } from "./animal/AnimalSchema";
 import { ScienceSchema } from "./science/ScienceSchema";
 import { WordSchema } from "./word/WordSchema";
@@ -30,7 +29,6 @@ export class Schemas {
   public readonly vehicle = new VehicleSchema();
   public readonly date = new DateSchema();
   public readonly person = new PersonSchema();
-  public readonly video = new VideoSchema();
   public readonly animal = new AnimalSchema();
   public readonly science = new ScienceSchema();
   public readonly color = new ColorSchema();
