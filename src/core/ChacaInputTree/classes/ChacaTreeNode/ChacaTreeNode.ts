@@ -11,7 +11,10 @@ interface IsNullProps<K> {
 export abstract class ChacaTreeNode {
   constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {}
 
-  public static getRouteString(route: Array<string>): string {
+  public abstract getNoArrayNode(): ChacaTreeNode;
+  public abstract checkIfFieldExists(fieldTreeRoute: string[]): boolean;
+
+  public static getRouteString(route: string[]): string {
     return route.join(".");
   }
 
@@ -22,9 +25,6 @@ export abstract class ChacaTreeNode {
   public getNodeConfig(): ChacaTreeNodeConfig {
     return this.nodeConfig;
   }
-
-  public abstract getNoArrayNode(): ChacaTreeNode;
-  public abstract checkIfFieldExists(fieldTreeRoute: Array<string>): boolean;
 
   public getNodeName(): string {
     const arrayRoute = this.nodeConfig.fieldTreeRoute;

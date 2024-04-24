@@ -20,15 +20,17 @@ import {
   EnumValueNode,
   KeyValueNode,
   MixedValueNode,
+  PickValueNode,
   ProbabilityValueNode,
   RefValueNode,
   SchemaValueNode,
   SequenceValueNode,
   SequentialValueNode,
 } from "./classes";
-import { InputTreeUtils } from "./utils/input_tree_utils";
+import { InputTreeUtils } from "./utils/input-tree-utils";
 import { SequentialFieldResolver } from "../Resolvers/core/SequentialFieldResolver/SequentialFieldResolver";
 import { SchemaStore } from "../SchemasStore/SchemaStore";
+import { PickFieldResolver } from "../Resolvers/core/PickFieldResolver/PickFieldResolver";
 
 interface Props {
   schemaName: string;
@@ -39,7 +41,7 @@ interface Props {
 export class ChacaInputTree {
   private inputTreeUtils = new InputTreeUtils();
 
-  private nodes: Array<ChacaTreeNode> = [];
+  private nodes: ChacaTreeNode[] = [];
   private schemasStore: SchemaStore;
   private schemaName: string;
 
@@ -81,6 +83,8 @@ export class ChacaInputTree {
 
     if (object.type instanceof CustomFieldResolver) {
       returnNode = new CustomValueNode(nodeConfig, object.type.fun);
+    } else if (object.type instanceof PickFieldResolver) {
+      returnNode = new PickValueNode(nodeConfig, object.type.values);
     } else if (object.type instanceof SchemaFieldResolver) {
       returnNode = new SchemaValueNode(nodeConfig, object.type.schema);
     } else if (object.type instanceof ProbabilityFieldResolver) {
@@ -89,6 +93,7 @@ export class ChacaInputTree {
       returnNode = new EnumValueNode(nodeConfig, object.type.array);
     } else if (object.type instanceof MixedFieldResolver) {
       returnNode = new MixedValueNode(nodeConfig, this.inputTreeUtils);
+
       this.createSubNodesOfMixedField(
         actualRoute,
         returnNode as MixedValueNode,
@@ -165,7 +170,7 @@ export class ChacaInputTree {
     return returnNode;
   }
 
-  private validateResolver(route: Array<string>, config: ResolverObject): void {
+  private validateResolver(route: string[], config: ResolverObject): void {
     const name = ChacaTreeNode.getRouteString(route);
 
     if (config.type instanceof SequenceFieldResolver) {
@@ -199,7 +204,7 @@ export class ChacaInputTree {
   }
 
   private createSubNodesOfMixedField(
-    actualRoute: Array<string>,
+    actualRoute: string[],
     parentNode: MixedValueNode,
     schema: ChacaSchema,
   ) {
@@ -263,7 +268,7 @@ export class ChacaInputTree {
   }
 
   public getKeyFields(): Array<KeyValueNode> {
-    const keys = [] as Array<KeyValueNode>;
+    const keys = [] as KeyValueNode[];
 
     this.nodes.forEach((n) => {
       if (n instanceof KeyValueNode) {

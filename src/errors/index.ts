@@ -13,6 +13,16 @@ export class EmptySequentialValuesError extends ChacaError {
   }
 }
 
+export class PickFieldDefinitionError extends ChacaError {
+  constructor(public readonly fieldRoute: string) {
+    super(
+      `On field '${fieldRoute}'. A pick field should must have a number of options to choose from greater than or equal to the 'count' property`,
+    );
+
+    this.name = "ChacaError.PickFieldDefinitionError";
+  }
+}
+
 export class TryRefANoKeyFieldError extends ChacaError {
   constructor(public readonly fieldRoute: string) {
     super(

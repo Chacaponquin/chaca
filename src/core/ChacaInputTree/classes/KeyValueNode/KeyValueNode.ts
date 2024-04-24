@@ -20,10 +20,10 @@ interface Props {
 
 export class KeyValueNode extends ChacaTreeNode {
   constructor(
-    fieldTreeRoute: Array<string>,
+    fieldTreeRoute: string[],
     private readonly fieldNode: KeyValueNodeProps,
   ) {
-    super({ fieldTreeRoute, isArray: null, possibleNull: 0 });
+    super({ fieldTreeRoute: fieldTreeRoute, isArray: null, possibleNull: 0 });
   }
 
   public getNoArrayNode(): ChacaTreeNode {
@@ -57,7 +57,7 @@ export class KeyValueNode extends ChacaTreeNode {
         fields: currentDocument,
       });
     } else {
-      resultValue = this.fieldNode.getNextValue();
+      resultValue = this.fieldNode.getValue();
     }
 
     if (

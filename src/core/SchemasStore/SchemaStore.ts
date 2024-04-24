@@ -4,13 +4,13 @@ import { SchemaResolver } from "../SchemaResolver/SchemaResolver";
 import { GetStoreValueConfig } from "./interfaces/store";
 
 export class SchemaStore {
-  private schemas: Array<SchemaResolver>;
+  private schemas: SchemaResolver[];
 
-  constructor(schemas: Array<SchemaResolver>) {
+  constructor(schemas: SchemaResolver[]) {
     this.schemas = schemas;
   }
 
-  private validateFieldToGet(fieldToGet: string): Array<string> {
+  private validateFieldToGet(fieldToGet: string): string[] {
     if (typeof fieldToGet === "string") {
       const fieldToGetArray = fieldToGet.split(".");
       return fieldToGetArray;
@@ -25,7 +25,7 @@ export class SchemaStore {
     return this.schemas[index];
   }
 
-  public setInjectedSchemas(array: Array<SchemaResolver>): void {
+  public setInjectedSchemas(array: SchemaResolver[]): void {
     this.schemas = array;
   }
 

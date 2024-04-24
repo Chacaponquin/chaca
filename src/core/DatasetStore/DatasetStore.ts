@@ -48,13 +48,13 @@ export class DatasetStore {
   public getValue<R = any>(
     fieldToGet: string,
     config?: GetStoreValueInput<R>,
-  ): Array<R> {
+  ): R[] {
     const foundNodes = this.schemasStore.getValue(
       fieldToGet,
       this.validateGetValueConfig(config),
     );
 
-    const returnValues = [] as Array<R>;
+    const returnValues = [] as R[];
 
     for (const node of foundNodes) {
       if (node instanceof FieldNode) {

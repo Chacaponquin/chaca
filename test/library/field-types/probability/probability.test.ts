@@ -1,6 +1,6 @@
 import { ChacaError, chaca } from "../../../../src";
 
-function count(data: Array<any>, value: number): number {
+function count(data: any[], value: number): number {
   let count = 0;
   for (const dat of data) {
     if (dat.prob === value) {

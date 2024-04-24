@@ -7,14 +7,13 @@ import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
 
 export class EnumValueNode extends ChacaTreeNode {
-  constructor(
-    config: ChacaTreeNodeConfig,
-    public readonly enumOptions: Array<unknown>,
-  ) {
+  private readonly utils = new ChacaUtils();
+
+  constructor(config: ChacaTreeNodeConfig, readonly options: unknown[]) {
     super(config);
 
-    if (Array.isArray(enumOptions)) {
-      if (enumOptions.length === 0) {
+    if (Array.isArray(options)) {
+      if (options.length === 0) {
         throw new EmptyEnumValuesError(this.getRouteString());
       }
     } else {
@@ -23,14 +22,14 @@ export class EnumValueNode extends ChacaTreeNode {
   }
 
   public getValue() {
-    const selectOption = new ChacaUtils().oneOfArray(this.enumOptions);
+    const selectOption = this.utils.oneOfArray(this.options);
     return selectOption ? selectOption : null;
   }
 
   public getNoArrayNode(): ChacaTreeNode {
     return new EnumValueNode(
       { ...this.getNodeConfig(), isArray: null },
-      this.enumOptions,
+      this.options,
     );
   }
 

@@ -3,6 +3,7 @@ import { SchemaField } from "../../../schemas/SchemaField";
 import {
   EnumField,
   KeyField,
+  PickField,
   ProbabilityField,
   RefField,
   SequenceField,
@@ -12,6 +13,7 @@ import {
   CustomFieldResolver,
   EnumFieldResolver,
   MixedFieldResolver,
+  PickFieldResolver,
   ProbabilityFieldResolver,
   RefFieldResolver,
   SchemaFieldResolver,
@@ -56,6 +58,8 @@ export class InputSchemaResolver {
       } else {
         if (config instanceof ChacaSchema) {
           returnResolver = new MixedFieldResolver(config);
+        } else if (config instanceof PickField) {
+          returnResolver = new PickFieldResolver(config.values);
         } else if (config instanceof SchemaField) {
           returnResolver = new SchemaFieldResolver(config);
         } else if (config instanceof RefField) {
