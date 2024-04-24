@@ -184,6 +184,19 @@ export class Chaca {
     return new ProbabilityField(options);
   }
 
+  /**
+   * Select a number of elements in an array so that all selected values are not repeated
+   *
+   * @param props.values array of values
+   * @param props.count number of items to select
+   *
+   * @example
+   * chaca.pick({
+   *    values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+   *    count: 3
+   * })
+   * // [2, 6, 10] or [4, 5, 1] or [1, 9, 8] or ...
+   */
   pick<V = any>(props: PickFieldProps<V>) {
     return new PickField(props);
   }
