@@ -1,4 +1,4 @@
-import { chaca, WrongPickFieldError } from "../../../../src";
+import { chaca, PickFieldDefinitionError } from "../../../../src";
 
 function unique(array: number[]) {
   for (const value of array) {
@@ -33,7 +33,7 @@ describe("# Pick Field Tests", () => {
       pick: chaca.pick({ values: [1, 2, 3], count: -1 }),
     });
 
-    expect(() => schema.generateObject()).toThrow(WrongPickFieldError);
+    expect(() => schema.generateObject()).toThrow(PickFieldDefinitionError);
   });
 
   it("Pass count=2 and values=[1]. Should throw an error", () => {
@@ -41,7 +41,7 @@ describe("# Pick Field Tests", () => {
       pick: chaca.pick({ values: [1], count: 2 }),
     });
 
-    expect(() => schema.generateObject()).toThrow(WrongPickFieldError);
+    expect(() => schema.generateObject()).toThrow(PickFieldDefinitionError);
   });
 
   it("Pass count=2 and values=[1, 2]. Should return [1, 2]", () => {
@@ -68,6 +68,4 @@ describe("# Pick Field Tests", () => {
     expect(data.pick).toHaveLength(5);
     unique(data.pick);
   });
-
-  
 });

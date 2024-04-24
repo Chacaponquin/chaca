@@ -40,7 +40,7 @@ import {
   CyclicAccessDataError,
   NotExistFieldError,
   EmptyEnumValuesError,
-  WrongPickFieldError,
+  PickFieldDefinitionError,
 } from "./errors";
 
 import { GetStoreValueInput } from "./core/SchemasStore/interfaces/store";
@@ -103,7 +103,7 @@ export {
   NotEnoughValuesForRefError,
   NotExistFieldError,
   EmptyEnumValuesError,
-  WrongPickFieldError,
+  PickFieldDefinitionError,
 };
 
 export {

@@ -1,6 +1,6 @@
 import {
   TryRefANoKeyFieldError,
-  WrongPickFieldError,
+  PickFieldDefinitionError,
 } from "../../../../errors";
 import { DataTypeSchema } from "../../../../schemas/dataType/DataTypeSchema";
 import { PickFieldProps } from "../../../Fields/core/PickField/PickField";
@@ -23,7 +23,7 @@ export class PickValueNode extends ChacaTreeNode {
     };
 
     if (this.values.count > this.values.values.length) {
-      throw new WrongPickFieldError(route);
+      throw new PickFieldDefinitionError(route);
     }
   }
 

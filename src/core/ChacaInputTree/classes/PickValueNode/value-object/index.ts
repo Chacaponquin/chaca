@@ -1,4 +1,4 @@
-import { WrongPickFieldError } from "../../../../../errors";
+import { PickFieldDefinitionError } from "../../../../../errors";
 
 export class Values {
   readonly value: unknown[];
@@ -7,7 +7,7 @@ export class Values {
     if (Array.isArray(value)) {
       this.value = value;
     } else {
-      throw new WrongPickFieldError(route);
+      throw new PickFieldDefinitionError(route);
     }
   }
 }
@@ -20,10 +20,10 @@ export class Count {
       if (value >= 0) {
         this.value = value;
       } else {
-        throw new WrongPickFieldError(route);
+        throw new PickFieldDefinitionError(route);
       }
     } else {
-      throw new WrongPickFieldError(route);
+      throw new PickFieldDefinitionError(route);
     }
   }
 }
