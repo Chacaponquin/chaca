@@ -1,3 +1,13 @@
+## chaca@1.9.0
+
+### 🌚 Features
+
+- 🎉 Add `pick` field to choose unique elements from an array
+
+### 🪛 Fix
+
+- 🎉 Data creation times have been reduced by 20%
+
 ## chaca@1.8.0
 
 ### 🌚 Features
