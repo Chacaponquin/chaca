@@ -6,9 +6,7 @@ import {
 } from "../classes";
 
 export class InputTreeUtils {
-  public orderNodesByPriority(
-    nodes: Array<ChacaTreeNode>,
-  ): Array<ChacaTreeNode> {
+  public orderNodesByPriority(nodes: ChacaTreeNode[]): ChacaTreeNode[] {
     const normalNodes: Array<ChacaTreeNode> = [];
     const customNodes: Array<CustomValueNode> = [];
     const refNodes: Array<RefValueNode> = [];

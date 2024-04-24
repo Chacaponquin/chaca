@@ -57,7 +57,7 @@ export class SequentialValueNode extends ChacaTreeNode {
     }
   }
 
-  public getSequentialValue(): unknown {
+  public getValue(): unknown {
     if (this.config.loop) {
       if (this.index === this.valuesArray.length) {
         this.index = 0;

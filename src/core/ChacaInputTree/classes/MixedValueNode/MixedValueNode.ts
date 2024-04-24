@@ -1,6 +1,6 @@
 import { ChacaTreeNodeConfig } from "../../interfaces/tree.interface";
 import { ChacaTreeNode } from "../ChacaTreeNode/ChacaTreeNode";
-import { InputTreeUtils } from "../../utils/input_tree_utils";
+import { InputTreeUtils } from "../../utils/input-tree-utils";
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { KeyValueNode } from "../KeyValueNode/KeyValueNode";
 

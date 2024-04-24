@@ -13,10 +13,10 @@ interface Props {
 }
 
 export class ProbabilityValueNode extends ChacaTreeNode {
-  private options: Array<ProbabilityOption>;
+  private options: ProbabilityOption[];
   private utils = new ChacaUtils();
 
-  constructor(config: ChacaTreeNodeConfig, options: Array<ProbabilityOption>) {
+  constructor(config: ChacaTreeNodeConfig, options: ProbabilityOption[]) {
     super(config);
 
     this.options = new Input({
@@ -43,7 +43,7 @@ export class ProbabilityValueNode extends ChacaTreeNode {
   public getValue(props: Props): unknown {
     const values = this.options.map((o) => o.value);
 
-    const weights: Array<number> = this.options.map((o) => {
+    const weights: number[] = this.options.map((o) => {
       const chance = o.chance;
 
       if (typeof chance === "number") {
@@ -69,8 +69,8 @@ export class ProbabilityValueNode extends ChacaTreeNode {
   }
 
   private createDistribution(
-    array: Array<unknown>,
-    weights: Array<number>,
+    array: unknown[],
+    weights: number[],
     size: number,
   ): Array<unknown> {
     const distribution = [];

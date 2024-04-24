@@ -7,6 +7,7 @@ import { SequentialFieldResolver } from "./SequentialFieldResolver/SequentialFie
 import { KeyFieldResolver } from "./KeyFieldResolver/KeyFieldResolver";
 import { SequenceFieldResolver } from "./SequenceFieldResolver/SequenceFieldResolver";
 import { ProbabilityFieldResolver } from "./ProbabilityFieldResolver/ProbabilityFieldResolver";
+import { PickFieldResolver } from "./PickFieldResolver/PickFieldResolver";
 
 export {
   CustomFieldResolver,
@@ -18,4 +19,5 @@ export {
   KeyFieldResolver,
   SequenceFieldResolver,
   ProbabilityFieldResolver,
+  PickFieldResolver,
 };

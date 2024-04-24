@@ -13,6 +13,7 @@ import {
   SequentialValueNode,
   SequenceValueNode,
   ProbabilityValueNode,
+  PickValueNode,
 } from "../ChacaInputTree/classes";
 import { ChacaResultTree } from "../ChacaResultTree/ChacaResultTree";
 import {
@@ -200,13 +201,13 @@ export class SchemaResolver<K = any> {
             console.log(`Creating ${this.schemaName} data...`);
           }
 
-          // cambiar isBuilding a true
+          // indicar que se está construyendo los datos
           this.isBuilding = true;
 
           for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
             const newDoc = new DocumentTree<K>();
 
-            // insert new document
+            // insertar el nuevo documento
             this.resultTree.insertDocument(newDoc);
 
             // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
@@ -234,6 +235,7 @@ export class SchemaResolver<K = any> {
 
           // indicar que se acabo de construir
           this.isBuilding = false;
+
           // indicar que ha acabado de crear los result trees
           this.finishBuilding = true;
         } else {
@@ -250,10 +252,15 @@ export class SchemaResolver<K = any> {
   }
 
   public getDocumentsArray(omitDocument?: DocumentTree<K>): Array<K> {
-    return this.getResultTree()
-      .getDocuments()
-      .filter((d) => d !== omitDocument)
-      .map((d) => d.getDocumentObject());
+    const result: K[] = [];
+
+    for (const d of this.getResultTree().getDocuments()) {
+      if (d !== omitDocument) {
+        result.push(d.getDocumentObject());
+      }
+    }
+
+    return result;
   }
 
   private resolveArrayAndMixedFields(
@@ -311,15 +318,18 @@ export class SchemaResolver<K = any> {
     indexDoc: number,
   ): void {
     const subFields = mixedField.getFields();
-    for (const f of subFields) {
+    for (const field of subFields) {
       // filtrar el subField segun su tipo
-      const subFieldSolutionNode = this.createSolutionNodeByType(f, indexDoc);
+      const subFieldSolutionNode = this.createSolutionNodeByType(
+        field,
+        indexDoc,
+      );
 
       // insertar la solucion del field en la solucion del mixed field pasado por parametro
       solutionMixedNode.insertNode(subFieldSolutionNode);
 
       // resolver el subField en caso de ser un array o un mixed field
-      this.resolveArrayAndMixedFields(f, subFieldSolutionNode, indexDoc);
+      this.resolveArrayAndMixedFields(field, subFieldSolutionNode, indexDoc);
     }
   }
 
@@ -371,9 +381,18 @@ export class SchemaResolver<K = any> {
           });
         }
 
+        // en caso de ser un pick field
+        else if (field instanceof PickValueNode) {
+          const value = field.getValues();
+          return new SingleResultNode({
+            name: field.getNodeName(),
+            value: value,
+          });
+        }
+
         // en caso de ser un field sequential
         else if (field instanceof SequentialValueNode) {
-          const value = field.getSequentialValue();
+          const value = field.getValue();
           return new SingleResultNode({
             name: field.getNodeName(),
             value: value,
@@ -426,7 +445,7 @@ export class SchemaResolver<K = any> {
         else if (field instanceof SequenceValueNode) {
           return new SingleResultNode({
             name: field.getNodeName(),
-            value: field.getNextValue(),
+            value: field.getValue(),
           });
         }
 
@@ -439,7 +458,7 @@ export class SchemaResolver<K = any> {
         else if (field instanceof EnumValueNode) {
           return new SingleResultNode({
             name: field.getNodeName(),
-            value: this.utils.oneOfArray(field.enumOptions),
+            value: this.utils.oneOfArray(field.options),
           });
         }
 

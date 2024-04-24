@@ -40,6 +40,7 @@ import {
   CyclicAccessDataError,
   NotExistFieldError,
   EmptyEnumValuesError,
+  WrongPickFieldError,
 } from "./errors";
 
 import { GetStoreValueInput } from "./core/SchemasStore/interfaces/store";
@@ -86,6 +87,11 @@ import {
   ChanceFunctionProps,
 } from "./core/Fields/core/ProbabilityField/ProbabilityField";
 
+import {
+  PickField,
+  PickFieldProps,
+} from "./core/Fields/core/PickField/PickField";
+
 export const chaca = new Chaca();
 export const schemas = new Schemas();
 
@@ -97,6 +103,7 @@ export {
   NotEnoughValuesForRefError,
   NotExistFieldError,
   EmptyEnumValuesError,
+  WrongPickFieldError,
 };
 
 export {
@@ -107,6 +114,7 @@ export {
   SequenceField,
   SequentialField,
   ProbabilityField,
+  PickField,
 };
 
 export { ChacaSchema, DatasetStore, Chaca, ChacaUtils, Schemas };
@@ -140,6 +148,7 @@ export type {
   ProbabilityOption,
   ChanceFunction,
   ChanceFunctionProps,
+  PickFieldProps,
 };
 
 export type {

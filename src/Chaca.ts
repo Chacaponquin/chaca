@@ -28,6 +28,10 @@ import {
   ProbabilityOption,
   ProbabilityField,
 } from "./core/Fields/core/ProbabilityField/ProbabilityField";
+import {
+  PickField,
+  PickFieldProps,
+} from "./core/Fields/core/PickField/PickField";
 
 export class Chaca {
   utils = new ChacaUtils();
@@ -36,7 +40,7 @@ export class Chaca {
    * @param inputObj The object with the keys and type of each field
    * @example
    * {
-   *    id: schemas.id.numberRow(),
+   *    id: schemas.id.uuid(),
    *    image: schemas.image.film(),
    *    name: schemas.person.firstName()
    * }
@@ -178,5 +182,9 @@ export class Chaca {
    */
   probability(options: Array<ProbabilityOption>) {
     return new ProbabilityField(options);
+  }
+
+  pick<V = any>(props: PickFieldProps<V>) {
+    return new PickField(props);
   }
 }
