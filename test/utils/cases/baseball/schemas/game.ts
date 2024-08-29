@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../../../src";
+import { chaca, modules } from "../../../../../src";
 
 export const GAME_SCHEMA = chaca.schema({
   game_id: chaca.key(chaca.sequence()),
@@ -12,18 +12,18 @@ export const GAME_SCHEMA = chaca.schema({
   },
   runs_home_club: ({ currentFields: fields }) => {
     if (fields.winner === fields.team_home_club) {
-      return schemas.dataType.int().getValue({ min: 1, max: 15 });
+      return modules.datatype.int().getValue({ min: 1, max: 15 });
     } else {
-      return schemas.dataType.int().getValue({ min: 0, max: 5 });
+      return modules.datatype.int().getValue({ min: 0, max: 5 });
     }
   },
   runs_visitant: ({ currentFields: fields }) => {
     if (fields.winner === fields.team_home_club) {
-      return schemas.dataType
+      return modules.datatype
         .int()
         .getValue({ min: 0, max: fields.runs_home_club });
     } else {
-      return schemas.dataType
+      return modules.datatype
         .int()
         .getValue({ min: fields.runs_home_club, max: 15 });
     }
@@ -34,12 +34,12 @@ export const GAME_SCHEMA = chaca.schema({
     const foundPhase = phases.find((p) => p.phase_id === fields.phase_id);
 
     if (foundPhase) {
-      return schemas.date.between().getValue({
+      return modules.date.between().getValue({
         from: foundPhase.start_date,
         to: foundPhase.finish_date,
       });
     } else {
-      return schemas.date.past().getValue();
+      return modules.date.past().getValue();
     }
   },
   phase_id: chaca.ref("Phase.phase_id"),
@@ -59,12 +59,12 @@ export const GAME_SCHEMA = chaca.schema({
       );
 
       if (foundStadium) {
-        return schemas.dataType
+        return modules.datatype
           .int()
           .getValue({ min: 50, max: foundStadium.capacity });
       }
     }
 
-    return schemas.dataType.int().getValue({ min: 50, max: 16999 });
+    return modules.datatype.int().getValue({ min: 50, max: 16999 });
   },
 });

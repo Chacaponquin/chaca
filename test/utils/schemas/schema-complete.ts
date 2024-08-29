@@ -1,13 +1,13 @@
-import { chaca, schemas } from "../../../src";
+import { chaca, modules } from "../../../src";
 
 export const COMPLETE_SCHEMA = chaca.schema({
-  id: chaca.key(schemas.id.uuid()),
+  id: chaca.key(modules.id.uuid()),
   authors: {
-    type: schemas.person.fullName({ language: "es" }),
+    type: modules.person.fullName({ language: "es" }),
     isArray: 5,
   },
-  image: schemas.image.film(),
-  likes: schemas.dataType.int({ min: 0, max: 500000 }),
+  image: modules.image.film(),
+  likes: modules.datatype.int({ min: 0, max: 500000 }),
   category: chaca.enum([
     "Horror",
     "War",
@@ -27,16 +27,16 @@ export const COMPLETE_SCHEMA = chaca.schema({
   },
   directorsInf: {
     type: chaca.schema({
-      name: schemas.person.fullName({}),
-      age: schemas.dataType.int({ min: 18, max: 85 }),
+      name: modules.person.fullName({}),
+      age: modules.datatype.int({ min: 18, max: 85 }),
       currentMovie: {
         type: chaca.schema({
-          movieName: schemas.person.firstName(),
-          image: schemas.image.event(),
+          movieName: modules.person.firstName(),
+          image: modules.image.event(),
         }),
         possibleNull: 50,
       },
-      email: schemas.internet.email(),
+      email: modules.internet.email(),
     }),
     isArray: { min: 1, max: 4 },
   },

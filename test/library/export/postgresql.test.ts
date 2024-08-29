@@ -16,10 +16,10 @@ describe("# PostgreSQL Export Test", () => {
   let SIMPLE_SCHEMA_DATA: any;
 
   beforeAll(() => {
-    ARRAY_FIELDS_DATA = SCHEMA_WITH_ARRAY_FIELDS.generate(50);
-    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
-    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
-    SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.generate(50);
+    ARRAY_FIELDS_DATA = SCHEMA_WITH_ARRAY_FIELDS.array(50);
+    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.array(50);
+    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.array(50);
+    SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.array(50);
   });
 
   describe("Export configuration", () => {
@@ -37,86 +37,86 @@ describe("# PostgreSQL Export Test", () => {
     });
   });
 
-  describe("Export Schemas (with exportFromSchemas)", () => {
+  describe("Export Schemas", () => {
     it("Export Simple Schema", async () => {
-      const route = await chaca.exportFromSchemas(
-        [
+      const route = await chaca
+        .dataset([
           {
             name: "SimpleSchema",
             schema: SIMPLE_SCHEMA,
             documents: COUNT_DOCUMENTS,
           },
-        ],
-        { filename: "simpleSchema", format: "postgresql", location: ROOT },
-        { verbose: false },
-      );
+        ])
+        .export({
+          filename: "simpleSchema",
+          format: "postgresql",
+          location: ROOT,
+          verbose: false,
+        });
 
       expect(checkFile({ route, ext })).toBe(true);
     });
 
-    it("Export Nested Object Schema", async () => {
-      const route = await chaca.exportFromSchemas(
-        [
+    it("Export nested object schema", async () => {
+      const route = await chaca
+        .dataset([
           {
             name: "NestedObjectSchema",
             schema: NESTED_OBJECT_SCHEMA,
             documents: COUNT_DOCUMENTS,
           },
-        ],
-        {
+        ])
+        .export({
           filename: "nestedObjectSchema",
           format: "postgresql",
           location: ROOT,
-        },
-        { verbose: false },
-      );
+          verbose: false,
+        });
 
       expect(checkFile({ route, ext })).toBe(true);
     });
 
-    it("Export Array Fields Schema", async () => {
-      await expect(() =>
-        chaca.exportFromSchemas(
-          [
+    it("Export array fields schema", async () => {
+      await expect(async () => {
+        await chaca
+          .dataset([
             {
               name: "ArrayFieldsSchema",
               schema: SCHEMA_WITH_ARRAY_FIELDS,
               documents: COUNT_DOCUMENTS,
             },
-          ],
-          {
+          ])
+          .export({
             filename: "arrayFieldsSchema",
             format: "postgresql",
             location: ROOT,
-          },
-          { verbose: false },
-        ),
-      ).rejects.toThrow(ChacaError);
+            verbose: false,
+          });
+      }).rejects.toThrow(ChacaError);
     });
 
-    it("Export Complete Schema", async () => {
-      const route = await chaca.exportFromSchemas(
-        [
+    it("Export complete schema", async () => {
+      const route = await chaca
+        .dataset([
           {
             name: "CompleteSchema",
             schema: COMPLETE_SCHEMA,
             documents: COUNT_DOCUMENTS,
           },
-        ],
-        {
+        ])
+        .export({
           filename: "completeSchema",
           format: "postgresql",
           location: ROOT,
-        },
-        { verbose: false },
-      );
+          verbose: false,
+        });
 
-      expect(checkFile({ route, ext })).toBe(true);
+      expect(checkFile({ ext: ext, route: route })).toBe(true);
     });
   });
 
-  describe("Export Schemas (with export)", () => {
-    it("Export Simple Schema Array", async () => {
+  describe("Export schemas (with export)", () => {
+    it("Export simple schema array", async () => {
       const route = await chaca.export(SIMPLE_SCHEMA_DATA, {
         filename: "simpleSchemaExport",
         location: ROOT,

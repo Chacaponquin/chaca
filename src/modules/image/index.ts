@@ -12,9 +12,9 @@ export class ImageModule {
   /**
    * Return a food image url
    *
-   * @example schemas.image.food() // Schema
+   * @example modules.image.food() // Schema
    * @example
-   * schemas.image.food().getValue()
+   * modules.image.food().getValue()
    * @returns string
    */
   food() {
@@ -26,9 +26,9 @@ export class ImageModule {
   /**
    * Return a event image url
    *
-   * @example schemas.image.event() // Schema
+   * @example modules.image.event() // Schema
    * @example
-   * schemas.image.event().getValue()
+   * modules.image.event().getValue()
    * @returns string
    */
   event() {
@@ -38,9 +38,9 @@ export class ImageModule {
   /**
    * Return a wallpaper image url
    *
-   * @example schemas.image.wallpaper() // Schema
+   * @example modules.image.wallpaper() // Schema
    * @example
-   * schemas.image.wallpaper().getValue()
+   * modules.image.wallpaper().getValue()
    * @returns string
    */
   wallpaper() {
@@ -50,9 +50,9 @@ export class ImageModule {
   /**
    * Return a 3D image url
    *
-   * @example schemas.image.treeDimension() // Schema
+   * @example modules.image.treeDimension() // Schema
    * @example
-   * schemas.image.treeDimension().getValue()
+   * modules.image.treeDimension().getValue()
    * @returns string
    */
   threeDimension() {
@@ -62,9 +62,9 @@ export class ImageModule {
   /**
    * Return a architecture image url
    *
-   * @example schemas.image.architecture() // Schema
+   * @example modules.image.architecture() // Schema
    * @example
-   * schemas.image.architecture().getValue()
+   * modules.image.architecture().getValue()
    * @returns string
    */
   architecture() {
@@ -74,9 +74,9 @@ export class ImageModule {
   /**
    * Return a nature image url
    *
-   * @example schemas.image.nature() // Schema
+   * @example modules.image.nature() // Schema
    * @example
-   * schemas.image.nature().getValue()
+   * modules.image.nature().getValue()
    * @returns string
    */
   nature() {
@@ -86,9 +86,9 @@ export class ImageModule {
   /**
    * Return a fashion image url
    *
-   * @example schemas.image.fashion() // Schema
+   * @example modules.image.fashion() // Schema
    * @example
-   * schemas.image.fashion().getValue()
+   * modules.image.fashion().getValue()
    * @returns string
    */
   fashion() {
@@ -98,9 +98,9 @@ export class ImageModule {
   /**
    * Return a film image url
    *
-   * @example schemas.image.film() // Schema
+   * @example modules.image.film() // Schema
    * @example
-   * schemas.image.film().getValue()
+   * modules.image.film().getValue()
    * @returns string
    */
   film() {
@@ -110,9 +110,9 @@ export class ImageModule {
   /**
    * Return a people image url
    *
-   * @example schemas.image.people() // Schema
+   * @example modules.image.people() // Schema
    * @example
-   * schemas.image.people().getValue()
+   * modules.image.people().getValue()
    * @returns string
    */
   people() {
@@ -122,9 +122,9 @@ export class ImageModule {
   /**
    * Return a health image url
    *
-   * @example schemas.image.health() // Schema
+   * @example modules.image.health() // Schema
    * @example
-   * schemas.image.health().getValue()
+   * modules.image.health().getValue()
    * @returns string
    */
   health() {
@@ -134,9 +134,9 @@ export class ImageModule {
   /**
    * Return a house image url
    *
-   * @example schemas.image.house() // Schema
+   * @example modules.image.house() // Schema
    * @example
-   * schemas.image.house().getValue()
+   * modules.image.house().getValue()
    * @returns string
    */
   house() {
@@ -146,9 +146,9 @@ export class ImageModule {
   /**
    * Return a street image url
    *
-   * @example schemas.image.street() // Schema
+   * @example modules.image.street() // Schema
    * @example
-   * schemas.image.street().getValue()
+   * modules.image.street().getValue()
    * @returns string
    */
   street() {
@@ -158,9 +158,9 @@ export class ImageModule {
   /**
    * Return a animal image url
    *
-   * @example schemas.image.animal() // Schema
+   * @example modules.image.animal() // Schema
    * @example
-   * schemas.image.animal().getValue()
+   * modules.image.animal().getValue()
    * @returns string
    */
   animal() {
@@ -170,9 +170,9 @@ export class ImageModule {
   /**
    * Return a spiritual image url
    *
-   * @example schemas.image.spiritual() // Schema
+   * @example modules.image.spiritual() // Schema
    * @example
-   * schemas.image.spiritual().getValue()
+   * modules.image.spiritual().getValue()
    * @returns string
    */
   spiritual() {
@@ -182,9 +182,9 @@ export class ImageModule {
   /**
    * Return a travel image url
    *
-   * @example schemas.image.travel() // Schema
+   * @example modules.image.travel() // Schema
    * @example
-   * schemas.image.travel().getValue()
+   * modules.image.travel().getValue()
    * @returns string
    */
   travel() {
@@ -194,9 +194,9 @@ export class ImageModule {
   /**
    * Return a art image url
    *
-   * @example schemas.image.art() // Schema
+   * @example modules.image.art() // Schema
    * @example
-   * schemas.image.art().getValue()
+   * modules.image.art().getValue()
    * @returns string
    */
   art() {
@@ -206,9 +206,9 @@ export class ImageModule {
   /**
    * Return a history image url
    *
-   * @example schemas.image.history() // Schema
+   * @example modules.image.history() // Schema
    * @example
-   * schemas.image.history().getValue()
+   * modules.image.history().getValue()
    * @returns string
    */
   history() {
@@ -218,9 +218,9 @@ export class ImageModule {
   /**
    * Return a sport image url
    *
-   * @example schemas.image.sport() // Schema
+   * @example modules.image.sport() // Schema
    * @example
-   * schemas.image.sport().getValue()
+   * modules.image.sport().getValue()
    * @returns string
    */
   sport() {
@@ -230,9 +230,9 @@ export class ImageModule {
   /**
    * Return a animate avatar image url
    *
-   * @example schemas.image.animateAvatar() // Schema
+   * @example modules.image.animateAvatar() // Schema
    * @example
-   * schemas.image.animateAvatar().getValue()
+   * modules.image.animateAvatar().getValue()
    *
    * @returns string
    */

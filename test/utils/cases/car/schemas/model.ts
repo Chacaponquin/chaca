@@ -1,7 +1,7 @@
-import { chaca, schemas } from "../../../../../src";
+import { chaca, modules } from "../../../../../src";
 
 export const MODEL_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  name: schemas.word.conjuction(),
+  name: modules.word.conjuction(),
   brand_id: chaca.ref("Brand.id"),
 });

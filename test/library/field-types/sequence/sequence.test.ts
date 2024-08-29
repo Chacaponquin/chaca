@@ -6,7 +6,7 @@ describe("# Sequence field tests", () => {
       test: chaca.sequence(),
     });
 
-    const data = schema.generate(5);
+    const data = schema.array(5);
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
 
@@ -15,7 +15,7 @@ describe("# Sequence field tests", () => {
       test: { type: chaca.sequence() },
     });
 
-    const data = schema.generate(5);
+    const data = schema.array(5);
 
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
@@ -26,7 +26,7 @@ describe("# Sequence field tests", () => {
         .schema({
           test: { type: chaca.sequence(), isArray: 20 },
         })
-        .generate(20),
+        .array(20),
     ).toThrow(ChacaError);
   });
 
@@ -35,7 +35,7 @@ describe("# Sequence field tests", () => {
       test: { type: chaca.sequence(), possibleNull: 50 },
     });
 
-    const data = schema.generate(20);
+    const data = schema.array(20);
     expect(data.some((o) => o.test === null)).toBe(true);
   });
 
@@ -44,7 +44,7 @@ describe("# Sequence field tests", () => {
       test: chaca.key(chaca.sequence()),
     });
 
-    const data = schema.generate(5);
+    const data = schema.array(5);
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
 });

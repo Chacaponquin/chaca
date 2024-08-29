@@ -1,9 +1,9 @@
-import { chaca, schemas } from "../../../../../src";
+import { chaca, modules } from "../../../../../src";
 
-const stadiumNameSchema = chaca.schemaField<unknown, string>(() => {
+const stadiumNameSchema = chaca.module<unknown, string>(() => {
   return [
-    schemas.person.firstName().getValue(),
-    schemas.person.lastName().getValue(),
+    modules.person.firstName().getValue(),
+    modules.person.lastName().getValue(),
     "Stadium",
   ].join(" ");
 });
@@ -11,5 +11,5 @@ const stadiumNameSchema = chaca.schemaField<unknown, string>(() => {
 export const STADIUM_SCHEMA = chaca.schema({
   stadium_id: chaca.key(chaca.sequence()),
   stadium_name: stadiumNameSchema(),
-  capacity: schemas.dataType.int({ min: 17000, max: 20000 }),
+  capacity: modules.datatype.int({ min: 17000, max: 20000 }),
 });

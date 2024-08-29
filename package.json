@@ -37,7 +37,7 @@
     "test": "jest",
     "test:field_types": "jest --testPathPattern=test/library/field_types",
     "test:cases": "jest --testPathPattern=test/library/cases",
-    "test:schemas": "jest --testPathPattern=test/schemas",
+    "test:modules": "jest --testPathPattern=test/modules",
     "test:library": "jest --testPathPattern=test/library",
     "test:export": "jest --testPathPattern=test/library/export",
     "test:utils": "jest --testPathPattern=test/library/utils",

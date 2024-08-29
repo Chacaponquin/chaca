@@ -1,4 +1,4 @@
-import { chaca } from "../../../src";
+import { chaca, Dataset } from "../../../src";
 import { LIBRARY_CASE_SCHEMA } from "../../utils/cases/library";
 
 const EXPORT_ROUTE = "./data/cases/library";
@@ -6,31 +6,29 @@ const FILE_NAME = "caseLibrary";
 
 describe("# Library Case Test", () => {
   let CASE_DATA: any;
+  let CASE: Dataset;
 
   beforeAll(() => {
-    CASE_DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA, { verbose: false });
+    CASE = chaca.dataset(LIBRARY_CASE_SCHEMA);
+    CASE_DATA = CASE.generate();
   });
 
   it("Creation", () => {
-    const DATA = chaca.multiGenerate(LIBRARY_CASE_SCHEMA, { verbose: false });
-    expect(DATA).toHaveProperty("Book_Topic");
-    expect(DATA).toHaveProperty("Book");
-    expect(DATA).toHaveProperty("Author");
-    expect(DATA).toHaveProperty("Library_User");
-    expect(DATA).toHaveProperty("User_Sanction");
-    expect(DATA).toHaveProperty("Book_Loan");
+    expect(CASE_DATA).toHaveProperty("Book_Topic");
+    expect(CASE_DATA).toHaveProperty("Book");
+    expect(CASE_DATA).toHaveProperty("Author");
+    expect(CASE_DATA).toHaveProperty("Library_User");
+    expect(CASE_DATA).toHaveProperty("User_Sanction");
+    expect(CASE_DATA).toHaveProperty("Book_Loan");
   });
 
   it("Postgresql", async () => {
-    await chaca.exportFromSchemas(
-      LIBRARY_CASE_SCHEMA,
-      {
-        filename: FILE_NAME,
-        location: EXPORT_ROUTE,
-        format: "postgresql",
-      },
-      { verbose: false },
-    );
+    await CASE.export({
+      filename: FILE_NAME,
+      location: EXPORT_ROUTE,
+      format: "postgresql",
+      verbose: false,
+    });
   });
 
   it("JSON", async () => {

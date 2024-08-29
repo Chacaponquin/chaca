@@ -1,7 +1,7 @@
 import { ChacaError, ChacaSchema, chaca } from "../../../../src";
 
 function valid(schema: ChacaSchema, step: number): boolean {
-  const data = schema.generate(10);
+  const data = schema.array(10);
 
   let valid = true;
   let req = 1;
@@ -25,13 +25,13 @@ describe("# Sequence field setp config tests", () => {
 
   it("Define step=-1. Should throw an error", () => {
     expect(() =>
-      chaca.schema({ test: chaca.sequence({ step: -1 }) }).generate(20),
+      chaca.schema({ test: chaca.sequence({ step: -1 }) }).array(20),
     ).toThrow(ChacaError);
   });
 
   it("Define step=0. Should throw an error", () => {
     expect(() =>
-      chaca.schema({ test: chaca.sequence({ step: 0 }) }).generate(20),
+      chaca.schema({ test: chaca.sequence({ step: 0 }) }).array(20),
     ).toThrow(ChacaError);
   });
 

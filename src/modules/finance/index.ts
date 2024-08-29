@@ -36,8 +36,8 @@ export class FinanceModule {
    * Returns a transaction type
    *
    * @example
-   * schemas.finance.transaction() // Schema
-   * schemas.finance.transaction().getValue() 'payment'
+   * modules.finance.transaction() // Schema
+   * modules.finance.transaction().getValue() 'payment'
    *
    * @returns string
    */
@@ -51,8 +51,8 @@ export class FinanceModule {
    * Returns a suscription plan type
    *
    * @example
-   * schemas.finance.subscriptionPlan() // Schema
-   * schemas.finance.subscriptionPlan().getValue() // 'Free'
+   * modules.finance.subscriptionPlan() // Schema
+   * modules.finance.subscriptionPlan().getValue() // 'Free'
    *
    * @returns string
    */
@@ -67,10 +67,10 @@ export class FinanceModule {
    *
    * @param args.length The length of the PIN to generate. Defaults to `4`.
    *
-   * @example schemas.finance.pin() // Schema
+   * @example modules.finance.pin() // Schema
    * @example
-   * schemas.finance.pin().getValue() // '5067'
-   * schemas.finance.pin().getValue({length: 6}) // '213789'
+   * modules.finance.pin().getValue() // '5067'
+   * modules.finance.pin().getValue({length: 6}) // '213789'
    *
    * @returns string
    */
@@ -89,9 +89,9 @@ export class FinanceModule {
   /**
    * Returns a Bitcoin address.
    *
-   * @example schemas.finance.bitcoinAddress() // Schema
+   * @example modules.finance.bitcoinAddress() // Schema
    * @example
-   * schemas.finance.bitcoinAddress().getValue() // '3ySdvCkTLVy7gKD4j6JfSaf5d'
+   * modules.finance.bitcoinAddress().getValue() // '3ySdvCkTLVy7gKD4j6JfSaf5d'
    *
    * @returns string
    */
@@ -112,9 +112,9 @@ export class FinanceModule {
   /**
    * Returns a credit card number.
    *
-   * @example schemas.finance.creaditNumber() // Schema
+   * @example modules.finance.creaditNumber() // Schema
    * @example
-   * schemas.finance.creditCard().getValue() // '6375-3265-4676-6646'
+   * modules.finance.creditCard().getValue() // '6375-3265-4676-6646'
    *
    * @returns string
    */
@@ -137,9 +137,9 @@ export class FinanceModule {
   /**
    * Returns a Ethereum address.
    *
-   * @example schemas.finance.ethereumAddress() // Schema
+   * @example modules.finance.ethereumAddress() // Schema
    * @example
-   * schemas.finance.ethereumAddress() // '0xf03dfeecbafc5147241cc4c4ca20b3c9dfd04c4a'
+   * modules.finance.ethereumAddress() // '0xf03dfeecbafc5147241cc4c4ca20b3c9dfd04c4a'
    *
    * @returns string
    */
@@ -151,8 +151,8 @@ export class FinanceModule {
 
   /**
    * @example
-   * schemas.finance.accountType() // Schema
-   * schemas.finance.accountType().getValue() // "Credit Card"
+   * modules.finance.accountType() // Schema
+   * modules.finance.accountType().getValue() // "Credit Card"
    * @returns string
    */
   accountType(): Module<string> {
@@ -162,9 +162,9 @@ export class FinanceModule {
   /**
    * Returns a SWIFT/BIC code based on the [ISO-9362](https://en.wikipedia.org/wiki/ISO_9362) format.
    *
-   * @example schemas.finance.bic() // Schema
+   * @example modules.finance.bic() // Schema
    * @example
-   * schemas.finance.bic().getValue() // 'WYAUPGX1'
+   * modules.finance.bic().getValue() // 'WYAUPGX1'
    *
    * @returns string
    */
@@ -193,8 +193,8 @@ export class FinanceModule {
 
   /**
    * @example
-   * schemas.finance.routingNumber() // Schema
-   * schemas.finance.routingNumber().getValue() // '522814402'
+   * modules.finance.routingNumber() // Schema
+   * modules.finance.routingNumber().getValue() // '522814402'
    * @returns string
    */
   routingNumber() {
@@ -217,9 +217,9 @@ export class FinanceModule {
   /**
    * Returns a credit card CVV.
    *
-   * @example schemas.finance.creditCardCVV() // Schema
+   * @example modules.finance.creditCardCVV() // Schema
    * @example
-   * schemas.finance.creditCardCVV().getValue() // '506'
+   * modules.finance.creditCardCVV().getValue() // '506'
    *
    * @returns string
    */
@@ -238,8 +238,8 @@ export class FinanceModule {
 
   /**
    * Returns a string with a money symbol
-   * @example schemas.finance.moneySymbol() // Schema
-   * @example schemas.finance.moneySymbol().getValue() // '$'
+   * @example modules.finance.moneySymbol() // Schema
+   * @example modules.finance.moneySymbol().getValue() // '$'
    * @returns string
    */
   moneySymbol(): Module<string> {
@@ -258,11 +258,11 @@ export class FinanceModule {
    * @param args.precision The number of decimal places for the amount.
    * @param args.symbol The symbol used to prefix the amount. Defaults to `'$'`.
    *
-   * @example schemas.finance.amount() // Schema
+   * @example modules.finance.amount() // Schema
    * @example
-   * schemas.finance.amount().getValue() // '$6170.87'
-   * schemas.finance.amount().getValue({min: 0, max: 1000}) // '$5.53'
-   * schemas.finance.amount().getValue({min: 0, max: 1000, symbol: '€', precision: 0}) // '€5'
+   * modules.finance.amount().getValue() // '$6170.87'
+   * modules.finance.amount().getValue({min: 0, max: 1000}) // '$5.53'
+   * modules.finance.amount().getValue({min: 0, max: 1000, symbol: '€', precision: 0}) // '€5'
    *
    * @returns string
    */
@@ -280,8 +280,8 @@ export class FinanceModule {
 
   /**
    * Returns a current money name
-   * @example schemas.finance.currencyMoneyName() // Schema
-   * @example schemas.finance.currencyMoneyName().getValue() // 'Us Dollar'
+   * @example modules.finance.currencyMoneyName() // Schema
+   * @example modules.finance.currencyMoneyName().getValue() // 'Us Dollar'
    * @returns string
    */
   currencyMoneyName() {
@@ -292,8 +292,8 @@ export class FinanceModule {
 
   /**
    * Returns a common money code
-   * @example schemas.finance.moneyCode() // Schema
-   * @example schemas.finance.moneyCode().getValue() // 'EUR'
+   * @example modules.finance.moneyCode() // Schema
+   * @example modules.finance.moneyCode().getValue() // 'EUR'
    * @returns string
    */
   moneyCode(): Module<string> {

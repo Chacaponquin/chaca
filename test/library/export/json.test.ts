@@ -23,8 +23,8 @@ describe("# JSON Export Test", () => {
   });
 
   it("Pass separate=false. Should create a single json file", async () => {
-    const route = await chaca.exportFromSchemas(
-      [
+    const route = await chaca
+      .dataset([
         {
           documents: COUNT_DOCUMENTS,
           name: "CompleteSchema",
@@ -40,14 +40,13 @@ describe("# JSON Export Test", () => {
           name: "NestedObjectSchema",
           schema: NESTED_OBJECT_SCHEMA,
         },
-      ],
-      {
+      ])
+      .export({
         filename: filename + "NotSeparate",
         format: { ext: "json", separate: false, zip: true },
         location: ROOT,
-      },
-      { verbose: false },
-    );
+        verbose: false,
+      });
 
     expect(checkFile({ route, ext: "zip" })).toBe(true);
   });
@@ -55,8 +54,8 @@ describe("# JSON Export Test", () => {
   it("Pass separate=true. Should create multiple files", async () => {
     const file = filename + "Separate";
 
-    const route = await chaca.exportFromSchemas(
-      [
+    const route = await chaca
+      .dataset([
         {
           documents: COUNT_DOCUMENTS,
           name: "CompleteSchema",
@@ -72,14 +71,13 @@ describe("# JSON Export Test", () => {
           name: "NestedObjectSchema",
           schema: NESTED_OBJECT_SCHEMA,
         },
-      ],
-      {
+      ])
+      .export({
         filename: file,
         format: { ext: "json", separate: true, zip: true },
         location: ROOT,
-      },
-      { verbose: false },
-    );
+        verbose: false,
+      });
 
     expect(checkFile({ route, ext: "zip" })).toBe(true);
   });

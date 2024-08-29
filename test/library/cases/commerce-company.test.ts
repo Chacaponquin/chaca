@@ -1,16 +1,16 @@
-import { chaca } from "../../../src";
-import { COMMERCE_COMPANY_SCHEMAS } from "../../utils/cases/commerce_company";
+import { chaca, Dataset } from "../../../src";
+import { COMMERCE_COMPANY_SCHEMAS } from "../../utils/cases/commerce-company";
 
 const EXPORT_ROUTE = "./data/cases/commerce_company";
 const FILE_NAME = "caseCommerceCompany";
 
 describe("# Commerce Company Case Test", () => {
   let CASE_DATA: any;
+  let CASE: Dataset;
 
   beforeAll(() => {
-    CASE_DATA = chaca.multiGenerate(COMMERCE_COMPANY_SCHEMAS, {
-      verbose: false,
-    });
+    CASE = chaca.dataset(COMMERCE_COMPANY_SCHEMAS);
+    CASE_DATA = CASE.generate();
   });
 
   it("JSON", async () => {
@@ -54,26 +54,20 @@ describe("# Commerce Company Case Test", () => {
   });
 
   it("Postgresql", async () => {
-    await chaca.exportFromSchemas(
-      COMMERCE_COMPANY_SCHEMAS,
-      {
-        filename: FILE_NAME,
-        format: "postgresql",
-        location: EXPORT_ROUTE,
-      },
-      { verbose: false },
-    );
+    await CASE.export({
+      filename: FILE_NAME,
+      format: "postgresql",
+      location: EXPORT_ROUTE,
+      verbose: false,
+    });
   });
 
   it("Python", async () => {
-    await chaca.exportFromSchemas(
-      COMMERCE_COMPANY_SCHEMAS,
-      {
-        filename: FILE_NAME,
-        format: "python",
-        location: EXPORT_ROUTE,
-      },
-      { verbose: false },
-    );
+    await CASE.export({
+      filename: FILE_NAME,
+      format: "python",
+      location: EXPORT_ROUTE,
+      verbose: false,
+    });
   });
 });

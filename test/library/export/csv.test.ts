@@ -14,9 +14,9 @@ describe("#Export CSV test", () => {
   let SIMPLE_SCHEMA_DATA: any;
 
   beforeAll(() => {
-    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
-    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
-    SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.generate(50);
+    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.array(50);
+    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.array(50);
+    SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.array(50);
   });
 
   describe("Export configuration", () => {

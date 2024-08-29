@@ -23,9 +23,9 @@ export class PhoneModule {
   /**
    * Returns a phone number
    * @param args.format Format of the phone number
-   * @example schemas.phone.number() // Schema
+   * @example modules.phone.number() // Schema
    * @example
-   * schemas.phone.number().getValue({format: '+53 #### ## ##'}) // '+53 5417 35 99'
+   * modules.phone.number().getValue({format: '+53 #### ## ##'}) // '+53 5417 35 99'
    * @returns string
    */
   number(args?: NumberProps) {
@@ -42,8 +42,8 @@ export class PhoneModule {
 
   /**
    * Returns a string with a country number prefix
-   * @example schemas.phone.prefix() // Schema
-   * @example schemas.phone.prefix().getValue() // '+53'
+   * @example modules.phone.prefix() // Schema
+   * @example modules.phone.prefix().getValue() // '+53'
    * @returns string
    */
   prefix() {
@@ -57,10 +57,10 @@ export class PhoneModule {
    * @param args.min Minimun minutes of the call. Default `0`
    * @param args.max Maximun minutes of the call. Default `59`
    *
-   * @example schemas.phone.callDuration() // Schema
+   * @example modules.phone.callDuration() // Schema
    * @example
-   * schemas.phone.callDuration().getValue({min: 10, max: 30}) // '27:30'
-   * schemas.phone.callDuration().getValue() // '20:52'
+   * modules.phone.callDuration().getValue({min: 10, max: 30}) // '27:30'
+   * modules.phone.callDuration().getValue() // '20:52'
    *
    * @returns string
    */

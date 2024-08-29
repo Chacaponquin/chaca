@@ -45,8 +45,8 @@ export class PersonModule {
 
   /**
    * @example
-   * schemas.person.language() // Schema
-   * schemas.person.language() // 'Georgian'
+   * modules.person.language() // Schema
+   * modules.person.language() // 'Georgian'
    *
    * @returns string
    */
@@ -58,8 +58,8 @@ export class PersonModule {
 
   /**
    * Returns a Job Level
-   * @example schemas.person.jobLevel() // Schema
-   * @example schemas.person.jobLevel().getValue() // 'Investor'
+   * @example modules.person.jobLevel() // Schema
+   * @example modules.person.jobLevel().getValue() // 'Investor'
    * @returns string
    */
   jobLevel() {
@@ -68,8 +68,8 @@ export class PersonModule {
 
   /**
    * Returns a Job Area
-   * @example schemas.person.jobArea() // Schema
-   * @example schemas.person.jobLevel().getValue() // 'Supervisor'
+   * @example modules.person.jobArea() // Schema
+   * @example modules.person.jobLevel().getValue() // 'Supervisor'
    * @returns string
    */
   jobArea() {
@@ -78,8 +78,8 @@ export class PersonModule {
 
   /**
    * Returns a person gender
-   * @example schemas.person.gender() // Schema
-   * @example schemas.person.gender().getValue() // 'Bigender'
+   * @example modules.person.gender() // Schema
+   * @example modules.person.gender().getValue() // 'Bigender'
    * @returns string
    */
   gender() {
@@ -90,8 +90,8 @@ export class PersonModule {
 
   /**
    * Returns a person sex
-   * @example schemas.person.sex() // Schema
-   * @example schemas.person.sex().getValue() // 'Male'
+   * @example modules.person.sex() // Schema
+   * @example modules.person.sex().getValue() // 'Male'
    * @returns `Male` | `Female`
    */
   sex() {
@@ -102,8 +102,8 @@ export class PersonModule {
    * Returns a first name from a selected lenguage
    * @param args.language (`'en'` | `'es'`). Default `'en'`
    * @param args.sex Person name sex (`'male'` | `'female'`)
-   * @example schemas.person.firstName() // Schema
-   * @example schemas.person.firstName().getValue() // 'Juan'
+   * @example modules.person.firstName() // Schema
+   * @example modules.person.firstName().getValue() // 'Juan'
    * @returns string
    */
   firstName(args?: NameProps) {
@@ -117,8 +117,8 @@ export class PersonModule {
   /**
    * Returns a last name from a selected lenguage
    * @param args.language (`en` | `es`). Default `en`
-   * @example schemas.person.lastName() // Schema
-   * @example schemas.person.lastName().getValue() // 'Scott'
+   * @example modules.person.lastName() // Schema
+   * @example modules.person.lastName().getValue() // 'Scott'
    * @returns string
    */
   lastName(args?: LangugeProps) {
@@ -134,8 +134,8 @@ export class PersonModule {
    * @param args.language (`en` | `es`). Default `en`
    * @param args.sex (`male` | `female`)
    * @example
-   * schemas.person.fullName() // Schema
-   * schemas.person.fullName().getValue() // 'Juan Rodriguez Perez'
+   * modules.person.fullName() // Schema
+   * modules.person.fullName().getValue() // 'Juan Rodriguez Perez'
    * @returns string
    */
   fullName(args?: NameProps) {
@@ -167,8 +167,8 @@ export class PersonModule {
   /**
    * Returns a random name prefix
    * @param args.sex Sex of the person. (`male` | `female`)
-   * @example schemas.person.prefix() // Schema
-   * @example schemas.person.prefix().getValue() // 'Ms.'
+   * @example modules.person.prefix() // Schema
+   * @example modules.person.prefix().getValue() // 'Ms.'
    * @returns string
    */
   prefix(args?: SexProps) {

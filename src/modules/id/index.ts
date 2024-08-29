@@ -7,9 +7,9 @@ export class IdModule {
   /**
    * Returns a MongoDB [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/) string.
    *
-   * @example schemas.id.mongodbID() // Schema
+   * @example modules.id.mongodbID() // Schema
    * @example
-   * schemas.id.mongodbID().getValue() // 'e175cac316a79afdd0ad3afb'
+   * modules.id.mongodbID().getValue() // 'e175cac316a79afdd0ad3afb'
    *
    * @returns string
    */
@@ -24,9 +24,9 @@ export class IdModule {
   /**
    * Returns a UUID v4 ([Universally Unique Identifier](https://en.wikipedia.org/wiki/Universally_unique_identifier)).
    *
-   * @example schemas.id.uuid() // Schema
+   * @example modules.id.uuid() // Schema
    * @example
-   * schemas.id.uuid().getValue() // '4136cd0b-d90b-4af7-b485-5d1ded8db252'
+   * modules.id.uuid().getValue() // '4136cd0b-d90b-4af7-b485-5d1ded8db252'
    *
    * @returns string
    */

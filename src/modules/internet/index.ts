@@ -83,8 +83,8 @@ export class InternetModule {
    * Returns a browser name
    *
    * @example
-   * schemas.internet.browser() // Schema
-   * schemas.internet.browser().getValue() // 'Opera'
+   * modules.internet.browser() // Schema
+   * modules.internet.browser().getValue() // 'Opera'
    *
    * @returns string
    */
@@ -98,8 +98,8 @@ export class InternetModule {
    * Generate a random OAuth provider
    *
    * @example
-   * schemas.internet.oauthProvider() // Schema
-   * schemas.internet.oauthProvider().getValue() // 'Amazon'
+   * modules.internet.oauthProvider() // Schema
+   * modules.internet.oauthProvider().getValue() // 'Amazon'
    *
    * @returns string
    */
@@ -113,8 +113,8 @@ export class InternetModule {
    * Returns a random locale
    *
    * @example
-   * schemas.internet.locale() // Schema
-   * schemas.internet.locale().getValue() // 'es_MX'
+   * modules.internet.locale() // Schema
+   * modules.internet.locale().getValue() // 'es_MX'
    *
    * @returns string
    */
@@ -128,8 +128,8 @@ export class InternetModule {
    * Returns a random email provider
    *
    * @example
-   * schemas.internet.emailProvider() // Schema
-   * schemas.internet.emailProvider().getValue() // 'gmail'
+   * modules.internet.emailProvider() // Schema
+   * modules.internet.emailProvider().getValue() // 'gmail'
    *
    * @returns string
    */
@@ -145,10 +145,10 @@ export class InternetModule {
    * @param args.lastName owner last name
    * @param args.provider email provider
    *
-   * @example schemas.internet.email() // Schema
+   * @example modules.internet.email() // Schema
    * @example
-   * schemas.internet.email().getValue() // 'juan527120@gmail.com'
-   * schemas.internet.email.getValue({firstName: 'pedro', lastName: 'Scott', provider: 'yahoo.com'}) // "pedro_scott@yahoo.com"
+   * modules.internet.email().getValue() // 'juan527120@gmail.com'
+   * modules.internet.email.getValue({firstName: 'pedro', lastName: 'Scott', provider: 'yahoo.com'}) // "pedro_scott@yahoo.com"
    *
    * @returns string
    */
@@ -180,11 +180,11 @@ export class InternetModule {
    * @param args.prefix The prefix to use. Defaults to `''`.
    *
    * @example
-   * schemas.internet.password().getValue() // '89G1wJuBLbGziIs'
-   * schemas.internet.password().getValue({length: 20}) // 'aF55c_8O9kZaPOrysFB_'
-   * schemas.internet.password().getValue({length: 20, memorable: true}) // 'lawetimufozujosodedi'
-   * schemas.internet.password().getValue({length: 20, memorable: true, pattern: /[A-Z]/}) // 'HMAQDFFYLDDUTBKVNFVS'
-   * schemas.internet.password().getValue({length: 20, memorable: true, pattern: /[A-Z]/, prefix: 'Hello '}) // 'Hello IREOXTDWPERQSB'
+   * modules.internet.password().getValue() // '89G1wJuBLbGziIs'
+   * modules.internet.password().getValue({length: 20}) // 'aF55c_8O9kZaPOrysFB_'
+   * modules.internet.password().getValue({length: 20, memorable: true}) // 'lawetimufozujosodedi'
+   * modules.internet.password().getValue({length: 20, memorable: true, pattern: /[A-Z]/}) // 'HMAQDFFYLDDUTBKVNFVS'
+   * modules.internet.password().getValue({length: 20, memorable: true, pattern: /[A-Z]/, prefix: 'Hello '}) // 'Hello IREOXTDWPERQSB'
    *
    * @returns string
    */
@@ -237,9 +237,9 @@ export class InternetModule {
 
   /**
    * Returns a string with a web url
-   * @example schemas.internet.url() // Schema
+   * @example modules.internet.url() // Schema
    * @example
-   * schemas.internet.url().getValue() // 'http://words.info.net'
+   * modules.internet.url().getValue() // 'http://words.info.net'
    * @param args.secure Boolean that indicates if the url has a secure protocol or not
    * @returns
    */
@@ -258,10 +258,10 @@ export class InternetModule {
    * Returns a profile user name
    * @param args.firstName owner first name
    * @param args.lastName owner last name
-   * @example schemas.internet.username() // Schema
+   * @example modules.internet.username() // Schema
    * @example
-   * schemas.internet.username().getValue() // 'juan527134'
-   * schemas.internet.username().getValue({firstName: 'pedro', lastName: 'Scott'}) // 'pedro_scott'
+   * modules.internet.username().getValue() // 'juan527134'
+   * modules.internet.username().getValue({firstName: 'pedro', lastName: 'Scott'}) // 'pedro_scott'
    * @returns string
    */
   username(args?: usernameArgs) {
@@ -315,9 +315,9 @@ export class InternetModule {
   /**
    * Returns a http method
    * @example
-   * schemas.internet.httpMethod() // Schema
+   * modules.internet.httpMethod() // Schema
    * @example
-   * schemas.internet.httpMethod().getValue() // 'GET'
+   * modules.internet.httpMethod().getValue() // 'GET'
    * @returns `GET` | `PATCH` | `DELETE` | `POST` | `PUT`
    */
   public httpMethod(): Module<string> {
@@ -328,8 +328,8 @@ export class InternetModule {
 
   /**
    * Returns a IPv6 address
-   * @example schemas.internet.ipv6() // Schema
-   * @example schemas.internet.ipv6().getValue() // '269f:1230:73e3:318d:842b:daab:326d:897b'
+   * @example modules.internet.ipv6() // Schema
+   * @example modules.internet.ipv6().getValue() // '269f:1230:73e3:318d:842b:daab:326d:897b'
    * @returns string
    */
   public ipv6() {
@@ -370,8 +370,8 @@ export class InternetModule {
 
   /**
    * Returns a IPv4 address.
-   * @example schemas.internet.ipv4() // Schema
-   * @example schemas.internet.ipv4().getValue() // '245.108.222.0'
+   * @example modules.internet.ipv4() // Schema
+   * @example modules.internet.ipv4().getValue() // '245.108.222.0'
    * @returns string
    */
   public ipv4(): Module<string> {
@@ -391,8 +391,8 @@ export class InternetModule {
   /**
    * Return an emoji
    * @param args.emoji emoji category
-   * @example schemas.internet.emoji() // Schema
-   * @example schemas.internet.emoji().getValue() // '🔎'
+   * @example modules.internet.emoji() // Schema
+   * @example modules.internet.emoji().getValue() // '🔎'
    * @returns string
    */
   public emoji(args?: EmojiProps): Module<string, EmojiProps> {
@@ -423,8 +423,8 @@ export class InternetModule {
 
   /**
    * Returns a mac address
-   * @example schemas.internet.mac() // Schema
-   * @example schemas.internet.mac().getValue() // '32:8e:2e:09:c6:05'
+   * @example modules.internet.mac() // Schema
+   * @example modules.internet.mac().getValue() // '32:8e:2e:09:c6:05'
    * @returns string
    */
   public mac() {
@@ -450,9 +450,9 @@ export class InternetModule {
 
   /**
    * Returns a port number
-   * @example schemas.internet.port() // Schema
+   * @example modules.internet.port() // Schema
    * @example
-   * schemas.internet.port().getValue() // 8001
+   * modules.internet.port().getValue() // 8001
    * @returns string
    */
   public port(): Module<number> {
@@ -464,8 +464,8 @@ export class InternetModule {
 
   /**
    * Returns a string with a browser user agent
-   * @example schemas.internet.userAgent() // Schema
-   * @example schemas.internet.userAgent().getValue() // 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_8_8)  AppleWebKit/536.0.2 (KHTML, like Gecko) Chrome/27.0.849.0 Safari/536.0.2'
+   * @example modules.internet.userAgent() // Schema
+   * @example modules.internet.userAgent().getValue() // 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_8_8)  AppleWebKit/536.0.2 (KHTML, like Gecko) Chrome/27.0.849.0 Safari/536.0.2'
    * @returns string
    */
   public userAgent(): Module<string> {
@@ -474,8 +474,8 @@ export class InternetModule {
 
   /**
    * Returns a web protocol
-   * @example schemas.internet.protocol() // Schema
-   * @example schemas.internet.protocol().getValue() // 'https'
+   * @example modules.internet.protocol() // Schema
+   * @example modules.internet.protocol().getValue() // 'https'
    * @returns string
    */
   public protocol(): Module<string> {
@@ -486,8 +486,8 @@ export class InternetModule {
 
   /**
    * Returns a domain suffix
-   * @example schemas.internet.domainSuffix() // Schema
-   * @example schemas.internet.domainSuffix().getValue() // '.com'
+   * @example modules.internet.domainSuffix() // Schema
+   * @example modules.internet.domainSuffix().getValue() // '.com'
    * @returns string
    */
   public domainSuffix(): Module<string> {
@@ -496,8 +496,8 @@ export class InternetModule {
 
   /**
    * Returns a domain word
-   * @example schemas.internet.domainName() // Schema
-   * @example schemas.internet.domainName().getValue() // 'words.info'
+   * @example modules.internet.domainName() // Schema
+   * @example modules.internet.domainName().getValue() // 'words.info'
    * @returns string
    */
   public domainName(): Module<string> {
@@ -521,8 +521,8 @@ export class InternetModule {
 
   /**
    * Returns a web http status code
-   * @example schemas.internet.httpStatusCode() // Schema
-   * @example schemas.internet.httpStatusCode().getValue // 201
+   * @example modules.internet.httpStatusCode() // Schema
+   * @example modules.internet.httpStatusCode().getValue // 201
    * @returns string
    */
   public httpStatusCode(): Module<number> {

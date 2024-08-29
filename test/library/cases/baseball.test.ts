@@ -1,21 +1,19 @@
-import { chaca } from "../../../src";
+import { chaca, Dataset } from "../../../src";
 import { BASEBALL_SCHEMAS } from "../../utils/cases/baseball";
 
 const EXPORT_ROUTE = "./data/cases/baseball";
 const FILE_NAME = "caseBaseball";
 
 describe("# Baseball Case Test", () => {
-  let BASEBALL_CASE_DATA: any;
+  let BASEBALL_CASE: Dataset;
+  let DATA: any;
 
   beforeAll(() => {
-    BASEBALL_CASE_DATA = chaca.dataset(BASEBALL_SCHEMAS, {
-      verbose: false,
-    });
+    BASEBALL_CASE = chaca.dataset(BASEBALL_SCHEMAS);
+    DATA = BASEBALL_CASE.generate();
   });
 
   it("Creation", () => {
-    const DATA = chaca.dataset(BASEBALL_SCHEMAS, { verbose: false });
-
     expect(DATA).toHaveProperty("Game");
     expect(DATA).toHaveProperty("Phase");
     expect(DATA).toHaveProperty("Stadium");
@@ -28,31 +26,25 @@ describe("# Baseball Case Test", () => {
   });
 
   it("Postgresql", async () => {
-    await chaca.exportFromSchemas(
-      BASEBALL_SCHEMAS,
-      {
-        filename: FILE_NAME,
-        location: EXPORT_ROUTE,
-        format: "postgresql",
-      },
-      { verbose: false },
-    );
+    await BASEBALL_CASE.export({
+      filename: FILE_NAME,
+      location: EXPORT_ROUTE,
+      format: "postgresql",
+      verbose: false,
+    });
   });
 
   it("CSV", async () => {
-    await chaca.exportFromSchemas(
-      BASEBALL_SCHEMAS,
-      {
-        filename: FILE_NAME,
-        location: EXPORT_ROUTE,
-        format: { ext: "csv", zip: true },
-      },
-      { verbose: false },
-    );
+    await BASEBALL_CASE.export({
+      filename: FILE_NAME,
+      location: EXPORT_ROUTE,
+      format: { ext: "csv", zip: true },
+      verbose: false,
+    });
   });
 
   it("JSON", async () => {
-    await chaca.export(BASEBALL_CASE_DATA, {
+    await chaca.export(DATA, {
       filename: FILE_NAME,
       format: "json",
       location: EXPORT_ROUTE,
@@ -60,7 +52,7 @@ describe("# Baseball Case Test", () => {
   });
 
   it("Typescript", async () => {
-    await chaca.export(BASEBALL_CASE_DATA, {
+    await chaca.export(DATA, {
       filename: FILE_NAME,
       format: "typescript",
       location: EXPORT_ROUTE,
@@ -68,7 +60,7 @@ describe("# Baseball Case Test", () => {
   });
 
   it("Java", async () => {
-    await chaca.export(BASEBALL_CASE_DATA, {
+    await chaca.export(DATA, {
       filename: FILE_NAME,
       format: { ext: "java", zip: true },
       location: EXPORT_ROUTE,
@@ -76,7 +68,7 @@ describe("# Baseball Case Test", () => {
   });
 
   it("Javascript", async () => {
-    await chaca.export(BASEBALL_CASE_DATA, {
+    await chaca.export(DATA, {
       filename: FILE_NAME,
       format: "javascript",
       location: EXPORT_ROUTE,
@@ -84,7 +76,7 @@ describe("# Baseball Case Test", () => {
   });
 
   it("Yaml", async () => {
-    await chaca.export(BASEBALL_CASE_DATA, {
+    await chaca.export(DATA, {
       location: EXPORT_ROUTE,
       filename: FILE_NAME,
       format: "yaml",
@@ -92,7 +84,7 @@ describe("# Baseball Case Test", () => {
   });
 
   it("Python", async () => {
-    await chaca.export(BASEBALL_CASE_DATA, {
+    await chaca.export(DATA, {
       location: EXPORT_ROUTE,
       filename: FILE_NAME,
       format: "python",

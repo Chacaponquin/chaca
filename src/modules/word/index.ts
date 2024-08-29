@@ -16,8 +16,8 @@ export class WordModule {
   /**
    * Returns a adjective from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example schemas.word.adjective() // Schema
-   * @example schemas.word.adjective().getValue() // 'clever'
+   * @example modules.word.adjective() // Schema
+   * @example modules.word.adjective().getValue() // 'clever'
    * @returns string
    */
   adjective(args?: WordProps) {
@@ -30,8 +30,8 @@ export class WordModule {
   /**
    * Returns a conjuction from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example schemas.word.conjuction() // Schema
-   * @example schemas.word.conjuction().getValue() // 'but'
+   * @example modules.word.conjuction() // Schema
+   * @example modules.word.conjuction().getValue() // 'but'
    * @returns string
    */
   conjuction(args?: WordProps) {
@@ -44,8 +44,8 @@ export class WordModule {
   /**
    * Returns a interjection from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example schemas.word.interjection() // Schema
-   * @example schemas.word.interjection().getValue() // 'hey!'
+   * @example modules.word.interjection() // Schema
+   * @example modules.word.interjection().getValue() // 'hey!'
    * @returns string
    */
   interjection(args?: WordProps) {
@@ -58,8 +58,8 @@ export class WordModule {
   /**
    * Returns a preposition from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example schemas.word.preposition() // Schema
-   * @example schemas.word.preposition().getValue() // 'at'
+   * @example modules.word.preposition() // Schema
+   * @example modules.word.preposition().getValue() // 'at'
    * @returns string
    */
   preposition(args?: WordProps) {
@@ -72,8 +72,8 @@ export class WordModule {
   /**
    * Returns a adverb from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example schemas.word.adverb() // Schema
-   * @example schemas.word.adverb().getValue() // 'here'
+   * @example modules.word.adverb() // Schema
+   * @example modules.word.adverb().getValue() // 'here'
    * @returns string
    */
   adverb(args?: WordProps) {
@@ -86,8 +86,8 @@ export class WordModule {
   /**
    * Returns a verb from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example schemas.word.verb() // Schema
-   * @example schemas.word.verb().getValue() // 'had'
+   * @example modules.word.verb() // Schema
+   * @example modules.word.verb().getValue() // 'had'
    * @returns string
    */
   verb(args?: WordProps) {
@@ -100,8 +100,8 @@ export class WordModule {
   /**
    * Returns a noun from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example schemas.word.noun() // Schema
-   * @example schemas.word.noun().getValue() // 'car'
+   * @example modules.word.noun() // Schema
+   * @example modules.word.noun().getValue() // 'car'
    * @returns string
    */
   noun(args?: WordProps) {

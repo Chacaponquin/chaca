@@ -1,4 +1,4 @@
-import { chaca, schemas } from "../../../../../src";
+import { chaca, modules } from "../../../../../src";
 import {
   DOWN_REASONS,
   EVALUATIONS,
@@ -20,7 +20,7 @@ export const GRADE_SCHEMA = chaca.schema({
 
 export const STUDENT_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  student_name: schemas.person.fullName({ language: "es" }),
+  student_name: modules.person.fullName({ language: "es" }),
   sex: chaca.enum(["Male", "Woman"]),
   municipality_id: chaca.ref("Municipality.id"),
   group: chaca.ref("Group.group_number"),
@@ -56,7 +56,7 @@ export const SUBJECT_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
   year: chaca.key(chaca.ref("Year.year_id")),
   subject_name: chaca.sequential(SUBJECTS),
-  count_hours: schemas.dataType.int({ min: 30, max: 90 }),
+  count_hours: modules.datatype.int({ min: 30, max: 90 }),
 });
 
 export const DOWN_REASON_SCHEMA = chaca.schema({

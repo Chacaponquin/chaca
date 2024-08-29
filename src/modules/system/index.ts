@@ -31,10 +31,10 @@ export class SystemModule {
   /**
    * Returns a file name
    * @param args.ext extension of the file
-   * @example schemas.system.filename() // Schema
+   * @example modules.system.filename() // Schema
    * @example
-   * schemas.system.filename().getValue() // 'academy.png'
-   * schemas.system.filename().getValue({ext: 'gif'}) // 'academy_button_school.gif'
+   * modules.system.filename().getValue() // 'academy.png'
+   * modules.system.filename().getValue({ext: 'gif'}) // 'academy_button_school.gif'
    * @returns string
    */
   filename(args?: FileNameProps) {
@@ -54,8 +54,8 @@ export class SystemModule {
 
   /**
    * Returns a mime type
-   * @example schemas.system.mimeType() // Schema
-   * @example schemas.system.mimeType().getValue() // 'video/mpeg'
+   * @example modules.system.mimeType() // Schema
+   * @example modules.system.mimeType().getValue() // 'video/mpeg'
    * @returns string
    */
   mimeType() {
@@ -64,8 +64,8 @@ export class SystemModule {
 
   /**
    * Return a file extension
-   * @example schemas.system.fileExt() // Schema
-   * @example schemas.system.fileExt().getValue() // 'mp4'
+   * @example modules.system.fileExt() // Schema
+   * @example modules.system.fileExt().getValue() // 'mp4'
    * @returns string
    */
   fileExt() {
@@ -79,8 +79,8 @@ export class SystemModule {
 
   /**
    * Returns a directory path
-   * @example schemas.system.directoryPath() // Schema
-   * @example schemas.system.directoryPath().getValue() // 'user/files/videos'
+   * @example modules.system.directoryPath() // Schema
+   * @example modules.system.directoryPath().getValue() // 'user/files/videos'
    * @returns string
    */
   directoryPath() {
@@ -98,8 +98,8 @@ export class SystemModule {
 
   /**
    * Returns a string with a system file path
-   * @example schemas.system.filePath() // Schema
-   * @example schemas.system.filePath().getValue() // 'user/files/videos/academy.mp4'
+   * @example modules.system.filePath() // Schema
+   * @example modules.system.filePath().getValue() // 'user/files/videos/academy.mp4'
    * @returns string
    */
   filePath() {

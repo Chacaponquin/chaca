@@ -12,7 +12,7 @@ describe("# Pick Field Tests", () => {
       pick: chaca.pick({ values: [], count: 0 }),
     });
 
-    const data = schema.generateObject();
+    const data = schema.object();
 
     expect(data.pick).toHaveLength(0);
   });
@@ -22,7 +22,7 @@ describe("# Pick Field Tests", () => {
       pick: chaca.pick({ values: [1, 2, 3], count: 2 }),
     });
 
-    const data = schema.generateObject();
+    const data = schema.object();
 
     expect(data.pick).toHaveLength(2);
     unique(data.pick);
@@ -33,7 +33,7 @@ describe("# Pick Field Tests", () => {
       pick: chaca.pick({ values: [1, 2, 3], count: -1 }),
     });
 
-    expect(() => schema.generateObject()).toThrow(PickFieldDefinitionError);
+    expect(() => schema.object()).toThrow(PickFieldDefinitionError);
   });
 
   it("Pass count=2 and values=[1]. Should throw an error", () => {
@@ -41,7 +41,7 @@ describe("# Pick Field Tests", () => {
       pick: chaca.pick({ values: [1], count: 2 }),
     });
 
-    expect(() => schema.generateObject()).toThrow(PickFieldDefinitionError);
+    expect(() => schema.object()).toThrow(PickFieldDefinitionError);
   });
 
   it("Pass count=2 and values=[1, 2]. Should return [1, 2]", () => {
@@ -49,7 +49,7 @@ describe("# Pick Field Tests", () => {
       pick: chaca.pick({ values: [1, 2], count: 2 }),
     });
 
-    const data = schema.generateObject();
+    const data = schema.object();
 
     expect(data.pick).toHaveLength(2);
     expect(data.pick[0]).toBe(1);
@@ -63,7 +63,7 @@ describe("# Pick Field Tests", () => {
       pick: chaca.pick({ values: array, count: 5 }),
     });
 
-    const data = schema.generateObject();
+    const data = schema.object();
 
     expect(data.pick).toHaveLength(5);
     unique(data.pick);

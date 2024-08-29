@@ -1,16 +1,16 @@
-import { chaca, schemas } from "../../../../../src";
+import { chaca, modules } from "../../../../../src";
 
 export const CONTRACT_SCHEMA = chaca.schema({
   plate: chaca.key(chaca.ref("Car.plate")),
   passport: chaca.ref("Tourist.passport"),
-  start_date: chaca.key(schemas.date.past()),
+  start_date: chaca.key(modules.date.past()),
   end_date: ({ currentFields: fields }) => {
-    return schemas.date
+    return modules.date
       .between()
       .getValue({ from: fields.start_date, to: new Date() });
   },
   delivery_date: ({ currentFields: fields }) => {
-    return schemas.date
+    return modules.date
       .between()
       .getValue({ from: fields.start_date, to: new Date() });
   },
@@ -37,10 +37,10 @@ export const CONTRACT_SCHEMA = chaca.schema({
       if (foundCar) {
         return foundCar.cant_km;
       } else {
-        return schemas.dataType.int({ min: 0, max: 3000 }).getValue();
+        return modules.datatype.int({ min: 0, max: 3000 }).getValue();
       }
     } else {
-      return schemas.dataType.int({ min: 0, max: 3000 }).getValue();
+      return modules.datatype.int({ min: 0, max: 3000 }).getValue();
     }
   },
   start_km: ({ currentFields: fields, store }) => {
@@ -66,11 +66,11 @@ export const CONTRACT_SCHEMA = chaca.schema({
         }
       }
 
-      return schemas.dataType
+      return modules.datatype
         .int({ min: ref.end_km, max: fields.end_km })
         .getValue();
     } else {
-      return schemas.dataType.int({ min: 0, max: fields.end_km }).getValue();
+      return modules.datatype.int({ min: 0, max: fields.end_km }).getValue();
     }
   },
   value: ({ currentFields: fields }) => {

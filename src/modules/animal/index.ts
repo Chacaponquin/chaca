@@ -41,8 +41,8 @@ export class AnimalModule {
 
   /**
    * Returns a dog breed
-   * @example schemas.animal.dog() // Schema
-   * @example schemas.animal.dog().getValue() // 'Irish Water Spaniel'
+   * @example modules.animal.dog() // Schema
+   * @example modules.animal.dog().getValue() // 'Irish Water Spaniel'
    * @returns string
    */
   dog() {
@@ -51,8 +51,8 @@ export class AnimalModule {
 
   /**
    * Returns a bear breed
-   * @example schemas.animal.bear() // Schema
-   * @example schemas.animal.bear().getValue() // 'Singapuria'
+   * @example modules.animal.bear() // Schema
+   * @example modules.animal.bear().getValue() // 'Singapuria'
    * @returns string
    */
   bear() {
@@ -61,8 +61,8 @@ export class AnimalModule {
 
   /**
    * Returns a bird breed
-   * @example schemas.animal.bird() // Schema
-   * @example schemas.animal.bird().getValue() // 'Singapuria'
+   * @example modules.animal.bird() // Schema
+   * @example modules.animal.bird().getValue() // 'Singapuria'
    * @returns string
    */
   bird() {
@@ -71,8 +71,8 @@ export class AnimalModule {
 
   /**
    * Returns a cat breed
-   * @example schemas.animal.cat() // Schema
-   * @example schemas.animal.cat().getValue() // 'Bengal'
+   * @example modules.animal.cat() // Schema
+   * @example modules.animal.cat().getValue() // 'Bengal'
    * @returns string
    */
   cat() {
@@ -81,8 +81,8 @@ export class AnimalModule {
 
   /**
    * Returns a cetacean breed
-   * @example schemas.animal.cetacean() // Schema
-   * @example schemas.animal.cetacean().getValue() // 'Spinner Dolphin'
+   * @example modules.animal.cetacean() // Schema
+   * @example modules.animal.cetacean().getValue() // 'Spinner Dolphin'
    * @returns string
    */
   cetacean() {
@@ -91,8 +91,8 @@ export class AnimalModule {
 
   /**
    * Returns a cow breed
-   * @example schemas.animal.cow() // Schema
-   * @example schemas.animal.cow().getValue() // 'Brava'
+   * @example modules.animal.cow() // Schema
+   * @example modules.animal.cow().getValue() // 'Brava'
    * @returns string
    */
   cow() {
@@ -101,8 +101,8 @@ export class AnimalModule {
 
   /**
    * Returns a crocodilia breed
-   * @example schemas.animal.crocodilia() // Schema
-   * @example schemas.animal.crocodilia().getValue() // 'Philippine Crocodile'
+   * @example modules.animal.crocodilia() // Schema
+   * @example modules.animal.crocodilia().getValue() // 'Philippine Crocodile'
    * @returns string
    */
   crocodilia() {
@@ -111,8 +111,8 @@ export class AnimalModule {
 
   /**
    * Returns a fish breed
-   * @example schemas.animal.fish() // Schema
-   * @example schemas.animal.fish().getValue() // 'Mandarin fish'
+   * @example modules.animal.fish() // Schema
+   * @example modules.animal.fish().getValue() // 'Mandarin fish'
    * @returns string
    */
   fish() {
@@ -121,8 +121,8 @@ export class AnimalModule {
 
   /**
    * Returns a horse breed
-   * @example schemas.animal.horse() // Schema
-   * @example schemas.animal.horse().getValue() // 'Swedish Warmblood'
+   * @example modules.animal.horse() // Schema
+   * @example modules.animal.horse().getValue() // 'Swedish Warmblood'
    * @returns string
    */
   horse() {
@@ -131,8 +131,8 @@ export class AnimalModule {
 
   /**
    * Returns a insect breed
-   * @example schemas.animal.insect() // Schema
-   * @example schemas.animal.insect().getValue() // 'Pyramid ant'
+   * @example modules.animal.insect() // Schema
+   * @example modules.animal.insect().getValue() // 'Pyramid ant'
    * @returns string
    */
   insect() {
@@ -141,8 +141,8 @@ export class AnimalModule {
 
   /**
    * Returns a lion breed
-   * @example schemas.animal.lion() // Schema
-   * @example schemas.animal.lion().getValue() // 'Northeast Congo Lion'
+   * @example modules.animal.lion() // Schema
+   * @example modules.animal.lion().getValue() // 'Northeast Congo Lion'
    * @returns string
    */
   lion() {
@@ -151,8 +151,8 @@ export class AnimalModule {
 
   /**
    * Returns a rabbit breed
-   * @example schemas.animal.rabbit() // Schema
-   * @example schemas.animal.rabbit().getValue() // 'Florida White'
+   * @example modules.animal.rabbit() // Schema
+   * @example modules.animal.rabbit().getValue() // 'Florida White'
    * @returns string
    */
   rabbit() {
@@ -161,8 +161,8 @@ export class AnimalModule {
 
   /**
    * Returns a rodent breed
-   * @example schemas.animal.rodent() // Schema
-   * @example schemas.animal.rodent().getValue() // 'Cuscomys ashanika'
+   * @example modules.animal.rodent() // Schema
+   * @example modules.animal.rodent().getValue() // 'Cuscomys ashanika'
    * @returns string
    */
   rodent() {
@@ -171,8 +171,8 @@ export class AnimalModule {
 
   /**
    * Returns a snake breed
-   * @example schemas.animal.snake() // Schema
-   * @example schemas.animal.snake().getValue() // 'Eyelash viper'
+   * @example modules.animal.snake() // Schema
+   * @example modules.animal.snake().getValue() // 'Eyelash viper'
    * @returns string
    */
   snake() {
@@ -181,8 +181,8 @@ export class AnimalModule {
 
   /**
    * Returns an animal type
-   * @example schemas.animal.animalType() // Schema
-   * @example schemas.animal.animalType().getValue() // 'Singapuria'
+   * @example modules.animal.animalType() // Schema
+   * @example modules.animal.animalType().getValue() // 'Singapuria'
    * @returns string
    */
   animalType() {

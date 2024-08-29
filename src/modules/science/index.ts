@@ -26,10 +26,10 @@ export class ScienceModule {
   /**
    * Returns periodic table element
    * @param args.type element format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
-   * @example schemas.science.periodicTableElement() // Schema
+   * @example modules.science.periodicTableElement() // Schema
    * @example
-   * schemas.science.periodicTableElement().getValue() // 'Curium'
-   * schemas.science.periodicTableElement().getValue({type: 'symbol'}) // 'Zn'
+   * modules.science.periodicTableElement().getValue() // 'Curium'
+   * modules.science.periodicTableElement().getValue({type: 'symbol'}) // 'Zn'
    * @returns string
    */
   periodicTableElement(args?: PeriodicTableProps) {
@@ -47,10 +47,10 @@ export class ScienceModule {
    *
    * @param args.type unit format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
    *
-   * @example schemas.science.unit() // Schema
+   * @example modules.science.unit() // Schema
    * @example
-   * schemas.science.unit() // 'hertz (Hz)'
-   * schemas.science.unit({type: 'symbol'}) // 'N'
+   * modules.science.unit() // 'hertz (Hz)'
+   * modules.science.unit({type: 'symbol'}) // 'N'
    * @returns string
    */
   unit(args?: UnitProps) {

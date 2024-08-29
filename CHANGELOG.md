@@ -181,12 +181,12 @@ schema.generate(5);
 
 ```js
 // Before
-const customField = chaca.schemaField("customField", (args) => {
+const customField = chaca.module("customField", (args) => {
   // return value
 });
 
 // Now
-const customField = chaca.schemaField((args) => {
+const customField = chaca.module((args) => {
   // return value
 });
 ```
@@ -232,7 +232,7 @@ const customField = chaca.schemaField((args) => {
 - Add `PostgreSQL` code generator
 - Add `chaca.multiGenerate` to generate relational schemas data
 - Add `chaca.exportFromSchemas` to export and generate relational schemas data
-- Add `schema.generateObject` to generate single object of data schema
+- Add `schema.object` to generate single object of data schema
 
 ### 🪛 Fix
 

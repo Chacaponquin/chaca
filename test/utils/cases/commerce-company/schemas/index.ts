@@ -1,4 +1,4 @@
-import { DatasetStore, chaca, schemas } from "../../../../../src";
+import { DatasetStore, chaca, modules } from "../../../../../src";
 import { PACKAGE_TYPE } from "../constants";
 
 interface Warehouse {
@@ -140,10 +140,10 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
 
 export const CHARGE_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  name: schemas.word.noun(),
-  need_refrigeration: schemas.dataType.boolean(),
-  expire_date: { type: schemas.date.future(), possibleNull: true },
-  weight: schemas.dataType.int({ min: 40, max: 1000 }),
+  name: modules.word.noun(),
+  need_refrigeration: modules.datatype.boolean(),
+  expire_date: { type: modules.date.future(), possibleNull: true },
+  weight: modules.datatype.int({ min: 40, max: 1000 }),
   client_id: chaca.ref("Client.id"),
   warehouse_id: chaca.ref("Warehouse.id", {
     where: ({ currentFields, store }) => {
@@ -182,9 +182,9 @@ export const CHARGE_SCHEMA = chaca.schema({
 
 export const WAREHOUSE_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  count_shelfs: schemas.dataType.int({ min: 1, max: 10 }),
-  count_rows: schemas.dataType.int({ min: 5, max: 15 }),
-  count_box: schemas.dataType.int({ min: 5, max: 10 }),
+  count_shelfs: modules.datatype.int({ min: 1, max: 10 }),
+  count_rows: modules.datatype.int({ min: 5, max: 15 }),
+  count_box: modules.datatype.int({ min: 5, max: 10 }),
 });
 
 export const CHARGE_PACKAGE_TYPE_SCHEMA = chaca.schema({
@@ -194,20 +194,20 @@ export const CHARGE_PACKAGE_TYPE_SCHEMA = chaca.schema({
 
 export const CLIENT_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  country: schemas.address.country(),
-  phone: schemas.phone.number(),
-  fax: schemas.phone.number(),
-  email: schemas.internet.email(),
+  country: modules.address.country(),
+  phone: modules.phone.number(),
+  fax: modules.phone.number(),
+  email: modules.internet.email(),
   name: ({ currentFields }) => {
     if (currentFields.type === "E") {
-      return schemas.word.noun().getValue() + " S.A.";
+      return modules.word.noun().getValue() + " S.A.";
     } else {
-      return schemas.person.fullName().getValue();
+      return modules.person.fullName().getValue();
     }
   },
-  is_priority: schemas.dataType.boolean(),
+  is_priority: modules.datatype.boolean(),
   type: chaca.enum(["E", "P"]),
-  init_services_date: schemas.date.past(),
+  init_services_date: modules.date.past(),
 });
 
 export const ENTERPRISE_CLIENT_SCHEMA = chaca.schema({

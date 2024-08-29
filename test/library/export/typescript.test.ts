@@ -14,8 +14,8 @@ describe("# Export Typescript", () => {
   let NESTED_OBJECTS_DATA: any;
 
   beforeAll(() => {
-    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
-    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
+    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.array(50);
+    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.array(50);
   });
 
   describe("Export configuration", () => {
@@ -117,7 +117,7 @@ describe("# Export Typescript", () => {
     });
 
     it("Export simple object", async () => {
-      const route = await chaca.export(SIMPLE_SCHEMA.generateObject(), {
+      const route = await chaca.export(SIMPLE_SCHEMA.object(), {
         format: "typescript",
         filename: filename + "SimpleObject",
         location: ROOT,
@@ -127,7 +127,7 @@ describe("# Export Typescript", () => {
     });
 
     it("Export complete schema object", async () => {
-      const route = await chaca.export(COMPLETE_SCHEMA.generateObject(), {
+      const route = await chaca.export(COMPLETE_SCHEMA.object(), {
         format: "typescript",
         filename: filename + "CompleteSchemaObject",
         location: ROOT,
@@ -137,7 +137,7 @@ describe("# Export Typescript", () => {
     });
 
     it("Export nested object schema object", async () => {
-      const route = await chaca.export(NESTED_OBJECT_SCHEMA.generateObject(), {
+      const route = await chaca.export(NESTED_OBJECT_SCHEMA.object(), {
         format: "typescript",
         filename: filename + "NestedObjectsSchemaObject",
         location: ROOT,
@@ -147,14 +147,11 @@ describe("# Export Typescript", () => {
     });
 
     it("Export schema with array fields object", async () => {
-      const route = await chaca.export(
-        SCHEMA_WITH_ARRAY_FIELDS.generateObject(),
-        {
-          format: "typescript",
-          filename: filename + "FieldsWithArrayObject",
-          location: ROOT,
-        },
-      );
+      const route = await chaca.export(SCHEMA_WITH_ARRAY_FIELDS.object(), {
+        format: "typescript",
+        filename: filename + "FieldsWithArrayObject",
+        location: ROOT,
+      });
 
       expect(checkFile({ route, ext })).toBe(true);
     });

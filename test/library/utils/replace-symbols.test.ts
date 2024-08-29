@@ -2,9 +2,7 @@ import { chaca } from "../../../src";
 
 describe("# ReplaceSymbols Util Test", () => {
   it("Pass undefined as argument. Should return an empty string", () => {
-    expect(() => chaca.utils.replaceSymbols(undefined!)).toThrowError(
-      TypeError,
-    );
+    expect(() => chaca.utils.replaceSymbols(undefined!)).toThrow(TypeError);
   });
 
   it("Pass only #. Should return a string with only numbers", () => {

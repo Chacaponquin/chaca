@@ -39,8 +39,8 @@ export class ColorModule {
    * Returns a random css supported color function name.
    *
    * @example
-   * schemas.color.cssSupportedFunction() // schema
-   * schemas.color.cssSupportedFunction().getValue() // 'rgb'
+   * modules.color.cssSupportedFunction() // schema
+   * modules.color.cssSupportedFunction().getValue() // 'rgb'
    */
   cssSupportedFunction(): Module<string> {
     return new Module(() => {
@@ -52,8 +52,8 @@ export class ColorModule {
    * Returns a random css supported color space name.
    *
    * @example
-   * schemas.color.cssSupportedSpace() // schema
-   * schemas.color.cssSupportedSpace().getValue() // 'display-p3'
+   * modules.color.cssSupportedSpace() // schema
+   * modules.color.cssSupportedSpace().getValue() // 'display-p3'
    */
   cssSupportedSpace(): Module<CSSSpace> {
     return new Module(() => this.utils.oneOfArray(CSS_SPACES as any), {});
@@ -68,14 +68,14 @@ export class ColorModule {
    * @param options.includeAlpha Adds an alpha value to the color (RGBA). Defaults to `false`.
    *
    * @example
-   * schemas.color.rgb().getValue() // schema
-   * schemas.color.rgb().getValue({ prefix: '#' }) // '#ffffFF'
-   * schemas.color.rgb().getValue({ casing: 'upper' }) // '0xFFFFFF'
-   * schemas.color.rgb().getValue({ casing: 'lower' }) // '0xffffff'
-   * schemas.color.rgb().getValue({ prefix: '#', casing: 'lower' }) // '#ffffff'
-   * schemas.color.rgb().getValue({ format: 'hex', casing: 'lower' }) // '#ffffff'
-   * schemas.color.rgb().getValue({ format: 'css' }) // 'rgb(255, 0, 0)'
-   * schemas.color.rgb().getValue({ format: 'binary' }) // '10000000 00000000 11111111'
+   * modules.color.rgb().getValue() // schema
+   * modules.color.rgb().getValue({ prefix: '#' }) // '#ffffFF'
+   * modules.color.rgb().getValue({ casing: 'upper' }) // '0xFFFFFF'
+   * modules.color.rgb().getValue({ casing: 'lower' }) // '0xffffff'
+   * modules.color.rgb().getValue({ prefix: '#', casing: 'lower' }) // '#ffffff'
+   * modules.color.rgb().getValue({ format: 'hex', casing: 'lower' }) // '#ffffff'
+   * modules.color.rgb().getValue({ format: 'css' }) // 'rgb(255, 0, 0)'
+   * modules.color.rgb().getValue({ format: 'binary' }) // '10000000 00000000 11111111'
    */
   rgb(args?: Partial<RgbProps>): Module<string, Partial<RgbProps>> {
     return new Module<string, Partial<RgbProps>>((a) => {
@@ -125,10 +125,10 @@ export class ColorModule {
    * @param options.format Format of generated CMYK color. Defaults to `'css'`.
    *
    * @example
-   * schemas.color.cmyk() // schema
-   * schemas.color.cmyk().getValue() // cmyk(100%, 0%, 0%, 0%)
-   * schemas.color.cmyk().getValue({ format: 'css' }) // cmyk(100%, 0%, 0%, 0%)
-   * schemas.color.cmyk().getValue({ format: 'binary' }) // (8-32 bits) x 4
+   * modules.color.cmyk() // schema
+   * modules.color.cmyk().getValue() // cmyk(100%, 0%, 0%, 0%)
+   * modules.color.cmyk().getValue({ format: 'css' }) // cmyk(100%, 0%, 0%, 0%)
+   * modules.color.cmyk().getValue({ format: 'binary' }) // (8-32 bits) x 4
    */
   cmyk(args?: Partial<CmykProps>): Module<string, Partial<CmykProps>> {
     return new Module<string, Partial<CmykProps>>((a) => {
@@ -149,11 +149,11 @@ export class ColorModule {
    * @param options.includeAlpha Adds an alpha value to the color (RGBA). Defaults to `false`.
    *
    * @example
-   * schemas.color.hsl() // schema
-   * schemas.color.hsl().getValue({ format: 'css' }) // hsl(0deg, 100%, 80%)
-   * schemas.color.hsl().getValue({ format: 'css', includeAlpha: true }) // hsl(0deg 100% 50% / 0.5)
-   * schemas.color.hsl().getValue({ format: 'binary' }) // (8-32 bits) x 3
-   * schemas.color.hsl().getValue({ format: 'binary', includeAlpha: true }) // (8-32 bits) x 4
+   * modules.color.hsl() // schema
+   * modules.color.hsl().getValue({ format: 'css' }) // hsl(0deg, 100%, 80%)
+   * modules.color.hsl().getValue({ format: 'css', includeAlpha: true }) // hsl(0deg 100% 50% / 0.5)
+   * modules.color.hsl().getValue({ format: 'binary' }) // (8-32 bits) x 3
+   * modules.color.hsl().getValue({ format: 'binary', includeAlpha: true }) // (8-32 bits) x 4
    */
   hsl(args?: Partial<HslProps>): Module<string, Partial<HslProps>> {
     return new Module<string, Partial<HslProps>>((a) => {
@@ -181,9 +181,9 @@ export class ColorModule {
    * @param options.format Format of generated HWB color. Defaults to `'css'`.
    *
    * @example
-   * schemas.color.hwb() // schema
-   * schemas.color.hwb().getValue({ format: 'css' }) // hwb(194 0% 0%)
-   * schemas.color.hwb().getValue({ format: 'binary' }) // (8-32 bits x 3)
+   * modules.color.hwb() // schema
+   * modules.color.hwb().getValue({ format: 'css' }) // hwb(194 0% 0%)
+   * modules.color.hwb().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
   hwb(args?: Partial<HwbProps>): Module<string, Partial<HwbProps>> {
     return new Module<string, Partial<HwbProps>>((a) => {
@@ -214,9 +214,9 @@ export class ColorModule {
    * @param options.format Format of generated LCH color. Defaults to `'decimal'`.
    *
    * @example
-   * schemas.color.lch() // schema
-   * schemas.color.lch().getValue({ format: 'css' }) // lch(52.2345% 72.2 56.2)
-   * schemas.color.lch().getValue({ format: 'binary' }) // (8-32 bits x 3)
+   * modules.color.lch() // schema
+   * modules.color.lch().getValue({ format: 'css' }) // lch(52.2345% 72.2 56.2)
+   * modules.color.lch().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
   lch(args?: Partial<LchProps>): Module<string, Partial<LchProps>> {
     return new Module((a) => {
@@ -245,9 +245,9 @@ export class ColorModule {
    * @param options.space Color space to generate the color for. Defaults to `'sRGB'`.
    *
    * @example
-   * schemas.color.colorByCSSColorSpace() // schema
-   * schemas.color.colorByCSSColorSpace().getValue({ format: 'css', space: 'display-p3' }) // color(display-p3 0.12 1 0.23)
-   * schemas.color.colorByCSSColorSpace().getValue({ format: 'binary' }) // (8-32 bits x 3)
+   * modules.color.colorByCSSColorSpace() // schema
+   * modules.color.colorByCSSColorSpace().getValue({ format: 'css', space: 'display-p3' }) // color(display-p3 0.12 1 0.23)
+   * modules.color.colorByCSSColorSpace().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
   colorByCSSColorSpace(
     args?: Partial<ColorByCSSColorSpaceProps>,

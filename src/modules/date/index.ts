@@ -52,11 +52,11 @@ export class DateModule {
    * @param args.days The range of days the date may be in the future.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example schemas.date.soon() // Schema
+   * @example modules.date.soon() // Schema
    *
    * @example
-   * schemas.date.soon().getValue() // '2022-02-05T09:55:39.216Z'
-   * schemas.date.soon().getValue({days: 10}) // '2022-02-11T05:14:39.138Z'
+   * modules.date.soon().getValue() // '2022-02-05T09:55:39.216Z'
+   * modules.date.soon().getValue({days: 10}) // '2022-02-11T05:14:39.138Z'
    */
   soon(args?: DateSoonProps) {
     return new Module<Date, DateSoonProps>((a) => {
@@ -86,11 +86,11 @@ export class DateModule {
    * @param args.years The range of years the date may be in the past.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example schemas.date.past() // Schema
+   * @example modules.date.past() // Schema
    *
    * @example
-   * schemas.date.past().getValue() // '2021-12-03T05:40:44.408Z'
-   * schemas.date.past().getValue({years: 10, refDate: '2020-01-01T00:00:00.000Z'}) // '2017-08-18T02:59:12.350Z'
+   * modules.date.past().getValue() // '2021-12-03T05:40:44.408Z'
+   * modules.date.past().getValue({years: 10, refDate: '2020-01-01T00:00:00.000Z'}) // '2017-08-18T02:59:12.350Z'
    *
    * @returns Date
    * */
@@ -122,11 +122,11 @@ export class DateModule {
    * @param args.years The range of years the date may be in the future.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example schemas.date.future() // Schema
+   * @example modules.date.future() // Schema
    *
    * @example
-   * schemas.date.future().getValue() // '2022-11-19T05:52:49.100Z'
-   * schemas.date.future().getValue({years: 10, refDate: '2020-01-01T00:00:00.000Z'}) // '2020-12-13T22:45:10.252Z'
+   * modules.date.future().getValue() // '2022-11-19T05:52:49.100Z'
+   * modules.date.future().getValue({years: 10, refDate: '2020-01-01T00:00:00.000Z'}) // '2020-12-13T22:45:10.252Z'
    *
    * @returns Date
    */
@@ -154,8 +154,8 @@ export class DateModule {
 
   /**
    * Returns a month name
-   * @example schemas.date.month() // Schema
-   * @example schemas.date.month().getValue() // 'February'
+   * @example modules.date.month() // Schema
+   * @example modules.date.month().getValue() // 'February'
    * @returns string
    */
   month() {
@@ -166,8 +166,8 @@ export class DateModule {
 
   /**
    * Returns a weekday name
-   * @example schemas.date.weekDay() // Schema
-   * @example schemas.date.weekDay().getValue() // 'Monday'
+   * @example modules.date.weekDay() // Schema
+   * @example modules.date.weekDay().getValue() // 'Monday'
    * @returns string
    */
   weekDay() {
@@ -190,12 +190,12 @@ export class DateModule {
    *
    * Defaults to `year`.
    *
-   * @example schemas.date.birthdate() // Schema
+   * @example modules.date.birthdate() // Schema
    *
    * @example
-   * schemas.date.birthdate().getValue() // 1977-07-10T01:37:30.719Z
-   * schemas.date.birthdate().getValue({ min: 18, max: 65, mode: 'age' }) // 2003-11-02T20:03:20.116Z
-   * schemas.date.birthdate().getValue({ min: 1900, max: 2000, mode: 'year' }) // 1940-08-20T08:53:07.538Z
+   * modules.date.birthdate().getValue() // 1977-07-10T01:37:30.719Z
+   * modules.date.birthdate().getValue({ min: 18, max: 65, mode: 'age' }) // 2003-11-02T20:03:20.116Z
+   * modules.date.birthdate().getValue({ min: 1900, max: 2000, mode: 'year' }) // 1940-08-20T08:53:07.538Z
    *
    * @returns Date
    */
@@ -240,10 +240,10 @@ export class DateModule {
    * @param args.from The early date boundary.
    * @param args.to The late date boundary.
    *
-   * @example schemas.date.between() // Schema
+   * @example modules.date.between() // Schema
    *
    * @example
-   * schemas.date.between().getValue({from: '2020-01-01T00:00:00.000Z', to: '2030-01-01T00:00:00.000Z'}) // '2026-05-16T02:22:53.002Z'
+   * modules.date.between().getValue({from: '2020-01-01T00:00:00.000Z', to: '2030-01-01T00:00:00.000Z'}) // '2026-05-16T02:22:53.002Z'
    *
    * @returns Date
    */
@@ -286,8 +286,8 @@ export class DateModule {
   /**
    * Returns a string with a time ago information
    * @param args.unit Date time unit. Can be (`"years"` | `"seconds"` | `"minutes"` | `"days"` | `"hours"` | `"months"`)
-   * @example schemas.date.timeAgo() // Schema
-   * @example schemas.date.timeAgo().getValue({unit: 'days'}) // '20 days ago'
+   * @example modules.date.timeAgo() // Schema
+   * @example modules.date.timeAgo().getValue({unit: 'days'}) // '20 days ago'
    * @returns string
    */
   timeAgo(args?: TimeAgoProps) {

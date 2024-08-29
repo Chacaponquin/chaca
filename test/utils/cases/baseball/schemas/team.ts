@@ -1,8 +1,8 @@
-import { chaca, schemas } from "../../../../../src";
+import { chaca, modules } from "../../../../../src";
 
 export const TEAM_SCHEMA = chaca.schema({
   team_id: chaca.key(chaca.sequence()),
-  played_championships: schemas.dataType.int({ min: 1, max: 70 }),
+  played_championships: modules.datatype.int({ min: 1, max: 70 }),
   color: () => "#000000",
   team_name: ({ currentFields: fields, store }) => {
     const provinces = store.getValue("Province");
@@ -15,9 +15,9 @@ export const TEAM_SCHEMA = chaca.schema({
     return fields.province_id + " Team";
   },
   province_id: chaca.ref("Province.province_id", { unique: true }),
-  pet: schemas.animal.animalType(),
+  pet: modules.animal.animalType(),
   won_championships: ({ currentFields: fields }) => {
-    return schemas.dataType
+    return modules.datatype
       .int()
       .getValue({ min: 0, max: fields.played_championships });
   },

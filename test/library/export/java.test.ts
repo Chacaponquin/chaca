@@ -14,10 +14,10 @@ describe("# Java Export Test", () => {
   let ARRAY_FIELDS_DATA: any;
 
   beforeAll(() => {
-    SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.generate(50);
-    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.generate(50);
-    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.generate(50);
-    ARRAY_FIELDS_DATA = SCHEMA_WITH_ARRAY_FIELDS.generate(50);
+    SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.array(50);
+    COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.array(50);
+    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.array(50);
+    ARRAY_FIELDS_DATA = SCHEMA_WITH_ARRAY_FIELDS.array(50);
   });
 
   describe("Export configuration", () => {

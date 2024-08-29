@@ -1,13 +1,13 @@
-const { chaca, schemas } = require("../../lib/cjs/index");
+const { chaca, modules } = require("../../lib/cjs/index");
 
 const USER_SCHEMA = chaca.schema({
-  id: chaca.key(schemas.id.uuid()),
-  username: schemas.internet.username(),
+  id: chaca.key(modules.id.uuid()),
+  username: modules.internet.username(),
 });
 
 const POST_SCHEMA = chaca.schema({
-  id: chaca.key(schemas.id.uuid()),
-  title: schemas.lorem.words(),
+  id: chaca.key(modules.id.uuid()),
+  title: modules.lorem.words(),
   user: chaca.ref("User.id"),
 });
 

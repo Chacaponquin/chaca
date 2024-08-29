@@ -32,10 +32,10 @@ export class AddressModule {
   /**
    * Returns a zip code
    * @param args.format format of the zip code. Default '#####'
-   * @example schemas.address.zipCode() // Schema
+   * @example modules.address.zipCode() // Schema
    * @example
-   * schemas.address.zipCode().getValue() // '62581'
-   * schemas.address.zipCode().getValue({format: '###'}) // '453'
+   * modules.address.zipCode().getValue() // '62581'
+   * modules.address.zipCode().getValue({format: '###'}) // '453'
    * @returns string
    */
   zipCode(args?: ZipCodeProps) {
@@ -48,8 +48,8 @@ export class AddressModule {
 
   /**
    * Returns a time zone
-   * @example schemas.address.timeZone() // Schema
-   * @example schemas.address.timeZone().getValue() // "Asia/Magadan"
+   * @example modules.address.timeZone() // Schema
+   * @example modules.address.timeZone().getValue() // "Asia/Magadan"
    * @returns string
    */
   timeZone() {
@@ -58,8 +58,8 @@ export class AddressModule {
 
   /**
    * Returns a cardinal direction
-   * @example schemas.address.cardinalDirection() // Schema
-   * @example schemas.address.cardinalDirection().getValue() // 'North'
+   * @example modules.address.cardinalDirection() // Schema
+   * @example modules.address.cardinalDirection().getValue() // 'North'
    * @returns string
    */
   cardinalDirection() {
@@ -72,8 +72,8 @@ export class AddressModule {
   /**
    * Returns a country
    * @param args.continent Continent of the country that you want
-   * @example schemas.address.country() // Schema
-   * @example schemas.address.country().getValue() // 'Spain'
+   * @example modules.address.country() // Schema
+   * @example modules.address.country().getValue() // 'Spain'
    * @returns string
    */
   country(args?: CountryProps) {
@@ -96,8 +96,8 @@ export class AddressModule {
 
   /**
    * Returns a country name code
-   * @example schemas.address.countryCode() // Schema
-   * @example schemas.address.countryCode().getValue() // 'CU'
+   * @example modules.address.countryCode() // Schema
+   * @example modules.address.countryCode().getValue() // 'CU'
    * @returns string
    */
   countryCode() {

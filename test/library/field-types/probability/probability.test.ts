@@ -17,7 +17,7 @@ describe("# Probability Field Tests", () => {
       prob: chaca.probability(null as any),
     });
 
-    expect(() => schema.generate(10)).toThrow(ChacaError);
+    expect(() => schema.array(10)).toThrow(ChacaError);
   });
 
   it("Create a schema with a probability field without values. Should throw an error", () => {
@@ -25,7 +25,7 @@ describe("# Probability Field Tests", () => {
       prob: chaca.probability([]),
     });
 
-    expect(() => schema.generate(10)).toThrow(ChacaError);
+    expect(() => schema.array(10)).toThrow(ChacaError);
   });
 
   it("Create a schema with a probability field with 3 elements", () => {
@@ -37,7 +37,7 @@ describe("# Probability Field Tests", () => {
       ]),
     });
 
-    const data = schema.generate(50);
+    const data = schema.array(50);
 
     expect(count(data, 10)).toBeGreaterThanOrEqual(30);
   });
@@ -51,7 +51,7 @@ describe("# Probability Field Tests", () => {
       ]),
     });
 
-    const data = schema.generate(50);
+    const data = schema.array(50);
 
     expect(count(data, 10)).toBeGreaterThanOrEqual(30);
   });
@@ -65,7 +65,7 @@ describe("# Probability Field Tests", () => {
       ]),
     });
 
-    const data = schema.generate(100);
+    const data = schema.array(100);
     const result = Math.abs(count(data, 10) - count(data, 5));
 
     expect(result).toBeLessThanOrEqual(20);
@@ -80,7 +80,7 @@ describe("# Probability Field Tests", () => {
       ]),
     });
 
-    const data = schema.generate(100);
+    const data = schema.array(100);
 
     expect(count(data, 10)).toBe(0);
   });
@@ -94,7 +94,7 @@ describe("# Probability Field Tests", () => {
       ]),
     });
 
-    const data = schema.generate(100);
+    const data = schema.array(100);
     const result1 = count(data, 10);
     const result2 = count(data, 5);
     const result3 = count(data, 1);

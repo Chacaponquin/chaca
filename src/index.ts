@@ -83,6 +83,7 @@ import {
 
 import { PickField, PickFieldProps } from "./core/fields/core/pick/PickField";
 import { ChacaModules, Module } from "./modules";
+import { Dataset } from "./core/dataset";
 
 export const chaca = new Chaca();
 export const modules = new ChacaModules();
@@ -154,3 +155,5 @@ export type {
   TypescriptFormatConfig,
   YamlFormatConfig,
 };
+
+export { Dataset };

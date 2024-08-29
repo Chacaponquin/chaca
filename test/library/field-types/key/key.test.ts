@@ -7,7 +7,7 @@ describe("# Key fields tests", () => {
         .schema({
           test: { type: chaca.key(chaca.sequence()), isArray: 20 },
         })
-        .generate(50),
+        .array(50),
     ).toThrow(ChacaError);
   });
 
@@ -17,7 +17,7 @@ describe("# Key fields tests", () => {
         .schema({
           test: { type: chaca.key(chaca.sequence()), possibleNull: 10 },
         })
-        .generate(50),
+        .array(50),
     ).toThrow(ChacaError);
   });
 });

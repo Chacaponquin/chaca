@@ -15,8 +15,8 @@ export class VehicleModule {
 
   /**
    * Returns a bicycle type
-   * @example schemas.vehicle.bicycle() // Schema
-   * @example schemas.vehicle.bicycle().getValue() // 'BMX Bicycle'
+   * @example modules.vehicle.bicycle() // Schema
+   * @example modules.vehicle.bicycle().getValue() // 'BMX Bicycle'
    * @returns string
    */
   bicycle() {
@@ -25,8 +25,8 @@ export class VehicleModule {
 
   /**
    * Returns a manufacturer name
-   * @example schemas.vehicle.manufacturer() // Schema
-   * @example schemas.vehicle.manufacturer().getValue() // 'BMW'
+   * @example modules.vehicle.manufacturer() // Schema
+   * @example modules.vehicle.manufacturer().getValue() // 'BMW'
    * @returns string
    */
   manufacturer() {
@@ -35,8 +35,8 @@ export class VehicleModule {
 
   /**
    * Returns a vehicle model name
-   * @example schemas.vehicle.vehicleModel() // Schema
-   * @example schemas.vehicle.vehicleModel().getValue() // 'Model S'
+   * @example modules.vehicle.vehicleModel() // Schema
+   * @example modules.vehicle.vehicleModel().getValue() // 'Model S'
    * @returns string
    */
   vehicleModel() {
@@ -45,8 +45,8 @@ export class VehicleModule {
 
   /**
    * Returns a vehicle type
-   * @example schemas.vehicle.vehicleType() // Schema
-   * @example schemas.vehicle.vehicleType().getValue() // 'Coupe'
+   * @example modules.vehicle.vehicleType() // Schema
+   * @example modules.vehicle.vehicleType().getValue() // 'Coupe'
    * @returns string
    */
   vehicleType() {
@@ -55,8 +55,8 @@ export class VehicleModule {
 
   /**
    * Returns a vehicle name
-   * @example schemas.vehicle.vehicle() // Schema
-   * @example schemas.vehicle.vehicle().getValue() // 'BMW Explorer'
+   * @example modules.vehicle.vehicle() // Schema
+   * @example modules.vehicle.vehicle().getValue() // 'BMW Explorer'
    * @returns string
    */
   vehicle() {
@@ -68,8 +68,8 @@ export class VehicleModule {
 
   /**
    * Returns a fuel type
-   * @example schemas.vehicle.fuel() // Schema
-   * @example schemas.vehicle.fuel().getValue() // 'Diesel'
+   * @example modules.vehicle.fuel() // Schema
+   * @example modules.vehicle.fuel().getValue() // 'Diesel'
    * @returns string
    */
   fuel() {

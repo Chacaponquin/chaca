@@ -70,8 +70,8 @@ export class DatatypeModule {
 
   /**
    * Returns a keyboard special character
-   * @example schemas.dataType.specialCharacter() // Schema
-   * @example schemas.dataType.specialCharacter().getValue() // '_'
+   * @example modules.datatype.specialCharacter() // Schema
+   * @example modules.datatype.specialCharacter().getValue() // '_'
    * @returns string
    */
   public specialCharacter(): Module<string> {
@@ -82,8 +82,8 @@ export class DatatypeModule {
 
   /**
    * Returns a boolean
-   * @example schemas.dataType.boolean() /// Schema
-   * @example schemas.dataType.boolean().getValue() // true
+   * @example modules.datatype.boolean() /// Schema
+   * @example modules.datatype.boolean().getValue() // true
    * @returns boolean
    */
   public boolean() {
@@ -94,10 +94,10 @@ export class DatatypeModule {
    * Returns a integer number
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
-   * @example schemas.dataType.int() // Schema
+   * @example modules.datatype.int() // Schema
    * @example
-   * schemas.dataType.int().getValue() // 462
-   * schemas.dataType.int().getValue({min: 10, max: 30}) // 28
+   * modules.datatype.int().getValue() // 462
+   * modules.datatype.int().getValue({min: 10, max: 30}) // 28
    * @returns number
    */
   int(args?: IntProps) {
@@ -130,11 +130,11 @@ export class DatatypeModule {
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
    * @param args.precision Precision of the float. Must be a value between `1` and `20`. Default `2`
-   * @example schemas.dataType.float() // Schema
+   * @example modules.datatype.float() // Schema
    * @example
-   * schemas.dataType.float().getValue() // 462.12
-   * schemas.dataType.float().getValue({min: 10, max: 30}) // 10.23
-   * schemas.dataType.number().getValue({precision: 4}) // 90.5362
+   * modules.datatype.float().getValue() // 462.12
+   * modules.datatype.float().getValue({min: 10, max: 30}) // 10.23
+   * modules.datatype.number().getValue({precision: 4}) // 90.5362
    * @returns number
    */
   float(args?: FloatProps) {
@@ -175,10 +175,10 @@ export class DatatypeModule {
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
    * @param args.precision Precision of the number. Must be a value between `0` and `20`.
-   * @example schemas.dataType.number() // Schema
+   * @example modules.datatype.number() // Schema
    * @example
-   * schemas.dataType.number().getValue() // 301
-   * schemas.dataType.number().getValue({min: 10, max: 30}) // 10.2327
+   * modules.datatype.number().getValue() // 301
+   * modules.datatype.number().getValue({min: 10, max: 30}) // 10.2327
    * @returns number
    */
   number(args?: NumberProps) {
@@ -201,10 +201,10 @@ export class DatatypeModule {
    * @param args.case Case of the values inside de hexadecimal code (`mixed` | `lower` | `upper`)
    * @param args.length Lenght of the hexadecimal code
    * @example
-   * schemas.dataType.hexadecimal() // Schema
-   * schemas.dataType.hexadecimal().getValue() // '009df'
-   * schemas.dataType.hexadecimal().getValue({length: 3}) // '01D'
-   * schemas.dataType.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
+   * modules.datatype.hexadecimal() // Schema
+   * modules.datatype.hexadecimal().getValue() // '009df'
+   * modules.datatype.hexadecimal().getValue({length: 3}) // '01D'
+   * modules.datatype.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
    * @returns string
    */
   public hexadecimal(args?: HexadecimalProps) {
@@ -250,11 +250,11 @@ export class DatatypeModule {
    * @param args.max Max value for the numbers of the matrix
    * @param args.precision Number precision of the matrix
    *
-   * @example schemas.dataType.matriz() // Schema
+   * @example modules.datatype.matriz() // Schema
    *
    * @example
-   * schemas.dataType.matrix().getValue() // [[1, 0, 5], [5, 10, 9]]
-   * schemas.dataType.matrix().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
+   * modules.datatype.matrix().getValue() // [[1, 0, 5], [5, 10, 9]]
+   * modules.datatype.matrix().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
   public matrix(args?: MatrizProps) {
     return new Module<number[][], MatrizProps>((a) => {
@@ -284,11 +284,11 @@ export class DatatypeModule {
    * @param args.length Length of characters. Default `1`
    * @param args.case Case of the characters (`lower` or `upper`)
    *
-   * @example schemas.dataType.character() // Schema
+   * @example modules.datatype.character() // Schema
    * @example
-   * schemas.dataType.characters().getValue() // 'v'
-   * schemas.dataType.characters().getValue({length: 5}) // 'bhtlw'
-   * schemas.dataType.characters().getValue({length: 5, case: 'upper'}) // 'HQRSD'
+   * modules.datatype.characters().getValue() // 'v'
+   * modules.datatype.characters().getValue({length: 5}) // 'bhtlw'
+   * modules.datatype.characters().getValue({length: 5, case: 'upper'}) // 'HQRSD'
    *
    * @returns string
    */
@@ -327,10 +327,10 @@ export class DatatypeModule {
   /**
    * Returns a string with a binary code
    * @param args.length Length of the binary code
-   * @example schemas.dataType.binaryCode() // Schema
+   * @example modules.datatype.binaryCode() // Schema
    * @example
-   * schemas.dataType.binaryCode().getValue() // '00101'
-   * schemas.dataType.binaryCode().getValue({length: 6}) // '010100'
+   * modules.datatype.binaryCode().getValue() // '00101'
+   * modules.datatype.binaryCode().getValue({length: 6}) // '010100'
    * @returns string
    */
   public binaryCode(args?: BinaryCodeProps) {

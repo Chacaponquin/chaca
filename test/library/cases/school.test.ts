@@ -1,4 +1,4 @@
-import { chaca } from "../../../src";
+import { chaca, Dataset } from "../../../src";
 import { SCHOOL_SCHEMAS } from "../../utils/cases/school";
 
 const EXPORT_ROUTE = "./data/cases/school";
@@ -6,32 +6,30 @@ const FILE_NAME = "caseSchool";
 
 describe("# School Case Test", () => {
   let CASE_DATA: any;
+  let CASE: Dataset;
 
   beforeAll(() => {
-    CASE_DATA = chaca.multiGenerate(SCHOOL_SCHEMAS, { verbose: false });
+    CASE = chaca.dataset(SCHOOL_SCHEMAS);
+    CASE_DATA = CASE.generate();
   });
 
   it("Creation", () => {
-    const DATA = chaca.multiGenerate(SCHOOL_SCHEMAS, { verbose: false });
-    expect(DATA).toHaveProperty("Municipality");
-    expect(DATA).toHaveProperty("Group");
-    expect(DATA).toHaveProperty("Grade");
-    expect(DATA).toHaveProperty("Student");
-    expect(DATA).toHaveProperty("Year");
-    expect(DATA).toHaveProperty("Subject");
-    expect(DATA).toHaveProperty("Subject_Student");
+    expect(CASE_DATA).toHaveProperty("Municipality");
+    expect(CASE_DATA).toHaveProperty("Group");
+    expect(CASE_DATA).toHaveProperty("Grade");
+    expect(CASE_DATA).toHaveProperty("Student");
+    expect(CASE_DATA).toHaveProperty("Year");
+    expect(CASE_DATA).toHaveProperty("Subject");
+    expect(CASE_DATA).toHaveProperty("Subject_Student");
   });
 
   it("Postgresql", async () => {
-    await chaca.exportFromSchemas(
-      SCHOOL_SCHEMAS,
-      {
-        filename: FILE_NAME,
-        location: EXPORT_ROUTE,
-        format: "postgresql",
-      },
-      { verbose: false },
-    );
+    await CASE.export({
+      filename: FILE_NAME,
+      location: EXPORT_ROUTE,
+      format: "postgresql",
+      verbose: false,
+    });
   });
 
   it("JSON", async () => {

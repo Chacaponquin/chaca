@@ -38,8 +38,8 @@ export class LoremModule {
    * @param args.maxSentences Maximun of sentences of each paragraphs
    * @param args.minSentences Min of sentences of each paragraphs
    *
-   * @example schemas.lorem.paragraphs() // Schema
-   * @example schemas.lorem.paragraphs().getValue()
+   * @example modules.lorem.paragraphs() // Schema
+   * @example modules.lorem.paragraphs().getValue()
    * @returns string
    */
   public paragraphs(args?: ParagraphsProps) {
@@ -75,8 +75,8 @@ export class LoremModule {
    * @param args.wordsMin Minimun of words in each sentence
    * @param args.wordsMax Maximun of words in each sentence
    *
-   * @example schemas.lorem.sentences() // Schema
-   * @example schemas.lorem.sentences().getValue()
+   * @example modules.lorem.sentences() // Schema
+   * @example modules.lorem.sentences().getValue()
    * @returns
    */
   public sentences(args?: SentencesProps) {
@@ -108,8 +108,8 @@ export class LoremModule {
 
   /**
    * @param args.wordCount Number of words in the slug
-   * @example schemas.lorem.slug() // Schema
-   * @example schemas.lorem.slug().getValue() // 'lorem-ipsum-ad'
+   * @example modules.lorem.slug() // Schema
+   * @example modules.lorem.slug().getValue() // 'lorem-ipsum-ad'
    * @returns string
    */
   public slug(args?: SlugProps) {
@@ -135,8 +135,8 @@ export class LoremModule {
   /**
    *
    * @param args.count Number or words. Default `5`
-   * @example schemas.lorem.words() // Schema
-   * @example schemas.lorem.words().getValue() // 'lorem ipsum in'
+   * @example modules.lorem.words() // Schema
+   * @example modules.lorem.words().getValue() // 'lorem ipsum in'
    * @returns string
    */
   public words(args?: WordsProps) {
@@ -150,8 +150,8 @@ export class LoremModule {
    * @param args.character_min Minimun of characters in the text
    * @param args.character_max Maximun of characters in the text
    *
-   * @example schemas.lorem.text() // Schema
-   * @example schemas.lorem.text().getValue()
+   * @example modules.lorem.text() // Schema
+   * @example modules.lorem.text().getValue()
    * @returns string
    */
   public text(args?: TextProps) {

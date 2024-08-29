@@ -1,17 +1,17 @@
-import { chaca, schemas } from "../../../../../src";
+import { chaca, modules } from "../../../../../src";
 
 export const BOOK_TOPIC_SCHEMA = chaca.schema({
-  topic: schemas.word.adjective(),
+  topic: modules.word.adjective(),
   id: chaca.key(chaca.sequence()),
 });
 
 export const BOOK_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  title: schemas.word.noun(),
-  edit_year: schemas.dataType.int({ min: 1950, max: new Date().getFullYear() }),
-  country: schemas.address.country(),
-  resume: schemas.lorem.paragraphs(),
-  count_pages: schemas.dataType.int({ min: 50, max: 800 }),
+  title: modules.word.noun(),
+  edit_year: modules.datatype.int({ min: 1950, max: new Date().getFullYear() }),
+  country: modules.address.country(),
+  resume: modules.lorem.paragraphs(),
+  count_pages: modules.datatype.int({ min: 50, max: 800 }),
   authors: {
     type: chaca.ref("Author.id"),
     isArray: { min: 1, max: 6 },
@@ -20,12 +20,12 @@ export const BOOK_SCHEMA = chaca.schema({
 
 export const AUTHOR_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  full_name: schemas.person.fullName(),
+  full_name: modules.person.fullName(),
 });
 
 export const USER_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  full_name: schemas.person.fullName(),
+  full_name: modules.person.fullName(),
 });
 
 export const USER_SANCTION_SCHEMA = chaca.schema({
@@ -37,7 +37,7 @@ export const USER_SANCTION_SCHEMA = chaca.schema({
         .some((s) => s.finish_date === null && userFields.id === s.user_id);
     },
   }),
-  init_date: schemas.date.past(),
+  init_date: modules.date.past(),
   finish_date: ({ currentFields: fields }) => {
     return chaca.utils.oneOfArray([
       chaca.utils.sumDateRange({
@@ -67,11 +67,11 @@ export const USER_SANCTION_SCHEMA = chaca.schema({
 
 export const BOOK_LOAN_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  init_date: schemas.date.past(),
+  init_date: modules.date.past(),
   finish_date: ({ currentFields }) => {
-    return schemas.date.between().getValue({
+    return modules.date.between().getValue({
       from: currentFields.init_date,
-      to: schemas.date.future().getValue(),
+      to: modules.date.future().getValue(),
     });
   },
   book_id: chaca.ref("Book.id"),
@@ -101,7 +101,7 @@ export const BOOK_LOAN_SCHEMA = chaca.schema({
   }),
   deliver_date: {
     type: ({ currentFields }) => {
-      return schemas.date
+      return modules.date
         .between()
         .getValue({ from: currentFields.init_date, to: new Date() });
     },

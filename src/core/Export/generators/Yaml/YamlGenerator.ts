@@ -39,7 +39,7 @@ export class YamlGenerator extends Generator {
     if (Array.isArray(data)) {
       returnCode += this.generateArray(data);
     } else {
-      returnCode += this.generateObject({ doc: data, onArray: false });
+      returnCode += this.object({ doc: data, onArray: false });
     }
 
     await fs.promises.writeFile(this.route, returnCode, "utf-8");
@@ -58,7 +58,7 @@ export class YamlGenerator extends Generator {
     return await this.generateFile(relationalData);
   }
 
-  private generateObject({ doc, onArray }: GenObjectProps): string {
+  private object({ doc, onArray }: GenObjectProps): string {
     let returnCode = `${onArray ? "" : "\n"}`;
 
     Object.entries(doc).forEach(([key, value], index) => {
@@ -147,7 +147,7 @@ export class YamlGenerator extends Generator {
       } else {
         this.actualMargin++;
 
-        const objectCreated = this.generateObject({
+        const objectCreated = this.object({
           doc: value,
           onArray: onArray,
         });
