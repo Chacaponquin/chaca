@@ -8,7 +8,7 @@ describe("# Export Test", () => {
     it("No file name. Should throw an error", async () => {
       await expect(() =>
         SIMPLE_SCHEMA.generateAndExport(1, {
-          fileName: "",
+          filename: "",
           format: "json",
           location: root,
         }),
@@ -18,7 +18,7 @@ describe("# Export Test", () => {
     it("Incorrect format file. Should throw an error", async () => {
       await expect(() =>
         SIMPLE_SCHEMA.generateAndExport(1, {
-          fileName: "quetal",
+          filename: "quetal",
           format: "buenas" as any,
           location: root,
         }),

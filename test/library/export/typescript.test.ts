@@ -5,7 +5,7 @@ import { SCHEMA_WITH_ARRAY_FIELDS } from "../../utils/schemas/schema-with-array"
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 import { checkFile } from "./utils/export-util";
 
-const fileName = "typescript";
+const filename = "typescript";
 const ROOT = "./data/typescript";
 const ext = "ts";
 
@@ -23,7 +23,7 @@ describe("# Export Typescript", () => {
       const route = await chaca.export(
         {},
         {
-          fileName: fileName + "Zip",
+          filename: filename + "Zip",
           format: { ext: "typescript", zip: true },
           location: ROOT,
         },
@@ -37,7 +37,7 @@ describe("# Export Typescript", () => {
     it("Export number", async () => {
       const route = await chaca.export(10, {
         format: "typescript",
-        fileName: fileName + "Number",
+        filename: filename + "Number",
         location: ROOT,
       });
 
@@ -47,7 +47,7 @@ describe("# Export Typescript", () => {
     it("Export boolean", async () => {
       const route = await chaca.export(false, {
         format: "typescript",
-        fileName: fileName + "Boolean",
+        filename: filename + "Boolean",
         location: ROOT,
       });
 
@@ -57,7 +57,7 @@ describe("# Export Typescript", () => {
     it("Export String", async () => {
       const route = await chaca.export("Hi", {
         format: "typescript",
-        fileName: fileName + "String",
+        filename: filename + "String",
         location: ROOT,
       });
 
@@ -74,7 +74,7 @@ describe("# Export Typescript", () => {
 
       const route = await chaca.export(data, {
         format: "typescript",
-        fileName: fileName + "ArrayDiferentObject",
+        filename: filename + "ArrayDiferentObject",
         location: ROOT,
       });
 
@@ -84,7 +84,7 @@ describe("# Export Typescript", () => {
     it("Array of Complete Schema", async () => {
       const route = await chaca.export(COMPLETE_SCHEMA_DATA, {
         format: "typescript",
-        fileName: fileName + "ArrayCompleteSchema",
+        filename: filename + "ArrayCompleteSchema",
         location: ROOT,
       });
 
@@ -94,7 +94,7 @@ describe("# Export Typescript", () => {
     it("Array of Schema with Nested Objects", async () => {
       const route = await chaca.export(NESTED_OBJECTS_DATA, {
         format: "typescript",
-        fileName: fileName + "ArrayNestedObjectsSchema",
+        filename: filename + "ArrayNestedObjectsSchema",
         location: ROOT,
       });
 
@@ -108,7 +108,7 @@ describe("# Export Typescript", () => {
         {},
         {
           format: "typescript",
-          fileName: fileName + "EmptyObject",
+          filename: filename + "EmptyObject",
           location: ROOT,
         },
       );
@@ -119,7 +119,7 @@ describe("# Export Typescript", () => {
     it("Export simple object", async () => {
       const route = await chaca.export(SIMPLE_SCHEMA.generateObject(), {
         format: "typescript",
-        fileName: fileName + "SimpleObject",
+        filename: filename + "SimpleObject",
         location: ROOT,
       });
 
@@ -129,7 +129,7 @@ describe("# Export Typescript", () => {
     it("Export complete schema object", async () => {
       const route = await chaca.export(COMPLETE_SCHEMA.generateObject(), {
         format: "typescript",
-        fileName: fileName + "CompleteSchemaObject",
+        filename: filename + "CompleteSchemaObject",
         location: ROOT,
       });
 
@@ -139,7 +139,7 @@ describe("# Export Typescript", () => {
     it("Export nested object schema object", async () => {
       const route = await chaca.export(NESTED_OBJECT_SCHEMA.generateObject(), {
         format: "typescript",
-        fileName: fileName + "NestedObjectsSchemaObject",
+        filename: filename + "NestedObjectsSchemaObject",
         location: ROOT,
       });
 
@@ -151,7 +151,7 @@ describe("# Export Typescript", () => {
         SCHEMA_WITH_ARRAY_FIELDS.generateObject(),
         {
           format: "typescript",
-          fileName: fileName + "FieldsWithArrayObject",
+          filename: filename + "FieldsWithArrayObject",
           location: ROOT,
         },
       );

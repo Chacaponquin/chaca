@@ -1,7 +1,7 @@
-import { SchemaResolver } from "../../../SchemaResolver/SchemaResolver";
+import { SchemaResolver } from "../../../schema-resolver/resolver";
 import { ExportSQLFormat } from "../../interfaces/export";
 import { ChacaError } from "../../../../errors";
-import { Generator } from "../Generator/Generator";
+import { Generator } from "../generator/Generator";
 import {
   SQLBoolean,
   SQLDate,
@@ -13,8 +13,8 @@ import {
   SQLFloatNumber,
   SQLIntegerNumber,
   SQLBigint,
-} from "./classes/sqlTypes";
-import { SQLTable } from "./classes/table";
+} from "./core/sqlTypes";
+import { SQLTable } from "./core/table";
 import {
   ArrayType,
   BigintType,
@@ -25,18 +25,18 @@ import {
   NumberType,
   ObjectType,
   StringType,
-} from "./classes/types";
+} from "./core/types";
 import fs from "fs";
 import {
   ChacaTreeNode,
   KeyValueNode,
   RefValueNode,
-} from "../../../ChacaInputTree/classes";
-import { SQLDataGenerator } from "./classes/generators";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+} from "../../../input-tree/core";
+import { SQLDataGenerator } from "./core/generators";
+import { DatasetResolver } from "../../../dataset-resolver/resolver";
 
 interface Props {
-  fileName: string;
+  filename: string;
   location: string;
   format: ExportSQLFormat;
   zip?: boolean;
@@ -56,7 +56,7 @@ export class SQLGenerator extends Generator {
   constructor(config: Props) {
     super({
       extension: "sql",
-      fileName: config.fileName,
+      filename: config.filename,
       location: config.location,
     });
 
@@ -66,7 +66,7 @@ export class SQLGenerator extends Generator {
   }
 
   public async generateRelationalDataFile(
-    resolvers: MultiGenerateResolver,
+    resolvers: DatasetResolver,
   ): Promise<string> {
     resolvers.getResolvers().forEach((r) => {
       const allKeys = r.getKeyNodes();
@@ -110,7 +110,7 @@ export class SQLGenerator extends Generator {
       sqlData = [data];
     }
 
-    this.createData(this.fileName, sqlData);
+    this.createData(this.filename, sqlData);
 
     // change tables id columns
     this.allTables.forEach((t) => {

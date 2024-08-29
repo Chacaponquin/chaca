@@ -26,7 +26,7 @@ describe("# Car Case Test", () => {
   it("JSON Simple Export", async () => {
     await chaca.export(CAR_CASE_DATA, {
       location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "json",
     });
   });
@@ -36,7 +36,7 @@ describe("# Car Case Test", () => {
       CASE_SCHEMAS,
       {
         location: EXPORT_ROUTE,
-        fileName: FILE_NAME_FROM_SCHEMAS + "CSV",
+        filename: FILE_NAME_FROM_SCHEMAS + "CSV",
         format: { ext: "csv", zip: true },
       },
       { verbose: false },
@@ -46,7 +46,7 @@ describe("# Car Case Test", () => {
   it("Javascript Simple Export", async () => {
     await chaca.export(CAR_CASE_DATA, {
       location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "javascript",
     });
   });
@@ -54,7 +54,7 @@ describe("# Car Case Test", () => {
   it("Yaml Simple Export", async () => {
     await chaca.export(CAR_CASE_DATA, {
       location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "yaml",
     });
   });
@@ -62,7 +62,7 @@ describe("# Car Case Test", () => {
   it("Typescript Simple Export", async () => {
     await chaca.export(CAR_CASE_DATA, {
       location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "typescript",
     });
   });
@@ -70,7 +70,7 @@ describe("# Car Case Test", () => {
   it("Java Simple Export", async () => {
     await chaca.export(CAR_CASE_DATA, {
       location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: { ext: "java", zip: true },
     });
   });
@@ -78,7 +78,7 @@ describe("# Car Case Test", () => {
   it("Python Simple Export", async () => {
     await chaca.export(CAR_CASE_DATA, {
       location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "python",
     });
   });
@@ -87,7 +87,7 @@ describe("# Car Case Test", () => {
     await chaca.exportFromSchemas(
       CASE_SCHEMAS,
       {
-        fileName: FILE_NAME,
+        filename: FILE_NAME,
         location: EXPORT_ROUTE,
         format: "postgresql",
       },
@@ -99,7 +99,7 @@ describe("# Car Case Test", () => {
     await chaca.exportFromSchemas(
       CASE_SCHEMAS,
       {
-        fileName: FILE_NAME_FROM_SCHEMAS,
+        filename: FILE_NAME_FROM_SCHEMAS,
         location: EXPORT_ROUTE,
         format: { ext: "java", zip: true },
       },
@@ -111,7 +111,7 @@ describe("# Car Case Test", () => {
     await chaca.exportFromSchemas(
       CASE_SCHEMAS,
       {
-        fileName: FILE_NAME_FROM_SCHEMAS,
+        filename: FILE_NAME_FROM_SCHEMAS,
         location: EXPORT_ROUTE,
         format: "python",
       },

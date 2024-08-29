@@ -1,6 +1,6 @@
 import { chaca, schemas } from "../../../src";
 
-function countNulls(array: Array<any>): number {
+function countNulls(array: any[]): number {
   let count = 0;
 
   for (const dat of array) {
@@ -12,7 +12,7 @@ function countNulls(array: Array<any>): number {
   return count;
 }
 
-describe("# Possible null fields Tests", () => {
+describe("# Possible null fields tests", () => {
   describe("Boolean value", () => {
     it("Pass possibleNull=true. Returns at least one null value", () => {
       const schema = chaca.schema({

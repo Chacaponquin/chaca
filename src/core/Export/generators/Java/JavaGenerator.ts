@@ -1,4 +1,4 @@
-import { Generator } from "../Generator/Generator";
+import { Generator } from "../generator/Generator";
 import fs from "fs";
 import path from "path";
 
@@ -16,11 +16,11 @@ import {
   RegExpType,
   StringType,
 } from "./classes/types";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
-import { IdSchema } from "../../../../schemas/id/IdSchema";
+import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { IdModule } from "../../../../modules/id";
 
 interface Props {
-  fileName: string;
+  filename: string;
   location: string;
   zip?: boolean;
 }
@@ -36,16 +36,15 @@ interface MainContentData {
 }
 
 export class JavaGenerator extends Generator {
-  private idSchema = new IdSchema();
-
+  private idModule = new IdModule();
   private zip: boolean;
 
-  private classesCreated: Array<JavaClassCreated> = [];
+  private classesCreated: JavaClassCreated[] = [];
 
   constructor(config: Props) {
     super({
       extension: "java",
-      fileName: config.fileName,
+      filename: config.filename,
       location: config.location,
     });
 
@@ -53,7 +52,7 @@ export class JavaGenerator extends Generator {
   }
 
   public async generateRelationalDataFile(
-    resolver: MultiGenerateResolver,
+    resolver: DatasetResolver,
   ): Promise<string> {
     this.classesCreated = [];
 
@@ -74,7 +73,7 @@ export class JavaGenerator extends Generator {
     this.classesCreated = [];
     const dataType = this.createDataTypes(data);
     const mainContent = this.generateMainContent([
-      { dataType, variableName: this.fileName },
+      { dataType, variableName: this.filename },
     ]);
 
     return await this.createAllFiles(mainContent);
@@ -262,7 +261,7 @@ export class JavaGenerator extends Generator {
     if (foundClass) {
       return { classType: object, className: foundClass.className };
     } else {
-      const className = `Object${this.idSchema.mongodbID().getValue()}`;
+      const className = `Object${this.idModule.mongodbId().getValue()}`;
 
       const newClass = {
         className,

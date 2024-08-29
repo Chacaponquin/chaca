@@ -11,13 +11,13 @@ async function run({ configRoute, format, filename, output, count }) {
 
     if (config instanceof ChacaSchema) {
       await config.generateAndExport(count, {
-        fileName: filename,
+        filename: filename,
         format: format,
         location: output,
       });
     } else if (Array.isArray(config)) {
       await chaca.exportFromSchemas(config, {
-        fileName: filename,
+        filename: filename,
         format: format,
         location: output,
       });

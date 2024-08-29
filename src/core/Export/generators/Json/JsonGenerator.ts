@@ -1,5 +1,5 @@
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
-import { Generator } from "../Generator/Generator";
+import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { Generator } from "../generator/Generator";
 import fs from "fs";
 
 interface ExtProps {
@@ -8,7 +8,7 @@ interface ExtProps {
 }
 
 interface Props {
-  fileName: string;
+  filename: string;
   location: string;
   extConfig: ExtProps;
 }
@@ -16,10 +16,10 @@ interface Props {
 export class JsonGenerator extends Generator {
   private config: ExtProps;
 
-  constructor({ extConfig, fileName, location }: Props) {
+  constructor({ extConfig, filename, location }: Props) {
     super({
       extension: "json",
-      fileName: fileName,
+      filename: filename,
       location: location,
     });
 
@@ -42,7 +42,7 @@ export class JsonGenerator extends Generator {
   }
 
   public async generateRelationalDataFile(
-    resolver: MultiGenerateResolver,
+    resolver: DatasetResolver,
   ): Promise<string> {
     const objectData = resolver.resolve();
 

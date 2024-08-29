@@ -1,12 +1,12 @@
-import { Generator } from "../Generator/Generator";
-import { JavascriptGenerator } from "../Javascript/JavascriptGenerator";
+import { Generator } from "../generator/Generator";
+import { JavascriptGenerator } from "../javascript/JavascriptGenerator";
 import fs from "fs";
-import { TypescriptInterface } from "./classes";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
-import { InterfacesToCreate } from "./classes/InterfacesToCreate";
+import { TypescriptInterface } from "./core";
+import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { InterfacesToCreate } from "./core/InterfacesToCreate";
 
 interface Props {
-  fileName: string;
+  filename: string;
   location: string;
   zip?: boolean;
 }
@@ -18,19 +18,19 @@ export class TypescriptGenerator extends Generator {
   constructor(config: Props) {
     super({
       extension: "ts",
-      fileName: config.fileName,
+      filename: config.filename,
       location: config.location,
     });
 
     this.zip = Boolean(config.zip);
   }
 
-  public async generateFile(data: any): Promise<string> {
+  async generateFile(data: any): Promise<string> {
     const javascriptCodeGenerator = new JavascriptGenerator({
-      fileName: this.fileName,
+      filename: this.filename,
       location: this.location,
     });
-    const variableName = this.utils.camelCase(this.fileName);
+    const variableName = this.utils.camelCase(this.filename);
 
     const javascriptCode = javascriptCodeGenerator.filterTypeValue(data);
 
@@ -52,9 +52,7 @@ export class TypescriptGenerator extends Generator {
     }
   }
 
-  public async generateRelationalDataFile(
-    resolver: MultiGenerateResolver,
-  ): Promise<string> {
+  async generateRelationalDataFile(resolver: DatasetResolver): Promise<string> {
     const data = resolver.resolve();
     const route = await this.generateFile(data);
     return route;

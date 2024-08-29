@@ -23,7 +23,7 @@ describe("# Java Export Test", () => {
   describe("Export configuration", () => {
     it("Pass zip=true. Should create a zip file", async () => {
       const route = await chaca.export([], {
-        fileName: "conf" + "Zip",
+        filename: "conf" + "Zip",
         format: { ext: "java", zip: true },
         location: ROOT,
       });
@@ -36,7 +36,7 @@ describe("# Java Export Test", () => {
     it("Array Fields Schema", async () => {
       const route = await chaca.export(ARRAY_FIELDS_DATA, {
         format: { ext: "java", zip: true },
-        fileName: "ArrayFieldsSchema",
+        filename: "ArrayFieldsSchema",
         location: ROOT,
       });
 
@@ -46,7 +46,7 @@ describe("# Java Export Test", () => {
     it("Simple Schema", async () => {
       const route = await chaca.export(SIMPLE_SCHEMA_DATA, {
         format: { ext: "java", zip: true },
-        fileName: "SimpleSchema",
+        filename: "SimpleSchema",
         location: ROOT,
       });
 
@@ -56,7 +56,7 @@ describe("# Java Export Test", () => {
     it("Schema Nested Objects", async () => {
       const route = await chaca.export(NESTED_OBJECTS_DATA, {
         format: { ext: "java", zip: true },
-        fileName: "SchemaNestedObjects",
+        filename: "SchemaNestedObjects",
         location: ROOT,
       });
 
@@ -66,7 +66,7 @@ describe("# Java Export Test", () => {
     it("Complete Schema", async () => {
       const route = await chaca.export(COMPLETE_SCHEMA_DATA, {
         format: { ext: "java", zip: true },
-        fileName: "CompleteSchema",
+        filename: "CompleteSchema",
         location: ROOT,
       });
 

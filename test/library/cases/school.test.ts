@@ -26,7 +26,7 @@ describe("# School Case Test", () => {
     await chaca.exportFromSchemas(
       SCHOOL_SCHEMAS,
       {
-        fileName: FILE_NAME,
+        filename: FILE_NAME,
         location: EXPORT_ROUTE,
         format: "postgresql",
       },
@@ -36,7 +36,7 @@ describe("# School Case Test", () => {
 
   it("JSON", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "json",
       location: EXPORT_ROUTE,
     });
@@ -44,7 +44,7 @@ describe("# School Case Test", () => {
 
   it("Typescript", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "typescript",
       location: EXPORT_ROUTE,
     });
@@ -52,7 +52,7 @@ describe("# School Case Test", () => {
 
   it("Java", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: { ext: "java", zip: true },
       location: EXPORT_ROUTE,
     });
@@ -60,7 +60,7 @@ describe("# School Case Test", () => {
 
   it("Javascript", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "javascript",
       location: EXPORT_ROUTE,
     });
@@ -69,7 +69,7 @@ describe("# School Case Test", () => {
   it("Yaml", async () => {
     await chaca.export(CASE_DATA, {
       location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "yaml",
     });
   });
@@ -77,7 +77,7 @@ describe("# School Case Test", () => {
   it("Python", async () => {
     await chaca.export(CASE_DATA, {
       location: EXPORT_ROUTE,
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "python",
     });
   });

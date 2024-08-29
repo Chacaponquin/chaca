@@ -15,7 +15,7 @@ describe("# Commerce Company Case Test", () => {
 
   it("JSON", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "json",
       location: EXPORT_ROUTE,
     });
@@ -23,7 +23,7 @@ describe("# Commerce Company Case Test", () => {
 
   it("Javascript", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "javascript",
       location: EXPORT_ROUTE,
     });
@@ -31,7 +31,7 @@ describe("# Commerce Company Case Test", () => {
 
   it("Typescrpt", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "typescript",
       location: EXPORT_ROUTE,
     });
@@ -39,7 +39,7 @@ describe("# Commerce Company Case Test", () => {
 
   it("Java", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: { ext: "java", zip: true },
       location: EXPORT_ROUTE,
     });
@@ -47,7 +47,7 @@ describe("# Commerce Company Case Test", () => {
 
   it("Yaml", async () => {
     await chaca.export(CASE_DATA, {
-      fileName: FILE_NAME,
+      filename: FILE_NAME,
       format: "yaml",
       location: EXPORT_ROUTE,
     });
@@ -57,7 +57,7 @@ describe("# Commerce Company Case Test", () => {
     await chaca.exportFromSchemas(
       COMMERCE_COMPANY_SCHEMAS,
       {
-        fileName: FILE_NAME,
+        filename: FILE_NAME,
         format: "postgresql",
         location: EXPORT_ROUTE,
       },
@@ -69,7 +69,7 @@ describe("# Commerce Company Case Test", () => {
     await chaca.exportFromSchemas(
       COMMERCE_COMPANY_SCHEMAS,
       {
-        fileName: FILE_NAME,
+        filename: FILE_NAME,
         format: "python",
         location: EXPORT_ROUTE,
       },

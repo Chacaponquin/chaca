@@ -61,7 +61,7 @@ const docs = postSchema.generate(20);
 
 // Generate 20 objects and export them in a json file
 await movieSchema.generateAndExport(20, {
-  fileName: "movies",
+  filename: "movies",
   format: "json",
   location: "./folder",
 });

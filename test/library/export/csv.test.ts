@@ -4,7 +4,7 @@ import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects"
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 import { checkFile } from "./utils/export-util";
 
-const fileName = "csvExport";
+const filename = "csvExport";
 const ROOT = "./data/csv";
 const ext = "csv";
 
@@ -22,7 +22,7 @@ describe("#Export CSV test", () => {
   describe("Export configuration", () => {
     it("Pass zip=true. Should create a zip file", async () => {
       const route = await chaca.export([], {
-        fileName: fileName + "Zip",
+        filename: filename + "Zip",
         format: { ext: "csv", zip: true },
         location: ROOT,
       });
@@ -35,7 +35,7 @@ describe("#Export CSV test", () => {
     it("Export string", async () => {
       await expect(() =>
         chaca.export("Hi", {
-          fileName: fileName + "String",
+          filename: filename + "String",
           location: ROOT,
           format: "csv",
         }),
@@ -45,7 +45,7 @@ describe("#Export CSV test", () => {
     it("Export number", async () => {
       await expect(
         chaca.export(5, {
-          fileName: fileName + "Number",
+          filename: filename + "Number",
           location: ROOT,
           format: "csv",
         }),
@@ -55,7 +55,7 @@ describe("#Export CSV test", () => {
     it("Export boolean", async () => {
       await expect(
         chaca.export(true, {
-          fileName: fileName + "Boolean",
+          filename: filename + "Boolean",
           location: ROOT,
           format: "csv",
         }),
@@ -66,7 +66,7 @@ describe("#Export CSV test", () => {
   describe("Export Array", () => {
     it("Export simple object", async () => {
       const route = await chaca.export(SIMPLE_SCHEMA_DATA, {
-        fileName: fileName + "SimpleObject",
+        filename: filename + "SimpleObject",
         location: ROOT,
         format: "csv",
       });
@@ -77,7 +77,7 @@ describe("#Export CSV test", () => {
     it("Array of similar objects", async () => {
       await expect(
         chaca.export(NESTED_OBJECTS_DATA, {
-          fileName: fileName + "SimpleObject",
+          filename: filename + "SimpleObject",
           location: ROOT,
           format: "csv",
         }),
@@ -87,7 +87,7 @@ describe("#Export CSV test", () => {
     it("Array of complete schema", async () => {
       await expect(
         chaca.export(COMPLETE_SCHEMA_DATA, {
-          fileName: fileName + "ArrayCompleteSchema",
+          filename: filename + "ArrayCompleteSchema",
           location: ROOT,
           format: "csv",
         }),
@@ -103,7 +103,7 @@ describe("#Export CSV test", () => {
       await expect(
         async () =>
           await chaca.export(data, {
-            fileName: fileName + "ArrayObjectDiferentProperties",
+            filename: filename + "ArrayObjectDiferentProperties",
             location: ROOT,
             format: "csv",
           }),

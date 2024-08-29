@@ -27,7 +27,7 @@ describe("# PostgreSQL Export Test", () => {
       const route = await chaca.export(
         {},
         {
-          fileName: "postgresql" + "Zip",
+          filename: "postgresql" + "Zip",
           format: { ext: "postgresql", zip: true },
           location: ROOT,
         },
@@ -47,7 +47,7 @@ describe("# PostgreSQL Export Test", () => {
             documents: COUNT_DOCUMENTS,
           },
         ],
-        { fileName: "simpleSchema", format: "postgresql", location: ROOT },
+        { filename: "simpleSchema", format: "postgresql", location: ROOT },
         { verbose: false },
       );
 
@@ -64,7 +64,7 @@ describe("# PostgreSQL Export Test", () => {
           },
         ],
         {
-          fileName: "nestedObjectSchema",
+          filename: "nestedObjectSchema",
           format: "postgresql",
           location: ROOT,
         },
@@ -85,7 +85,7 @@ describe("# PostgreSQL Export Test", () => {
             },
           ],
           {
-            fileName: "arrayFieldsSchema",
+            filename: "arrayFieldsSchema",
             format: "postgresql",
             location: ROOT,
           },
@@ -104,7 +104,7 @@ describe("# PostgreSQL Export Test", () => {
           },
         ],
         {
-          fileName: "completeSchema",
+          filename: "completeSchema",
           format: "postgresql",
           location: ROOT,
         },
@@ -118,7 +118,7 @@ describe("# PostgreSQL Export Test", () => {
   describe("Export Schemas (with export)", () => {
     it("Export Simple Schema Array", async () => {
       const route = await chaca.export(SIMPLE_SCHEMA_DATA, {
-        fileName: "simpleSchemaExport",
+        filename: "simpleSchemaExport",
         location: ROOT,
         format: "postgresql",
       });
@@ -128,7 +128,7 @@ describe("# PostgreSQL Export Test", () => {
 
     it("Export Nested Object Schema Array", async () => {
       const route = await chaca.export(NESTED_OBJECTS_DATA, {
-        fileName: "nestedObjectSchemaExport",
+        filename: "nestedObjectSchemaExport",
         location: ROOT,
         format: "postgresql",
       });
@@ -139,7 +139,7 @@ describe("# PostgreSQL Export Test", () => {
     it("Export Array Fields Schema Array", async () => {
       await expect(() =>
         chaca.export(ARRAY_FIELDS_DATA, {
-          fileName: "arrayFieldsSchemaExport",
+          filename: "arrayFieldsSchemaExport",
           location: ROOT,
           format: "postgresql",
         }),
@@ -148,7 +148,7 @@ describe("# PostgreSQL Export Test", () => {
 
     it("Export Complete Schema Array", async () => {
       const route = await chaca.export(COMPLETE_SCHEMA_DATA, {
-        fileName: "completeSchemaExport",
+        filename: "completeSchemaExport",
         location: ROOT,
         format: "postgresql",
       });

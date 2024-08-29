@@ -4,7 +4,7 @@ import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects"
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 import { checkFile } from "./utils/export-util";
 
-const fileName = "json";
+const filename = "json";
 const ROOT = "./data/json";
 const COUNT_DOCUMENTS = 50;
 
@@ -13,7 +13,7 @@ describe("# JSON Export Test", () => {
     const route = await chaca.export(
       {},
       {
-        fileName: fileName + "Zip",
+        filename: filename + "Zip",
         format: { ext: "json", zip: true },
         location: ROOT,
       },
@@ -42,7 +42,7 @@ describe("# JSON Export Test", () => {
         },
       ],
       {
-        fileName: fileName + "NotSeparate",
+        filename: filename + "NotSeparate",
         format: { ext: "json", separate: false, zip: true },
         location: ROOT,
       },
@@ -53,7 +53,7 @@ describe("# JSON Export Test", () => {
   });
 
   it("Pass separate=true. Should create multiple files", async () => {
-    const file = fileName + "Separate";
+    const file = filename + "Separate";
 
     const route = await chaca.exportFromSchemas(
       [
@@ -74,7 +74,7 @@ describe("# JSON Export Test", () => {
         },
       ],
       {
-        fileName: file,
+        filename: file,
         format: { ext: "json", separate: true, zip: true },
         location: ROOT,
       },

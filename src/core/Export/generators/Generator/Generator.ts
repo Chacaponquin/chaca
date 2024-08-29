@@ -1,19 +1,19 @@
 import path from "path";
 import fs from "fs";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
-import { ChacaUtils } from "../../../ChacaUtils/ChacaUtils";
+import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { ChacaUtils } from "../../../utils";
 import AdmZip from "adm-zip";
 
 export interface Props {
   extension: string;
-  fileName: string;
+  filename: string;
   location: string;
 }
 
 export abstract class Generator {
   protected utils = new ChacaUtils();
 
-  protected fileName: string;
+  protected filename: string;
   protected location: string;
 
   protected ext: string;
@@ -21,23 +21,23 @@ export abstract class Generator {
   protected saveFileName: string;
   protected baseLocation: string;
 
-  constructor({ fileName, location, extension }: Props) {
+  constructor({ filename, location, extension }: Props) {
     if (!fs.existsSync(location)) {
       fs.mkdirSync(location, { recursive: true });
     }
 
-    this.fileName = fileName;
+    this.filename = filename;
     this.location = location;
 
     this.ext = extension;
-    this.saveFileName = `${fileName}.${this.ext}`;
+    this.saveFileName = `${filename}.${this.ext}`;
     this.baseLocation = path.join("./", location);
-    this.route = this.generateRoute(fileName);
+    this.route = this.generateRoute(filename);
   }
 
   public abstract generateFile(data: any): Promise<string>;
   public abstract generateRelationalDataFile(
-    resolver: MultiGenerateResolver,
+    resolver: DatasetResolver,
   ): Promise<string>;
 
   public getRoute() {
@@ -50,7 +50,7 @@ export abstract class Generator {
 
   protected createZip() {
     const zip = new AdmZip();
-    const zipName = `${this.fileName}.zip`;
+    const zipName = `${this.filename}.zip`;
     const zipPath = path.join(this.baseLocation, zipName);
 
     return { zip, zipPath };

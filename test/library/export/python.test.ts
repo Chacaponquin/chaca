@@ -2,7 +2,7 @@ import { chaca } from "../../../src";
 import { VARIANT_ARRAY } from "./utils/array-variate";
 import { checkFile } from "./utils/export-util";
 
-const fileName = "python";
+const filename = "python";
 const ROOT = "./data/python";
 const ext = "py";
 
@@ -12,7 +12,7 @@ describe("# Python Export Test", () => {
       const route = await chaca.export(
         {},
         {
-          fileName: fileName + "Zip",
+          filename: filename + "Zip",
           format: { ext: "python", zip: true },
           location: ROOT,
         },
@@ -26,7 +26,7 @@ describe("# Python Export Test", () => {
     it("Export string", async () => {
       const route = await chaca.export("String Test", {
         format: "python",
-        fileName: fileName + "String",
+        filename: filename + "String",
         location: ROOT,
       });
 
@@ -36,7 +36,7 @@ describe("# Python Export Test", () => {
     it("Export null", async () => {
       const route = await chaca.export(null, {
         format: "python",
-        fileName: fileName + "Null",
+        filename: filename + "Null",
         location: ROOT,
       });
 
@@ -46,7 +46,7 @@ describe("# Python Export Test", () => {
     it("Export number", async () => {
       const route = await chaca.export(10, {
         format: "python",
-        fileName: fileName + "Number",
+        filename: filename + "Number",
         location: ROOT,
       });
 
@@ -56,7 +56,7 @@ describe("# Python Export Test", () => {
     it("Export boolean", async () => {
       const route = await chaca.export(true, {
         format: "python",
-        fileName: fileName + "Boolean",
+        filename: filename + "Boolean",
         location: ROOT,
       });
 
@@ -68,7 +68,7 @@ describe("# Python Export Test", () => {
     it("Export an array of any elements", async () => {
       const route = await chaca.export(VARIANT_ARRAY, {
         format: "python",
-        fileName: fileName + "ArrayAnyElements",
+        filename: filename + "ArrayAnyElements",
         location: ROOT,
       });
 
@@ -80,7 +80,7 @@ describe("# Python Export Test", () => {
     it("Export a new Date", async () => {
       const route = await chaca.export(new Date(), {
         format: "python",
-        fileName: fileName + "DateNow",
+        filename: filename + "DateNow",
         location: ROOT,
       });
 
@@ -94,7 +94,7 @@ describe("# Python Export Test", () => {
         {},
         {
           format: "python",
-          fileName: fileName + "EmptyObject",
+          filename: filename + "EmptyObject",
           location: ROOT,
         },
       );

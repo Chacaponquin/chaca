@@ -1,18 +1,18 @@
-import { CustomFieldResolver } from "./CustomFieldResolver/CustomFieldResolver";
-import { EnumFieldResolver } from "./EnumFieldResolver/EnumFieldResolver";
-import { SchemaFieldResolver } from "./SchemaFieldResolver/SchemaFieldResolver";
-import { MixedFieldResolver } from "./MixedFieldResolver/MixedFieldResolver";
-import { RefFieldResolver } from "./RefFieldResolver/RefFieldResolver";
-import { SequentialFieldResolver } from "./SequentialFieldResolver/SequentialFieldResolver";
-import { KeyFieldResolver } from "./KeyFieldResolver/KeyFieldResolver";
-import { SequenceFieldResolver } from "./SequenceFieldResolver/SequenceFieldResolver";
-import { ProbabilityFieldResolver } from "./ProbabilityFieldResolver/ProbabilityFieldResolver";
-import { PickFieldResolver } from "./PickFieldResolver/PickFieldResolver";
+import { CustomFieldResolver } from "./custom/CustomFieldResolver";
+import { EnumFieldResolver } from "./enum/EnumFieldResolver";
+import { ModuleResolver } from "./module";
+import { MixedFieldResolver } from "./mixed/MixedFieldResolver";
+import { RefFieldResolver } from "./ref/RefFieldResolver";
+import { SequentialFieldResolver } from "./sequential/SequentialFieldResolver";
+import { KeyFieldResolver } from "./key/KeyFieldResolver";
+import { SequenceFieldResolver } from "./sequence/SequenceFieldResolver";
+import { ProbabilityFieldResolver } from "./probability/ProbabilityFieldResolver";
+import { PickFieldResolver } from "./pick/PickFieldResolver";
 
 export {
   CustomFieldResolver,
   EnumFieldResolver,
-  SchemaFieldResolver,
+  ModuleResolver,
   MixedFieldResolver,
   RefFieldResolver,
   SequentialFieldResolver,

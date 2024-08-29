@@ -1,10 +1,10 @@
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { ChacaError } from "../../../../errors";
-import { Generator } from "../Generator/Generator";
+import { Generator } from "../generator/Generator";
 import fs from "fs";
 
 interface Props {
-  fileName: string;
+  filename: string;
   location: string;
   zip?: boolean;
 }
@@ -26,7 +26,7 @@ export class YamlGenerator extends Generator {
   constructor(config: Props) {
     super({
       extension: "yaml",
-      fileName: config.fileName,
+      filename: config.filename,
       location: config.location,
     });
 
@@ -52,7 +52,7 @@ export class YamlGenerator extends Generator {
   }
 
   public async generateRelationalDataFile(
-    resolver: MultiGenerateResolver,
+    resolver: DatasetResolver,
   ): Promise<string> {
     const relationalData = resolver.resolve();
     return await this.generateFile(relationalData);

@@ -2,7 +2,7 @@ import { chaca } from "../../../src";
 import { VARIANT_ARRAY } from "./utils/array-variate";
 import { checkFile } from "./utils/export-util";
 
-const fileName = "javascript";
+const filename = "javascript";
 const ROOT = "./data/javascript";
 const ext = "js";
 
@@ -12,7 +12,7 @@ describe("# Javascript Export Test", () => {
       const route = await chaca.export(
         {},
         {
-          fileName: fileName + "Zip",
+          filename: filename + "Zip",
           format: { ext: "javascript", zip: true },
           location: ROOT,
         },
@@ -26,7 +26,7 @@ describe("# Javascript Export Test", () => {
     it("Export string", async () => {
       const route = await chaca.export("Javascript Test", {
         format: "javascript",
-        fileName: fileName + "String",
+        filename: filename + "String",
         location: ROOT,
       });
 
@@ -36,7 +36,7 @@ describe("# Javascript Export Test", () => {
     it("Export null", async () => {
       const route = await chaca.export(null, {
         format: "javascript",
-        fileName: fileName + "Null",
+        filename: filename + "Null",
         location: ROOT,
       });
 
@@ -46,7 +46,7 @@ describe("# Javascript Export Test", () => {
     it("Export number", async () => {
       const route = await chaca.export(10, {
         format: "javascript",
-        fileName: fileName + "Number",
+        filename: filename + "Number",
         location: ROOT,
       });
 
@@ -56,7 +56,7 @@ describe("# Javascript Export Test", () => {
     it("Export boolean", async () => {
       const route = await chaca.export(true, {
         format: "javascript",
-        fileName: fileName + "Boolean",
+        filename: filename + "Boolean",
         location: ROOT,
       });
 
@@ -68,7 +68,7 @@ describe("# Javascript Export Test", () => {
     it("Export an array of any elements", async () => {
       const route = await chaca.export(VARIANT_ARRAY, {
         format: "javascript",
-        fileName: fileName + "ArrayAnyElements",
+        filename: filename + "ArrayAnyElements",
         location: ROOT,
       });
 
@@ -80,7 +80,7 @@ describe("# Javascript Export Test", () => {
     it("Export a new Date", async () => {
       const route = await chaca.export(new Date(), {
         format: "javascript",
-        fileName: fileName + "DateNow",
+        filename: filename + "DateNow",
         location: ROOT,
       });
 
@@ -93,7 +93,7 @@ describe("# Javascript Export Test", () => {
       {},
       {
         format: "javascript",
-        fileName: fileName + "EmptyObject",
+        filename: filename + "EmptyObject",
         location: ROOT,
       },
     );

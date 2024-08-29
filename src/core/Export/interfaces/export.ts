@@ -14,24 +14,29 @@ export type Extensions =
 export type ExportSQLFormat = "postgresql";
 
 /**
- * Export File Configuration
+ * Export file configuration
  */
 export interface FileConfig {
   /**
    * Name for the file
    */
-  fileName: string;
+  filename: string;
+
   /**
    * Location of the file
    * @example
    * { location: './data' }
    */
   location: string;
+
   /**
    * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    * @example { format: 'csv' }
    */
   format: ExportFormat;
+
+  /** Show log in console progretion */
+  verbose?: boolean;
 }
 
 export type ExtensionConfigs =

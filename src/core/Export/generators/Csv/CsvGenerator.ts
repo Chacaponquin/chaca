@@ -1,12 +1,12 @@
-import { Generator } from "../Generator/Generator";
+import { Generator } from "../generator/Generator";
 import fs from "fs";
 import path from "path";
 import { ChacaError } from "../../../../errors";
-import { MultiGenerateResolver } from "../../../MultiGenerate/MultiGenerateResolver";
+import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { CSVArray, CSVDataType, CSVObject } from "./core/types";
 
 interface Props {
-  fileName: string;
+  filename: string;
   location: string;
   zip?: boolean;
 }
@@ -17,7 +17,7 @@ export class CsvGenerator extends Generator {
   constructor(config: Props) {
     super({
       extension: "csv",
-      fileName: config.fileName,
+      filename: config.filename,
       location: config.location,
     });
 
@@ -25,13 +25,13 @@ export class CsvGenerator extends Generator {
   }
 
   public async generateRelationalDataFile(
-    resolver: MultiGenerateResolver,
+    resolver: DatasetResolver,
   ): Promise<string> {
     const allResolvers = resolver.getResolvers();
 
     if (allResolvers.length === 1) {
       const schemaData = allResolvers[0].resolve();
-      const route = await this.createFile(this.fileName, schemaData);
+      const route = await this.createFile(this.filename, schemaData);
 
       return route;
     } else {
@@ -61,7 +61,7 @@ export class CsvGenerator extends Generator {
   }
 
   public async generateFile(data: any): Promise<string> {
-    const fileRoute = await this.createFile(this.fileName, data);
+    const fileRoute = await this.createFile(this.filename, data);
 
     if (this.zip) {
       const { zip, zipPath } = this.createZip();

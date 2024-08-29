@@ -11,38 +11,40 @@ import {
   YamlGenerator,
 } from "./generators";
 import { FileConfig } from "./interfaces/export";
-import {
-  GenerateConfig,
-  MultiGenerateSchema,
-} from "../MultiGenerate/interfaces/multi-generate";
-import { MultiGenerateResolver } from "../MultiGenerate/MultiGenerateResolver";
-import { FileFormat, FileName, Location } from "./value-object";
+import { DatasetSchema } from "../dataset-resolver/interfaces/resolver";
+import { DatasetResolver } from "../dataset-resolver/resolver";
+import { FileName } from "./value-object/name";
+import { Location } from "./value-object/location";
+import { FileFormat } from "./value-object/format";
+import { Verbose } from "./value-object/verbose";
 
 export class ExportResolver {
-  private config: FileConfig;
+  private config: Required<FileConfig>;
 
   constructor(config: FileConfig) {
     this.config = {
-      fileName: new FileName(config.fileName).value(),
+      filename: new FileName(config.filename).value(),
       format: new FileFormat(config.format).value(),
       location: new Location(config.location).value(),
+      verbose: new Verbose(config.verbose).value(),
     };
   }
 
-  public async exportData(data: any): Promise<string> {
+  async data(data: any): Promise<string> {
     const gen = this.filterGenerator();
     const route = await gen.generateFile(data);
 
     return route;
   }
 
-  public async exportRelationalSchemas(
-    schemas: Array<MultiGenerateSchema>,
-    genConfig?: GenerateConfig,
-  ): Promise<string> {
+  async relational(schemas: DatasetSchema[]): Promise<string> {
     const gen = this.filterGenerator();
-    const multiResolver = new MultiGenerateResolver(schemas, genConfig);
-    const route = await gen.generateRelationalDataFile(multiResolver);
+    const resolver = new DatasetResolver({
+      schemas: schemas,
+      verbose: this.config.verbose,
+    });
+
+    const route = await gen.generateRelationalDataFile(resolver);
 
     return route;
   }
@@ -53,44 +55,44 @@ export class ExportResolver {
 
     if (format === "json") {
       gen = new JsonGenerator({
-        fileName: this.config.fileName,
+        filename: this.config.filename,
         location: this.config.location,
         extConfig: {},
       });
     } else if (format === "javascript") {
       gen = new JavascriptGenerator({
-        fileName: this.config.fileName,
+        filename: this.config.filename,
         location: this.config.location,
       });
     } else if (format === "csv") {
       gen = new CsvGenerator({
-        fileName: this.config.fileName,
+        filename: this.config.filename,
         location: this.config.location,
       });
     } else if (format === "java") {
       gen = new JavaGenerator({
-        fileName: this.config.fileName,
+        filename: this.config.filename,
         location: this.config.location,
       });
     } else if (format === "typescript") {
       gen = new TypescriptGenerator({
-        fileName: this.config.fileName,
+        filename: this.config.filename,
         location: this.config.location,
       });
     } else if (format === "yaml") {
       gen = new YamlGenerator({
-        fileName: this.config.fileName,
+        filename: this.config.filename,
         location: this.config.location,
       });
     } else if (format === "postgresql") {
       gen = new SQLGenerator({
-        fileName: this.config.fileName,
+        filename: this.config.filename,
         format: format,
         location: this.config.location,
       });
     } else if (format === "python") {
       gen = new PythonGenerator({
-        fileName: this.config.fileName,
+        filename: this.config.filename,
         location: this.config.location,
       });
     }
@@ -99,50 +101,50 @@ export class ExportResolver {
     else if (typeof format === "object") {
       if (format.ext === "json") {
         gen = new JsonGenerator({
-          fileName: this.config.fileName,
+          filename: this.config.filename,
           location: this.config.location,
           extConfig: { separate: format.separate, zip: format.zip },
         });
       } else if (format.ext === "csv") {
         gen = new CsvGenerator({
-          fileName: this.config.fileName,
+          filename: this.config.filename,
           location: this.config.location,
           zip: format.zip,
         });
       } else if (format.ext === "java") {
         gen = new JavaGenerator({
-          fileName: this.config.fileName,
+          filename: this.config.filename,
           location: this.config.location,
           zip: format.zip,
         });
       } else if (format.ext === "javascript") {
         gen = new JavascriptGenerator({
-          fileName: this.config.fileName,
+          filename: this.config.filename,
           location: this.config.location,
           zip: format.zip,
         });
       } else if (format.ext === "postgresql") {
         gen = new SQLGenerator({
-          fileName: this.config.fileName,
+          filename: this.config.filename,
           location: this.config.location,
           zip: format.zip,
           format: format.ext,
         });
       } else if (format.ext === "python") {
         gen = new PythonGenerator({
-          fileName: this.config.fileName,
+          filename: this.config.filename,
           location: this.config.location,
           zip: format.zip,
         });
       } else if (format.ext === "typescript") {
         gen = new TypescriptGenerator({
-          fileName: this.config.fileName,
+          filename: this.config.filename,
           location: this.config.location,
           zip: format.zip,
         });
       } else if (format.ext === "yaml") {
         gen = new YamlGenerator({
-          fileName: this.config.fileName,
+          filename: this.config.filename,
           location: this.config.location,
           zip: format.zip,
         });
