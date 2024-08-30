@@ -24,14 +24,12 @@ export class CsvGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
-  public async createRelationalFile(
-    resolver: DatasetResolver,
-  ): Promise<string> {
+  async createRelationalFile(resolver: DatasetResolver): Promise<string> {
     const allResolvers = resolver.getResolvers();
 
     if (allResolvers.length === 1) {
       const schemaData = allResolvers[0].resolve();
-      const route = await this.createFile(this.filename, schemaData);
+      const route = await this.setFile(this.filename, schemaData);
 
       return route;
     } else {
@@ -39,7 +37,8 @@ export class CsvGenerator extends Generator {
 
       for (const r of allResolvers) {
         const schemaData = r.resolve();
-        const route = await this.createFile(r.getSchemaName(), schemaData);
+        const route = await this.setFile(r.getSchemaName(), schemaData);
+
         allRoutes.push(route);
       }
 
@@ -60,8 +59,8 @@ export class CsvGenerator extends Generator {
     }
   }
 
-  public async createFile(data: any): Promise<string> {
-    const fileRoute = await this.createFile(this.filename, data);
+  async createFile(data: any): Promise<string> {
+    const fileRoute = await this.setFile(this.filename, data);
 
     if (this.zip) {
       const { zip, zipPath } = this.createZip();
@@ -77,7 +76,7 @@ export class CsvGenerator extends Generator {
     }
   }
 
-  private async createFile(filename: string, data: any): Promise<string> {
+  private async setFile(filename: string, data: any): Promise<string> {
     const fileRoute = path.join(this.baseLocation, `${filename}.csv`);
 
     const dataType = CSVDataType.filterTypeByValue(data);
