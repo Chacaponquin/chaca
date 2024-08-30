@@ -1,9 +1,9 @@
-import { Generator } from "../generator/Generator";
+import { Generator } from "../generator";
 import { JavascriptGenerator } from "../javascript/JavascriptGenerator";
 import fs from "fs";
 import { TypescriptInterface } from "./core";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { InterfacesToCreate } from "./core/InterfacesToCreate";
+import { InterfacesToCreate } from "./core/interfaces";
 
 interface Props {
   filename: string;
@@ -25,7 +25,7 @@ export class TypescriptGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
-  async generateFile(data: any): Promise<string> {
+  async createFile(data: any): Promise<string> {
     const javascriptCodeGenerator = new JavascriptGenerator({
       filename: this.filename,
       location: this.location,
@@ -52,9 +52,9 @@ export class TypescriptGenerator extends Generator {
     }
   }
 
-  async generateRelationalDataFile(resolver: DatasetResolver): Promise<string> {
+  async createRelationalFile(resolver: DatasetResolver): Promise<string> {
     const data = resolver.resolve();
-    const route = await this.generateFile(data);
+    const route = await this.createFile(data);
     return route;
   }
 

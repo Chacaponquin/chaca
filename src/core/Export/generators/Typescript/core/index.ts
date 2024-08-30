@@ -1,18 +1,18 @@
 import { ChacaError } from "../../../../../errors";
 import { IdModule } from "../../../../../modules/id";
-import { InterfacesToCreate } from "./InterfacesToCreate";
+import { InterfacesToCreate } from "./interfaces";
 
 interface ObjectKeys {
-  keyName: string;
-  fieldInterface: Array<TypescriptInterface>;
+  name: string;
+  fieldInterface: TypescriptInterface[];
 }
 
 export abstract class TypescriptInterface {
-  public abstract getInterface(): string;
-  public abstract equal(int: TypescriptInterface): boolean;
-  public abstract getInterfaceCode(): string;
+  abstract getInterface(): string;
+  abstract equal(int: TypescriptInterface): boolean;
+  abstract getInterfaceCode(): string;
 
-  public static filterInterface(
+  static filterInterface(
     value: any,
     interfaces: InterfacesToCreate,
   ): TypescriptInterface {
@@ -53,8 +53,8 @@ export abstract class TypescriptInterface {
   }
 
   protected equalArrayInterfaces(
-    array1: Array<TypescriptInterface>,
-    array2: Array<TypescriptInterface>,
+    array1: TypescriptInterface[],
+    array2: TypescriptInterface[],
   ): boolean {
     if (array1.length === array2.length) {
       let equal = true;
@@ -74,7 +74,7 @@ export abstract class TypescriptInterface {
   }
 
   protected pushIsNotInArray(
-    array: Array<TypescriptInterface>,
+    array: TypescriptInterface[],
     int: TypescriptInterface,
   ) {
     const exists = array.some((v) => v.equal(int));
@@ -85,10 +85,9 @@ export abstract class TypescriptInterface {
 }
 
 export class ObjectInterface extends TypescriptInterface {
-  private _keys: Array<ObjectKeys> = [];
+  private _keys: ObjectKeys[] = [];
   private readonly idModule = new IdModule();
-  public readonly name: string =
-    "Object" + this.idModule.mongodbId().getValue();
+  readonly name: string = "Object" + this.idModule.mongodbId().getValue();
   private interfaces: InterfacesToCreate;
 
   constructor(value: any, interfaces: InterfacesToCreate) {
@@ -101,7 +100,7 @@ export class ObjectInterface extends TypescriptInterface {
         fieldInterface: [
           TypescriptInterface.filterInterface(fieldValue, this.interfaces),
         ],
-        keyName: key,
+        name: key,
       });
     });
   }
@@ -110,7 +109,7 @@ export class ObjectInterface extends TypescriptInterface {
     return this._keys[index];
   }
 
-  setKeys(array: Array<ObjectKeys>): void {
+  setKeys(array: ObjectKeys[]): void {
     this._keys = array;
   }
 
@@ -129,7 +128,7 @@ export class ObjectInterface extends TypescriptInterface {
       for (let i = 0; i < this.length() && areEqual; i++) {
         const cantWithThatKey = compareObject
           .keys()
-          .filter((k) => k.keyName === this.get(i).keyName);
+          .filter((k) => k.name === this.get(i).name);
 
         if (cantWithThatKey.length !== 1) {
           areEqual = false;
@@ -142,13 +141,13 @@ export class ObjectInterface extends TypescriptInterface {
     }
   }
 
-  public compareAndUpdate(compareInterface: ObjectInterface): void {
-    const newKeysInterfaces: Array<ObjectKeys> = [];
+  compareAndUpdate(compareInterface: ObjectInterface): void {
+    const newKeysInterfaces: ObjectKeys[] = [];
 
     this.keys().forEach((thisKey) => {
       const found = compareInterface
         .keys()
-        .find((k) => k.keyName === thisKey.keyName);
+        .find((k) => k.name === thisKey.name);
 
       if (found) {
         const communInterfaces = this.communInterfaces(
@@ -157,7 +156,7 @@ export class ObjectInterface extends TypescriptInterface {
         );
 
         newKeysInterfaces.push({
-          keyName: thisKey.keyName,
+          name: thisKey.name,
           fieldInterface: communInterfaces,
         });
       }
@@ -175,12 +174,12 @@ export class ObjectInterface extends TypescriptInterface {
         .includes("undefined");
 
       if (includeUndefined) {
-        returnIndefined = `"${key.keyName}"?: ${key.fieldInterface
+        returnIndefined = `"${key.name}"?: ${key.fieldInterface
           .map((i) => i.getInterface())
           .filter((i) => i !== "undefined")
           .join(" | ")}`;
       } else {
-        returnIndefined = `"${key.keyName}": ${key.fieldInterface
+        returnIndefined = `"${key.name}": ${key.fieldInterface
           .map((i) => i.getInterface())
           .join(" | ")}`;
       }
@@ -201,10 +200,10 @@ export class ObjectInterface extends TypescriptInterface {
   }
 
   private communInterfaces(
-    interfacesOne: Array<TypescriptInterface>,
-    interfacesTwo: Array<TypescriptInterface>,
-  ): Array<TypescriptInterface> {
-    const returnArray = [] as Array<TypescriptInterface>;
+    interfacesOne: TypescriptInterface[],
+    interfacesTwo: TypescriptInterface[],
+  ): TypescriptInterface[] {
+    const returnArray = [] as TypescriptInterface[];
 
     interfacesOne.forEach((i) => this.pushIsNotInArray(returnArray, i));
     interfacesTwo.forEach((i) => this.pushIsNotInArray(returnArray, i));
@@ -219,7 +218,7 @@ export class ObjectInterface extends TypescriptInterface {
       if (this.name !== int.name) {
         for (let i = 0; i < int.length() && isEqual; i++) {
           const areEqual = this.keys().some((k) => {
-            const hasTheSameKey = k.keyName === int.get(i).keyName;
+            const hasTheSameKey = k.name === int.get(i).name;
 
             const hasSameInterface = this.equalArrayInterfaces(
               int.get(i).fieldInterface,
@@ -245,9 +244,9 @@ export class ObjectInterface extends TypescriptInterface {
 export class PrimitiveInterface extends TypescriptInterface {
   private name: string;
 
-  constructor(interfaceName: string) {
+  constructor(name: string) {
     super();
-    this.name = interfaceName;
+    this.name = name;
   }
 
   getInterface(): string {
@@ -268,7 +267,7 @@ export class PrimitiveInterface extends TypescriptInterface {
 }
 
 export class ArrayInterface extends TypescriptInterface {
-  private values: Array<TypescriptInterface> = [];
+  private values: TypescriptInterface[] = [];
   private interfaces: InterfacesToCreate;
 
   constructor(array: any, interfaces: InterfacesToCreate) {
@@ -280,7 +279,7 @@ export class ArrayInterface extends TypescriptInterface {
     this.updateValuesInterfaces();
   }
 
-  public equal(int: TypescriptInterface): boolean {
+  equal(int: TypescriptInterface): boolean {
     if (int instanceof ArrayInterface) {
       return this.equalArrayInterfaces(int.getValuesInterfaces(), this.values);
     } else {
@@ -288,11 +287,11 @@ export class ArrayInterface extends TypescriptInterface {
     }
   }
 
-  public getInterfaceCode(): string {
+  getInterfaceCode(): string {
     return this.getInterfaceCode();
   }
 
-  public getInterface(): string {
+  getInterface(): string {
     if (this.values.length === 0) {
       return "[]";
     } else {
@@ -306,7 +305,7 @@ export class ArrayInterface extends TypescriptInterface {
 
   private updateValuesInterfaces() {
     if (this.values.length > 1) {
-      const updatedInterfaces: Array<TypescriptInterface> = [];
+      const updatedInterfaces: TypescriptInterface[] = [];
 
       for (let i = 0; i < this.values.length; i++) {
         const actualInterface = this.values[i];
@@ -324,7 +323,7 @@ export class ArrayInterface extends TypescriptInterface {
     }
   }
 
-  public getValuesInterfaces() {
+  getValuesInterfaces() {
     return this.values;
   }
 }

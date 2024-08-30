@@ -1,4 +1,4 @@
-import { Generator } from "../generator/Generator";
+import { Generator } from "../generator";
 import fs from "fs";
 import { ChacaError } from "../../../../errors";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
@@ -22,14 +22,14 @@ export class JavascriptGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
-  public async generateRelationalDataFile(
+  public async createRelationalFile(
     resolver: DatasetResolver,
   ): Promise<string> {
     const data = resolver.resolve();
-    return await this.generateFile(data);
+    return await this.createFile(data);
   }
 
-  public async generateFile(data: any): Promise<string> {
+  public async createFile(data: any): Promise<string> {
     const variableName = this.utils.camelCase(this.filename);
     const returnData = `const ${variableName} = ${this.filterTypeValue(data)}`;
 

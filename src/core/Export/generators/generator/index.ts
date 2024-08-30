@@ -35,12 +35,10 @@ export abstract class Generator {
     this.route = this.generateRoute(filename);
   }
 
-  public abstract generateFile(data: any): Promise<string>;
-  public abstract generateRelationalDataFile(
-    resolver: DatasetResolver,
-  ): Promise<string>;
+  abstract createFile(data: any): Promise<string>;
+  abstract createRelationalFile(resolver: DatasetResolver): Promise<string>;
 
-  public getRoute() {
+  getRoute() {
     return this.route;
   }
 

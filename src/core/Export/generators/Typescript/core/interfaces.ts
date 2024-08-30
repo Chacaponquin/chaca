@@ -1,21 +1,21 @@
 import { ObjectInterface } from ".";
 
 export class InterfacesToCreate {
-  private _interfaces: Array<ObjectInterface> = [];
+  private _interfaces: ObjectInterface[] = [];
 
-  public interfaces() {
+  interfaces() {
     return this._interfaces;
   }
 
-  public length() {
+  length() {
     return this._interfaces.length;
   }
 
-  public get(index: number) {
+  get(index: number) {
     return this._interfaces[index];
   }
 
-  public deleteInterface(name: string): void {
+  deleteInterface(name: string): void {
     this._interfaces = this._interfaces.filter((o) => o.name !== name);
   }
 
@@ -23,7 +23,7 @@ export class InterfacesToCreate {
     this._interfaces.push(obj);
   }
 
-  public areSimilarObjects(
+  areSimilarObjects(
     objInterfaceOne: ObjectInterface,
     objInterfaceTwo: ObjectInterface,
   ): boolean {
@@ -40,7 +40,7 @@ export class InterfacesToCreate {
     for (let i = 0; i < maxObject.length() && cont < maxObject.length(); i++) {
       const exists = minObject
         .keys()
-        .some((k) => maxObject.get(i).keyName === k.keyName);
+        .some((k) => maxObject.get(i).name === k.name);
 
       if (exists) {
         cont++;
@@ -50,7 +50,7 @@ export class InterfacesToCreate {
     return cont === maxObject.length();
   }
 
-  public setInterface(object: ObjectInterface): ObjectInterface {
+  setInterface(object: ObjectInterface): ObjectInterface {
     let returnObject = object;
 
     let found = false;
@@ -74,7 +74,7 @@ export class InterfacesToCreate {
     return returnObject;
   }
 
-  public separateObjectsByLength(
+  separateObjectsByLength(
     objInterfaceOne: ObjectInterface,
     objInterfaceTwo: ObjectInterface,
   ) {

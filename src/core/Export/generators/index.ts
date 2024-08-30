@@ -1,11 +1,11 @@
 import { JsonGenerator } from "./json/JsonGenerator";
-import { Generator } from "./generator/Generator";
+import { Generator } from "./generator";
 import { JavascriptGenerator } from "./javascript/JavascriptGenerator";
 import { CsvGenerator } from "./csv/CsvGenerator";
 import { JavaGenerator } from "./java/JavaGenerator";
-import { TypescriptGenerator } from "./typescript/TypescriptGenerator";
+import { TypescriptGenerator } from "./typescript";
 import { YamlGenerator } from "./yaml/YamlGenerator";
-import { SQLGenerator } from "./sql/SQLGenerator";
+import { SQLGenerator } from "./sql";
 import { PythonGenerator } from "./python/PythonGenerator";
 
 export {

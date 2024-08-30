@@ -1,6 +1,6 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { ChacaError } from "../../../../errors";
-import { Generator } from "../generator/Generator";
+import { Generator } from "../generator";
 import fs from "fs";
 
 interface Props {
@@ -33,7 +33,7 @@ export class YamlGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
-  public async generateFile(data: any): Promise<string> {
+  public async createFile(data: any): Promise<string> {
     let returnCode = "";
 
     if (Array.isArray(data)) {
@@ -51,11 +51,11 @@ export class YamlGenerator extends Generator {
     }
   }
 
-  public async generateRelationalDataFile(
+  public async createRelationalFile(
     resolver: DatasetResolver,
   ): Promise<string> {
     const relationalData = resolver.resolve();
-    return await this.generateFile(relationalData);
+    return await this.createFile(relationalData);
   }
 
   private object({ doc, onArray }: GenObjectProps): string {

@@ -5,7 +5,7 @@ import {
   SQLString,
   SQLTextString,
   SQLType,
-} from "../sqlTypes";
+} from "../sql-types";
 import { SQLTable } from "./SQLTable";
 
 interface ColumnConfig {

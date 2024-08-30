@@ -1,6 +1,6 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { ChacaError } from "../../../../errors";
-import { Generator } from "../generator/Generator";
+import { Generator } from "../generator";
 import fs from "fs";
 
 interface Props {
@@ -23,7 +23,7 @@ export class PythonGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
-  public async generateFile(data: any): Promise<string> {
+  public async createFile(data: any): Promise<string> {
     const pythonCode = this.createDataCode(this.filename, data);
     const finalCode = this.buildFinalCode(pythonCode);
 
@@ -36,7 +36,7 @@ export class PythonGenerator extends Generator {
     }
   }
 
-  public async generateRelationalDataFile(
+  public async createRelationalFile(
     resolver: DatasetResolver,
   ): Promise<string> {
     const allDeclarations = [] as Array<string>;

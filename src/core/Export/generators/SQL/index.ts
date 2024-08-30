@@ -1,7 +1,7 @@
 import { SchemaResolver } from "../../../schema-resolver/resolver";
 import { ExportSQLFormat } from "../../interfaces/export";
 import { ChacaError } from "../../../../errors";
-import { Generator } from "../generator/Generator";
+import { Generator } from "../generator";
 import {
   SQLBoolean,
   SQLDate,
@@ -13,19 +13,19 @@ import {
   SQLFloatNumber,
   SQLIntegerNumber,
   SQLBigint,
-} from "./core/sqlTypes";
+} from "./core/sql-types";
 import { SQLTable } from "./core/table";
 import {
   ArrayType,
   BigintType,
   BooleanType,
-  DataType,
+  Datatype,
   DateType,
   NullType,
   NumberType,
   ObjectType,
   StringType,
-} from "./core/types";
+} from "./core/primitive-types";
 import fs from "fs";
 import {
   ChacaTreeNode,
@@ -43,10 +43,10 @@ interface Props {
 }
 
 export class SQLGenerator extends Generator {
-  private schemasPrimaryKeys: Array<KeyValueNode> = [];
-  private schemasForeignKeys: Array<RefValueNode> = [];
-  private schemaspossibleNull: Array<ChacaTreeNode> = [];
-  private allTables: Array<SQLTable> = [];
+  private schemasPrimaryKeys: KeyValueNode[] = [];
+  private schemasForeignKeys: RefValueNode[] = [];
+  private schemaspossibleNull: ChacaTreeNode[] = [];
+  private allTables: SQLTable[] = [];
   private dataGenerator: SQLDataGenerator;
 
   private zip: boolean;
@@ -65,9 +65,7 @@ export class SQLGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
-  public async generateRelationalDataFile(
-    resolvers: DatasetResolver,
-  ): Promise<string> {
+  async createRelationalFile(resolvers: DatasetResolver): Promise<string> {
     resolvers.getResolvers().forEach((r) => {
       const allKeys = r.getKeyNodes();
       allKeys.forEach((k) => this.schemasPrimaryKeys.push(k));
@@ -101,7 +99,7 @@ export class SQLGenerator extends Generator {
     }
   }
 
-  public async generateFile(data: any): Promise<string> {
+  public async createFile(data: any): Promise<string> {
     let sqlData: Array<any> = [];
 
     if (Array.isArray(data)) {
@@ -133,7 +131,7 @@ export class SQLGenerator extends Generator {
   private filterTypeByValue(
     parentTable: SQLTable,
     fieldName: string | null,
-    value: DataType,
+    value: Datatype,
   ): void {
     if (!parentTable.finish()) {
       if (value instanceof StringType) {
@@ -248,7 +246,7 @@ export class SQLGenerator extends Generator {
           objectTable.addNewID();
 
           value.getKeys().forEach((k) => {
-            this.filterTypeByValue(objectTable, k.key, k.dataType);
+            this.filterTypeByValue(objectTable, k.key, k.datatype);
           });
 
           // add foreign key in parent table
@@ -259,7 +257,7 @@ export class SQLGenerator extends Generator {
           });
         } else {
           value.getKeys().forEach((k) => {
-            this.filterTypeByValue(parentTable, k.key, k.dataType);
+            this.filterTypeByValue(parentTable, k.key, k.datatype);
           });
 
           // add new id to array table
@@ -407,7 +405,7 @@ export class SQLGenerator extends Generator {
           objectData !== null &&
           !Array.isArray(objectData)
         ) {
-          const type = DataType.filterTypeByValue(objectData) as ObjectType;
+          const type = Datatype.filterTypeByValue(objectData) as ObjectType;
           objectTypes.push(type);
         } else {
           throw new ChacaError("Your data must be an array of equal objects");
@@ -432,7 +430,7 @@ export class SQLGenerator extends Generator {
         documentTable.addNewID();
 
         objectTypes[i].getKeys().forEach((f) => {
-          this.filterTypeByValue(documentTable, f.key, f.dataType);
+          this.filterTypeByValue(documentTable, f.key, f.datatype);
         });
 
         if (i === objectTypes.length - 1) {

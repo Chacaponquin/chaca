@@ -32,7 +32,7 @@ export class ExportResolver {
 
   async data(data: any): Promise<string> {
     const gen = this.filterGenerator();
-    const route = await gen.generateFile(data);
+    const route = await gen.createFile(data);
 
     return route;
   }
@@ -44,7 +44,7 @@ export class ExportResolver {
       verbose: this.config.verbose,
     });
 
-    const route = await gen.generateRelationalDataFile(resolver);
+    const route = await gen.createRelationalFile(resolver);
 
     return route;
   }

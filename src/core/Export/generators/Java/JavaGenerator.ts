@@ -1,4 +1,4 @@
-import { Generator } from "../generator/Generator";
+import { Generator } from "../generator";
 import fs from "fs";
 import path from "path";
 
@@ -51,7 +51,7 @@ export class JavaGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
-  public async generateRelationalDataFile(
+  public async createRelationalFile(
     resolver: DatasetResolver,
   ): Promise<string> {
     this.classesCreated = [];
@@ -69,7 +69,7 @@ export class JavaGenerator extends Generator {
     return await this.createAllFiles(mainContent);
   }
 
-  public async generateFile(data: any): Promise<string> {
+  public async createFile(data: any): Promise<string> {
     this.classesCreated = [];
     const dataType = this.createDataTypes(data);
     const mainContent = this.generateMainContent([

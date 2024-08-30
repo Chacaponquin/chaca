@@ -1,4 +1,4 @@
-import { Generator } from "../generator/Generator";
+import { Generator } from "../generator";
 import fs from "fs";
 import path from "path";
 import { ChacaError } from "../../../../errors";
@@ -24,7 +24,7 @@ export class CsvGenerator extends Generator {
     this.zip = Boolean(config.zip);
   }
 
-  public async generateRelationalDataFile(
+  public async createRelationalFile(
     resolver: DatasetResolver,
   ): Promise<string> {
     const allResolvers = resolver.getResolvers();
@@ -60,7 +60,7 @@ export class CsvGenerator extends Generator {
     }
   }
 
-  public async generateFile(data: any): Promise<string> {
+  public async createFile(data: any): Promise<string> {
     const fileRoute = await this.createFile(this.filename, data);
 
     if (this.zip) {

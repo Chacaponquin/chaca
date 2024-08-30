@@ -1,5 +1,5 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { Generator } from "../generator/Generator";
+import { Generator } from "../generator";
 import fs from "fs";
 
 interface ExtProps {
@@ -31,7 +31,7 @@ export class JsonGenerator extends Generator {
     await fs.promises.writeFile(route, jsonContent, "utf-8");
   }
 
-  public async generateFile(data: any): Promise<string> {
+  public async createFile(data: any): Promise<string> {
     await this.createFile(this.route, data);
 
     if (this.config.zip) {
@@ -41,7 +41,7 @@ export class JsonGenerator extends Generator {
     }
   }
 
-  public async generateRelationalDataFile(
+  public async createRelationalFile(
     resolver: DatasetResolver,
   ): Promise<string> {
     const objectData = resolver.resolve();
@@ -71,7 +71,7 @@ export class JsonGenerator extends Generator {
         return this.baseLocation;
       }
     } else {
-      return await this.generateFile(objectData);
+      return await this.createFile(objectData);
     }
   }
 }

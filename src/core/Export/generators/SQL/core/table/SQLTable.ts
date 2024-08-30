@@ -1,6 +1,6 @@
 import { ChacaError } from "../../../../../../errors";
 import { IdModule } from "../../../../../../modules/id";
-import { SQLType, SQLNumber, SQLIntegerNumber } from "../sqlTypes";
+import { SQLType, SQLNumber, SQLIntegerNumber } from "../sql-types";
 import { ColumnForeignKeyConfig, SQLTableColumn } from "./SQLTableColumn";
 
 export class SQLTable {
