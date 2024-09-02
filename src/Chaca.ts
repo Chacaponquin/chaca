@@ -5,7 +5,7 @@ import {
   FieldRefInputConfig,
   FieldToRef,
   RefField,
-} from "./core/fields/core/ref/RefField";
+} from "./core/fields/core/ref";
 import {
   SequenceField,
   SequenceFieldProps,
@@ -22,10 +22,11 @@ import { FileConfig } from "./core/export/interfaces/export";
 import {
   ProbabilityOption,
   ProbabilityField,
-} from "./core/fields/core/probability/ProbabilityField";
+} from "./core/fields/core/probability";
 import { PickField, PickFieldProps } from "./core/fields/core/pick/PickField";
 import { Dataset } from "./core/dataset";
 import { Module } from "./modules";
+import { ModuleFunction } from "./modules/module";
 
 export class Chaca {
   utils = new ChacaUtils();
@@ -48,8 +49,8 @@ export class Chaca {
    * Define your ouwn type schema for create your data
    * @param func function that returns a value
    */
-  module<K = any, T = any>(func: (args: T) => K): (args?: T) => Module<K, T> {
-    return (args) => new Module<K, T>(func, args);
+  module<V = any, A = never>(func: ModuleFunction<V, A>) {
+    return (...args: A[]) => new Module<V, A>(func, ...args);
   }
 
   /**
@@ -153,8 +154,8 @@ export class Chaca {
    *   { chance: 0.1, value: 1 },
    * ])
    */
-  probability(options: ProbabilityOption[]) {
-    return new ProbabilityField(options);
+  probability<T = any>(options: ProbabilityOption<T>[]) {
+    return new ProbabilityField<T>(options);
   }
 
   /**

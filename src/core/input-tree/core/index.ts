@@ -1,14 +1,14 @@
-import { ChacaTreeNode } from "./node/node";
-import { CustomValueNode } from "./custom/CustomValueNode";
-import { EnumValueNode } from "./enum/EnumValueNode";
-import { MixedValueNode } from "./mixed/MixedValueNode";
+import { ChacaTreeNode } from "./node";
+import { CustomValueNode } from "./custom";
+import { EnumValueNode } from "./enum";
+import { MixedValueNode } from "./mixed";
 import { ModuleNode } from "./module";
-import { RefValueNode } from "./ref/ref";
-import { SequentialValueNode } from "./sequential/SequentialValueNode";
-import { KeyValueNode } from "./key/KeyValueNode";
-import { SequenceValueNode } from "./sequence/SequenceValueNode";
-import { ProbabilityValueNode } from "./probability/ProbabilityValueNode";
-import { PickValueNode } from "./pick/PickValueNode";
+import { RefValueNode } from "./ref";
+import { SequentialValueNode } from "./sequential";
+import { KeyValueNode } from "./key";
+import { SequenceValueNode } from "./sequence";
+import { ProbabilityValueNode } from "./probability";
+import { PickValueNode } from "./pick";
 
 export {
   ChacaTreeNode,

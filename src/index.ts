@@ -6,7 +6,7 @@ import {
   InputPossibleNull,
   CustomFieldProps,
   FieldTypes,
-  FieldSchemaConfig,
+  SchemaFieldConfig,
   PossibleNullFunction,
   PossibleNullFunctionProps,
 } from "./core/schema/interfaces/schema";
@@ -50,7 +50,7 @@ import {
   RefField,
   RefFieldWhereProps,
   RefFieldWhere,
-} from "./core/fields/core/ref/RefField";
+} from "./core/fields/core/ref";
 
 import {
   SequentialField,
@@ -79,7 +79,7 @@ import {
   ProbabilityOption,
   ChanceFunction,
   ChanceFunctionProps,
-} from "./core/fields/core/probability/ProbabilityField";
+} from "./core/fields/core/probability";
 
 import { PickField, PickFieldProps } from "./core/fields/core/pick/PickField";
 import { ChacaModules, Module } from "./modules";
@@ -133,7 +133,7 @@ export type {
   SequentialFieldConfig,
   RefFieldWhereProps,
   FieldTypes,
-  FieldSchemaConfig,
+  SchemaFieldConfig,
   PossibleNullFunction,
   PossibleNullFunctionProps,
   Chance,

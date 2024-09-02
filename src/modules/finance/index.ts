@@ -1,4 +1,4 @@
-import { Module } from "../Module";
+import { Module } from "../module";
 import { ChacaUtils } from "../../core/utils";
 import {
   ACCOUNT_TYPES,
@@ -106,7 +106,7 @@ export class FinanceModule {
       });
 
       return address;
-    }, {});
+    });
   }
 
   /**
@@ -188,7 +188,7 @@ export class FinanceModule {
         : "";
 
       return `${bankIdentifier}${countryCode}${locationCode}${branchCode}`;
-    }, {});
+    });
   }
 
   /**
@@ -247,7 +247,7 @@ export class FinanceModule {
       return this.utils.oneOfArray(
         Object.values(MONEY_INFO).map((el) => el.symbol),
       );
-    }, {});
+    });
   }
 
   /**
@@ -297,10 +297,8 @@ export class FinanceModule {
    * @returns string
    */
   moneyCode(): Module<string> {
-    return new Module<string>(
-      () =>
-        this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.code)),
-      {},
+    return new Module<string>(() =>
+      this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.code)),
     );
   }
 }

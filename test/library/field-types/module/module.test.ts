@@ -14,7 +14,7 @@ describe("# Schema Field test", () => {
   });
 
   it("Create an schema with arguments and the function sum the both", () => {
-    const schema = chaca.module<{ a: number; b: number }>((a) => {
+    const schema = chaca.module<number, { a: number; b: number }>((a) => {
       return a.a + a.b;
     });
 

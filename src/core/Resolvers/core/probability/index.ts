@@ -1,4 +1,4 @@
-import { ProbabilityOption } from "../../../fields/core/probability/ProbabilityField";
+import { ProbabilityOption } from "../../../fields/core/probability";
 import { IResolver } from "../../interfaces/resolvers";
 
 export class ProbabilityFieldResolver extends IResolver {

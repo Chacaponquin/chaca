@@ -7,9 +7,9 @@ import {
 } from "../../../../errors";
 import { SchemaResolver } from "../../../schema-resolver/resolver";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node/node";
+import { ChacaTreeNode } from "../node";
 import { ChacaUtils } from "../../../utils";
-import { FieldToRefObject } from "../../../fields/core/ref/RefField";
+import { FieldToRefObject } from "../../../fields/core/ref";
 import { SchemaStore } from "../../../schema-store/store";
 import { SingleResultNode } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";

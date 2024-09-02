@@ -25,9 +25,9 @@ import {
   SequentialValueNode,
 } from "./core";
 import { InputTreeUtils } from "./utils/input-tree-utils";
-import { SequentialFieldResolver } from "../resolvers/core/sequential/SequentialFieldResolver";
+import { SequentialFieldResolver } from "../resolvers/core/sequential";
 import { SchemaStore } from "../schema-store/store";
-import { PickFieldResolver } from "../resolvers/core/pick/PickFieldResolver";
+import { PickFieldResolver } from "../resolvers/core/pick";
 
 interface Props {
   schemaName: string;
@@ -83,7 +83,7 @@ export class ChacaInputTree {
     } else if (object.type instanceof PickFieldResolver) {
       returnNode = new PickValueNode(nodeConfig, object.type.values);
     } else if (object.type instanceof ModuleResolver) {
-      returnNode = new ModuleNode(nodeConfig, object.type.schema);
+      returnNode = new ModuleNode(nodeConfig, object.type.module);
     } else if (object.type instanceof ProbabilityFieldResolver) {
       returnNode = new ProbabilityValueNode(nodeConfig, object.type.values);
     } else if (object.type instanceof EnumFieldResolver) {
@@ -128,7 +128,7 @@ export class ChacaInputTree {
             isArray: null,
             possibleNull: 0,
           },
-          object.type.fieldType.schema,
+          object.type.fieldType.module,
         );
 
         returnNode = new KeyValueNode(actualRoute, schemaValueNode);

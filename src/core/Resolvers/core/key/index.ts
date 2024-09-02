@@ -1,8 +1,8 @@
 import { IResolver } from "../../interfaces/resolvers";
-import { CustomFieldResolver } from "../custom/CustomFieldResolver";
-import { RefFieldResolver } from "../ref/RefFieldResolver";
+import { CustomFieldResolver } from "../custom";
+import { RefFieldResolver } from "../ref";
 import { ModuleResolver } from "../module";
-import { SequenceFieldResolver } from "../sequence/SequenceFieldResolver";
+import { SequenceFieldResolver } from "../sequence";
 
 export type KeyFieldResolverProps =
   | ModuleResolver
@@ -11,7 +11,7 @@ export type KeyFieldResolverProps =
   | CustomFieldResolver<any, any>;
 
 export class KeyFieldResolver extends IResolver {
-  constructor(public readonly fieldType: KeyFieldResolverProps) {
+  constructor(readonly fieldType: KeyFieldResolverProps) {
     super();
   }
 }

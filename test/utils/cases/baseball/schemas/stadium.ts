@@ -1,6 +1,6 @@
 import { chaca, modules } from "../../../../../src";
 
-const stadiumNameSchema = chaca.module<unknown, string>(() => {
+const stadiumNameSchema = chaca.module<string>(() => {
   return [
     modules.person.firstName().getValue(),
     modules.person.lastName().getValue(),

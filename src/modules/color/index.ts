@@ -1,6 +1,6 @@
 import { ChacaUtils } from "../../core/utils";
 import { DatatypeModule } from "../datatype";
-import { Module } from "../Module";
+import { Module } from "../module";
 import { CSSSpace, CSS_FUNCTIONS, CSS_SPACES, CSSFunction } from "./constants";
 import { Casing, ColorFormat, toColorFormat, formatHexColor } from "./helpers";
 
@@ -44,8 +44,9 @@ export class ColorModule {
    */
   cssSupportedFunction(): Module<string> {
     return new Module(() => {
-      return this.utils.oneOfArray(CSS_FUNCTIONS as any);
-    }, {});
+      const value = this.utils.oneOfArray(CSS_FUNCTIONS as any) as string;
+      return value;
+    });
   }
 
   /**
@@ -56,7 +57,7 @@ export class ColorModule {
    * modules.color.cssSupportedSpace().getValue() // 'display-p3'
    */
   cssSupportedSpace(): Module<CSSSpace> {
-    return new Module(() => this.utils.oneOfArray(CSS_SPACES as any), {});
+    return new Module(() => this.utils.oneOfArray(CSS_SPACES as any));
   }
 
   /**
@@ -249,9 +250,7 @@ export class ColorModule {
    * modules.color.colorByCSSColorSpace().getValue({ format: 'css', space: 'display-p3' }) // color(display-p3 0.12 1 0.23)
    * modules.color.colorByCSSColorSpace().getValue({ format: 'binary' }) // (8-32 bits x 3)
    */
-  colorByCSSColorSpace(
-    args?: Partial<ColorByCSSColorSpaceProps>,
-  ): Module<string, Partial<ColorByCSSColorSpaceProps>> {
+  colorByCSSColorSpace(args?: Partial<ColorByCSSColorSpaceProps>) {
     return new Module<string, Partial<ColorByCSSColorSpaceProps>>((a) => {
       const { format = "css", space = "sRGB" } = a;
 

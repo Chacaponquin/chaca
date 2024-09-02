@@ -1,5 +1,5 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../Module";
+import { Module } from "../module";
 import {
   ANIMAL_TYPE,
   BEAR,
@@ -46,7 +46,7 @@ export class AnimalModule {
    * @returns string
    */
   dog() {
-    return new Module<string>(() => this.utils.oneOfArray(DOG), {});
+    return new Module<string>(() => this.utils.oneOfArray(DOG));
   }
 
   /**
@@ -56,7 +56,7 @@ export class AnimalModule {
    * @returns string
    */
   bear() {
-    return new Module<string>(() => this.utils.oneOfArray(BEAR), {});
+    return new Module<string>(() => this.utils.oneOfArray(BEAR));
   }
 
   /**
@@ -66,7 +66,7 @@ export class AnimalModule {
    * @returns string
    */
   bird() {
-    return new Module<string>(() => this.utils.oneOfArray(BIRD), {});
+    return new Module<string>(() => this.utils.oneOfArray(BIRD));
   }
 
   /**
@@ -76,7 +76,7 @@ export class AnimalModule {
    * @returns string
    */
   cat() {
-    return new Module<string>(() => this.utils.oneOfArray(CAT), {});
+    return new Module<string>(() => this.utils.oneOfArray(CAT));
   }
 
   /**
@@ -86,7 +86,7 @@ export class AnimalModule {
    * @returns string
    */
   cetacean() {
-    return new Module<string>(() => this.utils.oneOfArray(CETACEAN), {});
+    return new Module<string>(() => this.utils.oneOfArray(CETACEAN));
   }
 
   /**
@@ -96,7 +96,7 @@ export class AnimalModule {
    * @returns string
    */
   cow() {
-    return new Module<string>(() => this.utils.oneOfArray(COW), {});
+    return new Module<string>(() => this.utils.oneOfArray(COW));
   }
 
   /**
@@ -106,7 +106,7 @@ export class AnimalModule {
    * @returns string
    */
   crocodilia() {
-    return new Module<string>(() => this.utils.oneOfArray(CROCODILIA), {});
+    return new Module<string>(() => this.utils.oneOfArray(CROCODILIA));
   }
 
   /**
@@ -116,7 +116,7 @@ export class AnimalModule {
    * @returns string
    */
   fish() {
-    return new Module<string>(() => this.utils.oneOfArray(FISH), {});
+    return new Module<string>(() => this.utils.oneOfArray(FISH));
   }
 
   /**
@@ -126,7 +126,7 @@ export class AnimalModule {
    * @returns string
    */
   horse() {
-    return new Module<string>(() => this.utils.oneOfArray(HORSE), {});
+    return new Module<string>(() => this.utils.oneOfArray(HORSE));
   }
 
   /**
@@ -136,7 +136,7 @@ export class AnimalModule {
    * @returns string
    */
   insect() {
-    return new Module<string>(() => this.utils.oneOfArray(INSECT), {});
+    return new Module<string>(() => this.utils.oneOfArray(INSECT));
   }
 
   /**
@@ -146,7 +146,7 @@ export class AnimalModule {
    * @returns string
    */
   lion() {
-    return new Module<string>(() => this.utils.oneOfArray(LION), {});
+    return new Module<string>(() => this.utils.oneOfArray(LION));
   }
 
   /**
@@ -156,7 +156,7 @@ export class AnimalModule {
    * @returns string
    */
   rabbit() {
-    return new Module<string>(() => this.utils.oneOfArray(RABBIT), {});
+    return new Module<string>(() => this.utils.oneOfArray(RABBIT));
   }
 
   /**
@@ -166,7 +166,7 @@ export class AnimalModule {
    * @returns string
    */
   rodent() {
-    return new Module<string>(() => this.utils.oneOfArray(RODENT), {});
+    return new Module<string>(() => this.utils.oneOfArray(RODENT));
   }
 
   /**
@@ -176,7 +176,7 @@ export class AnimalModule {
    * @returns string
    */
   snake() {
-    return new Module<string>(() => this.utils.oneOfArray(SNAKE), {});
+    return new Module<string>(() => this.utils.oneOfArray(SNAKE));
   }
 
   /**
@@ -186,6 +186,6 @@ export class AnimalModule {
    * @returns string
    */
   animalType() {
-    return new Module<string>(() => this.utils.oneOfArray(ANIMAL_TYPE), {});
+    return new Module<string>(() => this.utils.oneOfArray(ANIMAL_TYPE));
   }
 }

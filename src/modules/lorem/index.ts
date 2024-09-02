@@ -1,4 +1,4 @@
-import { Module } from "../Module";
+import { Module } from "../module";
 import { loremIpsum } from "lorem-ipsum";
 import { DatatypeModule } from "../datatype";
 
@@ -42,7 +42,7 @@ export class LoremModule {
    * @example modules.lorem.paragraphs().getValue()
    * @returns string
    */
-  public paragraphs(args?: ParagraphsProps) {
+  paragraphs(args?: ParagraphsProps) {
     return new Module<string, ParagraphsProps>((a) => {
       const separator = typeof a.separator === "string" ? a.separator : "\n";
       const cant =
@@ -79,7 +79,7 @@ export class LoremModule {
    * @example modules.lorem.sentences().getValue()
    * @returns
    */
-  public sentences(args?: SentencesProps) {
+  sentences(args?: SentencesProps) {
     return new Module<string, SentencesProps>((a) => {
       const cant =
         typeof a.sentencesCount === "number" && a.sentencesCount > 0
@@ -112,7 +112,7 @@ export class LoremModule {
    * @example modules.lorem.slug().getValue() // 'lorem-ipsum-ad'
    * @returns string
    */
-  public slug(args?: SlugProps) {
+  slug(args?: SlugProps) {
     return new Module<string, SlugProps>((a) => {
       const cant =
         typeof a.wordCount === "number" && a.wordCount > 0 ? a.wordCount : 3;
@@ -139,7 +139,7 @@ export class LoremModule {
    * @example modules.lorem.words().getValue() // 'lorem ipsum in'
    * @returns string
    */
-  public words(args?: WordsProps) {
+  words(args?: WordsProps) {
     return new Module<string, WordsProps>((a) => {
       const cant = typeof a.count === "number" && a.count > 0 ? a.count : 5;
       return loremIpsum({ format: "plain", units: "words", count: cant });
@@ -154,7 +154,7 @@ export class LoremModule {
    * @example modules.lorem.text().getValue()
    * @returns string
    */
-  public text(args?: TextProps) {
+  text(args?: TextProps) {
     return new Module<string, TextProps>((a) => {
       const text = loremIpsum({
         format: "plain",

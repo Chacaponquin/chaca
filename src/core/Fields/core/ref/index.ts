@@ -4,7 +4,7 @@ import {
   FieldToRef,
   RefFieldWhere,
   RefFieldWhereProps,
-} from "./interfaces/ref.interface";
+} from "./interfaces/ref";
 import { InputRefField, Config } from "./value-object";
 
 export interface FieldToRefObject {

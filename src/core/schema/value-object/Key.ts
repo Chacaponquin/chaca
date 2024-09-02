@@ -1,7 +1,7 @@
 import { ChacaError } from "../../../errors";
 import { Module } from "../../../modules/";
 import { KeyField, RefField, SequenceField } from "../../fields/core";
-import { KeyFieldResolverProps } from "../../resolvers/core/key/KeyFieldResolver";
+import { KeyFieldResolverProps } from "../../resolvers/core/key";
 import {
   CustomFieldResolver,
   KeyFieldResolver,

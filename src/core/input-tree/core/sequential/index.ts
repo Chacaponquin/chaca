@@ -4,11 +4,11 @@ import {
 } from "../../../../errors";
 import { FieldPossibleNullConfig } from "../../../schema/interfaces/schema";
 import { SequentialFieldConfig } from "../../../fields/core/sequential/SequentialField";
-import { ChacaTreeNode } from "../node/node";
+import { ChacaTreeNode } from "../node";
 
 export interface SequentialValueNodeProps {
-  fieldTreeRoute: Array<string>;
-  valuesArray: Array<unknown>;
+  fieldTreeRoute: string[];
+  valuesArray: unknown[];
   config: Required<SequentialFieldConfig>;
   possibleNull: FieldPossibleNullConfig;
 }
@@ -16,7 +16,7 @@ export interface SequentialValueNodeProps {
 export class SequentialValueNode extends ChacaTreeNode {
   private index = 0;
 
-  private valuesArray: Array<unknown>;
+  private valuesArray: unknown[];
   private config: Required<SequentialFieldConfig>;
   private possibleNull: FieldPossibleNullConfig;
 
@@ -40,7 +40,7 @@ export class SequentialValueNode extends ChacaTreeNode {
     }
   }
 
-  public getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): ChacaTreeNode {
     return new SequentialValueNode({
       fieldTreeRoute: this.getFieldRoute(),
       valuesArray: this.valuesArray,
@@ -49,7 +49,7 @@ export class SequentialValueNode extends ChacaTreeNode {
     });
   }
 
-  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+  checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
       throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
@@ -57,7 +57,7 @@ export class SequentialValueNode extends ChacaTreeNode {
     }
   }
 
-  public getValue(): unknown {
+  getValue(): unknown {
     if (this.config.loop) {
       if (this.index === this.valuesArray.length) {
         this.index = 0;

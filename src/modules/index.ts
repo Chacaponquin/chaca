@@ -14,7 +14,7 @@ import { AnimalModule } from "./animal";
 import { ScienceModule } from "./science";
 import { WordModule } from "./word";
 import { ColorModule } from "./color";
-import { Module } from "./Module";
+import { Module } from "./module";
 
 export { Module };
 

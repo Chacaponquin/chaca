@@ -1,5 +1,5 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../Module";
+import { Module } from "../module";
 import { SPECIAL_CHARACTERS } from "./constants/special_characters";
 import {
   LOWER_CHARACTERS,
@@ -61,7 +61,7 @@ export class DatatypeModule {
 
   private utils = new ChacaUtils();
 
-  public readonly constants = {
+  readonly constants = {
     upperCharacters: UPPER_CHARACTERS,
     lowerCharacters: LOWER_CHARACTERS,
     mixedCharacters: MIXED_CHARACTERS,
@@ -74,10 +74,10 @@ export class DatatypeModule {
    * @example modules.datatype.specialCharacter().getValue() // '_'
    * @returns string
    */
-  public specialCharacter(): Module<string> {
+  specialCharacter(): Module<string> {
     return new Module<string>(() => {
       return this.utils.oneOfArray(SPECIAL_CHARACTERS);
-    }, {});
+    });
   }
 
   /**
@@ -86,8 +86,8 @@ export class DatatypeModule {
    * @example modules.datatype.boolean().getValue() // true
    * @returns boolean
    */
-  public boolean() {
-    return new Module<boolean>(() => this.utils.oneOfArray([true, false]), {});
+  boolean() {
+    return new Module<boolean>(() => this.utils.oneOfArray([true, false]));
   }
 
   /**
@@ -207,7 +207,7 @@ export class DatatypeModule {
    * modules.datatype.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
    * @returns string
    */
-  public hexadecimal(args?: HexadecimalProps) {
+  hexadecimal(args?: HexadecimalProps) {
     return new Module<string, HexadecimalProps>((a) => {
       const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
       const characters = ["A", "B", "C", "D", "E", "F", "G"];
@@ -256,7 +256,7 @@ export class DatatypeModule {
    * modules.datatype.matrix().getValue() // [[1, 0, 5], [5, 10, 9]]
    * modules.datatype.matrix().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
-  public matrix(args?: MatrizProps) {
+  matrix(args?: MatrizProps) {
     return new Module<number[][], MatrizProps>((a) => {
       const x_size =
         typeof a.x_size === "number" && a.x_size >= 0
@@ -292,7 +292,7 @@ export class DatatypeModule {
    *
    * @returns string
    */
-  public characters(args?: CharactersProps) {
+  characters(args?: CharactersProps) {
     return new Module<string, CharactersProps>((a) => {
       const len =
         typeof a.length === "number" && a.length > 0 ? a.length : undefined;
@@ -333,7 +333,7 @@ export class DatatypeModule {
    * modules.datatype.binaryCode().getValue({length: 6}) // '010100'
    * @returns string
    */
-  public binaryCode(args?: BinaryCodeProps) {
+  binaryCode(args?: BinaryCodeProps) {
     return new Module<string, BinaryCodeProps>((a) => {
       const length =
         typeof a.length === "number" && a.length > 0
@@ -341,6 +341,7 @@ export class DatatypeModule {
           : this.int().getValue({ min: 4, max: 8 });
 
       let ret = "";
+
       for (let i = 1; i <= length; i++) {
         ret = ret.concat(String(this.utils.oneOfArray([0, 1])));
       }
@@ -356,7 +357,7 @@ export class DatatypeModule {
    * @returns string
    */
 
-  public alphaNumeric(args?: AlphaNumericProps) {
+  alphaNumeric(args?: AlphaNumericProps) {
     return new Module<string, AlphaNumericProps>((a) => {
       const length =
         typeof a.length === "number" && a.length > 0

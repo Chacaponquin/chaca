@@ -1,6 +1,6 @@
 import { ChacaUtils } from "../../core/utils";
 import { ChacaError } from "../../errors";
-import { Module } from "../Module";
+import { Module } from "../module";
 import { DatatypeModule } from "../datatype";
 import { MONTHS } from "./constants/month";
 import { WEEKDAYS } from "./constants/weekday";
@@ -52,7 +52,7 @@ export class DateModule {
    * @param args.days The range of days the date may be in the future.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example modules.date.soon() // Schema
+   * @example modules.date.soon() // Module
    *
    * @example
    * modules.date.soon().getValue() // '2022-02-05T09:55:39.216Z'
@@ -86,7 +86,7 @@ export class DateModule {
    * @param args.years The range of years the date may be in the past.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example modules.date.past() // Schema
+   * @example modules.date.past() // Module
    *
    * @example
    * modules.date.past().getValue() // '2021-12-03T05:40:44.408Z'
@@ -122,7 +122,7 @@ export class DateModule {
    * @param args.years The range of years the date may be in the future.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example modules.date.future() // Schema
+   * @example modules.date.future() // Module
    *
    * @example
    * modules.date.future().getValue() // '2022-11-19T05:52:49.100Z'
@@ -154,26 +154,26 @@ export class DateModule {
 
   /**
    * Returns a month name
-   * @example modules.date.month() // Schema
+   * @example modules.date.month() // Module
    * @example modules.date.month().getValue() // 'February'
    * @returns string
    */
   month() {
     return new Module<string>(() => {
       return this.utils.oneOfArray(MONTHS);
-    }, {});
+    });
   }
 
   /**
    * Returns a weekday name
-   * @example modules.date.weekDay() // Schema
+   * @example modules.date.weekDay() // Module
    * @example modules.date.weekDay().getValue() // 'Monday'
    * @returns string
    */
   weekDay() {
     return new Module<string>(() => {
       return this.utils.oneOfArray(WEEKDAYS);
-    }, {});
+    });
   }
 
   /**
@@ -190,7 +190,7 @@ export class DateModule {
    *
    * Defaults to `year`.
    *
-   * @example modules.date.birthdate() // Schema
+   * @example modules.date.birthdate() // Module
    *
    * @example
    * modules.date.birthdate().getValue() // 1977-07-10T01:37:30.719Z
@@ -240,7 +240,7 @@ export class DateModule {
    * @param args.from The early date boundary.
    * @param args.to The late date boundary.
    *
-   * @example modules.date.between() // Schema
+   * @example modules.date.between() // Module
    *
    * @example
    * modules.date.between().getValue({from: '2020-01-01T00:00:00.000Z', to: '2030-01-01T00:00:00.000Z'}) // '2026-05-16T02:22:53.002Z'
@@ -286,7 +286,7 @@ export class DateModule {
   /**
    * Returns a string with a time ago information
    * @param args.unit Date time unit. Can be (`"years"` | `"seconds"` | `"minutes"` | `"days"` | `"hours"` | `"months"`)
-   * @example modules.date.timeAgo() // Schema
+   * @example modules.date.timeAgo() // Module
    * @example modules.date.timeAgo().getValue({unit: 'days'}) // '20 days ago'
    * @returns string
    */
@@ -343,8 +343,12 @@ export class DateModule {
   }
 
   private argToDate(date: ArgDate | undefined): Date {
-    if (date instanceof Date) return date;
-    else if (typeof date === "string") return new Date(date);
-    else return new Date();
+    if (date instanceof Date) {
+      return date;
+    } else if (typeof date === "string") {
+      return new Date(date);
+    } else {
+      return new Date();
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../Module";
+import { Module } from "../module";
 import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants";
 
 export class VehicleModule {

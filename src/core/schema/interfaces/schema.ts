@@ -22,12 +22,12 @@ export type FieldObjectInput<R = any> = {
   possibleNull?: InputPossibleNull;
 };
 
-export type FieldSchemaConfig<R = any> = FieldObjectInput<R> | FieldTypes<R>;
+export type SchemaFieldConfig<R = any> = FieldObjectInput<R> | FieldTypes<R>;
 
 /**
  * Input schema config
  */
-export type SchemaInput = Record<string, FieldSchemaConfig>;
+export type SchemaInput = Record<string, SchemaFieldConfig>;
 
 export type SchemaToResolve = Record<string, ResolverObject>;
 

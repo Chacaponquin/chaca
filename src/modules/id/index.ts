@@ -1,5 +1,5 @@
 import { DatatypeModule } from "../datatype";
-import { Module } from "../Module";
+import { Module } from "../module";
 
 export class IdModule {
   private datatypeModule = new DatatypeModule();
@@ -18,7 +18,7 @@ export class IdModule {
       return this.datatypeModule
         .hexadecimal()
         .getValue({ case: "lower", length: 24 });
-    }, {});
+    });
   }
 
   /**
@@ -33,6 +33,7 @@ export class IdModule {
   uuid() {
     return new Module<string>(() => {
       const RFC4122_TEMPLATE = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
+
       const replacePlaceholders = (placeholder: string) => {
         const random = this.datatypeModule.int().getValue({ min: 0, max: 15 });
         const value = placeholder === "x" ? random : (random & 0x3) | 0x8;
@@ -40,6 +41,6 @@ export class IdModule {
       };
 
       return RFC4122_TEMPLATE.replace(/[xy]/g, replacePlaceholders);
-    }, {});
+    });
   }
 }

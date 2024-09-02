@@ -1,4 +1,4 @@
-import { Module } from "../Module";
+import { Module } from "../module";
 import { ChacaUtils } from "../../core/utils";
 import { EMOJIS } from "./constants/emojis";
 import { DOMAIN_SUFFIX } from "./constants/domainSuffix";
@@ -55,7 +55,7 @@ type UrlArgs = {
   secure?: boolean;
 };
 
-type usernameArgs = {
+type UsernameArgs = {
   firstName?: string;
   lastName?: string;
 };
@@ -67,7 +67,7 @@ export class InternetModule {
 
   private utils = new ChacaUtils();
 
-  public readonly constants = {
+  readonly constants = {
     emojis: EMOJIS,
     domainSuffixs: DOMAIN_SUFFIX,
     httpStatus: HTTP_STATUS,
@@ -152,12 +152,11 @@ export class InternetModule {
    *
    * @returns string
    */
-  public email(args?: EmailArgs) {
+  email(args?: EmailArgs) {
     return new Module<string, EmailArgs>((a) => {
-      const provider =
-        typeof a.provider === "string"
-          ? a.provider
-          : this.utils.oneOfArray(this.constants.emailProviders);
+      const provider = a.provider
+        ? a.provider
+        : this.utils.oneOfArray(this.constants.emailProviders);
 
       const username = this.username({
         firstName: a.firstName,
@@ -188,7 +187,7 @@ export class InternetModule {
    *
    * @returns string
    */
-  public password(args?: PasswordArgs) {
+  password(args?: PasswordArgs) {
     return new Module<string, PasswordArgs>((a) => {
       const vowel = /[aeiouAEIOU]$/;
       const consonant = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]$/;
@@ -243,7 +242,7 @@ export class InternetModule {
    * @param args.secure Boolean that indicates if the url has a secure protocol or not
    * @returns
    */
-  public url(args?: UrlArgs) {
+  url(args?: UrlArgs) {
     return new Module<string, UrlArgs>((a) => {
       if (typeof a.secure === "boolean") {
         const sec = a.secure ? "https" : "http";
@@ -264,8 +263,8 @@ export class InternetModule {
    * modules.internet.username().getValue({firstName: 'pedro', lastName: 'Scott'}) // 'pedro_scott'
    * @returns string
    */
-  username(args?: usernameArgs) {
-    return new Module<string, usernameArgs>((a) => {
+  username(args?: UsernameArgs) {
+    return new Module<string, UsernameArgs>((a) => {
       const firstName =
         typeof a.firstName === "string"
           ? this.utils.camelCase(a.firstName)
@@ -320,10 +319,10 @@ export class InternetModule {
    * modules.internet.httpMethod().getValue() // 'GET'
    * @returns `GET` | `PATCH` | `DELETE` | `POST` | `PUT`
    */
-  public httpMethod(): Module<string> {
+  httpMethod(): Module<string> {
     return new Module<string>(() => {
       return this.utils.oneOfArray(HTTP_METHODS);
-    }, {});
+    });
   }
 
   /**
@@ -332,7 +331,7 @@ export class InternetModule {
    * @example modules.internet.ipv6().getValue() // '269f:1230:73e3:318d:842b:daab:326d:897b'
    * @returns string
    */
-  public ipv6() {
+  ipv6() {
     return new Module<string>(() => {
       const randHash = () => {
         let result = "";
@@ -365,7 +364,7 @@ export class InternetModule {
       }
 
       return result.join(":");
-    }, {});
+    });
   }
 
   /**
@@ -374,7 +373,7 @@ export class InternetModule {
    * @example modules.internet.ipv4().getValue() // '245.108.222.0'
    * @returns string
    */
-  public ipv4(): Module<string> {
+  ipv4(): Module<string> {
     return new Module<string>(() => {
       let retString = "";
 
@@ -385,7 +384,7 @@ export class InternetModule {
       }
 
       return retString;
-    }, {});
+    });
   }
 
   /**
@@ -395,7 +394,7 @@ export class InternetModule {
    * @example modules.internet.emoji().getValue() // '🔎'
    * @returns string
    */
-  public emoji(args?: EmojiProps): Module<string, EmojiProps> {
+  emoji(args?: EmojiProps): Module<string, EmojiProps> {
     return new Module<string, EmojiProps>((a) => {
       const emoji = typeof a.emoji === "string" ? a.emoji : undefined;
 
@@ -416,6 +415,7 @@ export class InternetModule {
         for (const val of Object.values(EMOJIS)) {
           retEmojis = [...retEmojis, ...val];
         }
+
         return this.utils.oneOfArray(retEmojis);
       }
     }, args || {});
@@ -427,7 +427,7 @@ export class InternetModule {
    * @example modules.internet.mac().getValue() // '32:8e:2e:09:c6:05'
    * @returns string
    */
-  public mac() {
+  mac() {
     return new Module<string>(() => {
       let retString = "";
 
@@ -445,7 +445,7 @@ export class InternetModule {
       }
 
       return retString;
-    }, {});
+    });
   }
 
   /**
@@ -455,10 +455,9 @@ export class InternetModule {
    * modules.internet.port().getValue() // 8001
    * @returns string
    */
-  public port(): Module<number> {
-    return new Module<number>(
-      () => this.datatypeModule.int().getValue({ min: 0, max: 65535 }),
-      {},
+  port(): Module<number> {
+    return new Module<number>(() =>
+      this.datatypeModule.int().getValue({ min: 0, max: 65535 }),
     );
   }
 
@@ -468,8 +467,8 @@ export class InternetModule {
    * @example modules.internet.userAgent().getValue() // 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10_8_8)  AppleWebKit/536.0.2 (KHTML, like Gecko) Chrome/27.0.849.0 Safari/536.0.2'
    * @returns string
    */
-  public userAgent(): Module<string> {
-    return new Module<string>(() => GenerateUserAgent(), {});
+  userAgent(): Module<string> {
+    return new Module<string>(() => GenerateUserAgent());
   }
 
   /**
@@ -478,7 +477,7 @@ export class InternetModule {
    * @example modules.internet.protocol().getValue() // 'https'
    * @returns string
    */
-  public protocol(): Module<string> {
+  protocol(): Module<string> {
     return new Module<string>(() =>
       this.utils.oneOfArray(this.constants.protocols),
     );
@@ -490,7 +489,7 @@ export class InternetModule {
    * @example modules.internet.domainSuffix().getValue() // '.com'
    * @returns string
    */
-  public domainSuffix(): Module<string> {
+  domainSuffix(): Module<string> {
     return new Module<string>(() => this.utils.oneOfArray(DOMAIN_SUFFIX));
   }
 
@@ -500,7 +499,7 @@ export class InternetModule {
    * @example modules.internet.domainName().getValue() // 'words.info'
    * @returns string
    */
-  public domainName(): Module<string> {
+  domainName(): Module<string> {
     return new Module<string>(() => {
       const name: string = this.wordModule.noun().getValue({ language: "en" });
       const tale = this.datatypeModule.boolean().getValue();
@@ -525,7 +524,7 @@ export class InternetModule {
    * @example modules.internet.httpStatusCode().getValue // 201
    * @returns string
    */
-  public httpStatusCode(): Module<number> {
+  httpStatusCode(): Module<number> {
     return new Module<number>(() => {
       const sel = this.utils.oneOfArray(
         Object.keys(HTTP_STATUS),

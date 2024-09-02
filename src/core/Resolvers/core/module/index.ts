@@ -2,7 +2,7 @@ import { Module } from "../../../../modules";
 import { IResolver } from "../../interfaces/resolvers";
 
 export class ModuleResolver extends IResolver {
-  constructor(public readonly schema: Module) {
+  constructor(readonly module: Module<any, any>) {
     super();
   }
 }

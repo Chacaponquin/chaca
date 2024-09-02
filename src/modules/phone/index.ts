@@ -1,6 +1,6 @@
 import { ChacaUtils } from "../../core/utils";
 import { DatatypeModule } from "../datatype";
-import { Module } from "../Module";
+import { Module } from "../module";
 import { PHONE_PREFIX } from "./constants/phonePrefix";
 
 type CallDurationProps = {

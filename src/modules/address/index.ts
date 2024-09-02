@@ -1,4 +1,4 @@
-import { Module } from "../Module";
+import { Module } from "../module";
 import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries";
 import { ChacaUtils } from "../../core/utils";
 import { TIME_ZONE } from "./constants/timeZone";
@@ -22,7 +22,7 @@ type CountryProps = {
 export class AddressModule {
   private utils = new ChacaUtils();
 
-  public readonly constants = {
+  readonly constants = {
     timeZones: TIME_ZONE,
     countries: COUNTRY_LIST,
     countriesCode: COUNTRY_CODE,
@@ -53,7 +53,7 @@ export class AddressModule {
    * @returns string
    */
   timeZone() {
-    return new Module<string>(() => this.utils.oneOfArray(TIME_ZONE), {});
+    return new Module<string>(() => this.utils.oneOfArray(TIME_ZONE));
   }
 
   /**
@@ -63,9 +63,8 @@ export class AddressModule {
    * @returns string
    */
   cardinalDirection() {
-    return new Module<string>(
-      () => this.utils.oneOfArray(this.constants.cardinalDirections),
-      {},
+    return new Module<string>(() =>
+      this.utils.oneOfArray(this.constants.cardinalDirections),
     );
   }
 
@@ -101,6 +100,6 @@ export class AddressModule {
    * @returns string
    */
   countryCode() {
-    return new Module<string>(() => this.utils.oneOfArray(COUNTRY_CODE), {});
+    return new Module<string>(() => this.utils.oneOfArray(COUNTRY_CODE));
   }
 }

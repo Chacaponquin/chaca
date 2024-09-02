@@ -1,7 +1,4 @@
-import {
-  FieldRefInputConfig,
-  RefFieldWhere,
-} from "../interfaces/ref.interface";
+import { FieldRefInputConfig, RefFieldWhere } from "../interfaces/ref";
 
 export class Config {
   private _unique = false;

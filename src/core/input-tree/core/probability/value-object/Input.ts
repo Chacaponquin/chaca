@@ -1,5 +1,5 @@
 import { ChacaError } from "../../../../../errors";
-import { ProbabilityOption } from "../../../../fields/core/probability/ProbabilityField";
+import { ProbabilityOption } from "../../../../fields/core/probability";
 import { InputChance } from "./InputChance";
 import { InputValue } from "./InputValue";
 

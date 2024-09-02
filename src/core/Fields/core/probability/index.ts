@@ -12,7 +12,7 @@ export type ChanceFunctionProps<C = any> = {
   store: DatasetStore;
 };
 
-export interface ProbabilityOption {
+export interface ProbabilityOption<T = any> {
   /**
    * Probability of being chosen
    * - `number` Value between 0 and 1
@@ -22,13 +22,13 @@ export interface ProbabilityOption {
   /**
    * Option value
    */
-  value: unknown;
+  value: T;
 }
 
-export class ProbabilityField extends SchemaFieldType {
-  private values: Array<ProbabilityOption> = [];
+export class ProbabilityField<T = any> extends SchemaFieldType {
+  private values: ProbabilityOption<T>[] = [];
 
-  constructor(values: Array<ProbabilityOption>) {
+  constructor(values: ProbabilityOption<T>[]) {
     super();
 
     if (Array.isArray(values)) {
@@ -36,7 +36,7 @@ export class ProbabilityField extends SchemaFieldType {
     }
   }
 
-  public getValues() {
+  getValues() {
     return this.values;
   }
 }

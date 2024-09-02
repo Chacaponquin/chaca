@@ -4,7 +4,7 @@ import {
   CustomField,
   SchemaFieldType,
 } from "../../../schema/interfaces/schema";
-import { RefField } from "../ref/RefField";
+import { RefField } from "../ref";
 import { SequenceField } from "../sequence/SequenceField";
 
 /**
@@ -21,15 +21,15 @@ export type KeyFieldProps<A, C> =
   | CustomField<C, KeyAllowDataTypes>;
 
 export class KeyField<A = any, C = any> extends SchemaFieldType {
-  private fieldType: KeyFieldProps<A, C>;
+  private field: KeyFieldProps<A, C>;
 
   constructor(fieldType: KeyFieldProps<A, C>) {
     super();
-    this.fieldType = this.validate(fieldType);
+    this.field = this.validate(fieldType);
   }
 
-  public getFieldType() {
-    return this.fieldType;
+  getFieldType() {
+    return this.field;
   }
 
   private validate(fieldFunction: KeyFieldProps<A, C>): KeyFieldProps<A, C> {

@@ -1,5 +1,5 @@
 import { ChacaError } from "../../../../../errors";
-import { FieldToRef } from "../interfaces/ref.interface";
+import { FieldToRef } from "../interfaces/ref";
 
 export class InputRefField {
   private _value: string;

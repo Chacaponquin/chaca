@@ -1,5 +1,5 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../Module";
+import { Module } from "../module";
 import { MIME_TYPES } from "./constants/mimeTypes";
 import { FILE_EXTENSIONS } from "./constants/fileExtensions";
 import { WordModule } from "../word";

@@ -1,7 +1,7 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { FieldPossibleNullConfig } from "../../../schema/interfaces/schema";
 import { SequenceFieldProps } from "../../../fields/core/sequence/SequenceField";
-import { ChacaTreeNode } from "../node/node";
+import { ChacaTreeNode } from "../node";
 import { Config } from "./value-object";
 
 interface Props {
@@ -31,18 +31,18 @@ export class SequenceValueNode extends ChacaTreeNode {
     this._possibleNull = possibleNull;
   }
 
-  public getConfig() {
+  getConfig() {
     return this._config;
   }
 
-  public getValue() {
+  getValue() {
     const returnValue = this.actualValue;
     this.actualValue += this._config.step;
 
     return returnValue;
   }
 
-  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+  checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
       throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
@@ -50,7 +50,7 @@ export class SequenceValueNode extends ChacaTreeNode {
     }
   }
 
-  public getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): ChacaTreeNode {
     return new SequenceValueNode({
       fieldTreeRoute: this.getNodeConfig().fieldTreeRoute,
       config: this._config,

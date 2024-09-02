@@ -1,5 +1,5 @@
 import { DatatypeModule } from "../datatype";
-import { Module } from "../Module";
+import { Module } from "../module";
 
 export class ImageModule {
   private datatypeModule = new DatatypeModule();
@@ -20,7 +20,7 @@ export class ImageModule {
   food() {
     return new Module<string>(() => {
       return this.buildUrl("food");
-    }, {});
+    });
   }
 
   /**
@@ -32,7 +32,7 @@ export class ImageModule {
    * @returns string
    */
   event() {
-    return new Module<string>(() => this.buildUrl("event"), {});
+    return new Module<string>(() => this.buildUrl("event"));
   }
 
   /**
@@ -44,7 +44,7 @@ export class ImageModule {
    * @returns string
    */
   wallpaper() {
-    return new Module<string>(() => this.buildUrl("wallpaper"), {});
+    return new Module<string>(() => this.buildUrl("wallpaper"));
   }
 
   /**
@@ -56,7 +56,7 @@ export class ImageModule {
    * @returns string
    */
   threeDimension() {
-    return new Module<string>(() => this.buildUrl("3d"), {});
+    return new Module<string>(() => this.buildUrl("3d"));
   }
 
   /**
@@ -68,7 +68,7 @@ export class ImageModule {
    * @returns string
    */
   architecture() {
-    return new Module<string>(() => this.buildUrl("architecture"), {});
+    return new Module<string>(() => this.buildUrl("architecture"));
   }
 
   /**
@@ -80,7 +80,7 @@ export class ImageModule {
    * @returns string
    */
   nature() {
-    return new Module<string>(() => this.buildUrl("nature"), {});
+    return new Module<string>(() => this.buildUrl("nature"));
   }
 
   /**
@@ -92,7 +92,7 @@ export class ImageModule {
    * @returns string
    */
   fashion() {
-    return new Module<string>(() => this.buildUrl("fashion"), {});
+    return new Module<string>(() => this.buildUrl("fashion"));
   }
 
   /**
@@ -104,7 +104,7 @@ export class ImageModule {
    * @returns string
    */
   film() {
-    return new Module<string>(() => this.buildUrl("film"), {});
+    return new Module<string>(() => this.buildUrl("film"));
   }
 
   /**
@@ -116,7 +116,7 @@ export class ImageModule {
    * @returns string
    */
   people() {
-    return new Module<string>(() => this.buildUrl("people"), {});
+    return new Module<string>(() => this.buildUrl("people"));
   }
 
   /**
@@ -128,7 +128,7 @@ export class ImageModule {
    * @returns string
    */
   health() {
-    return new Module<string>(() => this.buildUrl("health"), {});
+    return new Module<string>(() => this.buildUrl("health"));
   }
 
   /**
@@ -140,7 +140,7 @@ export class ImageModule {
    * @returns string
    */
   house() {
-    return new Module<string>(() => this.buildUrl("house"), {});
+    return new Module<string>(() => this.buildUrl("house"));
   }
 
   /**
@@ -152,7 +152,7 @@ export class ImageModule {
    * @returns string
    */
   street() {
-    return new Module<string>(() => this.buildUrl("street"), {});
+    return new Module<string>(() => this.buildUrl("street"));
   }
 
   /**
@@ -164,7 +164,7 @@ export class ImageModule {
    * @returns string
    */
   animal() {
-    return new Module<string>(() => this.buildUrl("animal"), {});
+    return new Module<string>(() => this.buildUrl("animal"));
   }
 
   /**
@@ -176,7 +176,7 @@ export class ImageModule {
    * @returns string
    */
   spiritual() {
-    return new Module<string>(() => this.buildUrl("spiritual"), {});
+    return new Module<string>(() => this.buildUrl("spiritual"));
   }
 
   /**
@@ -188,7 +188,7 @@ export class ImageModule {
    * @returns string
    */
   travel() {
-    return new Module<string>(() => this.buildUrl("travel"), {});
+    return new Module<string>(() => this.buildUrl("travel"));
   }
 
   /**
@@ -200,7 +200,7 @@ export class ImageModule {
    * @returns string
    */
   art() {
-    return new Module<string>(() => this.buildUrl("art"), {});
+    return new Module<string>(() => this.buildUrl("art"));
   }
 
   /**
@@ -212,7 +212,7 @@ export class ImageModule {
    * @returns string
    */
   history() {
-    return new Module<string>(() => this.buildUrl("history"), {});
+    return new Module<string>(() => this.buildUrl("history"));
   }
 
   /**
@@ -224,7 +224,7 @@ export class ImageModule {
    * @returns string
    */
   sport() {
-    return new Module<string>(() => this.buildUrl("sport"), {});
+    return new Module<string>(() => this.buildUrl("sport"));
   }
 
   /**
@@ -241,6 +241,6 @@ export class ImageModule {
       const ran = this.datatypeModule.int({ min: 0, max: 1000 }).getValue();
 
       return `https://api.multiavatar.com/${ran}.svg`;
-    }, {});
+    });
   }
 }

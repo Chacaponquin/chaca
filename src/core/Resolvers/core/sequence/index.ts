@@ -6,7 +6,7 @@ export class SequenceFieldResolver extends IResolver {
     super();
   }
 
-  public getConfig() {
+  getConfig() {
     return this.config;
   }
 }

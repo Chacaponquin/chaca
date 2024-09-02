@@ -1,5 +1,5 @@
 import { ChacaError } from "../../../../../errors";
-import { Chance } from "../../../../fields/core/probability/ProbabilityField";
+import { Chance } from "../../../../fields/core/probability";
 
 interface Props {
   value: Chance;

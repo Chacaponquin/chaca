@@ -1,10 +1,10 @@
 import { ChacaError } from "../../../../errors";
 import { DatasetStore } from "../../../dataset-store";
-import { ChacaTreeNode } from "../node/node";
-import { CustomValueNode } from "../custom/CustomValueNode";
-import { RefValueNode } from "../ref/ref";
+import { ChacaTreeNode } from "../node";
+import { CustomValueNode } from "../custom";
+import { RefValueNode } from "../ref";
 import { ModuleNode } from "../module";
-import { SequenceValueNode } from "../sequence/SequenceValueNode";
+import { SequenceValueNode } from "../sequence";
 
 export type KeyValueNodeProps =
   | RefValueNode

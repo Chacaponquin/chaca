@@ -5,7 +5,7 @@ import {
 import { DatatypeModule } from "../../../../modules/datatype";
 import { PickFieldProps } from "../../../fields/core/pick/PickField";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node/node";
+import { ChacaTreeNode } from "../node";
 import { Count, Values } from "./value-object";
 
 export class PickValueNode extends ChacaTreeNode {

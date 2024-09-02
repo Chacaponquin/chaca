@@ -2,9 +2,9 @@ import { TryRefANoKeyFieldError } from "../../../../errors";
 import { DocumentTree } from "../../../result-tree/classes";
 import { ChacaUtils } from "../../../utils";
 import { DatasetStore } from "../../../dataset-store";
-import { ProbabilityOption } from "../../../fields/core/probability/ProbabilityField";
+import { ProbabilityOption } from "../../../fields/core/probability";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node/node";
+import { ChacaTreeNode } from "../node";
 import { Input, InputChance } from "./value-object";
 
 interface Props {

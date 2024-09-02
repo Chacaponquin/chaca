@@ -2,7 +2,7 @@ import { TryRefANoKeyFieldError } from "../../../../errors";
 import { CustomField } from "../../../schema/interfaces/schema";
 import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node/node";
+import { ChacaTreeNode } from "../node";
 
 interface Props<C> {
   fields: C;
@@ -17,14 +17,14 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
     super(config);
   }
 
-  public getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): ChacaTreeNode {
     return new CustomValueNode<C, R>(
       { ...this.getNodeConfig(), isArray: null },
       this.func,
     );
   }
 
-  public getValue({ fields, datasetStore }: Props<C>): R {
+  getValue({ fields, datasetStore }: Props<C>): R {
     const value = this.func({
       store: datasetStore,
       currentFields: fields,
@@ -37,7 +37,7 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
     }
   }
 
-  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+  checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
       throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
