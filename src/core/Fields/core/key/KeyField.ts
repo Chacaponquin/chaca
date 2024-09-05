@@ -1,9 +1,5 @@
 import { ChacaError } from "../../../../errors";
-import { Module } from "../../../../modules";
-import {
-  CustomField,
-  SchemaFieldType,
-} from "../../../schema/interfaces/schema";
+import { CustomField } from "../../../schema/interfaces/schema";
 import { RefField } from "../ref";
 import { SequenceField } from "../sequence/SequenceField";
 
@@ -14,27 +10,20 @@ export type KeyAllowDataTypes = string | number | Date;
 /**
  * Posible types for key schema field
  */
-export type KeyFieldProps<A, C> =
-  | Module<KeyAllowDataTypes, A>
+export type KeyFieldProps<C = any> =
   | RefField
   | SequenceField
   | CustomField<C, KeyAllowDataTypes>;
 
-export class KeyField<A = any, C = any> extends SchemaFieldType {
-  private field: KeyFieldProps<A, C>;
+export class KeyField<C = any> {
+  readonly field: KeyFieldProps<C>;
 
-  constructor(fieldType: KeyFieldProps<A, C>) {
-    super();
-    this.field = this.validate(fieldType);
+  constructor(type: KeyFieldProps<C>) {
+    this.field = this.validate(type);
   }
 
-  getFieldType() {
-    return this.field;
-  }
-
-  private validate(fieldFunction: KeyFieldProps<A, C>): KeyFieldProps<A, C> {
+  private validate(fieldFunction: KeyFieldProps<C>): KeyFieldProps<C> {
     if (
-      fieldFunction instanceof Module ||
       fieldFunction instanceof RefField ||
       fieldFunction instanceof SequenceField ||
       typeof fieldFunction === "function"

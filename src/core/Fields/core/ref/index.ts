@@ -1,4 +1,3 @@
-import { SchemaFieldType } from "../../../schema/interfaces/schema";
 import {
   FieldRefInputConfig,
   FieldToRef,
@@ -13,16 +12,11 @@ export interface FieldToRefObject {
   where: RefFieldWhere | null;
 }
 
-export class RefField extends SchemaFieldType {
-  private refField: FieldToRefObject;
+export class RefField {
+  readonly refField: FieldToRefObject;
 
   constructor(refField: FieldToRef, config?: FieldRefInputConfig) {
-    super();
     this.refField = this.validate(refField, config);
-  }
-
-  getRefField() {
-    return this.refField;
   }
 
   private validate(

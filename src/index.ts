@@ -82,7 +82,7 @@ import {
 } from "./core/fields/core/probability";
 
 import { PickField, PickFieldProps } from "./core/fields/core/pick/PickField";
-import { ChacaModules, Module } from "./modules";
+import { ChacaModules } from "./modules";
 import { Dataset } from "./core/dataset";
 
 export const chaca = new Chaca();
@@ -102,7 +102,6 @@ export {
 export {
   KeyField,
   RefField,
-  Module,
   EnumField,
   SequenceField,
   SequentialField,

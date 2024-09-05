@@ -7,7 +7,6 @@ import {
   MixedFieldResolver,
   ProbabilityFieldResolver,
   RefFieldResolver,
-  ModuleResolver,
   SequenceFieldResolver,
 } from "../resolvers/core";
 import { ChacaSchema } from "../schema";
@@ -20,7 +19,6 @@ import {
   PickValueNode,
   ProbabilityValueNode,
   RefValueNode,
-  ModuleNode,
   SequenceValueNode,
   SequentialValueNode,
 } from "./core";
@@ -82,8 +80,6 @@ export class ChacaInputTree {
       returnNode = new CustomValueNode(nodeConfig, object.type.fun);
     } else if (object.type instanceof PickFieldResolver) {
       returnNode = new PickValueNode(nodeConfig, object.type.values);
-    } else if (object.type instanceof ModuleResolver) {
-      returnNode = new ModuleNode(nodeConfig, object.type.module);
     } else if (object.type instanceof ProbabilityFieldResolver) {
       returnNode = new ProbabilityValueNode(nodeConfig, object.type.values);
     } else if (object.type instanceof EnumFieldResolver) {
@@ -121,18 +117,7 @@ export class ChacaInputTree {
         possibleNull: object.possibleNull,
       });
     } else if (object.type instanceof KeyFieldResolver) {
-      if (object.type.fieldType instanceof ModuleResolver) {
-        const schemaValueNode = new ModuleNode(
-          {
-            fieldTreeRoute: actualRoute,
-            isArray: null,
-            possibleNull: 0,
-          },
-          object.type.fieldType.module,
-        );
-
-        returnNode = new KeyValueNode(actualRoute, schemaValueNode);
-      } else if (object.type.fieldType instanceof SequenceFieldResolver) {
+      if (object.type.fieldType instanceof SequenceFieldResolver) {
         const schemaValueNode = new SequenceValueNode({
           fieldTreeRoute: actualRoute,
           config: object.type.fieldType.getConfig(),

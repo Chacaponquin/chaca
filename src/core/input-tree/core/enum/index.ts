@@ -21,7 +21,7 @@ export class EnumValueNode extends ChacaTreeNode {
     }
   }
 
-  getValue() {
+  value() {
     const selectOption = this.utils.oneOfArray(this.options);
     return selectOption ? selectOption : null;
   }

@@ -1,4 +1,4 @@
-import { SequentialFieldConfig } from "../interfaces/sequential.interface";
+import { SequentialFieldConfig } from "../SequentialField";
 
 export class Config {
   private _config: Required<SequentialFieldConfig> = { loop: false };
@@ -11,7 +11,7 @@ export class Config {
     }
   }
 
-  public value() {
+  value() {
     return this._config;
   }
 }

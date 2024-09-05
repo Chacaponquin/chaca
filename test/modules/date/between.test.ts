@@ -8,7 +8,7 @@ describe("# Date between test", () => {
 
   it("With two logical dates", () => {
     const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.between().getValue({ from: initDate, to: finishDate }),
+      modules.date.between({ from: initDate, to: finishDate }),
     );
 
     expect(
@@ -22,13 +22,13 @@ describe("# Date between test", () => {
 
   it("Init date greater than from date. Should throw an error", () => {
     expect(() => {
-      modules.date.between().getValue({ from: finishDate, to: initDate });
+      modules.date.between({ from: finishDate, to: initDate });
     }).toThrow(ChacaError);
   });
 
   it("Pass only from date", () => {
     const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.between().getValue({ from: initDate }),
+      modules.date.between({ from: initDate }),
     );
 
     expect(allDates.every((d) => initDate.getTime() <= d.getTime())).toBe(true);
@@ -36,7 +36,7 @@ describe("# Date between test", () => {
 
   it("Pass only to date", () => {
     const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.between().getValue({ to: initDate }),
+      modules.date.between({ to: initDate }),
     );
 
     expect(allDates.every((d) => d.getTime() <= finishDate.getTime())).toBe(

@@ -1,12 +1,16 @@
-import { SchemaFieldType } from "../../../schema/interfaces/schema";
-import { SequenceFieldProps } from "./interfaces/sequence.interface";
 import { Config } from "./value-object";
 
-export class SequenceField extends SchemaFieldType {
+export type SequenceFieldProps = Partial<{
+  /** Init value for the field. Default `1`*/
+  starsWith: number;
+  /** Step between field values in schema documents. Default `1` */
+  step: number;
+}>;
+
+export class SequenceField {
   private config: Required<SequenceFieldProps>;
 
   constructor(config?: SequenceFieldProps) {
-    super();
     this.config = new Config(config).value();
   }
 
@@ -14,5 +18,3 @@ export class SequenceField extends SchemaFieldType {
     return this.config;
   }
 }
-
-export type { SequenceFieldProps };

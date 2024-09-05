@@ -16,7 +16,7 @@ describe("# Possible null fields tests", () => {
   describe("Boolean value", () => {
     it("Pass possibleNull=true. Returns at least one null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: true },
+        null: { type: () => modules.color.cmyk(), possibleNull: true },
       });
 
       const data = schema.array(50);
@@ -26,7 +26,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass possibleNull=false. Returns always a null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: false },
+        null: { type: () => modules.color.cmyk(), possibleNull: false },
       });
 
       const data = schema.array(50);
@@ -38,7 +38,7 @@ describe("# Possible null fields tests", () => {
   describe("Number value", () => {
     it("Pass possibleNull=0. Always return a non-null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: 0 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 0 },
       });
 
       const data = schema.array(50);
@@ -48,7 +48,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass possibleNull=100. Always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: 100 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 100 },
       });
 
       const data = schema.array(50);
@@ -58,7 +58,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass possibleNull=number-greater-than-100. Always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: 150 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 150 },
       });
 
       const data = schema.array(50);
@@ -68,7 +68,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a number between 0 and 100. Should return at least one null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: 60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 60 },
       });
 
       const data = schema.array(50);
@@ -78,7 +78,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass possibleNull=negative-number. Always return a non-null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: -60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: -60 },
       });
 
       const data = schema.array(50);
@@ -90,7 +90,7 @@ describe("# Possible null fields tests", () => {
   describe("Function value", () => {
     it("Pass a function that return a 0. Should return an non-null values", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: () => 0 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 0 },
       });
 
       const data = schema.array(50);
@@ -100,7 +100,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a function that return 100. Always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: () => 100 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 100 },
       });
 
       const data = schema.array(50);
@@ -110,7 +110,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a function that return a number-greater-than-100. Always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: () => 150 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 150 },
       });
 
       const data = schema.array(50);
@@ -120,7 +120,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a function that return a number between 0 and 100. Should return at least one null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: () => 60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 60 },
       });
 
       const data = schema.array(50);
@@ -130,7 +130,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a function that return a negative number. Always return a non-null value", () => {
       const schema = chaca.schema({
-        null: { type: modules.color.cmyk(), possibleNull: () => -60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => -60 },
       });
 
       const data = schema.array(50);
@@ -140,9 +140,9 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a function that uses currentFields", () => {
       const schema = chaca.schema({
-        age: modules.datatype.int({ max: 90, min: 18 }),
+        age: () => modules.datatype.int({ max: 90, min: 18 }),
         null: {
-          type: modules.color.cmyk(),
+          type: () => modules.color.cmyk(),
           possibleNull: ({ currentFields }) => {
             if (currentFields.age > 40) {
               return 100;

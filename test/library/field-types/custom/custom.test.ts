@@ -3,7 +3,7 @@ import { chaca, modules } from "../../../../src";
 describe("# Custom field tests", () => {
   it("Custom function return a string", () => {
     const schema = chaca.schema({
-      id: { type: modules.id.uuid() },
+      id: { type: () => modules.id.uuid() },
       custom: {
         type: () => "Foo",
       },
@@ -15,7 +15,7 @@ describe("# Custom field tests", () => {
 
   it("Custom function return undefined. Should return null as value", () => {
     const schema = chaca.schema({
-      id: { type: modules.id.uuid() },
+      id: { type: () => modules.id.uuid() },
       custom: {
         type: () => undefined,
       },
@@ -27,7 +27,7 @@ describe("# Custom field tests", () => {
 
   it("Custom function access to this property", () => {
     const schema = chaca.schema({
-      id: { type: modules.id.uuid() },
+      id: { type: () => modules.id.uuid() },
       custom: {
         type({ currentFields: fields }) {
           return fields.id;
@@ -42,9 +42,9 @@ describe("# Custom field tests", () => {
 
   it("Custom function in a nested schema", () => {
     const schema = chaca.schema({
-      id: modules.id.uuid(),
+      id: () => modules.id.uuid(),
       user: chaca.schema({
-        image: modules.science.unit(),
+        image: () => modules.image.people(),
         followersInf: {
           type: ({ currentFields: a }) => {
             return a.id;
@@ -56,18 +56,18 @@ describe("# Custom field tests", () => {
 
     const doc = schema.object();
 
-    expect(doc["user"]["followersInf"][0]).toBe(doc["id"]);
+    expect(doc.user.followersInf[0]).toBe(doc.id);
   });
 
   it("Custom function in a nested schema inside an other nested schema", () => {
     const schema = chaca.schema({
-      id: modules.id.uuid(),
+      id: () => modules.id.uuid(),
       user: chaca.schema({
-        image: modules.science.unit(),
-        custom: ({ currentFields: h }) => h.id,
+        image: () => modules.image.people(),
+        custom: ({ currentFields: f }) => f.id,
         followerInf: chaca.schema({
-          name: modules.person.firstName(),
-          hola: ({ currentFields }) => {
+          name: () => modules.person.firstName(),
+          foo: ({ currentFields }) => {
             return currentFields.user.image;
           },
         }),
@@ -76,6 +76,6 @@ describe("# Custom field tests", () => {
 
     const doc = schema.object();
 
-    expect(doc["user"]["followerInf"]["hola"]).toBe(doc["user"]["image"]);
+    expect(doc["user"]["followerInf"]["foo"]).toBe(doc["user"]["image"]);
   });
 });

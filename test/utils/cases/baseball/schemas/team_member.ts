@@ -6,16 +6,16 @@ const ARRAY_COACHS = new Array(TOTAL_COACHS).fill(0).map(() => "C");
 
 export const TEAM_MEMBER_SCHEMA = chaca.schema({
   member_id: chaca.key(chaca.sequence()),
-  member_name: modules.person.fullName({ language: "es", sex: "male" }),
+  member_name: () => modules.person.fullName({ language: "es", sex: "male" }),
   team_id: chaca.ref("Team.team_id"),
-  member_number: modules.datatype.int({ min: 1, max: 99 }),
-  years_in_team: modules.datatype.int({ min: 1, max: 20 }),
+  member_number: () => modules.datatype.int({ min: 1, max: 99 }),
+  years_in_team: () => modules.datatype.int({ min: 1, max: 20 }),
   member_type: chaca.sequential([...ARRAY_PLAYERS, ...ARRAY_COACHS]),
   /*teams_record: {
     type: chaca.schema({
       team_id: chaca.ref("Team.team_id"),
       year_init: chaca.sequence({
-        starsWith: modules.datatype.int().getValue({
+        starsWith: modules.datatype.int({
           min: 2010,
           max: new Date().getFullYear(),
         }),
@@ -25,7 +25,7 @@ export const TEAM_MEMBER_SCHEMA = chaca.schema({
         type: () => {
           return modules.datatype
             .int()
-            .getValue({ min: 2010, max: new Date().getFullYear() });
+            .value({ min: 2010, max: new Date().getFullYear() });
         },
       },
     }),
@@ -54,7 +54,7 @@ export const COACH_SCHEMA = chaca.schema({
       },
     }),
   ),
-  experience_year: modules.datatype.int({ min: 1, max: 15 }),
+  experience_year: () => modules.datatype.int({ min: 1, max: 15 }),
 });
 
 export const PITCHER_SCHEMA = chaca.schema({
@@ -64,7 +64,7 @@ export const PITCHER_SCHEMA = chaca.schema({
       where: ({ refFields, store }) => {
         let valid = false;
 
-        const allPositions = store.getValue("Position");
+        const allPositions = store.value("Position");
 
         for (let i = 0; i < allPositions.length && !valid; i++) {
           if (
@@ -79,8 +79,8 @@ export const PITCHER_SCHEMA = chaca.schema({
       },
     }),
   ),
-  innings_pitched: modules.datatype.int({ min: 0, max: 1000 }),
-  runs_allowed: modules.datatype.int({ min: 0, max: 1000 }),
+  innings_pitched: () => modules.datatype.int({ min: 0, max: 1000 }),
+  runs_allowed: () => modules.datatype.int({ min: 0, max: 1000 }),
 });
 
 export const BATTER_SCHEMA = chaca.schema({
@@ -90,7 +90,7 @@ export const BATTER_SCHEMA = chaca.schema({
       where: ({ refFields, store }) => {
         let valid = false;
 
-        const allPositions = store.getValue("Position");
+        const allPositions = store.value("Position");
 
         for (let i = 0; i < allPositions.length && !valid; i++) {
           if (
@@ -105,8 +105,8 @@ export const BATTER_SCHEMA = chaca.schema({
       },
     }),
   ),
-  at_bats: modules.datatype.int({ min: 0, max: 10000 }),
+  at_bats: () => modules.datatype.int({ min: 0, max: 10000 }),
   total_hits: ({ currentFields: fields }) => {
-    return modules.datatype.int().getValue({ min: 0, max: fields.at_bats });
+    return modules.datatype.int({ min: 0, max: fields.at_bats });
   },
 });

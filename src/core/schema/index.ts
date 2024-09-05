@@ -1,18 +1,13 @@
 import { ExportResolver } from "../export/ExportResolver";
-import {
-  SchemaFieldType,
-  SchemaInput,
-  SchemaToResolve,
-} from "./interfaces/schema";
+import { SchemaInput, SchemaToResolve } from "./interfaces/schema";
 import { FileConfig } from "../export/interfaces/export";
 import { InputSchemaResolver } from "./value-object/SchemaResolver";
-import { SchemaResolver } from "../schema-resolver/resolver";
+import { SchemaResolver } from "../schema-resolver";
 
-export class ChacaSchema<K = any> extends SchemaFieldType {
+export class ChacaSchema<K = any> {
   private schemaResolver: SchemaToResolve;
 
   constructor(input: SchemaInput) {
-    super();
     this.schemaResolver = new InputSchemaResolver(input).value();
   }
 

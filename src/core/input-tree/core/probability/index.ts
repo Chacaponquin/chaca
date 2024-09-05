@@ -40,7 +40,7 @@ export class ProbabilityValueNode extends ChacaTreeNode {
     }
   }
 
-  public getValue(props: Props): unknown {
+  public value(props: Props): unknown {
     const values = this.options.map((o) => o.value);
 
     const weights: number[] = this.options.map((o) => {

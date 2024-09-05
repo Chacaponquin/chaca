@@ -1,5 +1,4 @@
 import { ChacaError } from "../../../errors";
-import { Module } from "../../../modules";
 import {
   EnumField,
   KeyField,
@@ -16,7 +15,6 @@ import {
   PickFieldResolver,
   ProbabilityFieldResolver,
   RefFieldResolver,
-  ModuleResolver,
   SequenceFieldResolver,
   SequentialFieldResolver,
 } from "../../resolvers/core";
@@ -60,17 +58,15 @@ export class InputSchemaResolver {
           returnResolver = new MixedFieldResolver(config);
         } else if (config instanceof PickField) {
           returnResolver = new PickFieldResolver(config.values);
-        } else if (config instanceof Module) {
-          returnResolver = new ModuleResolver(config);
         } else if (config instanceof RefField) {
-          returnResolver = new RefFieldResolver(config.getRefField());
+          returnResolver = new RefFieldResolver(config.refField);
         } else if (config instanceof SequentialField) {
           returnResolver = new SequentialFieldResolver(
-            config.getValuesArray(),
-            config.getConfig(),
+            config.values,
+            config.config,
           );
         } else if (config instanceof ProbabilityField) {
-          returnResolver = new ProbabilityFieldResolver(config.getValues());
+          returnResolver = new ProbabilityFieldResolver(config.values);
         } else if (config instanceof KeyField) {
           returnResolver = new InputKeyField(config).resolver();
         } else if (config instanceof SequenceField) {

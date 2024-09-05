@@ -25,8 +25,6 @@ import {
 } from "./core/fields/core/probability";
 import { PickField, PickFieldProps } from "./core/fields/core/pick/PickField";
 import { Dataset } from "./core/dataset";
-import { Module } from "./modules";
-import { ModuleFunction } from "./modules/module";
 
 export class Chaca {
   utils = new ChacaUtils();
@@ -43,14 +41,6 @@ export class Chaca {
   schema<K = any>(input: SchemaInput): ChacaSchema<K> {
     const newSchema = new ChacaSchema<K>(input);
     return newSchema;
-  }
-
-  /**
-   * Define your ouwn type schema for create your data
-   * @param func function that returns a value
-   */
-  module<V = any, A = never>(func: ModuleFunction<V, A>) {
-    return (...args: A[]) => new Module<V, A>(func, ...args);
   }
 
   /**
@@ -93,14 +83,14 @@ export class Chaca {
 
   /**
    * Key field
-   * @param field field that will return the value. Could be (`Module` | `RefField` | `SequenceField` | `CustomField` )
+   * @param field field that will return the value. Could be (`RefField` | `SequenceField` | `CustomField` )
    *
    * @example
    * chaca.key(chaca.sequence())
    * chaca.key(schemas.id.uuid())
    */
-  key<A = any, C = any>(field: KeyFieldProps<A, C>) {
-    return new KeyField<A>(field);
+  key(field: KeyFieldProps) {
+    return new KeyField(field);
   }
 
   /**
@@ -120,14 +110,18 @@ export class Chaca {
    * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    *
    * @example
-   * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]
+   * const data = [
+   *  { id: '1664755445878', name: 'Alberto', age: 20 },
+   *  { id: '1664755445812', name: 'Carolina', age: 28 }
+   * ]
    * const config = { filename: 'users', format: 'json', location: '../../data' }
+   *
    * await schema.export(data, config)
    *
    * @returns
    * Promise<string>
    */
-  async export(data: any, config: FileConfig) {
+  async export(data: any, config: FileConfig): Promise<string> {
     const resolver = new ExportResolver(config);
     const route = await resolver.data(data);
 

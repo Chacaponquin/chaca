@@ -1,5 +1,4 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../module";
 import {
   ANIMAL_TYPE,
   BEAR,
@@ -19,9 +18,7 @@ import {
 } from "./constants";
 
 export class AnimalModule {
-  private utils = new ChacaUtils();
-
-  public readonly constants = {
+  readonly constants = {
     animalTypes: ANIMAL_TYPE,
     bears: BEAR,
     birds: BIRD,
@@ -41,151 +38,151 @@ export class AnimalModule {
 
   /**
    * Returns a dog breed
-   * @example modules.animal.dog() // Schema
-   * @example modules.animal.dog().getValue() // 'Irish Water Spaniel'
+   * @example modules.animal.dog() // 'Irish Water Spaniel'
    * @returns string
    */
-  dog() {
-    return new Module<string>(() => this.utils.oneOfArray(DOG));
+  dog(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(DOG);
   }
 
   /**
    * Returns a bear breed
-   * @example modules.animal.bear() // Schema
-   * @example modules.animal.bear().getValue() // 'Singapuria'
+   * @example modules.animal.bear() // 'Singapuria'
    * @returns string
    */
-  bear() {
-    return new Module<string>(() => this.utils.oneOfArray(BEAR));
+  bear(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(BEAR);
   }
 
   /**
    * Returns a bird breed
-   * @example modules.animal.bird() // Schema
-   * @example modules.animal.bird().getValue() // 'Singapuria'
+   * @example modules.animal.bird() // 'Singapuria'
    * @returns string
    */
-  bird() {
-    return new Module<string>(() => this.utils.oneOfArray(BIRD));
+  bird(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(BIRD);
   }
 
   /**
    * Returns a cat breed
-   * @example modules.animal.cat() // Schema
-   * @example modules.animal.cat().getValue() // 'Bengal'
+   * @example modules.animal.cat() // 'Bengal'
    * @returns string
    */
-  cat() {
-    return new Module<string>(() => this.utils.oneOfArray(CAT));
+  cat(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(CAT);
   }
 
   /**
    * Returns a cetacean breed
-   * @example modules.animal.cetacean() // Schema
-   * @example modules.animal.cetacean().getValue() // 'Spinner Dolphin'
+   * @example modules.animal.cetacean() // 'Spinner Dolphin'
    * @returns string
    */
-  cetacean() {
-    return new Module<string>(() => this.utils.oneOfArray(CETACEAN));
+  cetacean(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(CETACEAN);
   }
 
   /**
    * Returns a cow breed
-   * @example modules.animal.cow() // Schema
-   * @example modules.animal.cow().getValue() // 'Brava'
+   * @example modules.animal.cow() // 'Brava'
    * @returns string
    */
-  cow() {
-    return new Module<string>(() => this.utils.oneOfArray(COW));
+  cow(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(COW);
   }
 
   /**
    * Returns a crocodilia breed
-   * @example modules.animal.crocodilia() // Schema
-   * @example modules.animal.crocodilia().getValue() // 'Philippine Crocodile'
+   * @example modules.animal.crocodilia() // 'Philippine Crocodile'
    * @returns string
    */
-  crocodilia() {
-    return new Module<string>(() => this.utils.oneOfArray(CROCODILIA));
+  crocodilia(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(CROCODILIA);
   }
 
   /**
    * Returns a fish breed
-   * @example modules.animal.fish() // Schema
-   * @example modules.animal.fish().getValue() // 'Mandarin fish'
+   * @example modules.animal.fish() // 'Mandarin fish'
    * @returns string
    */
-  fish() {
-    return new Module<string>(() => this.utils.oneOfArray(FISH));
+  fish(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(FISH);
   }
 
   /**
    * Returns a horse breed
-   * @example modules.animal.horse() // Schema
-   * @example modules.animal.horse().getValue() // 'Swedish Warmblood'
+   * @example modules.animal.horse() // 'Swedish Warmblood'
    * @returns string
    */
-  horse() {
-    return new Module<string>(() => this.utils.oneOfArray(HORSE));
+  horse(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(HORSE);
   }
 
   /**
    * Returns a insect breed
-   * @example modules.animal.insect() // Schema
-   * @example modules.animal.insect().getValue() // 'Pyramid ant'
+   * @example modules.animal.insect() // 'Pyramid ant'
    * @returns string
    */
-  insect() {
-    return new Module<string>(() => this.utils.oneOfArray(INSECT));
+  insect(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(INSECT);
   }
 
   /**
    * Returns a lion breed
-   * @example modules.animal.lion() // Schema
-   * @example modules.animal.lion().getValue() // 'Northeast Congo Lion'
+   * @example modules.animal.lion() // 'Northeast Congo Lion'
    * @returns string
    */
-  lion() {
-    return new Module<string>(() => this.utils.oneOfArray(LION));
+  lion(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(LION);
   }
 
   /**
    * Returns a rabbit breed
-   * @example modules.animal.rabbit() // Schema
-   * @example modules.animal.rabbit().getValue() // 'Florida White'
+   * @example modules.animal.rabbit() // 'Florida White'
    * @returns string
    */
-  rabbit() {
-    return new Module<string>(() => this.utils.oneOfArray(RABBIT));
+  rabbit(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(RABBIT);
   }
 
   /**
    * Returns a rodent breed
-   * @example modules.animal.rodent() // Schema
-   * @example modules.animal.rodent().getValue() // 'Cuscomys ashanika'
+   * @example modules.animal.rodent() // 'Cuscomys ashanika'
    * @returns string
    */
-  rodent() {
-    return new Module<string>(() => this.utils.oneOfArray(RODENT));
+  rodent(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(RODENT);
   }
 
   /**
    * Returns a snake breed
-   * @example modules.animal.snake() // Schema
-   * @example modules.animal.snake().getValue() // 'Eyelash viper'
+   * @example modules.animal.snake() // 'Eyelash viper'
    * @returns string
    */
-  snake() {
-    return new Module<string>(() => this.utils.oneOfArray(SNAKE));
+  snake(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(SNAKE);
   }
 
   /**
    * Returns an animal type
-   * @example modules.animal.animalType() // Schema
-   * @example modules.animal.animalType().getValue() // 'Singapuria'
+   * @example modules.animal.type() // 'Singapuria'
    * @returns string
    */
-  animalType() {
-    return new Module<string>(() => this.utils.oneOfArray(ANIMAL_TYPE));
+  type(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(ANIMAL_TYPE);
   }
 }

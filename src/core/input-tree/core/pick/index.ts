@@ -65,14 +65,13 @@ export class PickValueNode extends ChacaTreeNode {
   }
 
   private generate(banned: number[]): number {
-    let num = this.datatypeModule
-      .int()
-      .getValue({ min: 0, max: this.values.values.length });
+    let num = this.datatypeModule.int({
+      min: 0,
+      max: this.values.values.length,
+    });
 
     while (banned.includes(num)) {
-      num = this.datatypeModule
-        .int()
-        .getValue({ min: 0, max: this.values.values.length });
+      num = this.datatypeModule.int({ min: 0, max: this.values.values.length });
     }
 
     return num;

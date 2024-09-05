@@ -8,7 +8,6 @@ import {
   EnumValueNode,
   MixedValueNode,
   RefValueNode,
-  ModuleNode,
   KeyValueNode,
   SequentialValueNode,
   SequenceValueNode,
@@ -289,7 +288,7 @@ export class SchemaResolver<K = any> {
 
     if (fieldIsArray !== null) {
       // limite del arreglo de valores
-      const limit = this.datatypeModule.int().getValue({
+      const limit = this.datatypeModule.int({
         min: fieldIsArray.min,
         max: fieldIsArray.max,
       });
@@ -361,17 +360,9 @@ export class SchemaResolver<K = any> {
 
       // en caso de no ser un array
       else {
-        // en caso de ser un schema field
-        if (field instanceof ModuleNode) {
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: field.getValue(),
-          });
-        }
-
         // en caso de ser un probability field
-        else if (field instanceof ProbabilityValueNode) {
-          const value = field.getValue({
+        if (field instanceof ProbabilityValueNode) {
+          const value = field.value({
             store: store,
             currentDocument: currentDocument,
           });
@@ -393,7 +384,7 @@ export class SchemaResolver<K = any> {
 
         // en caso de ser un field sequential
         else if (field instanceof SequentialValueNode) {
-          const value = field.getValue();
+          const value = field.value();
           return new SingleResultNode({
             name: field.getNodeName(),
             value: value,
@@ -403,7 +394,7 @@ export class SchemaResolver<K = any> {
         // en caso de ser un custom field
         else if (field instanceof CustomValueNode) {
           // obtener el valor de la funcion pasando como parametro el documento actual del ciclo
-          const value = field.getValue({
+          const value = field.value({
             fields: currentDocument.getDocumentObject(),
             datasetStore: store,
           });
@@ -416,7 +407,7 @@ export class SchemaResolver<K = any> {
 
         // en caso de ser un ref field
         else if (field instanceof RefValueNode) {
-          const refValue = field.getValue(indexDoc, this.schemaIndex);
+          const refValue = field.value(indexDoc, this.schemaIndex);
           return new SingleResultNode({
             name: field.getNodeName(),
             value: refValue,
@@ -426,7 +417,7 @@ export class SchemaResolver<K = any> {
         // en caso de ser un key field
         else if (field instanceof KeyValueNode) {
           const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-          const keyValue = field.getValue({
+          const keyValue = field.value({
             currentDocument: indexDoc,
             store: new DatasetStore({
               schemasStore: this.schemasStore,
@@ -446,7 +437,7 @@ export class SchemaResolver<K = any> {
         else if (field instanceof SequenceValueNode) {
           return new SingleResultNode({
             name: field.getNodeName(),
-            value: field.getValue(),
+            value: field.value(),
           });
         }
 

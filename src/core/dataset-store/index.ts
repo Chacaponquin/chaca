@@ -5,7 +5,7 @@ import {
   GetStoreValueInput,
 } from "../schema-store/interfaces/store";
 import { FieldNode } from "../result-tree/classes";
-import { SchemaResolver } from "../schema-resolver/resolver";
+import { SchemaResolver } from "../schema-resolver";
 
 interface Props {
   schemasStore: SchemaStore;
@@ -45,8 +45,8 @@ export class DatasetStore {
     return returnConfig;
   }
 
-  getValue<R = any>(fieldToGet: string, config?: GetStoreValueInput<R>): R[] {
-    const foundNodes = this.schemasStore.getValue(
+  value<R = any>(fieldToGet: string, config?: GetStoreValueInput<R>): R[] {
+    const foundNodes = this.schemasStore.value(
       fieldToGet,
       this.validateGetValueConfig(config),
     );

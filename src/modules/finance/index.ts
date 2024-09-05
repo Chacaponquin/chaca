@@ -1,4 +1,3 @@
-import { Module } from "../module";
 import { ChacaUtils } from "../../core/utils";
 import {
   ACCOUNT_TYPES,
@@ -21,10 +20,7 @@ type PinProps = {
 };
 
 export class FinanceModule {
-  private datatypeModule = new DatatypeModule();
-  private utils = new ChacaUtils();
-
-  public readonly constants = {
+  readonly constants = {
     accountTypes: ACCOUNT_TYPES,
     ibans: IBAN,
     moneyInfo: MONEY_INFO,
@@ -36,30 +32,26 @@ export class FinanceModule {
    * Returns a transaction type
    *
    * @example
-   * modules.finance.transaction() // Schema
-   * modules.finance.transaction().getValue() 'payment'
+   * modules.finance.transaction() // 'payment'
    *
    * @returns string
    */
-  transaction() {
-    return new Module(() => {
-      return this.utils.oneOfArray(this.constants.transactionTypes);
-    });
+  transaction(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.constants.transactionTypes);
   }
 
   /**
    * Returns a suscription plan type
    *
    * @example
-   * modules.finance.subscriptionPlan() // Schema
-   * modules.finance.subscriptionPlan().getValue() // 'Free'
+   * modules.finance.subscriptionPlan() // 'Free'
    *
    * @returns string
    */
-  subscriptionPlan() {
-    return new Module(() => {
-      return this.utils.oneOfArray(this.constants.subscriptionPlans);
-    });
+  subscriptionPlan(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.constants.subscriptionPlans);
   }
 
   /**
@@ -67,187 +59,172 @@ export class FinanceModule {
    *
    * @param args.length The length of the PIN to generate. Defaults to `4`.
    *
-   * @example modules.finance.pin() // Schema
    * @example
-   * modules.finance.pin().getValue() // '5067'
-   * modules.finance.pin().getValue({length: 6}) // '213789'
+   * modules.finance.pin() // '5067'
+   * modules.finance.pin({ length: 6 }) // '213789'
    *
    * @returns string
    */
-  pin(args?: PinProps) {
-    return new Module<string, PinProps>((a) => {
-      const len = typeof a.length === "number" && a.length > 0 ? a.length : 4;
+  pin(a?: PinProps): string {
+    const datatypeModule = new DatatypeModule();
 
-      return Array.from({ length: len })
-        .map(() =>
-          String(this.datatypeModule.int().getValue({ min: 0, max: 9 })),
-        )
-        .join("");
-    }, args || {});
+    const len = a?.length && a.length > 0 ? a.length : 4;
+
+    return Array.from({ length: len })
+      .map(() => String(datatypeModule.int({ min: 0, max: 9 })))
+      .join("");
   }
 
   /**
    * Returns a Bitcoin address.
    *
-   * @example modules.finance.bitcoinAddress() // Schema
    * @example
-   * modules.finance.bitcoinAddress().getValue() // '3ySdvCkTLVy7gKD4j6JfSaf5d'
+   * modules.finance.bitcoinAddress() // '3ySdvCkTLVy7gKD4j6JfSaf5d'
    *
    * @returns string
    */
-  bitcoinAddress() {
-    return new Module<string>(() => {
-      let address: string = this.utils.oneOfArray(["1", "3"]);
+  bitcoinAddress(): string {
+    const utils = new ChacaUtils();
+    const datatypeModule = new DatatypeModule();
 
-      address += this.datatypeModule.alphaNumeric().getValue({
-        case: "mixed",
-        banned: "0OIl",
-        length: this.datatypeModule.int().getValue({ min: 25, max: 39 }),
-      });
+    let address: string = utils.oneOfArray(["1", "3"]);
 
-      return address;
+    address += datatypeModule.alphaNumeric({
+      case: "mixed",
+      banned: "0OIl",
+      length: datatypeModule.int({ min: 25, max: 39 }),
     });
+
+    return address;
   }
 
   /**
    * Returns a credit card number.
    *
-   * @example modules.finance.creaditNumber() // Schema
    * @example
-   * modules.finance.creditCard().getValue() // '6375-3265-4676-6646'
+   * modules.finance.creditCard() // '6375-3265-4676-6646'
    *
    * @returns string
    */
-  creditCard() {
-    return new Module<string>(() => {
-      let retString = "";
+  creditCard(): string {
+    const datatypeModule = new DatatypeModule();
 
-      for (let i = 1; i <= 12; i++) {
-        if (i % 4 === 0) retString = retString.concat("-");
+    let retString = "";
 
-        retString = retString.concat(
-          String(this.datatypeModule.int().getValue({ min: 0, max: 9 })),
-        );
-      }
+    for (let i = 1; i <= 12; i++) {
+      if (i % 4 === 0) retString = retString.concat("-");
 
-      return retString;
-    });
+      retString = retString.concat(
+        String(datatypeModule.int({ min: 0, max: 9 })),
+      );
+    }
+
+    return retString;
   }
 
   /**
    * Returns a Ethereum address.
    *
-   * @example modules.finance.ethereumAddress() // Schema
    * @example
    * modules.finance.ethereumAddress() // '0xf03dfeecbafc5147241cc4c4ca20b3c9dfd04c4a'
    *
    * @returns string
    */
-  ethereumAddress(): Module<string> {
-    return new Module(() =>
-      this.datatypeModule.hexadecimal().getValue({ length: 40, case: "lower" }),
-    );
+  ethereumAddress(): string {
+    const datatypeModule = new DatatypeModule();
+    return datatypeModule.hexadecimal({ length: 40, case: "lower" });
   }
 
   /**
    * @example
-   * modules.finance.accountType() // Schema
-   * modules.finance.accountType().getValue() // "Credit Card"
+   * modules.finance.accountType() // "Credit Card"
+   *
    * @returns string
    */
-  accountType(): Module<string> {
-    return new Module<string>(() => this.utils.oneOfArray(ACCOUNT_TYPES));
+  accountType(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(ACCOUNT_TYPES);
   }
 
   /**
    * Returns a SWIFT/BIC code based on the [ISO-9362](https://en.wikipedia.org/wiki/ISO_9362) format.
    *
-   * @example modules.finance.bic() // Schema
    * @example
-   * modules.finance.bic().getValue() // 'WYAUPGX1'
+   * modules.finance.bic() // 'WYAUPGX1'
    *
    * @returns string
    */
-  bic() {
-    return new Module<string>(() => {
-      const bankIdentifier = this.datatypeModule.characters().getValue({
-        length: 4,
-        case: "upper",
-      });
-      const countryCode = this.utils.oneOfArray(IBAN.iso3166);
-      const locationCode = this.datatypeModule.alphaNumeric().getValue({
-        case: "upper",
-        length: 2,
-      });
-      const branchCode = this.datatypeModule.boolean().getValue()
-        ? this.datatypeModule.boolean().getValue()
-          ? this.datatypeModule
-              .alphaNumeric()
-              .getValue({ case: "upper", length: 3 })
-          : "XXX"
-        : "";
+  bic(): string {
+    const utils = new ChacaUtils();
+    const datatypeModule = new DatatypeModule();
 
-      return `${bankIdentifier}${countryCode}${locationCode}${branchCode}`;
+    const bankIdentifier = datatypeModule.characters({
+      length: 4,
+      case: "upper",
     });
+    const countryCode = utils.oneOfArray(IBAN.iso3166);
+    const locationCode = datatypeModule.alphaNumeric({
+      case: "upper",
+      length: 2,
+    });
+    const branchCode = datatypeModule.boolean()
+      ? datatypeModule.boolean()
+        ? datatypeModule.alphaNumeric({ case: "upper", length: 3 })
+        : "XXX"
+      : "";
+
+    return `${bankIdentifier}${countryCode}${locationCode}${branchCode}`;
   }
 
   /**
    * @example
-   * modules.finance.routingNumber() // Schema
-   * modules.finance.routingNumber().getValue() // '522814402'
+   * modules.finance.routingNumber() // '522814402'
    * @returns string
    */
-  routingNumber() {
-    return new Module<string>(() => {
-      const routingNumber = this.utils.replaceSymbols("########");
+  routingNumber(): string {
+    const utils = new ChacaUtils();
+    const routingNumber = utils.replaceSymbols("########");
 
-      // Modules 10 straight summation.
-      let sum = 0;
+    // Modules 10 straight summation.
+    let sum = 0;
 
-      for (let i = 0; i < routingNumber.length; i += 3) {
-        sum += Number(routingNumber[i]) * 3;
-        sum += Number(routingNumber[i + 1]) * 7;
-        sum += Number(routingNumber[i + 2]) || 0;
-      }
+    for (let i = 0; i < routingNumber.length; i += 3) {
+      sum += Number(routingNumber[i]) * 3;
+      sum += Number(routingNumber[i + 1]) * 7;
+      sum += Number(routingNumber[i + 2]) || 0;
+    }
 
-      return `${routingNumber}${Math.ceil(sum / 10) * 10 - sum}`;
-    });
+    return `${routingNumber}${Math.ceil(sum / 10) * 10 - sum}`;
   }
 
   /**
    * Returns a credit card CVV.
    *
-   * @example modules.finance.creditCardCVV() // Schema
    * @example
-   * modules.finance.creditCardCVV().getValue() // '506'
+   * modules.finance.creditCardCVV() // '506'
    *
    * @returns string
    */
-  creditCardCVV(): Module<string> {
-    return new Module<string>(() => {
-      let cvv = "";
-      for (let i = 0; i < 3; i++) {
-        cvv += this.datatypeModule
-          .int()
-          .getValue({ max: 9, min: 0 })
-          .toString();
-      }
-      return cvv;
-    });
+  creditCardCVV(): string {
+    const datatypeModule = new DatatypeModule();
+
+    let cvv = "";
+
+    for (let i = 0; i < 3; i++) {
+      cvv += datatypeModule.int({ max: 9, min: 0 }).toString();
+    }
+
+    return cvv;
   }
 
   /**
    * Returns a string with a money symbol
-   * @example modules.finance.moneySymbol() // Schema
-   * @example modules.finance.moneySymbol().getValue() // '$'
+   * @example modules.finance.moneySymbol() // '$'
    * @returns string
    */
-  moneySymbol(): Module<string> {
-    return new Module<string>(() => {
-      return this.utils.oneOfArray(
-        Object.values(MONEY_INFO).map((el) => el.symbol),
-      );
-    });
+  moneySymbol(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.symbol));
   }
 
   /**
@@ -258,47 +235,49 @@ export class FinanceModule {
    * @param args.precision The number of decimal places for the amount.
    * @param args.symbol The symbol used to prefix the amount. Defaults to `'$'`.
    *
-   * @example modules.finance.amount() // Schema
    * @example
-   * modules.finance.amount().getValue() // '$6170.87'
-   * modules.finance.amount().getValue({min: 0, max: 1000}) // '$5.53'
-   * modules.finance.amount().getValue({min: 0, max: 1000, symbol: '€', precision: 0}) // '€5'
+   * modules.finance.amount()// '$6170.87'
+   * modules.finance.amount({ min: 0, max: 1000 }) // '$5.53'
+   * modules.finance.amount({ min: 0, max: 1000, symbol: '€', precision: 0 }) // '€5'
    *
    * @returns string
    */
-  amount(args?: AmountProps): Module<string, AmountProps> {
-    return new Module<string, AmountProps>((a) => {
-      const symbol = typeof a.symbol === "string" ? a.symbol : "$";
+  amount(a?: AmountProps): string {
+    const datatypeModule = new DatatypeModule();
 
-      return `${symbol}${this.datatypeModule.number().getValue({
-        max: a.max,
-        min: a.min,
-        precision: a.precision,
-      })}`;
-    }, args || {});
+    const {
+      max = undefined,
+      min = undefined,
+      precision = undefined,
+      symbol: isymbol = undefined,
+    } = a ? a : {};
+
+    const symbol = isymbol ? isymbol : "$";
+
+    return `${symbol}${datatypeModule.number({
+      max: max,
+      min: min,
+      precision: precision,
+    })}`;
   }
 
   /**
    * Returns a current money name
-   * @example modules.finance.currencyMoneyName() // Schema
-   * @example modules.finance.currencyMoneyName().getValue() // 'Us Dollar'
+   * @example modules.finance.currencyMoneyName() // 'Us Dollar'
    * @returns string
    */
-  currencyMoneyName() {
-    return new Module<string>(() =>
-      this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name)),
-    );
+  currencyMoneyName(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.name));
   }
 
   /**
    * Returns a common money code
-   * @example modules.finance.moneyCode() // Schema
-   * @example modules.finance.moneyCode().getValue() // 'EUR'
+   * @example modules.finance.moneyCode() // 'EUR'
    * @returns string
    */
-  moneyCode(): Module<string> {
-    return new Module<string>(() =>
-      this.utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.code)),
-    );
+  moneyCode(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.code));
   }
 }

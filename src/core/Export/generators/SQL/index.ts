@@ -1,4 +1,4 @@
-import { SchemaResolver } from "../../../schema-resolver/resolver";
+import { SchemaResolver } from "../../../schema-resolver";
 import { ExportSQLFormat } from "../../interfaces/export";
 import { ChacaError } from "../../../../errors";
 import { Generator } from "../generator";

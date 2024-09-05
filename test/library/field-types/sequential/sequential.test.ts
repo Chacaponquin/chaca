@@ -1,9 +1,4 @@
-import {
-  ChacaError,
-  EmptySequentialValuesError,
-  chaca,
-  modules,
-} from "../../../../src";
+import { ChacaError, EmptySequentialValuesError, chaca } from "../../../../src";
 
 describe("# Sequential Field test", () => {
   it("Try create an array sequential field. Should throw an error", () => {
@@ -59,8 +54,6 @@ describe("# Sequential Field test", () => {
   it("Too much sequential values test", () => {
     const TOO_MUCH_VALUES_SEQUENTIAL_DATA = chaca
       .schema({
-        id: modules.id.uuid(),
-        name: modules.person.fullName(),
         favoriteNumber: chaca.sequential([
           1, 2, 3, 4, 5, 4, 5, 6, 6, 5, 1, 5, 5,
         ]),

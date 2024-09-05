@@ -1,22 +1,19 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../module";
 import {
   PERIODIC_TABLE_ELEMETNS,
   PERIODIC_TABLE_SYMBOLS,
 } from "./constants/periodicTable";
 import { UNITS } from "./constants/units";
 
-type PeriodicTableProps = {
+export type PeriodicTableProps = {
   type?: "symbol" | "name";
 };
 
-type UnitProps = {
+export type UnitProps = {
   type?: "symbol" | "name";
 };
 
 export class ScienceModule {
-  private utils = new ChacaUtils();
-
   readonly constants = {
     units: UNITS,
     periodicTableElements: PERIODIC_TABLE_ELEMETNS,
@@ -26,20 +23,20 @@ export class ScienceModule {
   /**
    * Returns periodic table element
    * @param args.type element format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
-   * @example modules.science.periodicTableElement() // Schema
    * @example
-   * modules.science.periodicTableElement().getValue() // 'Curium'
-   * modules.science.periodicTableElement().getValue({type: 'symbol'}) // 'Zn'
+   * modules.science.periodicTableElement() // 'Curium'
+   * modules.science.periodicTableElement({ type: 'symbol' }) // 'Zn'
    * @returns string
    */
-  periodicTableElement(args?: PeriodicTableProps) {
-    return new Module<string, PeriodicTableProps>((a) => {
-      if (typeof a.type === "string") {
-        if (a.type === "name") {
-          return this.utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
-        } else return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
-      } else return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
-    }, args || {});
+  periodicTableElement(a?: PeriodicTableProps): string {
+    const utils = new ChacaUtils();
+    const { type = undefined } = a ? a : {};
+
+    if (type === "name") {
+      return utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
+    }
+
+    return utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
   }
 
   /**
@@ -47,19 +44,19 @@ export class ScienceModule {
    *
    * @param args.type unit format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
    *
-   * @example modules.science.unit() // Schema
    * @example
    * modules.science.unit() // 'hertz (Hz)'
-   * modules.science.unit({type: 'symbol'}) // 'N'
+   * modules.science.unit({ type: 'symbol' }) // 'N'
    * @returns string
    */
-  unit(args?: UnitProps) {
-    return new Module<string, UnitProps>((a) => {
-      if (typeof a.type === "string") {
-        if (a.type === "symbol") {
-          return this.utils.oneOfArray(UNITS.map((el) => el.symbol));
-        } else return this.utils.oneOfArray(UNITS.map((el) => el.val));
-      } else return this.utils.oneOfArray(UNITS.map((el) => el.val));
-    }, args || {});
+  unit(a?: UnitProps) {
+    const utils = new ChacaUtils();
+    const { type = undefined } = a ? a : {};
+
+    if (type === "symbol") {
+      return utils.oneOfArray(UNITS.map((el) => el.symbol));
+    }
+
+    return utils.oneOfArray(UNITS.map((el) => el.val));
   }
 }

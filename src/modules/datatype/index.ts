@@ -1,5 +1,4 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../module";
 import { SPECIAL_CHARACTERS } from "./constants/special_characters";
 import {
   LOWER_CHARACTERS,
@@ -7,41 +6,41 @@ import {
   UPPER_CHARACTERS,
 } from "./constants/characters";
 
-type Case = "lower" | "upper" | "mixed";
+export type Case = "lower" | "upper" | "mixed";
 
-type AlphaNumericProps = {
+export type AlphaNumericProps = {
   length?: number;
   case?: Case;
   banned?: Array<string> | string;
 };
 
-type BinaryCodeProps = {
+export type BinaryCodeProps = {
   length?: number;
 };
 
-type FloatProps = {
+export type FloatProps = {
   min?: number;
   max?: number;
   precision?: number;
 };
 
-type NumberProps = {
+export type NumberProps = {
   min?: number;
   max?: number;
   precision?: number;
 };
 
-type IntProps = {
+export type IntProps = {
   min?: number;
   max?: number;
 };
 
-type HexadecimalProps = {
+export type HexadecimalProps = {
   length?: number;
   case?: Case;
 };
 
-type MatrizProps = {
+export type MatrixProps = {
   x_size?: number;
   y_size?: number;
   min?: number;
@@ -49,17 +48,15 @@ type MatrizProps = {
   precision?: number;
 };
 
-type CharactersProps = {
+export type CharactersProps = {
   length?: number;
   case?: "lower" | "upper";
 };
 
 export class DatatypeModule {
-  private MIN_RANDOM_VALUE = -9999999;
-  private MAX_RANDOM_VALUE = 9999999;
-  private MAX_PRECISION = 16;
-
-  private utils = new ChacaUtils();
+  private readonly MIN_RANDOM_VALUE = -9999999;
+  private readonly MAX_RANDOM_VALUE = 9999999;
+  private readonly MAX_PRECISION = 16;
 
   readonly constants = {
     upperCharacters: UPPER_CHARACTERS,
@@ -70,59 +67,57 @@ export class DatatypeModule {
 
   /**
    * Returns a keyboard special character
-   * @example modules.datatype.specialCharacter() // Schema
-   * @example modules.datatype.specialCharacter().getValue() // '_'
+   * @example modules.datatype.specialCharacter() // '_'
    * @returns string
    */
-  specialCharacter(): Module<string> {
-    return new Module<string>(() => {
-      return this.utils.oneOfArray(SPECIAL_CHARACTERS);
-    });
+  specialCharacter(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(SPECIAL_CHARACTERS);
   }
 
   /**
    * Returns a boolean
-   * @example modules.datatype.boolean() /// Schema
-   * @example modules.datatype.boolean().getValue() // true
+   * @example modules.datatype.boolean() // true
    * @returns boolean
    */
-  boolean() {
-    return new Module<boolean>(() => this.utils.oneOfArray([true, false]));
+  boolean(): boolean {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray([true, false]);
   }
 
   /**
    * Returns a integer number
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
-   * @example modules.datatype.int() // Schema
    * @example
-   * modules.datatype.int().getValue() // 462
-   * modules.datatype.int().getValue({min: 10, max: 30}) // 28
+   * modules.datatype.int() // 462
+   * modules.datatype.int() // 28
    * @returns number
    */
-  int(args?: IntProps) {
-    return new Module<number, IntProps>((a) => {
-      const minimun: number =
-        typeof a.min === "number" ? a.min : this.MIN_RANDOM_VALUE;
-      let maximun: number;
+  int(a?: IntProps): number {
+    const { max = undefined, min = undefined } = a || {};
 
-      if (typeof a.max === "number") {
-        if (minimun) {
-          if (a.max >= minimun) {
-            maximun = a.max;
-          } else {
-            maximun = this.MAX_RANDOM_VALUE;
-          }
+    const minimun: number =
+      typeof min === "number" ? min : this.MIN_RANDOM_VALUE;
+    let maximun: number;
+
+    if (typeof max === "number") {
+      if (minimun) {
+        if (max >= minimun) {
+          maximun = max;
         } else {
-          maximun = a.max;
+          maximun = this.MAX_RANDOM_VALUE;
         }
       } else {
-        maximun = this.MAX_RANDOM_VALUE;
+        maximun = max;
       }
+    } else {
+      maximun = this.MAX_RANDOM_VALUE;
+    }
 
-      const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
-      return val;
-    }, args || {});
+    const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
+
+    return val;
   }
 
   /**
@@ -130,44 +125,44 @@ export class DatatypeModule {
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
    * @param args.precision Precision of the float. Must be a value between `1` and `20`. Default `2`
-   * @example modules.datatype.float() // Schema
    * @example
-   * modules.datatype.float().getValue() // 462.12
-   * modules.datatype.float().getValue({min: 10, max: 30}) // 10.23
-   * modules.datatype.number().getValue({precision: 4}) // 90.5362
+   * modules.datatype.float() // 462.12
+   * modules.datatype.float({ min: 10, max: 30 }) // 10.23
+   * modules.datatype.float({ precision: 4 }) // 90.5362
    * @returns number
    */
-  float(args?: FloatProps) {
-    return new Module<number, FloatProps>((a) => {
-      const { max, min, precision } = a;
-      let range: number;
-      if (typeof max === "number" && typeof min === "number") {
-        range = max - min;
-      } else if (typeof max === "number" && typeof min === "undefined") {
-        range = max;
-      } else if (typeof max === "undefined" && typeof min === "number") {
-        range = this.MAX_RANDOM_VALUE - min;
-      } else {
-        range = this.utils.oneOfArray([
-          this.MAX_RANDOM_VALUE,
-          this.MIN_RANDOM_VALUE,
-        ]);
-      }
+  float(a?: FloatProps): number {
+    const utils = new ChacaUtils();
+    const {
+      max = undefined,
+      min = undefined,
+      precision = undefined,
+    } = a ? a : {};
 
-      const pres: number =
-        typeof precision === "number" &&
-        precision > 0 &&
-        precision <= this.MAX_PRECISION
-          ? precision
-          : this.int().getValue({ min: 1, max: 10 });
+    let range: number;
+    if (typeof max === "number" && typeof min === "number") {
+      range = max - min;
+    } else if (typeof max === "number" && typeof min === "undefined") {
+      range = max;
+    } else if (typeof max === "undefined" && typeof min === "number") {
+      range = this.MAX_RANDOM_VALUE - min;
+    } else {
+      range = utils.oneOfArray([this.MAX_RANDOM_VALUE, this.MIN_RANDOM_VALUE]);
+    }
 
-      const randomNum = Math.random() * range + (min || 0);
-      const factor = Math.pow(10, pres);
+    const pres: number =
+      typeof precision === "number" &&
+      precision > 0 &&
+      precision <= this.MAX_PRECISION
+        ? precision
+        : this.int({ min: 1, max: 10 });
 
-      const returnValue = Math.round(randomNum * factor) / factor;
+    const randomNum = Math.random() * range + (min || 0);
+    const factor = Math.pow(10, pres);
 
-      return returnValue;
-    }, args || {});
+    const returnValue = Math.round(randomNum * factor) / factor;
+
+    return returnValue;
   }
 
   /**
@@ -175,25 +170,26 @@ export class DatatypeModule {
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
    * @param args.precision Precision of the number. Must be a value between `0` and `20`.
-   * @example modules.datatype.number() // Schema
    * @example
-   * modules.datatype.number().getValue() // 301
-   * modules.datatype.number().getValue({min: 10, max: 30}) // 10.2327
+   * modules.datatype.number() // 301
+   * modules.datatype.number({ min: 10, max: 30 }) // 10.2327
    * @returns number
    */
-  number(args?: NumberProps) {
-    return new Module<number, NumberProps>((a) => {
-      const { max, min, precision } = a;
+  number(a?: NumberProps): number {
+    const {
+      max = undefined,
+      min = undefined,
+      precision = undefined,
+    } = a ? a : {};
 
-      let val: number;
-      if (precision === 0) {
-        val = this.int().getValue({ max, min });
-      } else {
-        val = this.float().getValue({ max, min, precision });
-      }
+    let val: number;
+    if (precision === 0) {
+      val = this.int({ max, min });
+    } else {
+      val = this.float({ max, min, precision });
+    }
 
-      return val;
-    }, args || {});
+    return val;
   }
 
   /**
@@ -201,44 +197,41 @@ export class DatatypeModule {
    * @param args.case Case of the values inside de hexadecimal code (`mixed` | `lower` | `upper`)
    * @param args.length Lenght of the hexadecimal code
    * @example
-   * modules.datatype.hexadecimal() // Schema
-   * modules.datatype.hexadecimal().getValue() // '009df'
-   * modules.datatype.hexadecimal().getValue({length: 3}) // '01D'
-   * modules.datatype.hexadecimal().getValue({lenght: 3, case: 'upper'}) // 'DE20'
+   * modules.datatype.hexadecimal() // '009df'
+   * modules.datatype.hexadecimal({ length: 3 }) // '01D'
+   * modules.datatype.hexadecimal({ lenght: 3, case: 'upper' }) // 'DE20'
    * @returns string
    */
-  hexadecimal(args?: HexadecimalProps) {
-    return new Module<string, HexadecimalProps>((a) => {
-      const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-      const characters = ["A", "B", "C", "D", "E", "F", "G"];
+  hexadecimal(a?: HexadecimalProps): string {
+    const utils = new ChacaUtils();
+    const { length: ilength = undefined, case: icase = "mixed" } = a ? a : {};
 
-      const length =
-        typeof a.length === "number" && a.length > 0
-          ? a.length
-          : this.int().getValue({ min: 5, max: 10 });
-      const c = typeof a.case === "string" ? a.case : "mixed";
+    const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    const characters = ["A", "B", "C", "D", "E", "F", "G"];
 
-      let ret = "";
-      for (let i = 1; i <= length; i++) {
-        ret = ret.concat(
-          this.utils.oneOfArray([
-            ...numbers,
-            ...characters.map((el) => {
-              if (c === "lower") return el.toLowerCase();
-              else if (c === "upper") return el;
-              else {
-                return this.utils.oneOfArray([
-                  el.toLowerCase(),
-                  el.toUpperCase(),
-                ]);
-              }
-            }),
-          ]),
-        );
-      }
+    const length =
+      ilength && ilength > 0 ? ilength : this.int({ min: 5, max: 10 });
+    const c = icase ? icase : "mixed";
 
-      return ret;
-    }, args || {});
+    let ret = "";
+    for (let i = 1; i <= length; i++) {
+      ret = ret.concat(
+        utils.oneOfArray([
+          ...numbers,
+          ...characters.map((el) => {
+            if (c === "lower") {
+              return el.toLowerCase();
+            } else if (c === "upper") {
+              return el;
+            } else {
+              return utils.oneOfArray([el.toLowerCase(), el.toUpperCase()]);
+            }
+          }),
+        ]),
+      );
+    }
+
+    return ret;
   }
 
   /**
@@ -250,33 +243,38 @@ export class DatatypeModule {
    * @param args.max Max value for the numbers of the matrix
    * @param args.precision Number precision of the matrix
    *
-   * @example modules.datatype.matriz() // Schema
-   *
    * @example
-   * modules.datatype.matrix().getValue() // [[1, 0, 5], [5, 10, 9]]
-   * modules.datatype.matrix().getValue({x_size: 4, y_size: 2}) // [[1, 2], [0, 0], [1, 1], [4, 5]]
+   * modules.datatype.matrix() // [[1, 0, 5], [5, 10, 9]]
+   * modules.datatype.matrix({ x_size: 4, y_size: 2 }) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
-  matrix(args?: MatrizProps) {
-    return new Module<number[][], MatrizProps>((a) => {
-      const x_size =
-        typeof a.x_size === "number" && a.x_size >= 0
-          ? Number.parseInt(String(a.x_size))
-          : this.int().getValue({ min: 1, max: 10 });
-      const y_size =
-        typeof a.y_size === "number" && a.y_size >= 0
-          ? Number.parseInt(String(a.y_size))
-          : this.int().getValue({ min: 1, max: 10 });
+  matrix(a?: MatrixProps): number[][] {
+    const {
+      x_size: ix_size = undefined,
+      max = undefined,
+      min = undefined,
+      precision = undefined,
+      y_size: iy_size = undefined,
+    } = a ? a : {};
 
-      return Array.from({ length: x_size }).map(() => {
-        return Array.from({ length: y_size }).map(() => {
-          return this.number().getValue({
-            min: a.min,
-            max: a.max,
-            precision: a.precision,
-          });
+    const x_size =
+      typeof ix_size === "number" && ix_size >= 0
+        ? ix_size
+        : this.int({ min: 1, max: 10 });
+
+    const y_size =
+      typeof iy_size === "number" && iy_size >= 0
+        ? iy_size
+        : this.int({ min: 1, max: 10 });
+
+    return Array.from({ length: x_size }).map(() => {
+      return Array.from({ length: y_size }).map(() => {
+        return this.number({
+          min: min,
+          max: max,
+          precision: precision,
         });
       });
-    }, args || {});
+    });
   }
 
   /**
@@ -284,70 +282,66 @@ export class DatatypeModule {
    * @param args.length Length of characters. Default `1`
    * @param args.case Case of the characters (`lower` or `upper`)
    *
-   * @example modules.datatype.character() // Schema
    * @example
-   * modules.datatype.characters().getValue() // 'v'
-   * modules.datatype.characters().getValue({length: 5}) // 'bhtlw'
-   * modules.datatype.characters().getValue({length: 5, case: 'upper'}) // 'HQRSD'
+   * modules.datatype.characters() // 'v'
+   * modules.datatype.characters({ length: 5 }) // 'bhtlw'
+   * modules.datatype.characters({ length: 5, case: 'upper' }) // 'HQRSD'
    *
    * @returns string
    */
-  characters(args?: CharactersProps) {
-    return new Module<string, CharactersProps>((a) => {
-      const len =
-        typeof a.length === "number" && a.length > 0 ? a.length : undefined;
+  characters(a?: CharactersProps): string {
+    const utils = new ChacaUtils();
+    const { case: icase = "lower", length = 10 } = a ? a : {};
 
-      let charactersToRet;
+    const len = length > 0 ? length : undefined;
 
-      if (a.case) {
-        if (a.case === "lower") {
-          charactersToRet = this.constants.lowerCharacters;
-        } else if (a.case === "upper") {
-          charactersToRet = this.constants.upperCharacters;
-        } else {
-          charactersToRet = this.constants.mixedCharacters;
-        }
+    let charactersToRet;
+
+    if (icase) {
+      if (icase === "lower") {
+        charactersToRet = this.constants.lowerCharacters;
+      } else if (icase === "upper") {
+        charactersToRet = this.constants.upperCharacters;
       } else {
         charactersToRet = this.constants.mixedCharacters;
       }
+    } else {
+      charactersToRet = this.constants.mixedCharacters;
+    }
 
-      if (len) {
-        let ret = "";
-        for (let i = 1; i <= len; i++) {
-          ret = ret.concat(this.utils.oneOfArray(charactersToRet));
-        }
-
-        return ret;
-      } else {
-        return this.utils.oneOfArray(charactersToRet);
+    if (len) {
+      let ret = "";
+      for (let i = 1; i <= len; i++) {
+        ret = ret.concat(utils.oneOfArray(charactersToRet));
       }
-    }, args || {});
+
+      return ret;
+    } else {
+      return utils.oneOfArray(charactersToRet);
+    }
   }
 
   /**
    * Returns a string with a binary code
    * @param args.length Length of the binary code
-   * @example modules.datatype.binaryCode() // Schema
    * @example
-   * modules.datatype.binaryCode().getValue() // '00101'
-   * modules.datatype.binaryCode().getValue({length: 6}) // '010100'
+   * modules.datatype.binaryCode() // '00101'
+   * modules.datatype.binaryCode({ length: 6 }) // '010100'
    * @returns string
    */
-  binaryCode(args?: BinaryCodeProps) {
-    return new Module<string, BinaryCodeProps>((a) => {
-      const length =
-        typeof a.length === "number" && a.length > 0
-          ? a.length
-          : this.int().getValue({ min: 4, max: 8 });
+  binaryCode(a?: BinaryCodeProps): string {
+    const utils = new ChacaUtils();
+    const { length: ilength = this.int({ min: 4, max: 8 }) } = a ? a : {};
 
-      let ret = "";
+    const length = ilength > 0 ? ilength : this.int({ min: 4, max: 8 });
 
-      for (let i = 1; i <= length; i++) {
-        ret = ret.concat(String(this.utils.oneOfArray([0, 1])));
-      }
+    let ret = "";
 
-      return ret;
-    }, args || {});
+    for (let i = 1; i <= length; i++) {
+      ret = ret.concat(String(utils.oneOfArray([0, 1])));
+    }
+
+    return ret;
   }
 
   /**
@@ -357,53 +351,55 @@ export class DatatypeModule {
    * @returns string
    */
 
-  alphaNumeric(args?: AlphaNumericProps) {
-    return new Module<string, AlphaNumericProps>((a) => {
-      const length =
-        typeof a.length === "number" && a.length > 0
-          ? a.length
-          : this.int().getValue({ min: 1, max: 20 });
+  alphaNumeric(a?: AlphaNumericProps): string {
+    const utils = new ChacaUtils();
+    const {
+      length: ilength = this.int({ min: 1, max: 20 }),
+      case: icase = undefined,
+      banned: ibanned = undefined,
+    } = a ? a : {};
 
-      const banned: string[] = [];
+    const length =
+      ilength && ilength > 0 ? ilength : this.int({ min: 1, max: 20 });
 
-      const cass = typeof a.case === "string" ? a.case : undefined;
+    const banned: string[] = [];
 
-      if (a.banned) {
-        if (typeof a.banned === "string") {
-          for (let i = 0; i < a.banned.length; i++) {
-            banned.push(a.banned[i]);
-          }
-        } else if (Array.isArray(banned)) {
-          for (const c of a.banned) {
-            if (typeof c === "string") {
-              banned.push(c);
-            }
-          }
+    const cass = icase ? icase : undefined;
+
+    if (ibanned) {
+      if (typeof ibanned === "string") {
+        for (let i = 0; i < ibanned.length; i++) {
+          banned.push(ibanned[i]);
+        }
+      } else if (Array.isArray(banned)) {
+        for (const c of ibanned) {
+          banned.push(c);
         }
       }
+    }
 
-      const selectNumbers = this.numbersArray().filter((el) => {
-        const is = banned.some((b) => b === el);
-        return !is;
+    const selectNumbers = this.numbersArray().filter((el) => {
+      const is = banned.some((b) => b === el);
+      return !is;
+    });
+
+    const characters = this.filterCharacters(cass);
+    const selectCharacters = characters.filter((el) => {
+      let is = true;
+      banned.forEach((b) => {
+        if (b === el) is = false;
       });
+      return is;
+    });
 
-      const characters = this.filterCharacters(cass);
-      const selectCharacters = characters.filter((el) => {
-        let is = true;
-        banned.forEach((b) => {
-          if (b === el) is = false;
-        });
-        return is;
-      });
-      const selectValues = [...selectCharacters, ...selectNumbers];
+    const selectValues = [...selectCharacters, ...selectNumbers];
 
-      let retString = "";
-      for (let i = 1; i <= length; i++) {
-        retString = retString.concat(this.utils.oneOfArray(selectValues));
-      }
+    let retString = "";
+    for (let i = 1; i <= length; i++) {
+      retString = retString.concat(utils.oneOfArray(selectValues));
+    }
 
-      return retString;
-    }, args || {});
+    return retString;
   }
 
   private filterCharacters(fCase?: Case): string[] {

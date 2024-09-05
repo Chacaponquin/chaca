@@ -12,42 +12,38 @@ export const GAME_SCHEMA = chaca.schema({
   },
   runs_home_club: ({ currentFields: fields }) => {
     if (fields.winner === fields.team_home_club) {
-      return modules.datatype.int().getValue({ min: 1, max: 15 });
+      return modules.datatype.int({ min: 1, max: 15 });
     } else {
-      return modules.datatype.int().getValue({ min: 0, max: 5 });
+      return modules.datatype.int({ min: 0, max: 5 });
     }
   },
   runs_visitant: ({ currentFields: fields }) => {
     if (fields.winner === fields.team_home_club) {
-      return modules.datatype
-        .int()
-        .getValue({ min: 0, max: fields.runs_home_club });
+      return modules.datatype.int({ min: 0, max: fields.runs_home_club });
     } else {
-      return modules.datatype
-        .int()
-        .getValue({ min: fields.runs_home_club, max: 15 });
+      return modules.datatype.int({ min: fields.runs_home_club, max: 15 });
     }
   },
   game_date: ({ currentFields: fields, store }) => {
-    const phases = store.getValue("Phase");
+    const phases = store.value("Phase");
 
     const foundPhase = phases.find((p) => p.phase_id === fields.phase_id);
 
     if (foundPhase) {
-      return modules.date.between().getValue({
+      return modules.date.between({
         from: foundPhase.start_date,
         to: foundPhase.finish_date,
       });
     } else {
-      return modules.date.past().getValue();
+      return modules.date.past();
     }
   },
   phase_id: chaca.ref("Phase.phase_id"),
   total_audience: ({ currentFields: fields, store }) => {
     let foundStadium = null as any;
 
-    const stadiums = store.getValue("Stadium");
-    const teams = store.getValue("Team");
+    const stadiums = store.value("Stadium");
+    const teams = store.value("Team");
 
     const foundHomeClubTeam = teams.find(
       (t) => t.team_id === fields.team_home_club,
@@ -59,12 +55,10 @@ export const GAME_SCHEMA = chaca.schema({
       );
 
       if (foundStadium) {
-        return modules.datatype
-          .int()
-          .getValue({ min: 50, max: foundStadium.capacity });
+        return modules.datatype.int({ min: 50, max: foundStadium.capacity });
       }
     }
 
-    return modules.datatype.int().getValue({ min: 50, max: 16999 });
+    return modules.datatype.int({ min: 50, max: 16999 });
   },
 });

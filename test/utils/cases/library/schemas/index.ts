@@ -1,17 +1,18 @@
 import { chaca, modules } from "../../../../../src";
 
 export const BOOK_TOPIC_SCHEMA = chaca.schema({
-  topic: modules.word.adjective(),
+  topic: () => modules.word.adjective(),
   id: chaca.key(chaca.sequence()),
 });
 
 export const BOOK_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  title: modules.word.noun(),
-  edit_year: modules.datatype.int({ min: 1950, max: new Date().getFullYear() }),
-  country: modules.address.country(),
-  resume: modules.lorem.paragraphs(),
-  count_pages: modules.datatype.int({ min: 50, max: 800 }),
+  title: () => modules.word.noun(),
+  edit_year: () =>
+    modules.datatype.int({ min: 1950, max: new Date().getFullYear() }),
+  country: () => modules.address.country(),
+  resume: () => modules.lorem.paragraphs(),
+  count_pages: () => modules.datatype.int({ min: 50, max: 800 }),
   authors: {
     type: chaca.ref("Author.id"),
     isArray: { min: 1, max: 6 },
@@ -20,12 +21,12 @@ export const BOOK_SCHEMA = chaca.schema({
 
 export const AUTHOR_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  full_name: modules.person.fullName(),
+  full_name: () => modules.person.fullName(),
 });
 
 export const USER_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  full_name: modules.person.fullName(),
+  full_name: () => modules.person.fullName(),
 });
 
 export const USER_SANCTION_SCHEMA = chaca.schema({
@@ -33,11 +34,11 @@ export const USER_SANCTION_SCHEMA = chaca.schema({
   user_id: chaca.ref("Library_User.id", {
     where: ({ refFields: userFields, store }) => {
       return !store
-        .getValue("User_Sanction")
+        .value("User_Sanction")
         .some((s) => s.finish_date === null && userFields.id === s.user_id);
     },
   }),
-  init_date: modules.date.past(),
+  init_date: () => modules.date.past(),
   finish_date: ({ currentFields: fields }) => {
     return chaca.utils.oneOfArray([
       chaca.utils.sumDateRange({
@@ -67,17 +68,17 @@ export const USER_SANCTION_SCHEMA = chaca.schema({
 
 export const BOOK_LOAN_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  init_date: modules.date.past(),
+  init_date: () => modules.date.past(),
   finish_date: ({ currentFields }) => {
-    return modules.date.between().getValue({
+    return modules.date.between({
       from: currentFields.init_date,
-      to: modules.date.future().getValue(),
+      to: modules.date.future(),
     });
   },
   book_id: chaca.ref("Book.id"),
   user_id: chaca.ref("Library_User.id", {
     where: ({ store, currentFields }) => {
-      const findSanctionsThatUser = store.getValue("User_Sanction", {
+      const findSanctionsThatUser = store.value("User_Sanction", {
         where: (sanctionFields) => {
           return sanctionFields.user_id === currentFields.user_id;
         },
@@ -101,9 +102,10 @@ export const BOOK_LOAN_SCHEMA = chaca.schema({
   }),
   deliver_date: {
     type: ({ currentFields }) => {
-      return modules.date
-        .between()
-        .getValue({ from: currentFields.init_date, to: new Date() });
+      return modules.date.between({
+        from: currentFields.init_date,
+        to: new Date(),
+      });
     },
     possibleNull: 40,
   },

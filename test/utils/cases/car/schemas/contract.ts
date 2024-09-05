@@ -3,21 +3,17 @@ import { chaca, modules } from "../../../../../src";
 export const CONTRACT_SCHEMA = chaca.schema({
   plate: chaca.key(chaca.ref("Car.plate")),
   passport: chaca.ref("Tourist.passport"),
-  start_date: chaca.key(modules.date.past()),
+  start_date: chaca.key(() => modules.date.past()),
   end_date: ({ currentFields: fields }) => {
-    return modules.date
-      .between()
-      .getValue({ from: fields.start_date, to: new Date() });
+    return modules.date.between({ from: fields.start_date, to: new Date() });
   },
   delivery_date: ({ currentFields: fields }) => {
-    return modules.date
-      .between()
-      .getValue({ from: fields.start_date, to: new Date() });
+    return modules.date.between({ from: fields.start_date, to: new Date() });
   },
   pay_method_id: chaca.ref("Pay_Method.id"),
   driver_dni: { type: chaca.ref("Driver.dni"), possibleNull: 50 },
   end_km: ({ currentFields: fields, store }) => {
-    const allCars = store.getValue("Car");
+    const allCars = store.value("Car");
     const restDocuments = store.getSchemaDocuments();
 
     let found = null;
@@ -37,10 +33,10 @@ export const CONTRACT_SCHEMA = chaca.schema({
       if (foundCar) {
         return foundCar.cant_km;
       } else {
-        return modules.datatype.int({ min: 0, max: 3000 }).getValue();
+        return modules.datatype.int({ min: 0, max: 3000 });
       }
     } else {
-      return modules.datatype.int({ min: 0, max: 3000 }).getValue();
+      return modules.datatype.int({ min: 0, max: 3000 });
     }
   },
   start_km: ({ currentFields: fields, store }) => {
@@ -66,11 +62,9 @@ export const CONTRACT_SCHEMA = chaca.schema({
         }
       }
 
-      return modules.datatype
-        .int({ min: ref.end_km, max: fields.end_km })
-        .getValue();
+      return modules.datatype.int({ min: ref.end_km, max: fields.end_km });
     } else {
-      return modules.datatype.int({ min: 0, max: fields.end_km }).getValue();
+      return modules.datatype.int({ min: 0, max: fields.end_km });
     }
   },
   value: ({ currentFields: fields }) => {

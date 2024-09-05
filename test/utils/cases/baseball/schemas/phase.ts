@@ -6,7 +6,7 @@ interface PhaseDate {
   finish_date: Date;
 }
 
-const PHASE_DATES: Array<PhaseDate> = [
+const PHASE_DATES: PhaseDate[] = [
   {
     start_date: new Date(2023, 0, 0),
     finish_date: new Date(2023, 0, 30),

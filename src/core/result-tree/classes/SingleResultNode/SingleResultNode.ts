@@ -7,27 +7,27 @@ interface Props {
 }
 
 export class SingleResultNode extends FieldNode {
-  private value: unknown;
-  private taken: Array<string> = [];
+  private _value: unknown;
+  private _taken: string[] = [];
 
   constructor({ name, value }: Props) {
     super(name);
-    this.value = value;
+    this._value = value;
   }
 
-  protected getValue(): unknown {
-    return this.value;
+  protected value(): unknown {
+    return this._value;
   }
 
-  public changeIsTaken(fieldRoute: Array<string>) {
-    this.taken.push(fieldRoute.join("."));
+  changeIsTaken(fieldRoute: string[]) {
+    this._taken.push(fieldRoute.join("."));
   }
 
-  public isTaken(fieldRoute: Array<string>): boolean {
-    return this.taken.includes(fieldRoute.join("."));
+  isTaken(fieldRoute: string[]): boolean {
+    return this._taken.includes(fieldRoute.join("."));
   }
 
-  public getNodeByRoute(fieldTreeRoute: string[]): FieldNode {
+  getNodeByRoute(fieldTreeRoute: string[]): FieldNode {
     if (fieldTreeRoute.length === 0) {
       return this;
     } else {
@@ -37,7 +37,7 @@ export class SingleResultNode extends FieldNode {
     }
   }
 
-  public getRefValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
+  getRefValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
     if (fieldTreeRoute.length === 0) {
       return this;
     } else {

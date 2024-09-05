@@ -1,5 +1,5 @@
 import { DocumentTree } from "../../result-tree/classes";
-import { SchemaResolver } from "../../schema-resolver/resolver";
+import { SchemaResolver } from "../../schema-resolver";
 
 /**
  * Get value in dataset store config

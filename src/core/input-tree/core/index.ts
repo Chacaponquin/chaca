@@ -2,7 +2,6 @@ import { ChacaTreeNode } from "./node";
 import { CustomValueNode } from "./custom";
 import { EnumValueNode } from "./enum";
 import { MixedValueNode } from "./mixed";
-import { ModuleNode } from "./module";
 import { RefValueNode } from "./ref";
 import { SequentialValueNode } from "./sequential";
 import { KeyValueNode } from "./key";
@@ -15,7 +14,6 @@ export {
   CustomValueNode,
   EnumValueNode,
   MixedValueNode,
-  ModuleNode,
   RefValueNode,
   SequentialValueNode,
   KeyValueNode,

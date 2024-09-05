@@ -1,18 +1,18 @@
 import { chaca, modules } from "../../../../../src";
 
 export const SCHEMA_ONE = chaca.schema({
-  id: modules.id.uuid(),
+  id: modules.id.uuid,
   ref: chaca.ref("SchemaTwo.ref"),
 });
 
 export const SCHEMA_TWO = chaca.schema({
-  id: modules.id.uuid(),
+  id: modules.id.uuid,
   ref: chaca.ref("SchemaThree.ref"),
 });
 
 export const SCHEMA_THREE = chaca.schema({
-  id: modules.id.uuid(),
-  name: modules.person.fullName(),
+  id: modules.id.uuid,
+  name: () => modules.person.fullName(),
 });
 
 export const REPEAT_NAMES_DATA = () =>

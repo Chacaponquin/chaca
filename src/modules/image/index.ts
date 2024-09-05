@@ -1,9 +1,6 @@
 import { DatatypeModule } from "../datatype";
-import { Module } from "../module";
 
 export class ImageModule {
-  private datatypeModule = new DatatypeModule();
-
   private buildUrl(category: string) {
     const url = "https://source.unsplash.com/category";
     return `${url}/${category}`;
@@ -12,235 +9,213 @@ export class ImageModule {
   /**
    * Return a food image url
    *
-   * @example modules.image.food() // Schema
    * @example
-   * modules.image.food().getValue()
+   * modules.image.food()
    * @returns string
    */
-  food() {
-    return new Module<string>(() => {
-      return this.buildUrl("food");
-    });
+  food(): string {
+    return this.buildUrl("food");
   }
 
   /**
    * Return a event image url
    *
-   * @example modules.image.event() // Schema
    * @example
-   * modules.image.event().getValue()
+   * modules.image.event()
    * @returns string
    */
-  event() {
-    return new Module<string>(() => this.buildUrl("event"));
+  event(): string {
+    return this.buildUrl("event");
   }
 
   /**
    * Return a wallpaper image url
    *
-   * @example modules.image.wallpaper() // Schema
    * @example
-   * modules.image.wallpaper().getValue()
+   * modules.image.wallpaper()
    * @returns string
    */
-  wallpaper() {
-    return new Module<string>(() => this.buildUrl("wallpaper"));
+  wallpaper(): string {
+    return this.buildUrl("wallpaper");
   }
 
   /**
    * Return a 3D image url
    *
-   * @example modules.image.treeDimension() // Schema
    * @example
-   * modules.image.treeDimension().getValue()
+   * modules.image.treeDimension()
    * @returns string
    */
-  threeDimension() {
-    return new Module<string>(() => this.buildUrl("3d"));
+  threeDimension(): string {
+    return this.buildUrl("3d");
   }
 
   /**
    * Return a architecture image url
    *
-   * @example modules.image.architecture() // Schema
    * @example
-   * modules.image.architecture().getValue()
+   * modules.image.architecture()
    * @returns string
    */
-  architecture() {
-    return new Module<string>(() => this.buildUrl("architecture"));
+  architecture(): string {
+    return this.buildUrl("architecture");
   }
 
   /**
    * Return a nature image url
    *
-   * @example modules.image.nature() // Schema
    * @example
-   * modules.image.nature().getValue()
+   * modules.image.nature()
    * @returns string
    */
-  nature() {
-    return new Module<string>(() => this.buildUrl("nature"));
+  nature(): string {
+    return this.buildUrl("nature");
   }
 
   /**
    * Return a fashion image url
    *
-   * @example modules.image.fashion() // Schema
    * @example
-   * modules.image.fashion().getValue()
+   * modules.image.fashion()
    * @returns string
    */
-  fashion() {
-    return new Module<string>(() => this.buildUrl("fashion"));
+  fashion(): string {
+    return this.buildUrl("fashion");
   }
 
   /**
    * Return a film image url
    *
-   * @example modules.image.film() // Schema
    * @example
-   * modules.image.film().getValue()
+   * modules.image.film()
    * @returns string
    */
-  film() {
-    return new Module<string>(() => this.buildUrl("film"));
+  film(): string {
+    return this.buildUrl("film");
   }
 
   /**
    * Return a people image url
    *
-   * @example modules.image.people() // Schema
    * @example
-   * modules.image.people().getValue()
+   * modules.image.people()
    * @returns string
    */
-  people() {
-    return new Module<string>(() => this.buildUrl("people"));
+  people(): string {
+    return this.buildUrl("people");
   }
 
   /**
    * Return a health image url
    *
-   * @example modules.image.health() // Schema
    * @example
-   * modules.image.health().getValue()
+   * modules.image.health()
    * @returns string
    */
-  health() {
-    return new Module<string>(() => this.buildUrl("health"));
+  health(): string {
+    return this.buildUrl("health");
   }
 
   /**
    * Return a house image url
    *
-   * @example modules.image.house() // Schema
    * @example
-   * modules.image.house().getValue()
+   * modules.image.house()
    * @returns string
    */
-  house() {
-    return new Module<string>(() => this.buildUrl("house"));
+  house(): string {
+    return this.buildUrl("house");
   }
 
   /**
    * Return a street image url
    *
-   * @example modules.image.street() // Schema
    * @example
-   * modules.image.street().getValue()
+   * modules.image.street()
    * @returns string
    */
-  street() {
-    return new Module<string>(() => this.buildUrl("street"));
+  street(): string {
+    return this.buildUrl("street");
   }
 
   /**
    * Return a animal image url
    *
-   * @example modules.image.animal() // Schema
    * @example
-   * modules.image.animal().getValue()
+   * modules.image.animal()
    * @returns string
    */
-  animal() {
-    return new Module<string>(() => this.buildUrl("animal"));
+  animal(): string {
+    return this.buildUrl("animal");
   }
 
   /**
    * Return a spiritual image url
    *
-   * @example modules.image.spiritual() // Schema
    * @example
-   * modules.image.spiritual().getValue()
+   * modules.image.spiritual()
    * @returns string
    */
-  spiritual() {
-    return new Module<string>(() => this.buildUrl("spiritual"));
+  spiritual(): string {
+    return this.buildUrl("spiritual");
   }
 
   /**
    * Return a travel image url
    *
-   * @example modules.image.travel() // Schema
    * @example
-   * modules.image.travel().getValue()
+   * modules.image.travel()
    * @returns string
    */
-  travel() {
-    return new Module<string>(() => this.buildUrl("travel"));
+  travel(): string {
+    return this.buildUrl("travel");
   }
 
   /**
    * Return a art image url
    *
-   * @example modules.image.art() // Schema
    * @example
-   * modules.image.art().getValue()
+   * modules.image.art()
    * @returns string
    */
-  art() {
-    return new Module<string>(() => this.buildUrl("art"));
+  art(): string {
+    return this.buildUrl("art");
   }
 
   /**
    * Return a history image url
    *
-   * @example modules.image.history() // Schema
    * @example
-   * modules.image.history().getValue()
+   * modules.image.history()
    * @returns string
    */
-  history() {
-    return new Module<string>(() => this.buildUrl("history"));
+  history(): string {
+    return this.buildUrl("history");
   }
 
   /**
    * Return a sport image url
    *
-   * @example modules.image.sport() // Schema
    * @example
-   * modules.image.sport().getValue()
+   * modules.image.sport()
    * @returns string
    */
-  sport() {
-    return new Module<string>(() => this.buildUrl("sport"));
+  sport(): string {
+    return this.buildUrl("sport");
   }
 
   /**
    * Return a animate avatar image url
    *
-   * @example modules.image.animateAvatar() // Schema
    * @example
-   * modules.image.animateAvatar().getValue()
+   * modules.image.animateAvatar()
    *
    * @returns string
    */
-  animateAvatar() {
-    return new Module<string>(() => {
-      const ran = this.datatypeModule.int({ min: 0, max: 1000 }).getValue();
+  animateAvatar(): string {
+    const datatypeModule = new DatatypeModule();
+    const ran = datatypeModule.int({ min: 0, max: 1000 });
 
-      return `https://api.multiavatar.com/${ran}.svg`;
-    });
+    return `https://api.multiavatar.com/${ran}.svg`;
   }
 }

@@ -1,21 +1,17 @@
 import { ChacaUtils } from "../../core/utils";
 import { DatatypeModule } from "../datatype";
-import { Module } from "../module";
-import { PHONE_PREFIX } from "./constants/phonePrefix";
+import { PHONE_PREFIX } from "./constants/prefix";
 
-type CallDurationProps = {
+export type CallDurationProps = {
   min?: number;
   max?: number;
 };
 
-type NumberProps = {
+export type NumberProps = {
   format?: string;
 };
 
 export class PhoneModule {
-  private datatypeModule = new DatatypeModule();
-  private utils = new ChacaUtils();
-
   readonly constants = {
     phonePrefixs: PHONE_PREFIX,
   };
@@ -23,33 +19,29 @@ export class PhoneModule {
   /**
    * Returns a phone number
    * @param args.format Format of the phone number
-   * @example modules.phone.number() // Schema
    * @example
-   * modules.phone.number().getValue({format: '+53 #### ## ##'}) // '+53 5417 35 99'
+   * modules.phone.number({ format: '+53 #### ## ##' }) // '+53 5417 35 99'
    * @returns string
    */
-  number(args?: NumberProps) {
-    return new Module<string, NumberProps>((a) => {
-      const format: string =
-        typeof a.format === "string"
-          ? a.format
-          : `${this.prefix().getValue()} ### ### ##`;
+  number(a?: NumberProps): string {
+    const utils = new ChacaUtils();
 
-      const number: string = this.utils.replaceSymbols(format);
-      return number;
-    }, args || {});
+    const { format: iformat = undefined } = a ? a : {};
+
+    const format: string = iformat ? iformat : `${this.prefix()} ### ### ##`;
+
+    const number: string = utils.replaceSymbols(format);
+    return number;
   }
 
   /**
    * Returns a string with a country number prefix
-   * @example modules.phone.prefix() // Schema
-   * @example modules.phone.prefix().getValue() // '+53'
+   * @example modules.phone.prefix() // '+53'
    * @returns string
    */
-  prefix() {
-    return new Module<string>(() =>
-      this.utils.oneOfArray(PHONE_PREFIX.map((el) => el.code)),
-    );
+  prefix(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(PHONE_PREFIX.map((el) => el.code));
   }
 
   /**
@@ -57,32 +49,31 @@ export class PhoneModule {
    * @param args.min Minimun minutes of the call. Default `0`
    * @param args.max Maximun minutes of the call. Default `59`
    *
-   * @example modules.phone.callDuration() // Schema
    * @example
-   * modules.phone.callDuration().getValue({min: 10, max: 30}) // '27:30'
-   * modules.phone.callDuration().getValue() // '20:52'
+   * modules.phone.callDuration({ min: 10, max: 30 }) // '27:30'
+   * modules.phone.callDuration() // '20:52'
    *
    * @returns string
    */
-  callDuration(args?: CallDurationProps) {
-    return new Module<string, CallDurationProps>((a) => {
-      const min: number =
-        typeof a.min === "number" && a.min >= 0 && a.min < 60 ? a.min : 0;
-      const max: number =
-        typeof a.max === "number" && a.max < 60 && a.max >= 0 && a.max >= min
-          ? a.max
-          : 59;
+  callDuration(a?: CallDurationProps): string {
+    const datatypeModule = new DatatypeModule();
 
-      const minutes = this.datatypeModule.int().getValue({
-        min,
-        max,
-      });
-      const seconds = this.datatypeModule.int().getValue({ min: 0, max: 59 });
+    const { max: imax = undefined, min: imin = undefined } = a ? a : {};
 
-      const stringMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
-      const stringSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+    const min: number = imin && imin >= 0 && imin < 60 ? imin : 0;
+    const max: number =
+      imax && imax < 60 && imax >= 0 && imax >= min ? imax : 59;
 
-      return `${stringMinutes}:${stringSeconds}`;
-    }, args || {});
+    const minutes = datatypeModule.int({
+      min,
+      max,
+    });
+
+    const seconds = datatypeModule.int({ min: 0, max: 59 });
+
+    const stringMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const stringSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
+    return `${stringMinutes}:${stringSeconds}`;
   }
 }

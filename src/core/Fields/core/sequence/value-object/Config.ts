@@ -1,4 +1,4 @@
-import { SequenceFieldProps } from "../interfaces/sequence.interface";
+import { SequenceFieldProps } from "../SequenceField";
 
 export class Config {
   private _config: Required<SequenceFieldProps> = {
@@ -18,7 +18,7 @@ export class Config {
     }
   }
 
-  public value() {
+  value() {
     return this._config;
   }
 }

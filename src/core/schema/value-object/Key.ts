@@ -1,12 +1,10 @@
 import { ChacaError } from "../../../errors";
-import { Module } from "../../../modules/";
 import { KeyField, RefField, SequenceField } from "../../fields/core";
 import { KeyFieldResolverProps } from "../../resolvers/core/key";
 import {
   CustomFieldResolver,
   KeyFieldResolver,
   RefFieldResolver,
-  ModuleResolver,
   SequenceFieldResolver,
 } from "../../resolvers/core";
 
@@ -22,13 +20,11 @@ export class InputKeyField {
   }
 
   private validate(schema: KeyField): KeyFieldResolver {
-    const fieldType = schema.getFieldType();
+    const fieldType = schema.field;
 
     let type: KeyFieldResolverProps;
-    if (fieldType instanceof Module) {
-      type = new ModuleResolver(fieldType);
-    } else if (fieldType instanceof RefField) {
-      type = new RefFieldResolver(fieldType.getRefField());
+    if (fieldType instanceof RefField) {
+      type = new RefFieldResolver(fieldType.refField);
     } else if (fieldType instanceof SequenceField) {
       type = new SequenceFieldResolver(fieldType.getConfig());
     } else if (typeof fieldType === "function") {

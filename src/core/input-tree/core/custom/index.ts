@@ -24,7 +24,7 @@ export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
     );
   }
 
-  getValue({ fields, datasetStore }: Props<C>): R {
+  value({ fields, datasetStore }: Props<C>): R {
     const value = this.func({
       store: datasetStore,
       currentFields: fields,

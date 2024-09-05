@@ -5,7 +5,7 @@ import {
   NotExistFieldError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
-import { SchemaResolver } from "../../../schema-resolver/resolver";
+import { SchemaResolver } from "../../../schema-resolver";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
 import { ChacaUtils } from "../../../utils";
@@ -127,7 +127,7 @@ export class RefValueNode extends ChacaTreeNode {
     return returnRefValues;
   }
 
-  getValue(
+  value(
     currentDocument: number,
     currentSchemaResolver: number,
   ): unknown | unknown[] {

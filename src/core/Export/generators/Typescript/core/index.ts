@@ -87,7 +87,7 @@ export abstract class TypescriptInterface {
 export class ObjectInterface extends TypescriptInterface {
   private _keys: ObjectKeys[] = [];
   private readonly idModule = new IdModule();
-  readonly name: string = "Object" + this.idModule.mongodbId().getValue();
+  readonly name: string = "Object" + this.idModule.mongodbId();
   private interfaces: InterfacesToCreate;
 
   constructor(value: any, interfaces: InterfacesToCreate) {

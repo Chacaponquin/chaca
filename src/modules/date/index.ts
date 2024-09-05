@@ -1,46 +1,48 @@
 import { ChacaUtils } from "../../core/utils";
 import { ChacaError } from "../../errors";
-import { Module } from "../module";
 import { DatatypeModule } from "../datatype";
 import { MONTHS } from "./constants/month";
 import { WEEKDAYS } from "./constants/weekday";
 
-type ArgDate = Date | string;
+export type ArgDate = Date | string;
 
-type DateSoonProps = {
+export type DateSoonProps = {
   days?: number;
   refDate?: ArgDate;
 };
 
-type DatePastProps = {
+export type DatePastProps = {
   years?: number;
   refDate?: ArgDate;
 };
 
-type DateFutureProps = { years?: number; refDate?: ArgDate };
+export type DateFutureProps = { years?: number; refDate?: ArgDate };
 
-type BirthDateProps = {
+export type BirthDateProps = {
   refDate?: ArgDate;
   min?: number;
   max?: number;
   mode?: "age" | "year";
 };
 
-type TimeUnits = "years" | "seconds" | "minutes" | "days" | "hours" | "months";
+export type TimeUnits =
+  | "years"
+  | "seconds"
+  | "minutes"
+  | "days"
+  | "hours"
+  | "months";
 
-type TimeAgoProps = {
+export type TimeAgoProps = {
   unit?: TimeUnits;
 };
 
-type DateBetweenProps = {
+export type DateBetweenProps = {
   from?: ArgDate;
   to?: ArgDate;
 };
 
 export class DateModule {
-  private datatypeModule = new DatatypeModule();
-  private utils = new ChacaUtils();
-
   readonly constants = {
     weekDays: WEEKDAYS,
     months: MONTHS,
@@ -52,32 +54,31 @@ export class DateModule {
    * @param args.days The range of days the date may be in the future.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example modules.date.soon() // Module
-   *
    * @example
-   * modules.date.soon().getValue() // '2022-02-05T09:55:39.216Z'
-   * modules.date.soon().getValue({days: 10}) // '2022-02-11T05:14:39.138Z'
+   * modules.date.soon() // '2022-02-05T09:55:39.216Z'
+   * modules.date.soon({ days: 10 }) // '2022-02-11T05:14:39.138Z'
    */
-  soon(args?: DateSoonProps) {
-    return new Module<Date, DateSoonProps>((a) => {
-      const days =
-        typeof a.days === "number" && a.days > 0
-          ? a.days
-          : this.datatypeModule.int().getValue({ min: 1, max: 200 });
+  soon(a?: DateSoonProps): Date {
+    const datatypeModule = new DatatypeModule();
+    const { days: idays = undefined, refDate: irefDate = undefined } = a || {};
 
-      const refDate = this.argToDate(a.refDate);
+    const days =
+      typeof idays === "number" && idays > 0
+        ? idays
+        : datatypeModule.int({ min: 1, max: 200 });
 
-      const range = {
-        min: 1000,
-        max: (days || 1) * 24 * 3600 * 1000,
-      };
+    const refDate = this.argToDate(irefDate);
 
-      let future = refDate.getTime();
-      future += this.datatypeModule.int().getValue(range);
-      refDate.setTime(future);
+    const range = {
+      min: 1000,
+      max: (days || 1) * 24 * 3600 * 1000,
+    };
 
-      return refDate;
-    }, args || {});
+    let future = refDate.getTime();
+    future += datatypeModule.int(range);
+    refDate.setTime(future);
+
+    return refDate;
   }
 
   /**
@@ -86,34 +87,34 @@ export class DateModule {
    * @param args.years The range of years the date may be in the past.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example modules.date.past() // Module
-   *
    * @example
-   * modules.date.past().getValue() // '2021-12-03T05:40:44.408Z'
-   * modules.date.past().getValue({years: 10, refDate: '2020-01-01T00:00:00.000Z'}) // '2017-08-18T02:59:12.350Z'
+   * modules.date.past() // '2021-12-03T05:40:44.408Z'
+   * modules.date.past()({ years: 10, refDate: '2020-01-01T00:00:00.000Z' }) // '2017-08-18T02:59:12.350Z'
    *
    * @returns Date
    * */
-  past(args?: DatePastProps) {
-    return new Module<Date, DatePastProps>((a) => {
-      const years =
-        typeof a.years === "number" && a.years > 0
-          ? a.years
-          : this.datatypeModule.int().getValue({ min: 1, max: 10 });
+  past(a?: DatePastProps) {
+    const datatypeModule = new DatatypeModule();
+    const { refDate: irefDate = undefined, years: iyears = undefined } =
+      a || {};
 
-      const refDate = this.argToDate(a.refDate);
+    const years =
+      typeof iyears === "number" && iyears > 0
+        ? iyears
+        : datatypeModule.int({ min: 1, max: 10 });
 
-      const range = {
-        min: 1000,
-        max: (years || 1) * 365 * 24 * 3600 * 1000,
-      };
+    const refDate = this.argToDate(irefDate);
 
-      let past = refDate.getTime();
-      past -= this.datatypeModule.int().getValue(range); // some time from now to N years ago, in milliseconds
-      refDate.setTime(past);
+    const range = {
+      min: 1000,
+      max: (years || 1) * 365 * 24 * 3600 * 1000,
+    };
 
-      return refDate;
-    }, args || {});
+    let past = refDate.getTime();
+    past -= datatypeModule.int(range); // some time from now to N years ago, in milliseconds
+    refDate.setTime(past);
+
+    return refDate;
   }
 
   /**
@@ -122,58 +123,53 @@ export class DateModule {
    * @param args.years The range of years the date may be in the future.
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to now.
    *
-   * @example modules.date.future() // Module
-   *
    * @example
-   * modules.date.future().getValue() // '2022-11-19T05:52:49.100Z'
-   * modules.date.future().getValue({years: 10, refDate: '2020-01-01T00:00:00.000Z'}) // '2020-12-13T22:45:10.252Z'
+   * modules.date.future() // '2022-11-19T05:52:49.100Z'
+   * modules.date.future({ years: 10, refDate: '2020-01-01T00:00:00.000Z' }) // '2020-12-13T22:45:10.252Z'
    *
    * @returns Date
    */
-  future(args?: DateFutureProps) {
-    return new Module<Date, DateFutureProps>((a) => {
-      const years =
-        typeof a.years === "number" && a.years > 0 ? a.years : undefined;
+  future(a?: DateFutureProps) {
+    const datatypeModule = new DatatypeModule();
+    const { refDate: irefDate = undefined, years: iyears = undefined } =
+      a || {};
 
-      const refDate = this.argToDate(a.refDate);
+    const years = typeof iyears === "number" && iyears > 0 ? iyears : undefined;
 
-      const range = {
-        min: 1000,
-        max: (years || 1) * 365 * 24 * 3600 * 1000,
-      };
+    const refDate = this.argToDate(irefDate);
 
-      let future = refDate.getTime();
-      future += this.datatypeModule.int().getValue(range);
+    const range = {
+      min: 1000,
+      max: (years || 1) * 365 * 24 * 3600 * 1000,
+    };
 
-      const newDate = new Date();
-      newDate.setTime(future);
+    let future = refDate.getTime();
+    future += datatypeModule.int(range);
 
-      return newDate;
-    }, args || {});
+    const newDate = new Date();
+    newDate.setTime(future);
+
+    return newDate;
   }
 
   /**
    * Returns a month name
-   * @example modules.date.month() // Module
-   * @example modules.date.month().getValue() // 'February'
+   * @example modules.date.month() // 'February'
    * @returns string
    */
-  month() {
-    return new Module<string>(() => {
-      return this.utils.oneOfArray(MONTHS);
-    });
+  month(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(MONTHS);
   }
 
   /**
    * Returns a weekday name
-   * @example modules.date.weekDay() // Module
-   * @example modules.date.weekDay().getValue() // 'Monday'
+   * @example modules.date.weekDay() // 'Monday'
    * @returns string
    */
-  weekDay() {
-    return new Module<string>(() => {
-      return this.utils.oneOfArray(WEEKDAYS);
-    });
+  weekDay(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(WEEKDAYS);
   }
 
   /**
@@ -190,46 +186,48 @@ export class DateModule {
    *
    * Defaults to `year`.
    *
-   * @example modules.date.birthdate() // Module
-   *
    * @example
-   * modules.date.birthdate().getValue() // 1977-07-10T01:37:30.719Z
-   * modules.date.birthdate().getValue({ min: 18, max: 65, mode: 'age' }) // 2003-11-02T20:03:20.116Z
-   * modules.date.birthdate().getValue({ min: 1900, max: 2000, mode: 'year' }) // 1940-08-20T08:53:07.538Z
+   * modules.date.birthdate() // 1977-07-10T01:37:30.719Z
+   * modules.date.birthdate({ min: 18, max: 65, mode: 'age' }) // 2003-11-02T20:03:20.116Z
+   * modules.date.birthdate({ min: 1900, max: 2000, mode: 'year' }) // 1940-08-20T08:53:07.538Z
    *
    * @returns Date
    */
-  birthdate(args?: BirthDateProps) {
-    return new Module<Date, BirthDateProps>((a) => {
-      const refDate = this.argToDate(a.refDate);
+  birthdate(a?: BirthDateProps) {
+    const datatypeModule = new DatatypeModule();
+    const {
+      refDate: irefDate = undefined,
+      max: imax = undefined,
+      min: imin = undefined,
+      mode: imode = undefined,
+    } = a || {};
 
-      const mode =
-        typeof a.mode === "string" && (a.mode === "age" || a.mode === "year")
-          ? a.mode
-          : "age";
+    const refDate = this.argToDate(irefDate);
 
-      const refYear = refDate.getUTCFullYear();
+    const mode = imode === "age" || imode === "year" ? imode : "age";
 
-      let min: number =
-        typeof a.min === "number" && a.min > 0 ? a.min : refYear - 18;
-      let max: number = typeof a.max === "number" ? a.max : refYear - 80;
+    const refYear = refDate.getUTCFullYear();
 
-      if (mode === "age") {
-        min = new Date(refDate).setUTCFullYear(refYear - max - 1);
-        max = new Date(refDate).setUTCFullYear(refYear - min);
-      } else {
-        min = new Date(Date.UTC(0, 0, 2)).setUTCFullYear(min);
-        max = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);
-      }
+    let min: number =
+      typeof imin === "number" && imin > 0 ? imin : refYear - 18;
+    let max: number = typeof imax === "number" ? imax : refYear - 80;
 
-      return new Date(this.datatypeModule.int().getValue({ min, max }));
-    }, args || {});
+    if (mode === "age") {
+      min = new Date(refDate).setUTCFullYear(refYear - max - 1);
+      max = new Date(refDate).setUTCFullYear(refYear - min);
+    } else {
+      min = new Date(Date.UTC(0, 0, 2)).setUTCFullYear(min);
+      max = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);
+    }
+
+    return new Date(datatypeModule.int({ min, max }));
   }
 
   private randomDate(): Date {
-    const year = this.datatypeModule.int().getValue({ min: 1900, max: 2300 });
-    const month = this.datatypeModule.int().getValue({ min: 0, max: 11 });
-    const day = this.datatypeModule.int().getValue({ min: 1, max: 30 });
+    const datatypeModule = new DatatypeModule();
+    const year = datatypeModule.int({ min: 1900, max: 2300 });
+    const month = datatypeModule.int({ min: 0, max: 11 });
+    const day = datatypeModule.int({ min: 1, max: 30 });
 
     return new Date(year, month, day);
   }
@@ -240,106 +238,106 @@ export class DateModule {
    * @param args.from The early date boundary.
    * @param args.to The late date boundary.
    *
-   * @example modules.date.between() // Module
-   *
    * @example
-   * modules.date.between().getValue({from: '2020-01-01T00:00:00.000Z', to: '2030-01-01T00:00:00.000Z'}) // '2026-05-16T02:22:53.002Z'
+   * modules.date.between({ from: '2020-01-01T00:00:00.000Z', to: '2030-01-01T00:00:00.000Z' }) // '2026-05-16T02:22:53.002Z'
    *
    * @returns Date
    */
-  between(args?: DateBetweenProps) {
-    return new Module<Date, DateBetweenProps>((a) => {
-      let from: Date;
-      let to: Date;
+  between(a?: DateBetweenProps) {
+    const datatypeModule = new DatatypeModule();
+    const { from: ifrom = undefined, to: ito = undefined } = a || {};
 
-      if (a.from instanceof Date && a.to instanceof Date) {
-        if (a.from.getTime() > a.to.getTime()) {
-          throw new ChacaError(`The to Date must be greater than from Date.`);
-        } else {
-          from = a.from;
-          to = a.to;
-        }
+    let from: Date;
+    let to: Date;
+
+    if (ifrom instanceof Date && ito instanceof Date) {
+      if (ifrom.getTime() > ito.getTime()) {
+        throw new ChacaError(`The to Date must be greater than from Date.`);
       } else {
-        if (a.from instanceof Date && !(a.to instanceof Date)) {
-          from = this.argToDate(a.from);
-          to = this.future().getValue({ refDate: from });
-        } else if (!(a.from instanceof Date) && a.to instanceof Date) {
-          to = a.to as Date;
-          from = this.past().getValue({ refDate: to });
-        } else {
-          from = this.randomDate();
-          to = this.future().getValue({ refDate: from });
-        }
+        from = ifrom;
+        to = ito;
       }
+    } else {
+      if (ifrom instanceof Date && !(ito instanceof Date)) {
+        from = this.argToDate(ifrom);
+        to = this.future({ refDate: from });
+      } else if (!(ifrom instanceof Date) && ito instanceof Date) {
+        to = ito as Date;
+        from = this.past({ refDate: to });
+      } else {
+        from = this.randomDate();
+        to = this.future({ refDate: from });
+      }
+    }
 
-      const fromMs = from.getTime();
-      const toMs = to.getTime();
-      const dateOffset = this.datatypeModule.int().getValue({
-        min: 0,
-        max: toMs - fromMs,
-      });
+    const fromMs = from.getTime();
+    const toMs = to.getTime();
+    const dateOffset = datatypeModule.int({
+      min: 0,
+      max: toMs - fromMs,
+    });
 
-      return new Date(fromMs + dateOffset);
-    }, args || {});
+    return new Date(fromMs + dateOffset);
   }
 
   /**
    * Returns a string with a time ago information
    * @param args.unit Date time unit. Can be (`"years"` | `"seconds"` | `"minutes"` | `"days"` | `"hours"` | `"months"`)
-   * @example modules.date.timeAgo() // Module
-   * @example modules.date.timeAgo().getValue({unit: 'days'}) // '20 days ago'
+   * @example modules.date.timeAgo({ unit: 'days' }) // '20 days ago'
    * @returns string
    */
-  timeAgo(args?: TimeAgoProps) {
-    return new Module<string, TimeAgoProps>((a) => {
-      const units = ["years", "seconds", "minutes", "days", "hours"];
+  timeAgo(a?: TimeAgoProps) {
+    const utils = new ChacaUtils();
+    const datatypeModule = new DatatypeModule();
 
-      const unit =
-        typeof a.unit === "string" ? a.unit : this.utils.oneOfArray(units);
+    const { unit: iunit = undefined } = a || {};
 
-      let filterUnit = units.find((el) => el === unit) as TimeUnits;
-      if (!filterUnit) {
-        filterUnit = this.utils.oneOfArray(units) as TimeUnits;
-      }
+    const units = ["years", "seconds", "minutes", "days", "hours"];
 
-      switch (filterUnit) {
-        case "days":
-          return `${this.datatypeModule.int().getValue({
-            min: 1,
-            max: 30,
-          })} ${unit} ago`;
-        case "hours":
-          return `${this.datatypeModule.int().getValue({
-            min: 1,
-            max: 23,
-          })} ${unit} ago`;
-        case "minutes":
-          return `${this.datatypeModule.int().getValue({
-            min: 1,
-            max: 59,
-          })} ${unit} ago`;
-        case "seconds":
-          return `${this.datatypeModule.int().getValue({
-            min: 1,
-            max: 59,
-          })} ${unit} ago`;
-        case "years":
-          return `${this.datatypeModule.int().getValue({
-            min: 1,
-            max: 40,
-          })} ${unit} ago`;
-        case "months":
-          return `${this.datatypeModule.int().getValue({
-            min: 1,
-            max: 11,
-          })} ${unit} ago`;
-        default:
-          return `${this.datatypeModule.int().getValue({
-            min: 1,
-            max: 60,
-          })} ${unit} ago`;
-      }
-    }, args || {});
+    const unit = typeof iunit === "string" ? iunit : utils.oneOfArray(units);
+
+    let filterUnit = units.find((el) => el === unit) as TimeUnits;
+    if (!filterUnit) {
+      filterUnit = utils.oneOfArray(units) as TimeUnits;
+    }
+
+    switch (filterUnit) {
+      case "days":
+        return `${datatypeModule.int({
+          min: 1,
+          max: 30,
+        })} ${unit} ago`;
+      case "hours":
+        return `${datatypeModule.int({
+          min: 1,
+          max: 23,
+        })} ${unit} ago`;
+      case "minutes":
+        return `${datatypeModule.int({
+          min: 1,
+          max: 59,
+        })} ${unit} ago`;
+      case "seconds":
+        return `${datatypeModule.int({
+          min: 1,
+          max: 59,
+        })} ${unit} ago`;
+      case "years":
+        return `${datatypeModule.int({
+          min: 1,
+          max: 40,
+        })} ${unit} ago`;
+      case "months":
+        return `${datatypeModule.int({
+          min: 1,
+          max: 11,
+        })} ${unit} ago`;
+      default:
+        return `${datatypeModule.int({
+          min: 1,
+          max: 60,
+        })} ${unit} ago`;
+    }
   }
 
   private argToDate(date: ArgDate | undefined): Date {

@@ -9,7 +9,7 @@ interface Props {
 }
 
 export class ArrayResultNode extends FieldNode {
-  private arrayNodes: Array<FieldNode> = [];
+  private arrayNodes: FieldNode[] = [];
   private fieldNode: ChacaTreeNode;
 
   constructor({ name, fieldNode }: Props) {
@@ -18,15 +18,15 @@ export class ArrayResultNode extends FieldNode {
     this.fieldNode = fieldNode;
   }
 
-  public getValue(): Array<unknown> {
+  value(): Array<unknown> {
     return this.arrayNodes.map((n) => n.getRealValue());
   }
 
-  public insertNode(n: FieldNode) {
+  insertNode(n: FieldNode) {
     this.arrayNodes.push(n);
   }
 
-  public getNodeByRoute(fieldTreeRoute: string[]): FieldNode {
+  getNodeByRoute(fieldTreeRoute: string[]): FieldNode {
     if (fieldTreeRoute.length === 0) {
       return this;
     } else {
@@ -36,7 +36,7 @@ export class ArrayResultNode extends FieldNode {
     }
   }
 
-  public getRefValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
+  getRefValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
     if (fieldTreeRoute.length === 0) {
       throw new ChacaError(
         `The field ${fieldTreeRoute.join(".")} do not exists`,
@@ -48,7 +48,7 @@ export class ArrayResultNode extends FieldNode {
     }
   }
 
-  public getFieldNode() {
+  getFieldNode() {
     return this.fieldNode;
   }
 }

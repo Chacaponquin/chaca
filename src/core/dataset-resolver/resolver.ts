@@ -1,5 +1,5 @@
 import { ChacaError } from "../../errors";
-import { SchemaResolver } from "../schema-resolver/resolver";
+import { SchemaResolver } from "../schema-resolver";
 import { DatasetSchema } from "./interfaces/resolver";
 
 interface Props {

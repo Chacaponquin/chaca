@@ -32,7 +32,7 @@ const filterPachagesByCharge = (
   store: DatasetStore,
 ): Package[] => {
   return packages.filter((p) => {
-    const packageCharge = store.getValue<Charge>("Charge", {
+    const packageCharge = store.value<Charge>("Charge", {
       where: (fields) => {
         return fields.id === p.charge_id;
       },
@@ -43,13 +43,13 @@ const filterPachagesByCharge = (
 };
 
 const findCharge = (store: DatasetStore, charge_id: number) => {
-  return store.getValue<Charge>("Charge", (fields) => {
+  return store.value<Charge>("Charge", (fields) => {
     return fields.id === charge_id;
   })[0];
 };
 
 const findWarehouse = (store: DatasetStore, w_id: number) => {
-  return store.getValue<Warehouse>("Warehouse", (wFields) => {
+  return store.value<Warehouse>("Warehouse", (wFields) => {
     return wFields.id === w_id;
   })[0];
 };
@@ -71,7 +71,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
       let sumTaken = 0;
 
       filterPachagesByCharge(
-        store.getValue<Package>("Package"),
+        store.value<Package>("Package"),
         foundCharge.warehouse_id,
         store,
       ).forEach((p) => {
@@ -101,7 +101,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
       let sumTaken = 0;
 
       filterPachagesByCharge(
-        store.getValue<Package>("Package"),
+        store.value<Package>("Package"),
         foundCharge.warehouse_id,
         store,
       ).forEach((p) => {
@@ -122,7 +122,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
     const foundCharge = findCharge(store, packageFields.charge_id);
 
     const filterPackages = filterPachagesByCharge(
-      store.getValue<Package>("Package"),
+      store.value<Package>("Package"),
       foundCharge.warehouse_id,
       store,
     ).filter(
@@ -140,10 +140,10 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
 
 export const CHARGE_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  name: modules.word.noun(),
-  need_refrigeration: modules.datatype.boolean(),
-  expire_date: { type: modules.date.future(), possibleNull: true },
-  weight: modules.datatype.int({ min: 40, max: 1000 }),
+  name: () => modules.word.noun(),
+  need_refrigeration: modules.datatype.boolean,
+  expire_date: { type: () => modules.date.future(), possibleNull: true },
+  weight: () => modules.datatype.int({ min: 40, max: 1000 }),
   client_id: chaca.ref("Client.id"),
   warehouse_id: chaca.ref("Warehouse.id", {
     where: ({ currentFields, store }) => {
@@ -153,7 +153,7 @@ export const CHARGE_SCHEMA = chaca.schema({
           return charge.warehouse_id === currentFields.warehouse_id;
         });
 
-      const foundWareHouse = store.getValue<Warehouse>("Warehouse", {
+      const foundWareHouse = store.value<Warehouse>("Warehouse", {
         where: (wFields) => {
           return wFields.id === currentFields.warehouse_id;
         },
@@ -167,7 +167,7 @@ export const CHARGE_SCHEMA = chaca.schema({
 
         let takedCapacity = 0;
         findChargesWithSameWarehouse.forEach((charge) => {
-          takedCapacity += store.getValue<Package>("Package", {
+          takedCapacity += store.value<Package>("Package", {
             where: (fields) => fields.charge_id === charge.id,
           }).length;
         });
@@ -182,9 +182,9 @@ export const CHARGE_SCHEMA = chaca.schema({
 
 export const WAREHOUSE_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  count_shelfs: modules.datatype.int({ min: 1, max: 10 }),
-  count_rows: modules.datatype.int({ min: 5, max: 15 }),
-  count_box: modules.datatype.int({ min: 5, max: 10 }),
+  count_shelfs: () => modules.datatype.int({ min: 1, max: 10 }),
+  count_rows: () => modules.datatype.int({ min: 5, max: 15 }),
+  count_box: () => modules.datatype.int({ min: 5, max: 10 }),
 });
 
 export const CHARGE_PACKAGE_TYPE_SCHEMA = chaca.schema({
@@ -194,20 +194,20 @@ export const CHARGE_PACKAGE_TYPE_SCHEMA = chaca.schema({
 
 export const CLIENT_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  country: modules.address.country(),
-  phone: modules.phone.number(),
-  fax: modules.phone.number(),
-  email: modules.internet.email(),
+  country: () => modules.address.country(),
+  phone: () => modules.phone.number(),
+  fax: () => modules.phone.number(),
+  email: () => modules.internet.email(),
   name: ({ currentFields }) => {
     if (currentFields.type === "E") {
-      return modules.word.noun().getValue() + " S.A.";
+      return modules.word.noun() + " S.A.";
     } else {
-      return modules.person.fullName().getValue();
+      return modules.person.fullName();
     }
   },
-  is_priority: modules.datatype.boolean(),
+  is_priority: modules.datatype.boolean,
   type: chaca.enum(["E", "P"]),
-  init_services_date: modules.date.past(),
+  init_services_date: () => modules.date.past(),
 });
 
 export const ENTERPRISE_CLIENT_SCHEMA = chaca.schema({

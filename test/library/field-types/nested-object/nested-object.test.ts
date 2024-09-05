@@ -3,11 +3,11 @@ import { chaca, modules } from "../../../../src";
 describe("# Nested Object field tests", () => {
   it("Should return an object with user field as an object", () => {
     const schema = chaca.schema({
-      id: modules.id.uuid(),
-      image: modules.image.people(),
+      id: () => modules.id.uuid(),
+      image: () => modules.image.people(),
       user: chaca.schema({
-        username: modules.internet.username(),
-        image: modules.image.fashion(),
+        username: () => modules.internet.username(),
+        image: () => modules.image.fashion(),
       }),
     });
 
@@ -20,8 +20,8 @@ describe("# Nested Object field tests", () => {
   it("Should return an object with a user field with the image field as array of string", () => {
     const schema = chaca.schema({
       user: chaca.schema({
-        username: modules.internet.username(),
-        images: { type: modules.image.fashion(), isArray: 10 },
+        username: () => modules.internet.username(),
+        images: { type: () => modules.image.fashion(), isArray: 10 },
       }),
     });
 
@@ -34,8 +34,8 @@ describe("# Nested Object field tests", () => {
     const schema = chaca.schema({
       user: {
         type: chaca.schema({
-          username: modules.person.firstName(),
-          image: modules.image.food(),
+          username: () => modules.person.firstName(),
+          image: () => modules.image.food(),
         }),
         isArray: 20,
       },

@@ -1,4 +1,3 @@
-import { Module } from "../module";
 import {
   ILanguageNames,
   NAMES,
@@ -10,28 +9,25 @@ import {
 import { ChacaUtils } from "../../core/utils";
 import { DatatypeModule } from "../datatype";
 
-type AllLanguages = "es" | "en";
+export type AllLanguages = "es" | "en";
 
-type LangugeProps = {
+export type LangugeProps = {
   language?: AllLanguages;
 };
 
-type Sex = "male" | "female";
+export type Sex = "male" | "female";
 
-type NameProps = {
+export type NameProps = {
   language?: AllLanguages;
   sex?: Sex;
 };
 
-type SexProps = {
+export type SexProps = {
   sex?: Sex;
 };
 
 export class PersonModule {
-  private datatypeModule = new DatatypeModule();
-  private utils = new ChacaUtils();
-
-  public readonly constants = {
+  readonly constants = {
     jobLevels: JOBS.JOB_LEVELS,
     jobAreas: JOBS.JOBS_AREAS,
     genders: GENDERS,
@@ -45,88 +41,84 @@ export class PersonModule {
 
   /**
    * @example
-   * modules.person.language() // Schema
    * modules.person.language() // 'Georgian'
    *
    * @returns string
    */
-  language() {
-    return new Module(() => {
-      return this.utils.oneOfArray(this.constants.languages);
-    });
+  language(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.constants.languages);
   }
 
   /**
    * Returns a Job Level
-   * @example modules.person.jobLevel() // Schema
-   * @example modules.person.jobLevel().getValue() // 'Investor'
+   * @example modules.person.jobLevel() // 'Investor'
    * @returns string
    */
-  jobLevel() {
-    return new Module<string>(() => this.utils.oneOfArray(JOBS.JOB_LEVELS));
+  jobLevel(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(JOBS.JOB_LEVELS);
   }
 
   /**
    * Returns a Job Area
-   * @example modules.person.jobArea() // Schema
-   * @example modules.person.jobLevel().getValue() // 'Supervisor'
+   * @example modules.person.jobArea() // 'Supervisor'
    * @returns string
    */
-  jobArea() {
-    return new Module<string>(() => this.utils.oneOfArray(JOBS.JOBS_AREAS));
+  jobArea(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(JOBS.JOBS_AREAS);
   }
 
   /**
    * Returns a person gender
-   * @example modules.person.gender() // Schema
-   * @example modules.person.gender().getValue() // 'Bigender'
+   * @example modules.person.gender() // 'Bigender'
    * @returns string
    */
-  gender() {
-    return new Module<string>(() =>
-      this.utils.oneOfArray(this.constants.genders),
-    );
+  gender(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.constants.genders);
   }
 
   /**
    * Returns a person sex
-   * @example modules.person.sex() // Schema
-   * @example modules.person.sex().getValue() // 'Male'
+   * @example modules.person.sex() // 'Male'
    * @returns `Male` | `Female`
    */
-  sex() {
-    return new Module<string>(() => this.utils.oneOfArray(["Male", "Female"]));
+  sex(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(["Male", "Female"]);
   }
 
   /**
    * Returns a first name from a selected lenguage
    * @param args.language (`'en'` | `'es'`). Default `'en'`
    * @param args.sex Person name sex (`'male'` | `'female'`)
-   * @example modules.person.firstName() // Schema
-   * @example modules.person.firstName().getValue() // 'Juan'
+   * @example modules.person.firstName() // 'Juan'
    * @returns string
    */
-  firstName(args?: NameProps) {
-    return new Module<string, NameProps>((a) => {
-      return this.utils.oneOfArray(
-        this.filterBySex(this.filterNameByLanguage(a.language), a.sex),
-      );
-    }, args || {});
+  firstName(a?: NameProps): string {
+    const utils = new ChacaUtils();
+
+    const { language = undefined, sex = undefined } = a ? a : {};
+
+    return utils.oneOfArray(
+      this.filterBySex(this.filterNameByLanguage(language), sex),
+    );
   }
 
   /**
    * Returns a last name from a selected lenguage
    * @param args.language (`en` | `es`). Default `en`
-   * @example modules.person.lastName() // Schema
-   * @example modules.person.lastName().getValue() // 'Scott'
+   * @example modules.person.lastName()// 'Scott'
    * @returns string
    */
-  lastName(args?: LangugeProps) {
-    return new Module<string, LangugeProps>((a) => {
-      return this.utils.oneOfArray(
-        this.filterNameByLanguage(a.language).lastNames,
-      );
-    }, args || {});
+  lastName(a?: LangugeProps): string {
+    const utils = new ChacaUtils();
+
+    const { language = undefined } = a ? a : {};
+
+    return utils.oneOfArray(this.filterNameByLanguage(language).lastNames);
   }
 
   /**
@@ -135,62 +127,64 @@ export class PersonModule {
    * @param args.sex (`male` | `female`)
    * @example
    * modules.person.fullName() // Schema
-   * modules.person.fullName().getValue() // 'Juan Rodriguez Perez'
+   * modules.person.fullName().value() // 'Juan Rodriguez Perez'
    * @returns string
    */
-  fullName(args?: NameProps) {
-    return new Module<string, NameProps>((a) => {
-      const lan = this.filterNameByLanguage(a.language);
+  fullName(a?: NameProps) {
+    const utils = new ChacaUtils();
+    const datatypeModule = new DatatypeModule();
 
-      const sex = a.sex
-        ? a.sex
-        : (this.utils.oneOfArray(["male", "female"]) as Sex);
+    const { language = undefined, sex: isex = undefined } = a ? a : {};
 
-      const firstName = this.utils.oneOfArray(this.filterBySex(lan, sex));
-      const middleName = this.datatypeModule.boolean().getValue()
-        ? this.utils.oneOfArray(this.filterBySex(lan, sex))
-        : undefined;
-      const lastNameFirst = this.utils.oneOfArray(lan.lastNames);
-      const lastNameSecond = this.utils.oneOfArray(lan.lastNames);
+    const lan = this.filterNameByLanguage(language);
 
-      const fullName = [
-        firstName,
-        middleName,
-        lastNameFirst,
-        lastNameSecond,
-      ].filter((n) => n !== undefined);
+    const sex = isex ? isex : (utils.oneOfArray(["male", "female"]) as Sex);
 
-      return fullName.join(" ");
-    }, args || {});
+    const firstName = utils.oneOfArray(this.filterBySex(lan, sex));
+    const middleName = datatypeModule.boolean()
+      ? utils.oneOfArray(this.filterBySex(lan, sex))
+      : undefined;
+    const lastNameFirst = utils.oneOfArray(lan.lastNames);
+    const lastNameSecond = utils.oneOfArray(lan.lastNames);
+
+    const fullName = [
+      firstName,
+      middleName,
+      lastNameFirst,
+      lastNameSecond,
+    ].filter((n) => n !== undefined);
+
+    return fullName.join(" ");
   }
 
   /**
    * Returns a random name prefix
    * @param args.sex Sex of the person. (`male` | `female`)
-   * @example modules.person.prefix() // Schema
-   * @example modules.person.prefix().getValue() // 'Ms.'
+   * @example modules.person.prefix() // 'Ms.'
    * @returns string
    */
-  prefix(args?: SexProps) {
-    return new Module<string, SexProps>((a) => {
-      const sex = typeof a.sex === "string" ? a.sex : undefined;
-      const all = [
-        ...this.constants.prefixes.male,
-        ...this.constants.prefixes.female,
-      ];
+  prefix(a?: SexProps) {
+    const utils = new ChacaUtils();
 
-      if (sex) {
-        if (sex === "male") {
-          return this.utils.oneOfArray(this.constants.prefixes.male);
-        } else if (sex === "female") {
-          return this.utils.oneOfArray(this.constants.prefixes.female);
-        } else {
-          return this.utils.oneOfArray(all);
-        }
+    const { sex: isex = undefined } = a ? a : {};
+
+    const sex = isex ? isex : undefined;
+    const all = [
+      ...this.constants.prefixes.male,
+      ...this.constants.prefixes.female,
+    ];
+
+    if (sex) {
+      if (sex === "male") {
+        return utils.oneOfArray(this.constants.prefixes.male);
+      } else if (sex === "female") {
+        return utils.oneOfArray(this.constants.prefixes.female);
       } else {
-        return this.utils.oneOfArray(all);
+        return utils.oneOfArray(all);
       }
-    }, args || {});
+    } else {
+      return utils.oneOfArray(all);
+    }
   }
 
   private filterNameByLanguage(

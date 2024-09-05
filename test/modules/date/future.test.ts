@@ -5,7 +5,7 @@ const TEST_COUNT_VALUES = 1000;
 describe("# Date future test", () => {
   it("Without arguments", () => {
     const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.future().getValue(),
+      modules.date.future(),
     );
 
     expect(allDates.every((d) => d.getTime() > new Date().getTime())).toBe(
@@ -15,7 +15,7 @@ describe("# Date future test", () => {
 
   it("Pass year=5", () => {
     const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.future().getValue({ years: 5 }),
+      modules.date.future({ years: 5 }),
     );
 
     expect(
@@ -25,7 +25,7 @@ describe("# Date future test", () => {
 
   it("Pass years=-5", () => {
     const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.future().getValue({ years: -5 }),
+      modules.date.future({ years: -5 }),
     );
 
     expect(allDates.every((d) => d.getTime() > new Date().getTime())).toBe(

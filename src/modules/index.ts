@@ -14,9 +14,6 @@ import { AnimalModule } from "./animal";
 import { ScienceModule } from "./science";
 import { WordModule } from "./word";
 import { ColorModule } from "./color";
-import { Module } from "./module";
-
-export { Module };
 
 export class ChacaModules {
   readonly internet = new InternetModule();

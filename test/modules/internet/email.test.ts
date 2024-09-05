@@ -5,7 +5,7 @@ describe("# Internet email tests", () => {
 
   it("Generate email with out arguments. Should return a valid argument", () => {
     const emails = Array.from({ length: 50 }).map(() =>
-      modules.internet.email().getValue(),
+      modules.internet.email(),
     );
 
     expect(emails.every((e) => emailRegex.test(e) === true)).toBe(true);

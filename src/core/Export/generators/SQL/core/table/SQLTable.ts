@@ -10,22 +10,19 @@ export class SQLTable {
 
   constructor(readonly tableName: string) {}
 
-  public generateIDColumn(): void {
-    const idColumn = new SQLTableColumn(new IdModule().uuid().getValue());
+  generateIDColumn(): void {
+    const idColumn = new SQLTableColumn(new IdModule().uuid());
     idColumn.changeToPrimaryKey();
 
     this.hasGeneratedID = true;
     this.columns.push(idColumn);
   }
 
-  public getSQLTableName(): string {
+  getSQLTableName(): string {
     return this.tableName.trim().replace(" ", "_");
   }
 
-  public addForeignKey(
-    columnName: string,
-    config: ColumnForeignKeyConfig,
-  ): void {
+  addForeignKey(columnName: string, config: ColumnForeignKeyConfig): void {
     const foundColumn = this.columns.find(
       (c) => c.getColumnName() === columnName,
     );
@@ -40,19 +37,19 @@ export class SQLTable {
     }
   }
 
-  public setInitBuild(): void {
+  setInitBuild(): void {
     this.finishBuild = false;
   }
 
-  public setFinishBuild(): void {
+  setFinishBuild(): void {
     this.finishBuild = true;
   }
 
-  public finish() {
+  finish() {
     return this.finishBuild;
   }
 
-  public addPrimaryColumn(columnName: string): void {
+  addPrimaryColumn(columnName: string): void {
     const foundColumn = this.columns.find(
       (c) => c.getColumnName() === columnName,
     );
@@ -67,7 +64,7 @@ export class SQLTable {
     }
   }
 
-  public updateIdColumnName(): void {
+  updateIdColumnName(): void {
     if (this.hasGeneratedID) {
       this.checkAndChangeIDColumnName("id");
     }
@@ -87,19 +84,19 @@ export class SQLTable {
     }
   }
 
-  public getColumns() {
+  getColumns() {
     return this.columns;
   }
 
-  public getLastID(): SQLNumber {
+  getLastID(): SQLNumber {
     return this.getPrimaryKeyColumn().getLastRow() as SQLNumber;
   }
 
-  public findColumnByName(columnName: string): SQLTableColumn | null {
+  findColumnByName(columnName: string): SQLTableColumn | null {
     return this.columns.find((c) => c.getColumnName() === columnName) || null;
   }
 
-  public getTableMatrixData(): Array<Array<SQLType>> {
+  getTableMatrixData(): Array<Array<SQLType>> {
     const matrix = [] as Array<Array<SQLType>>;
     const rowCount = this.getTableLenght();
 
@@ -114,7 +111,7 @@ export class SQLTable {
     this.columns.push(new SQLTableColumn(columnName));
   }
 
-  public getTableLenght(): number {
+  getTableLenght(): number {
     if (this.columns.length) {
       return this.columns[0].getColumnLenght();
     } else {
@@ -122,7 +119,7 @@ export class SQLTable {
     }
   }
 
-  public getPrimaryKeyColumn(): SQLTableColumn {
+  getPrimaryKeyColumn(): SQLTableColumn {
     const primaryColumn = this.columns.find((c) => c.isPrimaryKey());
 
     if (primaryColumn) {
@@ -134,10 +131,7 @@ export class SQLTable {
     }
   }
 
-  public changeColumnToForeignKey(
-    columnName: string,
-    config: ColumnForeignKeyConfig,
-  ) {
+  changeColumnToForeignKey(columnName: string, config: ColumnForeignKeyConfig) {
     const foundColumn = this.columns.find(
       (c) => c.getColumnName() === columnName,
     );
@@ -147,7 +141,7 @@ export class SQLTable {
     }
   }
 
-  public addColumnValue(columnName: string, value: SQLType): void {
+  addColumnValue(columnName: string, value: SQLType): void {
     const foundColumn = this.columns.find(
       (c) => c.getColumnName() === columnName,
     );
@@ -160,7 +154,7 @@ export class SQLTable {
     }
   }
 
-  public addNewID(): void {
+  addNewID(): void {
     if (this.hasGeneratedID) {
       if (this.columns[0].getColumnLenght()) {
         const newID = new SQLIntegerNumber(this.getLastID().value + 1);

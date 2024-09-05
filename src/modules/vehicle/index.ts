@@ -1,10 +1,7 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../module";
 import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants";
 
 export class VehicleModule {
-  private utils = new ChacaUtils();
-
   readonly constants = {
     bicycles: BICYCLE,
     fuels: FUEL,
@@ -15,64 +12,60 @@ export class VehicleModule {
 
   /**
    * Returns a bicycle type
-   * @example modules.vehicle.bicycle() // Schema
-   * @example modules.vehicle.bicycle().getValue() // 'BMX Bicycle'
+   * @example modules.vehicle.bicycle() // 'BMX Bicycle'
    * @returns string
    */
-  bicycle() {
-    return new Module<string>(() => this.utils.oneOfArray(BICYCLE));
+  bicycle(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(BICYCLE);
   }
 
   /**
    * Returns a manufacturer name
-   * @example modules.vehicle.manufacturer() // Schema
-   * @example modules.vehicle.manufacturer().getValue() // 'BMW'
+   * @example modules.vehicle.manufacturer() // 'BMW'
    * @returns string
    */
-  manufacturer() {
-    return new Module<string>(() => this.utils.oneOfArray(MANUFACTURER));
+  manufacturer(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(MANUFACTURER);
   }
 
   /**
    * Returns a vehicle model name
-   * @example modules.vehicle.vehicleModel() // Schema
-   * @example modules.vehicle.vehicleModel().getValue() // 'Model S'
+   * @example modules.vehicle.vehicleModel() // 'Model S'
    * @returns string
    */
-  vehicleModel() {
-    return new Module<string>(() => this.utils.oneOfArray(MODEL));
+  vehicleModel(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(MODEL);
   }
 
   /**
    * Returns a vehicle type
-   * @example modules.vehicle.vehicleType() // Schema
-   * @example modules.vehicle.vehicleType().getValue() // 'Coupe'
+   * @example modules.vehicle.vehicleType() // 'Coupe'
    * @returns string
    */
-  vehicleType() {
-    return new Module<string>(() => this.utils.oneOfArray(TYPE));
+  vehicleType(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(TYPE);
   }
 
   /**
    * Returns a vehicle name
-   * @example modules.vehicle.vehicle() // Schema
-   * @example modules.vehicle.vehicle().getValue() // 'BMW Explorer'
+   * @example modules.vehicle.vehicle() // 'BMW Explorer'
    * @returns string
    */
-  vehicle() {
-    return new Module<string>(
-      () =>
-        `${this.manufacturer().getValue()} ${this.vehicleModel().getValue()}`,
-    );
+  vehicle(): string {
+    return `${this.manufacturer()} ${this.vehicleModel()}`;
   }
 
   /**
    * Returns a fuel type
-   * @example modules.vehicle.fuel() // Schema
-   * @example modules.vehicle.fuel().getValue() // 'Diesel'
+   * @example modules.vehicle.fuel() // 'Diesel'
    * @returns string
    */
-  fuel() {
-    return new Module<string>(() => this.utils.oneOfArray(FUEL));
+  fuel(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(FUEL);
   }
 }

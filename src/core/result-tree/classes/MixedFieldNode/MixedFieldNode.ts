@@ -9,7 +9,7 @@ export class MixedFieldNode extends FieldNode {
     this.nodes.push(node);
   }
 
-  public getValue(): unknown {
+  public value(): unknown {
     let resultObject = {};
 
     this.nodes.forEach((n) => {

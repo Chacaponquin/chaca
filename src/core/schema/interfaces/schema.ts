@@ -1,9 +1,26 @@
+import { ChacaSchema } from "..";
 import { DatasetStore } from "../../dataset-store";
+import {
+  EnumField,
+  KeyField,
+  PickField,
+  ProbabilityField,
+  RefField,
+  SequenceField,
+  SequentialField,
+} from "../../fields/core";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
 
-export abstract class SchemaFieldType {}
-
-export type FieldTypes<R = any> = CustomField<any, R> | SchemaFieldType;
+export type FieldTypes<R = any> =
+  | CustomField<any, R>
+  | KeyField
+  | EnumField
+  | PickField
+  | ProbabilityField
+  | RefField
+  | SequenceField
+  | SequentialField
+  | ChacaSchema;
 
 export type FieldObjectInput<R = any> = {
   /** Schema field type*/
@@ -22,7 +39,7 @@ export type FieldObjectInput<R = any> = {
   possibleNull?: InputPossibleNull;
 };
 
-export type SchemaFieldConfig<R = any> = FieldObjectInput<R> | FieldTypes<R>;
+export type SchemaFieldConfig<R = any> = FieldTypes<R> | FieldObjectInput<R>;
 
 /**
  * Input schema config

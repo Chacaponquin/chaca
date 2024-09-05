@@ -20,7 +20,7 @@ export const GRADE_SCHEMA = chaca.schema({
 
 export const STUDENT_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
-  student_name: modules.person.fullName({ language: "es" }),
+  student_name: () => modules.person.fullName({ language: "es" }),
   sex: chaca.enum(["Male", "Woman"]),
   municipality_id: chaca.ref("Municipality.id"),
   group: chaca.ref("Group.group_number"),
@@ -33,7 +33,7 @@ export const GROUP_SCHEMA = chaca.schema({
   year: chaca.key(chaca.ref("Year.year_id")),
   group_number: chaca.key(({ currentFields: ownFields, store }) => {
     const allGroupsWithSameYear = store
-      .getValue("Group")
+      .value("Group")
       .filter((g) => g.year === ownFields.year);
 
     if (allGroupsWithSameYear.length === 0) {
@@ -56,7 +56,7 @@ export const SUBJECT_SCHEMA = chaca.schema({
   id: chaca.key(chaca.sequence()),
   year: chaca.key(chaca.ref("Year.year_id")),
   subject_name: chaca.sequential(SUBJECTS),
-  count_hours: modules.datatype.int({ min: 30, max: 90 }),
+  count_hours: () => modules.datatype.int({ min: 30, max: 90 }),
 });
 
 export const DOWN_REASON_SCHEMA = chaca.schema({
@@ -75,7 +75,7 @@ export const STUDENT_SUBJECT_GRADE = chaca.schema({
     chaca.ref(
       "Student.id",
       ({ currentFields, refFields: studentFields, store }) => {
-        const foundSubject = store.getValue("Subject", {
+        const foundSubject = store.value("Subject", {
           where(fields) {
             return fields.id === currentFields.subject_id;
           },

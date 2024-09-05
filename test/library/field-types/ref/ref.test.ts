@@ -3,7 +3,7 @@ import { chaca, modules, NotExistFieldError } from "../../../../src";
 describe("# Ref field tests", () => {
   it("Create a correct ref field", () => {
     const dataset1 = chaca.schema({
-      id: chaca.key(modules.id.uuid()),
+      id: chaca.key(modules.id.uuid),
     });
 
     const dataset2 = chaca.schema({ id: chaca.ref("Dataset1.id") });
@@ -22,7 +22,7 @@ describe("# Ref field tests", () => {
 
   it("Try ref a not existing field. Should throw an error", () => {
     const dataset1 = chaca.schema({
-      id: chaca.key(modules.id.uuid()),
+      id: chaca.key(modules.id.uuid),
     });
 
     const dataset2 = chaca.schema({ id: chaca.ref("Dataset1.customId") });

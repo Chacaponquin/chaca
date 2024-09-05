@@ -2,9 +2,9 @@ import { ChacaError, chaca, modules } from "../../../src";
 
 describe("# Schema generate tests", () => {
   const schema = chaca.schema({
-    id: { type: modules.id.uuid() },
-    image: { type: modules.image.film() },
-    name: { type: modules.person.firstName({ language: "es" }) },
+    id: { type: () => modules.id.uuid() },
+    image: { type: () => modules.image.film() },
+    name: { type: () => modules.person.firstName({ language: "es" }) },
   });
 
   const doc = schema.object();

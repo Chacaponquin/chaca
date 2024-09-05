@@ -1,121 +1,101 @@
 import { ChacaUtils } from "../../core/utils";
-import { Module } from "../module";
-import WORDS, { ILanguageWord } from "./constants";
+import { ILanguageWord, WORDS } from "./constants";
 
-type Languages = "es" | "en";
+export type Languages = "es" | "en";
 
-type WordProps = {
+export type WordProps = {
   language?: Languages;
 };
 
 export class WordModule {
-  private utils = new ChacaUtils();
-
   readonly constants = { words: WORDS };
 
   /**
    * Returns a adjective from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example modules.word.adjective() // Schema
-   * @example modules.word.adjective().getValue() // 'clever'
+   * @example modules.word.adjective() // 'clever'
    * @returns string
    */
-  adjective(args?: WordProps) {
-    return new Module<string, WordProps>(
-      (a) => this.utils.oneOfArray(this.filterWords(a.language).adjectives),
-      args || {},
-    );
+  adjective(args?: WordProps): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.filterWords(args?.language).adjectives);
   }
 
   /**
    * Returns a conjuction from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example modules.word.conjuction() // Schema
-   * @example modules.word.conjuction().getValue() // 'but'
+   * @example modules.word.conjuction() // 'but'
    * @returns string
    */
-  conjuction(args?: WordProps) {
-    return new Module<string, WordProps>(
-      (a) => this.utils.oneOfArray(this.filterWords(a.language).conjuctions),
-      args || {},
-    );
+  conjuction(args?: WordProps): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.filterWords(args?.language).conjuctions);
   }
 
   /**
    * Returns a interjection from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example modules.word.interjection() // Schema
-   * @example modules.word.interjection().getValue() // 'hey!'
+   * @example modules.word.interjection() // 'hey!'
    * @returns string
    */
-  interjection(args?: WordProps) {
-    return new Module<string, WordProps>(
-      (a) => this.utils.oneOfArray(this.filterWords(a.language).interjections),
-      args || {},
-    );
+  interjection(args?: WordProps): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.filterWords(args?.language).interjections);
   }
 
   /**
    * Returns a preposition from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example modules.word.preposition() // Schema
-   * @example modules.word.preposition().getValue() // 'at'
+   * @example modules.word.preposition() // 'at'
    * @returns string
    */
-  preposition(args?: WordProps) {
-    return new Module<string, WordProps>(
-      (a) => this.utils.oneOfArray(this.filterWords(a.language).prepositions),
-      args || {},
-    );
+  preposition(args?: WordProps): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.filterWords(args?.language).prepositions);
   }
 
   /**
    * Returns a adverb from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example modules.word.adverb() // Schema
-   * @example modules.word.adverb().getValue() // 'here'
+   * @example modules.word.adverb() // 'here'
    * @returns string
    */
-  adverb(args?: WordProps) {
-    return new Module<string, WordProps>(
-      (a) => this.utils.oneOfArray(this.filterWords(a.language).adverbs),
-      args || {},
-    );
+  adverb(args?: WordProps): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.filterWords(args?.language).adverbs);
   }
 
   /**
    * Returns a verb from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example modules.word.verb() // Schema
-   * @example modules.word.verb().getValue() // 'had'
+   * @example modules.word.verb() // 'had'
    * @returns string
    */
-  verb(args?: WordProps) {
-    return new Module<string, WordProps>(
-      (a) => this.utils.oneOfArray(this.filterWords(a.language).verbs),
-      args || {},
-    );
+  verb(args?: WordProps): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.filterWords(args?.language).verbs);
   }
 
   /**
    * Returns a noun from a selected lenguage
    * @param args.language word language (`en` | `es`). Defaults `en`
-   * @example modules.word.noun() // Schema
-   * @example modules.word.noun().getValue() // 'car'
+   * @example modules.word.noun() // 'car'
    * @returns string
    */
-  noun(args?: WordProps) {
-    return new Module<string, WordProps>(
-      (a) => this.utils.oneOfArray(this.filterWords(a.language).nouns),
-      args || {},
-    );
+  noun(args?: WordProps): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(this.filterWords(args?.language).nouns);
   }
 
   private filterWords(lan: Languages | undefined): ILanguageWord {
     if (typeof lan === "string") {
       const languageSelected = WORDS[lan];
-      if (languageSelected) return languageSelected;
-      else return WORDS["en"];
-    } else return WORDS["en"];
+
+      if (languageSelected) {
+        return languageSelected;
+      }
+    }
+
+    return WORDS["en"];
   }
 }

@@ -1,21 +1,21 @@
 import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
 
 export abstract class FieldNode {
-  constructor(public readonly name: string) {}
+  constructor(readonly name: string) {}
 
-  protected abstract getValue(): unknown | Array<unknown>;
-  public abstract getNodeByRoute(fieldTreeRoute: Array<string>): FieldNode;
+  protected abstract value(): unknown | Array<unknown>;
+  abstract getNodeByRoute(fieldTreeRoute: Array<string>): FieldNode;
 
   protected abstract getRefValueByNodeRoute(
-    fieldTreeRoute: Array<string>,
+    fieldTreeRoute: string[],
   ): SingleResultNode;
 
-  public getRefValueByRoute(fieldTreeRoute: Array<string>): SingleResultNode {
+  getRefValueByRoute(fieldTreeRoute: Array<string>): SingleResultNode {
     const value = this.getRefValueByNodeRoute(fieldTreeRoute);
     return value;
   }
 
-  public getRealValue() {
-    return this.getValue();
+  getRealValue() {
+    return this.value();
   }
 }

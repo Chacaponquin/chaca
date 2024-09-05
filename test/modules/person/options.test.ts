@@ -2,27 +2,27 @@ import { modules } from "../../../src";
 
 describe("# Person options tests", () => {
   it("Gender test", () => {
-    const value = modules.person.gender().getValue();
+    const value = modules.person.gender();
     expect(modules.person.constants.genders.includes(value));
   });
 
   it("Job area test", () => {
-    const value = modules.person.jobArea().getValue();
+    const value = modules.person.jobArea();
     expect(modules.person.constants.jobAreas.includes(value));
   });
 
   it("Job level test", () => {
-    const value = modules.person.jobLevel().getValue();
+    const value = modules.person.jobLevel();
     expect(modules.person.constants.jobLevels.includes(value));
   });
 
   it("Language test", () => {
-    const value = modules.person.language().getValue();
+    const value = modules.person.language();
     expect(modules.person.constants.languages.includes(value));
   });
 
   it("Prefix test", () => {
-    const value = modules.person.prefix().getValue();
+    const value = modules.person.prefix();
     const all = [
       ...modules.person.constants.prefixes.female,
       ...modules.person.constants.prefixes.male,
@@ -31,7 +31,7 @@ describe("# Person options tests", () => {
   });
 
   it("Sex test", () => {
-    const value = modules.person.sex().getValue();
+    const value = modules.person.sex();
     expect(["Male", "Female"].includes(value));
   });
 });

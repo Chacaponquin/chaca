@@ -3,12 +3,10 @@ import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNode } from "../node";
 import { CustomValueNode } from "../custom";
 import { RefValueNode } from "../ref";
-import { ModuleNode } from "../module";
 import { SequenceValueNode } from "../sequence";
 
 export type KeyValueNodeProps =
   | RefValueNode
-  | ModuleNode
   | SequenceValueNode
   | CustomValueNode;
 
@@ -26,38 +24,32 @@ export class KeyValueNode extends ChacaTreeNode {
     super({ fieldTreeRoute: fieldTreeRoute, isArray: null, possibleNull: 0 });
   }
 
-  public getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): ChacaTreeNode {
     return new KeyValueNode(
       this.getNodeConfig().fieldTreeRoute,
       this.fieldNode,
     );
   }
 
-  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+  checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     return fieldTreeRoute.length === 0;
   }
 
-  public getValue({
-    currentDocument,
-    currentSchemaResolver,
-    store,
-  }: Props): unknown {
+  value({ currentDocument, currentSchemaResolver, store }: Props): unknown {
     let resultValue: unknown;
 
     if (this.fieldNode instanceof RefValueNode) {
-      resultValue = this.fieldNode.getValue(
+      resultValue = this.fieldNode.value(
         currentDocument,
         currentSchemaResolver,
       );
-    } else if (this.fieldNode instanceof ModuleNode) {
-      resultValue = this.fieldNode.getValue();
     } else if (this.fieldNode instanceof CustomValueNode) {
-      resultValue = this.fieldNode.getValue({
+      resultValue = this.fieldNode.value({
         datasetStore: store,
         fields: currentDocument,
       });
     } else {
-      resultValue = this.fieldNode.getValue();
+      resultValue = this.fieldNode.value();
     }
 
     if (

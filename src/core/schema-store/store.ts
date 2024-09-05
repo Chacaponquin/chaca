@@ -1,6 +1,6 @@
 import { ChacaError, CyclicAccessDataError } from "../../errors";
 import { DocumentTree, FieldNode } from "../result-tree/classes";
-import { SchemaResolver } from "../schema-resolver/resolver";
+import { SchemaResolver } from "../schema-resolver";
 import { GetStoreValueConfig } from "./interfaces/store";
 
 export class SchemaStore {
@@ -33,7 +33,7 @@ export class SchemaStore {
     return this.schemas;
   }
 
-  getValue<D = any>(
+  value<D = any>(
     fieldToGet: string,
     config: GetStoreValueConfig,
   ): Array<FieldNode | DocumentTree<D>> {
