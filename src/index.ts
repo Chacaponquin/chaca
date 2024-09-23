@@ -2,8 +2,8 @@ import {
   SchemaInput,
   FieldObjectInput,
   CustomField,
-  InputIsArrayConfig,
-  InputPossibleNull,
+  IsArrayConfig,
+  PossibleNullConfig,
   CustomFieldProps,
   FieldTypes,
   SchemaFieldConfig,
@@ -27,7 +27,7 @@ import {
   YamlFormatConfig,
 } from "./core/export/interfaces/export";
 
-import { ChacaSchema } from "./core/schema";
+import { Schema } from "./core/schema";
 
 import {
   ChacaError,
@@ -40,12 +40,15 @@ import {
   PickFieldDefinitionError,
 } from "./errors";
 
-import { GetStoreValueInput } from "./core/schema-store/interfaces/store";
+import {
+  GetStoreConfig,
+  GetStoreWhere,
+} from "./core/schema-store/interfaces/store";
 
 import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
 
 import {
-  FieldRefInputConfig,
+  RefFieldConfig,
   FieldToRef,
   RefField,
   RefFieldWhereProps,
@@ -81,7 +84,15 @@ import {
   ChanceFunctionProps,
 } from "./core/fields/core/probability";
 
-import { PickField, PickFieldProps } from "./core/fields/core/pick/PickField";
+import {
+  PickField,
+  PickFieldProps,
+  PickCount,
+  PickCountFunction,
+  PickCountFunctionProps,
+  PickCountLimits,
+} from "./core/fields/core/pick";
+
 import { ChacaModules } from "./modules";
 import { Dataset } from "./core/dataset";
 
@@ -109,7 +120,7 @@ export {
   PickField,
 };
 
-export { ChacaSchema, DatasetStore, Chaca, ChacaUtils, ChacaModules };
+export { Schema, DatasetStore, Chaca, ChacaUtils, ChacaModules };
 
 export type {
   CustomField,
@@ -120,14 +131,14 @@ export type {
   FieldToRef,
   RefFieldWhere,
   KeyAllowDataTypes,
-  GetStoreValueInput,
+  GetStoreConfig,
   ExportSQLFormat,
   SequenceFieldProps,
   KeyFieldProps,
-  FieldRefInputConfig,
+  RefFieldConfig,
   FieldObjectInput,
-  InputIsArrayConfig,
-  InputPossibleNull,
+  IsArrayConfig,
+  PossibleNullConfig,
   CustomFieldProps,
   SequentialFieldConfig,
   RefFieldWhereProps,
@@ -140,6 +151,11 @@ export type {
   ChanceFunction,
   ChanceFunctionProps,
   PickFieldProps,
+  GetStoreWhere,
+  PickCount,
+  PickCountFunctionProps,
+  PickCountFunction,
+  PickCountLimits,
 };
 
 export type {

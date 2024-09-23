@@ -33,7 +33,7 @@ export const GROUP_SCHEMA = chaca.schema({
   year: chaca.key(chaca.ref("Year.year_id")),
   group_number: chaca.key(({ currentFields: ownFields, store }) => {
     const allGroupsWithSameYear = store
-      .value("Group")
+      .get("Group")
       .filter((g) => g.year === ownFields.year);
 
     if (allGroupsWithSameYear.length === 0) {
@@ -75,7 +75,7 @@ export const STUDENT_SUBJECT_GRADE = chaca.schema({
     chaca.ref(
       "Student.id",
       ({ currentFields, refFields: studentFields, store }) => {
-        const foundSubject = store.value("Subject", {
+        const foundSubject = store.get("Subject", {
           where(fields) {
             return fields.id === currentFields.subject_id;
           },

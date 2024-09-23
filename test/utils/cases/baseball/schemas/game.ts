@@ -25,7 +25,7 @@ export const GAME_SCHEMA = chaca.schema({
     }
   },
   game_date: ({ currentFields: fields, store }) => {
-    const phases = store.value("Phase");
+    const phases = store.get("Phase");
 
     const foundPhase = phases.find((p) => p.phase_id === fields.phase_id);
 
@@ -42,8 +42,8 @@ export const GAME_SCHEMA = chaca.schema({
   total_audience: ({ currentFields: fields, store }) => {
     let foundStadium = null as any;
 
-    const stadiums = store.value("Stadium");
-    const teams = store.value("Team");
+    const stadiums = store.get("Stadium");
+    const teams = store.get("Team");
 
     const foundHomeClubTeam = teams.find(
       (t) => t.team_id === fields.team_home_club,

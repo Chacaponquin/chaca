@@ -4,7 +4,7 @@ import { FileConfig } from "../export/interfaces/export";
 import { InputSchemaResolver } from "./value-object/SchemaResolver";
 import { SchemaResolver } from "../schema-resolver";
 
-export class ChacaSchema<K = any> {
+export class Schema<K = any> {
   private schemaResolver: SchemaToResolve;
 
   constructor(input: SchemaInput) {
@@ -17,17 +17,14 @@ export class ChacaSchema<K = any> {
 
   /**
    * Generate and export the schema documents
-   * @param countDocuments number of documents that you want to create
-   * @param configFile Configuration of the file you want to export (name, location, format)
+   * @param documents number of documents that you want to create
+   * @param config Configuration of the file you want to export (name, location, format)
    * @returns Promise<string>
    */
-  async export(
-    countDocuments: number,
-    configFile: FileConfig,
-  ): Promise<string> {
-    const resolver = new ExportResolver(configFile);
+  async export(documents: number, config: FileConfig): Promise<string> {
+    const resolver = new ExportResolver(config);
     const fileRoute = await resolver.relational([
-      { name: configFile.filename, documents: countDocuments, schema: this },
+      { name: config.filename, documents: documents, schema: this },
     ]);
 
     return fileRoute;

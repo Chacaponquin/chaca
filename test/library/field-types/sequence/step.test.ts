@@ -1,6 +1,6 @@
-import { ChacaError, ChacaSchema, chaca } from "../../../../src";
+import { ChacaError, Schema, chaca } from "../../../../src";
 
-function valid(schema: ChacaSchema, step: number): boolean {
+function valid(schema: Schema, step: number): boolean {
   const data = schema.array(10);
 
   let valid = true;

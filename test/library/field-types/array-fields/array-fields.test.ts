@@ -6,7 +6,7 @@ describe("# Array field tests", () => {
       id: { type: modules.id.mongodbId, isArray: {} },
     });
     const docs = schema.object();
-    const id = docs["id"];
+    const id = docs.id;
 
     expect(id.length).toBeGreaterThanOrEqual(1);
     expect(id.length).toBeLessThanOrEqual(10);

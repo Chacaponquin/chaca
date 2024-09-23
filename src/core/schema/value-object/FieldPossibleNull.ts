@@ -1,12 +1,12 @@
 import {
   FieldPossibleNullConfig,
-  InputPossibleNull,
+  PossibleNullConfig,
 } from "../interfaces/schema";
 
 export class FieldPossibleNull {
   private _value: FieldPossibleNullConfig;
 
-  constructor(posible?: InputPossibleNull) {
+  constructor(posible?: PossibleNullConfig) {
     this._value = this.validate(posible);
   }
 
@@ -30,7 +30,7 @@ export class FieldPossibleNull {
     return pos ? 50 : 0;
   }
 
-  private validate(pos?: InputPossibleNull): FieldPossibleNullConfig {
+  private validate(pos?: PossibleNullConfig): FieldPossibleNullConfig {
     let value: FieldPossibleNullConfig;
 
     if (typeof pos === "number") {

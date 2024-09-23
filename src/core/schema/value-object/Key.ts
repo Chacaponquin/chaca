@@ -26,7 +26,7 @@ export class InputKeyField {
     if (fieldType instanceof RefField) {
       type = new RefFieldResolver(fieldType.refField);
     } else if (fieldType instanceof SequenceField) {
-      type = new SequenceFieldResolver(fieldType.getConfig());
+      type = new SequenceFieldResolver(fieldType.config);
     } else if (typeof fieldType === "function") {
       type = new CustomFieldResolver(fieldType);
     } else {

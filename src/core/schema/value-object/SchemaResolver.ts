@@ -19,7 +19,7 @@ import {
   SequentialFieldResolver,
 } from "../../resolvers/core";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
-import { ChacaSchema } from "..";
+import { Schema } from "..";
 import {
   CustomField,
   FieldObjectInput,
@@ -54,7 +54,7 @@ export class InputSchemaResolver {
       if (typeof config === "function") {
         returnResolver = new CustomFieldResolver(config as CustomField);
       } else {
-        if (config instanceof ChacaSchema) {
+        if (config instanceof Schema) {
           returnResolver = new MixedFieldResolver(config);
         } else if (config instanceof PickField) {
           returnResolver = new PickFieldResolver(config.values);
@@ -70,7 +70,7 @@ export class InputSchemaResolver {
         } else if (config instanceof KeyField) {
           returnResolver = new InputKeyField(config).resolver();
         } else if (config instanceof SequenceField) {
-          returnResolver = new SequenceFieldResolver(config.getConfig());
+          returnResolver = new SequenceFieldResolver(config.config);
         } else if (config instanceof EnumField) {
           returnResolver = new EnumFieldResolver(config.values);
         } else {

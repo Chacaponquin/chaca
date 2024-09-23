@@ -34,7 +34,7 @@ export const USER_SANCTION_SCHEMA = chaca.schema({
   user_id: chaca.ref("Library_User.id", {
     where: ({ refFields: userFields, store }) => {
       return !store
-        .value("User_Sanction")
+        .get("User_Sanction")
         .some((s) => s.finish_date === null && userFields.id === s.user_id);
     },
   }),
@@ -78,7 +78,7 @@ export const BOOK_LOAN_SCHEMA = chaca.schema({
   book_id: chaca.ref("Book.id"),
   user_id: chaca.ref("Library_User.id", {
     where: ({ store, currentFields }) => {
-      const findSanctionsThatUser = store.value("User_Sanction", {
+      const findSanctionsThatUser = store.get("User_Sanction", {
         where: (sanctionFields) => {
           return sanctionFields.user_id === currentFields.user_id;
         },

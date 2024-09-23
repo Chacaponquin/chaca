@@ -5,10 +5,7 @@ import { CustomValueNode } from "../custom";
 import { RefValueNode } from "../ref";
 import { SequenceValueNode } from "../sequence";
 
-export type KeyValueNodeProps =
-  | RefValueNode
-  | SequenceValueNode
-  | CustomValueNode;
+export type KeyFieldProps = RefValueNode | SequenceValueNode | CustomValueNode;
 
 interface Props {
   currentDocument: number;
@@ -19,7 +16,7 @@ interface Props {
 export class KeyValueNode extends ChacaTreeNode {
   constructor(
     fieldTreeRoute: string[],
-    private readonly fieldNode: KeyValueNodeProps,
+    private readonly fieldNode: KeyFieldProps,
   ) {
     super({ fieldTreeRoute: fieldTreeRoute, isArray: null, possibleNull: 0 });
   }
@@ -52,20 +49,12 @@ export class KeyValueNode extends ChacaTreeNode {
       resultValue = this.fieldNode.value();
     }
 
-    if (
-      typeof resultValue === "string" ||
-      typeof resultValue === "number" ||
-      resultValue instanceof Date
-    ) {
-      return resultValue;
-    } else if (resultValue === null) {
+    if (resultValue === null) {
       throw new ChacaError(
         `The key value ${this.getRouteString()} can not be null`,
       );
-    } else {
-      throw new ChacaError(
-        `The key value ${this.getRouteString()} has to be an string, number or Date`,
-      );
     }
+
+    return resultValue;
   }
 }

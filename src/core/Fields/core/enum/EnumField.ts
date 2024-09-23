@@ -1,3 +1,3 @@
 export class EnumField<R = any> {
-  constructor(public readonly values: R[]) {}
+  constructor(readonly values: ReadonlyArray<R>) {}
 }

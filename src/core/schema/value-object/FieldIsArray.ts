@@ -1,9 +1,9 @@
-import { FieldIsArrayConfig, InputIsArrayConfig } from "../interfaces/schema";
+import { FieldIsArrayConfig, IsArrayConfig } from "../interfaces/schema";
 
 export class FieldIsArray {
   private _value: FieldIsArrayConfig = null;
 
-  constructor(isArray?: InputIsArrayConfig) {
+  constructor(isArray?: IsArrayConfig) {
     this._value = this.validate(isArray);
   }
 
@@ -11,7 +11,7 @@ export class FieldIsArray {
     return this._value;
   }
 
-  private validate(isArray?: InputIsArrayConfig): FieldIsArrayConfig {
+  private validate(isArray?: IsArrayConfig): FieldIsArrayConfig {
     let value: FieldIsArrayConfig = null;
 
     if (typeof isArray === "number") {

@@ -1,14 +1,14 @@
-import { FieldRefInputConfig, RefFieldWhere } from "../interfaces/ref";
+import { RefFieldConfig, RefFieldWhere } from "../interfaces/ref";
 
 export class Config {
   private _unique = false;
   private _where: RefFieldWhere | null = null;
 
-  constructor(config?: FieldRefInputConfig) {
+  constructor(config?: RefFieldConfig) {
     this.validate(config);
   }
 
-  private validate(config?: FieldRefInputConfig) {
+  private validate(config?: RefFieldConfig) {
     if (typeof config === "function") {
       this._where = config;
     } else if (config && typeof config === "object") {

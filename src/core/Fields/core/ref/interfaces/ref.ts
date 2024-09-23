@@ -21,7 +21,7 @@ export type RefFieldWhereProps<C = any, R = any> = {
   store: DatasetStore;
 };
 
-export type FieldRefInputConfig =
+export type RefFieldConfig =
   | RefFieldWhere
   | {
       /**

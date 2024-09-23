@@ -9,7 +9,7 @@ import {
   RefFieldResolver,
   SequenceFieldResolver,
 } from "../resolvers/core";
-import { ChacaSchema } from "../schema";
+import { Schema } from "../schema";
 import {
   ChacaTreeNode,
   CustomValueNode,
@@ -22,7 +22,6 @@ import {
   SequenceValueNode,
   SequentialValueNode,
 } from "./core";
-import { InputTreeUtils } from "./utils/input-tree-utils";
 import { SequentialFieldResolver } from "../resolvers/core/sequential";
 import { SchemaStore } from "../schema-store/store";
 import { PickFieldResolver } from "../resolvers/core/pick";
@@ -34,8 +33,6 @@ interface Props {
 }
 
 export class ChacaInputTree {
-  private inputTreeUtils = new InputTreeUtils();
-
   private nodes: ChacaTreeNode[] = [];
   private schemasStore: SchemaStore;
   private schemaName: string;
@@ -85,7 +82,7 @@ export class ChacaInputTree {
     } else if (object.type instanceof EnumFieldResolver) {
       returnNode = new EnumValueNode(nodeConfig, object.type.array);
     } else if (object.type instanceof MixedFieldResolver) {
-      returnNode = new MixedValueNode(nodeConfig, this.inputTreeUtils);
+      returnNode = new MixedValueNode(nodeConfig);
 
       this.createSubNodesOfMixedField(
         actualRoute,
@@ -156,6 +153,7 @@ export class ChacaInputTree {
   private validateResolver(route: string[], config: ResolverObject): void {
     const name = ChacaTreeNode.getRouteString(route);
 
+    // sequence
     if (config.type instanceof SequenceFieldResolver) {
       if (config.isArray !== null) {
         throw new ChacaError(
@@ -189,7 +187,7 @@ export class ChacaInputTree {
   private createSubNodesOfMixedField(
     actualRoute: string[],
     parentNode: MixedValueNode,
-    schema: ChacaSchema,
+    schema: Schema,
   ) {
     const object = schema.getSchemaObject();
     for (const [key, obj] of Object.entries<ResolverObject>(object)) {
@@ -201,7 +199,6 @@ export class ChacaInputTree {
 
   insertNode(node: ChacaTreeNode) {
     this.nodes.push(node);
-    this.nodes = this.inputTreeUtils.orderNodesByPriority(this.nodes);
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {

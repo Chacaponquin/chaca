@@ -4,37 +4,30 @@ import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
 
-interface Props<C> {
-  fields: C;
+interface Props {
+  fields: any;
   datasetStore: DatasetStore;
 }
 
-export class CustomValueNode<C = any, R = unknown> extends ChacaTreeNode {
-  constructor(
-    config: ChacaTreeNodeConfig,
-    private readonly func: CustomField<C, R>,
-  ) {
+export class CustomValueNode extends ChacaTreeNode {
+  constructor(config: ChacaTreeNodeConfig, private readonly func: CustomField) {
     super(config);
   }
 
   getNoArrayNode(): ChacaTreeNode {
-    return new CustomValueNode<C, R>(
+    return new CustomValueNode(
       { ...this.getNodeConfig(), isArray: null },
       this.func,
     );
   }
 
-  value({ fields, datasetStore }: Props<C>): R {
+  value({ fields, datasetStore }: Props) {
     const value = this.func({
       store: datasetStore,
       currentFields: fields,
     });
 
-    if (value === undefined) {
-      return null as R;
-    } else {
-      return value;
-    }
+    return value;
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {

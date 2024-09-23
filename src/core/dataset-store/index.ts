@@ -1,11 +1,9 @@
 import { SchemaStore } from "../schema-store/store";
 import { DocumentTree } from "../result-tree/classes/DocumentTree/DocumentTree";
-import {
-  GetStoreValueConfig,
-  GetStoreValueInput,
-} from "../schema-store/interfaces/store";
+import { GetStoreConfig } from "../schema-store/interfaces/store";
 import { FieldNode } from "../result-tree/classes";
 import { SchemaResolver } from "../schema-resolver";
+import { GetConfig } from "./value-object";
 
 interface Props {
   schemasStore: SchemaStore;
@@ -25,31 +23,14 @@ export class DatasetStore {
     this.schemasStore = schemasStore;
   }
 
-  private validateGetValueConfig(
-    config?: GetStoreValueInput,
-  ): GetStoreValueConfig {
-    const returnConfig: GetStoreValueConfig = {
-      omitDocument: this.omitCurrentDocument,
+  get<R = any>(route: string, iconfig?: GetStoreConfig): R[] {
+    const config = new GetConfig({
+      omitCurrentDocument: this.omitCurrentDocument,
       omitResolver: this.omitResolver,
-    };
+      config: iconfig,
+    });
 
-    if (config && typeof config === "object" && config !== null) {
-      if (typeof config.where === "function") {
-        const whereFunction = config.where;
-        returnConfig.where = whereFunction;
-      }
-    } else if (typeof config === "function") {
-      returnConfig.where = config;
-    }
-
-    return returnConfig;
-  }
-
-  value<R = any>(fieldToGet: string, config?: GetStoreValueInput<R>): R[] {
-    const foundNodes = this.schemasStore.value(
-      fieldToGet,
-      this.validateGetValueConfig(config),
-    );
+    const foundNodes = this.schemasStore.value(route, config.value());
 
     const returnValues = [] as R[];
 
@@ -64,7 +45,7 @@ export class DatasetStore {
     return returnValues;
   }
 
-  getSchemaDocuments<R = any>(): R[] {
+  currentDocuments<R = any>(): R[] {
     return this.omitResolver.getDocumentsArray(this.omitCurrentDocument);
   }
 }

@@ -64,7 +64,7 @@ export const PITCHER_SCHEMA = chaca.schema({
       where: ({ refFields, store }) => {
         let valid = false;
 
-        const allPositions = store.value("Position");
+        const allPositions = store.get("Position");
 
         for (let i = 0; i < allPositions.length && !valid; i++) {
           if (
@@ -90,7 +90,7 @@ export const BATTER_SCHEMA = chaca.schema({
       where: ({ refFields, store }) => {
         let valid = false;
 
-        const allPositions = store.value("Position");
+        const allPositions = store.get("Position");
 
         for (let i = 0; i < allPositions.length && !valid; i++) {
           if (

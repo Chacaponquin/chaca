@@ -5,7 +5,7 @@ export const TEAM_SCHEMA = chaca.schema({
   played_championships: () => modules.datatype.int({ min: 1, max: 70 }),
   color: () => "#000000",
   team_name: ({ currentFields: fields, store }) => {
-    const provinces = store.value("Province");
+    const provinces = store.get("Province");
 
     let found = provinces.find((p) => p.province_id === fields.province_id);
 

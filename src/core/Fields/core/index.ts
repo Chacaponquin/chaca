@@ -1,6 +1,6 @@
 import { EnumField } from "./enum/EnumField";
 import { KeyField } from "./key/KeyField";
-import { PickField } from "./pick/PickField";
+import { PickField } from "./pick";
 import { ProbabilityField } from "./probability";
 import { RefField } from "./ref";
 import { SequenceField } from "./sequence/SequenceField";

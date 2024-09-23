@@ -1,8 +1,8 @@
 import { IResolver } from "../../interfaces/resolvers";
-import { ChacaSchema } from "../../../schema";
+import { Schema } from "../../../schema";
 
 export class MixedFieldResolver extends IResolver {
-  constructor(readonly schema: ChacaSchema) {
+  constructor(readonly schema: Schema) {
     super();
   }
 }

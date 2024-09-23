@@ -1,4 +1,4 @@
-import { ChacaSchema } from "../../schema";
+import { Schema } from "../../schema";
 
 export interface DatasetSchema {
   /**
@@ -8,7 +8,7 @@ export interface DatasetSchema {
   /**
    * Defined schema
    */
-  schema: ChacaSchema;
+  schema: Schema;
   /**
    * Count documents to generate
    */

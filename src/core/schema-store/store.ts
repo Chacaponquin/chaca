@@ -4,16 +4,12 @@ import { SchemaResolver } from "../schema-resolver";
 import { GetStoreValueConfig } from "./interfaces/store";
 
 export class SchemaStore {
-  private schemas: SchemaResolver[];
+  constructor(private schemas: SchemaResolver[]) {}
 
-  constructor(schemas: SchemaResolver[]) {
-    this.schemas = schemas;
-  }
-
-  private validateFieldToGet(fieldToGet: string): string[] {
-    if (typeof fieldToGet === "string") {
-      const fieldToGetArray = fieldToGet.split(".");
-      return fieldToGetArray;
+  private validateFieldToGet(route: string): string[] {
+    if (typeof route === "string") {
+      const routeArray = route.split(".");
+      return routeArray;
     } else {
       throw new ChacaError(
         "The field to get must be an array separated by points",
@@ -34,10 +30,10 @@ export class SchemaStore {
   }
 
   value<D = any>(
-    fieldToGet: string,
+    route: string,
     config: GetStoreValueConfig,
   ): Array<FieldNode | DocumentTree<D>> {
-    const fieldToGetArray = this.validateFieldToGet(fieldToGet);
+    const routeArray = this.validateFieldToGet(route);
 
     let foundSchema = false;
     let values = [] as Array<FieldNode | DocumentTree<D>>;
@@ -45,7 +41,7 @@ export class SchemaStore {
     for (let i = 0; i < this.schemas.length && !foundSchema; i++) {
       const currentSchema = this.schemas[i];
 
-      if (currentSchema.getSchemaName() === fieldToGetArray[0]) {
+      if (currentSchema.getSchemaName() === routeArray[0]) {
         if (currentSchema !== config.omitResolver) {
           if (!currentSchema.dangerCyclic()) {
             currentSchema.buildTrees();
@@ -56,10 +52,7 @@ export class SchemaStore {
           }
         }
 
-        values = currentSchema.getAllValuesByRoute(
-          fieldToGetArray.slice(1),
-          config,
-        );
+        values = currentSchema.getAllValuesByRoute(routeArray.slice(1), config);
 
         foundSchema = true;
       }

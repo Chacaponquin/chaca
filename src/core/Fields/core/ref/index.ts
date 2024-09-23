@@ -1,5 +1,5 @@
 import {
-  FieldRefInputConfig,
+  RefFieldConfig,
   FieldToRef,
   RefFieldWhere,
   RefFieldWhereProps,
@@ -15,13 +15,13 @@ export interface FieldToRefObject {
 export class RefField {
   readonly refField: FieldToRefObject;
 
-  constructor(refField: FieldToRef, config?: FieldRefInputConfig) {
+  constructor(refField: FieldToRef, config?: RefFieldConfig) {
     this.refField = this.validate(refField, config);
   }
 
   private validate(
     refField: FieldToRef,
-    inputConfig?: FieldRefInputConfig,
+    inputConfig?: RefFieldConfig,
   ): FieldToRefObject {
     const config = new Config(inputConfig);
 
@@ -35,9 +35,4 @@ export class RefField {
   }
 }
 
-export type {
-  FieldRefInputConfig,
-  FieldToRef,
-  RefFieldWhere,
-  RefFieldWhereProps,
-};
+export type { RefFieldConfig, FieldToRef, RefFieldWhere, RefFieldWhereProps };

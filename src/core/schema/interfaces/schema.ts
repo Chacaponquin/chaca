@@ -1,4 +1,4 @@
-import { ChacaSchema } from "..";
+import { Schema } from "..";
 import { DatasetStore } from "../../dataset-store";
 import {
   EnumField,
@@ -20,7 +20,7 @@ export type FieldTypes<R = any> =
   | RefField
   | SequenceField
   | SequentialField
-  | ChacaSchema;
+  | Schema;
 
 export type FieldObjectInput<R = any> = {
   /** Schema field type*/
@@ -30,13 +30,13 @@ export type FieldObjectInput<R = any> = {
    * - `number` - specific array length
    * - `config.min` and `config.max` - limits of array length
    */
-  isArray?: InputIsArrayConfig;
+  isArray?: IsArrayConfig;
   /** Null schema field configuration
    * - `boolean` - `true` 50% chances to be null, `false` 0% chances
    * - `number` specific porcent of chances
    * - `function` function that returns a number between 0 and 100 or a boolean. Receive 'currentFields' and 'store' as parameters
    */
-  possibleNull?: InputPossibleNull;
+  possibleNull?: PossibleNullConfig;
 };
 
 export type SchemaFieldConfig<R = any> = FieldTypes<R> | FieldObjectInput<R>;
@@ -54,8 +54,18 @@ export type ResolverObject = {
   possibleNull: FieldPossibleNullConfig;
 };
 
-export type ArrayLimitObject = { min: number; max: number };
-export type FieldIsArrayConfig = ArrayLimitObject | null;
+export type ArrayLimitObject = { min?: number; max?: number };
+export type FieldIsArrayConfig = Required<ArrayLimitObject> | null;
+export type IsArrayFunction = (
+  props: IsArrayFunctionProps,
+) => ArrayLimitObject | number;
+export type IsArrayFunctionProps<C = any> = {
+  /** Current schema document fields */
+  currentFields: C;
+  /** Store to interact with all datasets */
+  store: DatasetStore;
+};
+
 export type FieldPossibleNullConfig = number | PossibleNullFunction;
 export type PossibleNullFunction = (
   props: PossibleNullFunctionProps,
@@ -67,8 +77,8 @@ export type PossibleNullFunctionProps<C = any> = {
   store: DatasetStore;
 };
 
-export type InputIsArrayConfig = boolean | number | Partial<ArrayLimitObject>;
-export type InputPossibleNull = boolean | number | PossibleNullFunction;
+export type IsArrayConfig = number | ArrayLimitObject | IsArrayFunction;
+export type PossibleNullConfig = boolean | number | PossibleNullFunction;
 
 /**
  * Function that returns a value depending on the state of the current document and the dataset

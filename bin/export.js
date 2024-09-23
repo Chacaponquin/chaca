@@ -1,6 +1,6 @@
 const path = require("path");
 const fs = require("fs");
-const { chaca, ChacaSchema } = require("../lib/cjs/index.js");
+const { chaca, Schema } = require("../lib/cjs/index.js");
 
 async function run({ configRoute, format, filename, output, count }) {
   if (!fs.existsSync(configRoute)) {
@@ -9,7 +9,7 @@ async function run({ configRoute, format, filename, output, count }) {
     const route = path.resolve(process.cwd(), configRoute);
     const config = require(route);
 
-    if (config instanceof ChacaSchema) {
+    if (config instanceof Schema) {
       await config.generateAndExport(count, {
         filename: filename,
         format: format,

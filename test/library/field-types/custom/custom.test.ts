@@ -13,18 +13,6 @@ describe("# Custom field tests", () => {
     expect(docs["custom"]).toBe("Foo");
   });
 
-  it("Custom function return undefined. Should return null as value", () => {
-    const schema = chaca.schema({
-      id: { type: () => modules.id.uuid() },
-      custom: {
-        type: () => undefined,
-      },
-    });
-
-    const docs = schema.object();
-    expect(docs["custom"]).toBe(null);
-  });
-
   it("Custom function access to this property", () => {
     const schema = chaca.schema({
       id: { type: () => modules.id.uuid() },
@@ -61,7 +49,6 @@ describe("# Custom field tests", () => {
 
   it("Custom function in a nested schema inside an other nested schema", () => {
     const schema = chaca.schema({
-      id: () => modules.id.uuid(),
       user: chaca.schema({
         image: () => modules.image.people(),
         custom: ({ currentFields: f }) => f.id,

@@ -9,7 +9,10 @@ import { ChacaTreeNode } from "../node";
 export class EnumValueNode extends ChacaTreeNode {
   private readonly utils = new ChacaUtils();
 
-  constructor(config: ChacaTreeNodeConfig, readonly options: unknown[]) {
+  constructor(
+    config: ChacaTreeNodeConfig,
+    readonly options: ReadonlyArray<unknown>,
+  ) {
     super(config);
 
     if (Array.isArray(options)) {

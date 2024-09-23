@@ -1,32 +1,25 @@
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
-import { InputTreeUtils } from "../../utils/input-tree-utils";
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { KeyValueNode } from "../key";
 
 export class MixedValueNode extends ChacaTreeNode {
-  private nodes: Array<ChacaTreeNode> = [];
+  private nodes: ChacaTreeNode[] = [];
 
-  constructor(
-    config: ChacaTreeNodeConfig,
-    private readonly treeUtils: InputTreeUtils,
-  ) {
+  constructor(config: ChacaTreeNodeConfig) {
     super(config);
   }
 
-  public getFields() {
+  getFields() {
     return this.nodes;
   }
 
-  public getNoArrayNode(): ChacaTreeNode {
-    return new MixedValueNode(
-      { ...this.getNodeConfig(), isArray: null },
-      this.treeUtils,
-    );
+  getNoArrayNode(): ChacaTreeNode {
+    return new MixedValueNode({ ...this.getNodeConfig(), isArray: null });
   }
 
-  public getPossibleNullNodes(): Array<ChacaTreeNode> {
-    const nodes = [] as Array<ChacaTreeNode>;
+  getPossibleNullNodes(): ChacaTreeNode[] {
+    const nodes = [] as ChacaTreeNode[];
 
     this.nodes.forEach((n) => {
       if (n.isPossibleNull()) {
@@ -42,8 +35,8 @@ export class MixedValueNode extends ChacaTreeNode {
     return nodes;
   }
 
-  public getKeyFields(): Array<KeyValueNode> {
-    const keys = [] as Array<KeyValueNode>;
+  getKeyFields(): KeyValueNode[] {
+    const keys = [] as KeyValueNode[];
 
     this.nodes.forEach((n) => {
       if (n instanceof MixedValueNode) {
@@ -57,12 +50,11 @@ export class MixedValueNode extends ChacaTreeNode {
     return keys;
   }
 
-  public insertNode(node: ChacaTreeNode): void {
+  insertNode(node: ChacaTreeNode): void {
     this.nodes.push(node);
-    this.treeUtils.orderNodesByPriority(this.nodes);
   }
 
-  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+  checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
       throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {

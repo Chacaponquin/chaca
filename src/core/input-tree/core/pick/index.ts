@@ -3,23 +3,26 @@ import {
   PickFieldDefinitionError,
 } from "../../../../errors";
 import { DatatypeModule } from "../../../../modules/datatype";
-import { PickFieldProps } from "../../../fields/core/pick/PickField";
+import { PickFieldProps } from "../../../fields/core/pick";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
 import { Count, Values } from "./value-object";
 
 export class PickValueNode extends ChacaTreeNode {
   private datatypeModule = new DatatypeModule();
-  private values: PickFieldProps<unknown>;
+  private values: PickFieldProps;
 
-  constructor(config: ChacaTreeNodeConfig, values: PickFieldProps<unknown>) {
+  constructor(config: ChacaTreeNodeConfig, ivalues: PickFieldProps) {
     super(config);
 
     const route = this.getRouteString();
 
+    const count = new Count(route, ivalues.count);
+    const values = new Values(route, ivalues.values);
+
     this.values = {
-      count: new Count(route, values.count).value,
-      values: new Values(route, values.values).value,
+      count: count.value,
+      values: values.value,
     };
 
     if (this.values.count > this.values.values.length) {

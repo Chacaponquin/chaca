@@ -32,7 +32,7 @@ const filterPachagesByCharge = (
   store: DatasetStore,
 ): Package[] => {
   return packages.filter((p) => {
-    const packageCharge = store.value<Charge>("Charge", {
+    const packageCharge = store.get<Charge>("Charge", {
       where: (fields) => {
         return fields.id === p.charge_id;
       },
@@ -43,14 +43,18 @@ const filterPachagesByCharge = (
 };
 
 const findCharge = (store: DatasetStore, charge_id: number) => {
-  return store.value<Charge>("Charge", (fields) => {
-    return fields.id === charge_id;
+  return store.get<Charge>("Charge", {
+    where: (fields) => {
+      return fields.id === charge_id;
+    },
   })[0];
 };
 
 const findWarehouse = (store: DatasetStore, w_id: number) => {
-  return store.value<Warehouse>("Warehouse", (wFields) => {
-    return wFields.id === w_id;
+  return store.get<Warehouse>("Warehouse", {
+    where: (wFields) => {
+      return wFields.id === w_id;
+    },
   })[0];
 };
 
@@ -71,7 +75,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
       let sumTaken = 0;
 
       filterPachagesByCharge(
-        store.value<Package>("Package"),
+        store.get<Package>("Package"),
         foundCharge.warehouse_id,
         store,
       ).forEach((p) => {
@@ -101,7 +105,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
       let sumTaken = 0;
 
       filterPachagesByCharge(
-        store.value<Package>("Package"),
+        store.get<Package>("Package"),
         foundCharge.warehouse_id,
         store,
       ).forEach((p) => {
@@ -122,7 +126,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
     const foundCharge = findCharge(store, packageFields.charge_id);
 
     const filterPackages = filterPachagesByCharge(
-      store.value<Package>("Package"),
+      store.get<Package>("Package"),
       foundCharge.warehouse_id,
       store,
     ).filter(
@@ -148,12 +152,12 @@ export const CHARGE_SCHEMA = chaca.schema({
   warehouse_id: chaca.ref("Warehouse.id", {
     where: ({ currentFields, store }) => {
       const findChargesWithSameWarehouse = store
-        .getSchemaDocuments<Charge>()
+        .currentDocuments<Charge>()
         .filter((charge) => {
           return charge.warehouse_id === currentFields.warehouse_id;
         });
 
-      const foundWareHouse = store.value<Warehouse>("Warehouse", {
+      const foundWareHouse = store.get<Warehouse>("Warehouse", {
         where: (wFields) => {
           return wFields.id === currentFields.warehouse_id;
         },
@@ -167,7 +171,7 @@ export const CHARGE_SCHEMA = chaca.schema({
 
         let takedCapacity = 0;
         findChargesWithSameWarehouse.forEach((charge) => {
-          takedCapacity += store.value<Package>("Package", {
+          takedCapacity += store.get<Package>("Package", {
             where: (fields) => fields.charge_id === charge.id,
           }).length;
         });

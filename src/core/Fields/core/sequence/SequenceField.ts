@@ -8,13 +8,9 @@ export type SequenceFieldProps = Partial<{
 }>;
 
 export class SequenceField {
-  private config: Required<SequenceFieldProps>;
+  readonly config: Required<SequenceFieldProps>;
 
   constructor(config?: SequenceFieldProps) {
     this.config = new Config(config).value();
-  }
-
-  public getConfig() {
-    return this.config;
   }
 }

@@ -1,11 +1,7 @@
-import { ChacaSchema } from "./core/schema";
+import { Schema } from "./core/schema";
 import { EnumField } from "./core/fields/core/enum/EnumField";
 import { KeyField, KeyFieldProps } from "./core/fields/core/key/KeyField";
-import {
-  FieldRefInputConfig,
-  FieldToRef,
-  RefField,
-} from "./core/fields/core/ref";
+import { RefFieldConfig, FieldToRef, RefField } from "./core/fields/core/ref";
 import {
   SequenceField,
   SequenceFieldProps,
@@ -23,7 +19,7 @@ import {
   ProbabilityOption,
   ProbabilityField,
 } from "./core/fields/core/probability";
-import { PickField, PickFieldProps } from "./core/fields/core/pick/PickField";
+import { PickField, PickFieldProps } from "./core/fields/core/pick";
 import { Dataset } from "./core/dataset";
 
 export class Chaca {
@@ -38,8 +34,8 @@ export class Chaca {
    *    name: schemas.person.firstName()
    * }
    */
-  schema<K = any>(input: SchemaInput): ChacaSchema<K> {
-    const newSchema = new ChacaSchema<K>(input);
+  schema<K = any>(input: SchemaInput): Schema<K> {
+    const newSchema = new Schema<K>(input);
     return newSchema;
   }
 
@@ -52,13 +48,13 @@ export class Chaca {
    *    field: chaca.ref('Schema.fieldToRef')
    * }
    */
-  ref(field: FieldToRef, config?: FieldRefInputConfig) {
+  ref(field: FieldToRef, config?: RefFieldConfig): RefField {
     return new RefField(field, config);
   }
 
   /**
    * Sequential field
-   * @param values array of the secuential values
+   * @param values Array of the secuential values
    * @param config.loop Boolean indicating whether the values should be generated cyclically. Default `false`
    * @example
    * // the first generated object will have the favoriteNumber with value 1
@@ -97,7 +93,7 @@ export class Chaca {
    * Enum field
    * @param values Array of posible values
    */
-  enum<R = any>(values: R[]) {
+  enum<R = any>(values: ReadonlyArray<R>) {
     return new EnumField<R>(values);
   }
 
@@ -111,8 +107,8 @@ export class Chaca {
    *
    * @example
    * const data = [
-   *  { id: '1664755445878', name: 'Alberto', age: 20 },
-   *  { id: '1664755445812', name: 'Carolina', age: 28 }
+   *  { id: 1, name: 'Alberto', age: 20 },
+   *  { id: 2, name: 'Carolina', age: 28 }
    * ]
    * const config = { filename: 'users', format: 'json', location: '../../data' }
    *
@@ -148,7 +144,7 @@ export class Chaca {
    *   { chance: 0.1, value: 1 },
    * ])
    */
-  probability<T = any>(options: ProbabilityOption<T>[]) {
+  probability<T = any>(options: ProbabilityOption<T>[]): ProbabilityField<T> {
     return new ProbabilityField<T>(options);
   }
 
@@ -166,6 +162,6 @@ export class Chaca {
    * // [2, 6, 10] or [4, 5, 1] or [1, 9, 8] or ...
    */
   pick<V = any>(props: PickFieldProps<V>) {
-    return new PickField(props);
+    return new PickField<V>(props);
   }
 }
