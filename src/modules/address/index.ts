@@ -34,10 +34,8 @@ export class AddressModule {
    * modules.address.zipCode({ format: '###' }) // '453'
    * @returns string
    */
-  zipCode(a?: ZipCodeProps): string {
+  zipCode({ format: iformat }: ZipCodeProps = {}): string {
     const utils = new ChacaUtils();
-
-    const { format: iformat = undefined } = a || {};
 
     const format = typeof iformat === "string" ? iformat : "#####";
     return utils.replaceSymbols(format);
@@ -69,8 +67,7 @@ export class AddressModule {
    * @example modules.address.country() // 'Spain'
    * @returns string
    */
-  country(a?: CountryProps): string {
-    const { continent = undefined } = a ? a : {};
+  country({ continent }: CountryProps = {}): string {
     const utils = new ChacaUtils();
 
     if (continent && typeof continent === "string") {

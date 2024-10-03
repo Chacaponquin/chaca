@@ -40,7 +40,7 @@ export class ColorModule {
    * @example
    * modules.color.cssSupportedFunction() // 'rgb'
    */
-  cssSupportedFunction(): string {
+  cssSupportedFunction() {
     const utils = new ChacaUtils();
     const value = utils.oneOfArray(CSS_FUNCTIONS);
     return value;
@@ -52,7 +52,7 @@ export class ColorModule {
    * @example
    * modules.color.cssSupportedSpace() // 'display-p3'
    */
-  cssSupportedSpace(): CSSSpace {
+  cssSupportedSpace() {
     const utils = new ChacaUtils();
     return utils.oneOfArray(CSS_SPACES);
   }
@@ -74,15 +74,13 @@ export class ColorModule {
    * modules.color.rgb({ format: 'css' }) // 'rgb(255, 0, 0)'
    * modules.color.rgb({ format: 'binary' }) // '10000000 00000000 11111111'
    */
-  rgb(a?: RgbProps): string {
+  rgb({
+    format = "hex",
+    includeAlpha = false,
+    casing = "mixed",
+    prefix = "#",
+  }: RgbProps = {}): string {
     const datatypeModule = new DatatypeModule();
-
-    const {
-      format = "hex",
-      includeAlpha = false,
-      casing = "mixed",
-      prefix = "#",
-    } = a ? a : {};
 
     let color: string | number[];
     let cssFunction: CSSFunction = "rgb";
@@ -92,12 +90,14 @@ export class ColorModule {
         length: includeAlpha ? 8 : 6,
       });
 
-      color = formatHexColor(color, a);
+      color = formatHexColor(color, { prefix, casing });
       return color;
     }
+
     color = Array.from({ length: 3 }).map(() =>
       datatypeModule.int({ min: 0, max: 255 }),
     );
+
     if (includeAlpha) {
       color.push(datatypeModule.float({ min: 0, max: 1, precision: 2 }));
       cssFunction = "rgba";
@@ -123,9 +123,8 @@ export class ColorModule {
    * modules.color.cmyk({ format: 'css' }) // cmyk(100%, 0%, 0%, 0%)
    * modules.color.cmyk({ format: 'binary' }) // (8-32 bits) x 4
    */
-  cmyk(a?: CmykProps): string {
+  cmyk({ format = "css" }: CmykProps = {}): string {
     const datatypeModule = new DatatypeModule();
-    const { format = "css" } = a ? a : {};
 
     const color: number[] = Array.from({ length: 4 }).map(() =>
       datatypeModule.float({ min: 0, max: 1, precision: 2 }),
@@ -146,9 +145,8 @@ export class ColorModule {
    * modules.color.hsl({ format: 'binary' }) // (8-32 bits) x 3
    * modules.color.hsl({ format: 'binary', includeAlpha: true }) // (8-32 bits) x 4
    */
-  hsl(a: HslProps): string {
+  hsl({ format = "css", includeAlpha = false }: HslProps = {}): string {
     const datatypeModule = new DatatypeModule();
-    const { format = "css", includeAlpha = false } = a ? a : {};
 
     const hsl: number[] = [datatypeModule.int({ min: 0, max: 360 })];
 
@@ -170,9 +168,8 @@ export class ColorModule {
    * modules.color.hwb({ format: 'css' }) // hwb(194 0% 0%)
    * modules.color.hwb({ format: 'binary' }) // (8-32 bits x 3)
    */
-  hwb(a?: HwbProps): string {
+  hwb({ format = "css" }: HwbProps = {}): string {
     const datatypeModule = new DatatypeModule();
-    const { format = "css" } = a || {};
 
     const hsl: number[] = [datatypeModule.int({ min: 0, max: 360 })];
 
@@ -195,9 +192,8 @@ export class ColorModule {
    * modules.color.lch({ format: 'css' }) // lch(52.2345% 72.2 56.2)
    * modules.color.lch({ format: 'binary' }) // (8-32 bits x 3)
    */
-  lch(a?: LchProps): string {
+  lch({ format = "css" }: LchProps = {}): string {
     const datatypeModule = new DatatypeModule();
-    const { format = "css" } = a || {};
 
     const lch = [datatypeModule.float({ min: 0, max: 1, precision: 6 })];
 
@@ -218,12 +214,14 @@ export class ColorModule {
    * modules.color.colorByCSSColorSpace({ format: 'css', space: 'display-p3' }) // color(display-p3 0.12 1 0.23)
    * modules.color.colorByCSSColorSpace({ format: 'binary' }) // (8-32 bits x 3)
    */
-  colorByCSSColorSpace(a?: ColorByCSSColorSpaceProps) {
+  colorByCSSColorSpace({
+    format = "css",
+    space = "sRGB",
+  }: ColorByCSSColorSpaceProps = {}) {
     const datatypeModule = new DatatypeModule();
-    const { format = "css", space = "sRGB" } = a || {};
 
     const color = Array.from({ length: 3 }).map(() =>
-      datatypeModule.float({ min: 0, max: 1, precision: 0.0001 }),
+      datatypeModule.float({ min: 0, max: 1, precision: 4 }),
     );
 
     return toColorFormat(color, format, "color", space);

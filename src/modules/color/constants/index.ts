@@ -23,7 +23,7 @@ export const CSS_FUNCTIONS = [
   "lab",
   "lch",
   "color",
-];
+] as const;
 
 export type CSSFunction = (typeof CSS_FUNCTIONS)[number];
 export type CSSSpace = (typeof CSS_SPACES)[number];

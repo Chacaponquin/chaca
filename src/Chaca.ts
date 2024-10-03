@@ -29,9 +29,9 @@ export class Chaca {
    * @param input The object with the keys and type of each field
    * @example
    * {
-   *    id: schemas.id.uuid(),
-   *    image: schemas.image.film(),
-   *    name: schemas.person.firstName()
+   *    id: () => modules.id.uuid(),
+   *    image: () => modules.image.film(),
+   *    name: () => modules.person.firstName()
    * }
    */
   schema<K = any>(input: SchemaInput): Schema<K> {

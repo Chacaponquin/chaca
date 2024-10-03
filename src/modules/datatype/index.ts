@@ -94,9 +94,7 @@ export class DatatypeModule {
    * modules.datatype.int() // 28
    * @returns number
    */
-  int(a?: IntProps): number {
-    const { max = undefined, min = undefined } = a || {};
-
+  int({ max, min }: IntProps = {}): number {
     const minimun: number =
       typeof min === "number" ? min : this.MIN_RANDOM_VALUE;
     let maximun: number;
@@ -131,13 +129,8 @@ export class DatatypeModule {
    * modules.datatype.float({ precision: 4 }) // 90.5362
    * @returns number
    */
-  float(a?: FloatProps): number {
+  float({ max, min, precision }: FloatProps = {}): number {
     const utils = new ChacaUtils();
-    const {
-      max = undefined,
-      min = undefined,
-      precision = undefined,
-    } = a ? a : {};
 
     let range: number;
     if (typeof max === "number" && typeof min === "number") {
@@ -175,14 +168,9 @@ export class DatatypeModule {
    * modules.datatype.number({ min: 10, max: 30 }) // 10.2327
    * @returns number
    */
-  number(a?: NumberProps): number {
-    const {
-      max = undefined,
-      min = undefined,
-      precision = undefined,
-    } = a ? a : {};
-
+  number({ max, min, precision }: NumberProps = {}): number {
     let val: number;
+
     if (precision === 0) {
       val = this.int({ max, min });
     } else {
@@ -202,9 +190,11 @@ export class DatatypeModule {
    * modules.datatype.hexadecimal({ lenght: 3, case: 'upper' }) // 'DE20'
    * @returns string
    */
-  hexadecimal(a?: HexadecimalProps): string {
+  hexadecimal({
+    length: ilength,
+    case: icase = "mixed",
+  }: HexadecimalProps = {}): string {
     const utils = new ChacaUtils();
-    const { length: ilength = undefined, case: icase = "mixed" } = a ? a : {};
 
     const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
     const characters = ["A", "B", "C", "D", "E", "F", "G"];
@@ -247,15 +237,13 @@ export class DatatypeModule {
    * modules.datatype.matrix() // [[1, 0, 5], [5, 10, 9]]
    * modules.datatype.matrix({ x_size: 4, y_size: 2 }) // [[1, 2], [0, 0], [1, 1], [4, 5]]
    */
-  matrix(a?: MatrixProps): number[][] {
-    const {
-      x_size: ix_size = undefined,
-      max = undefined,
-      min = undefined,
-      precision = undefined,
-      y_size: iy_size = undefined,
-    } = a ? a : {};
-
+  matrix({
+    x_size: ix_size,
+    max,
+    min,
+    precision,
+    y_size: iy_size,
+  }: MatrixProps = {}): number[][] {
     const x_size =
       typeof ix_size === "number" && ix_size >= 0
         ? ix_size
@@ -289,9 +277,11 @@ export class DatatypeModule {
    *
    * @returns string
    */
-  characters(a?: CharactersProps): string {
+  characters({
+    case: icase = "lower",
+    length = 10,
+  }: CharactersProps = {}): string {
     const utils = new ChacaUtils();
-    const { case: icase = "lower", length = 10 } = a ? a : {};
 
     const len = length > 0 ? length : undefined;
 
@@ -329,9 +319,10 @@ export class DatatypeModule {
    * modules.datatype.binaryCode({ length: 6 }) // '010100'
    * @returns string
    */
-  binaryCode(a?: BinaryCodeProps): string {
+  binaryCode({
+    length: ilength = this.int({ min: 4, max: 8 }),
+  }: BinaryCodeProps = {}): string {
     const utils = new ChacaUtils();
-    const { length: ilength = this.int({ min: 4, max: 8 }) } = a ? a : {};
 
     const length = ilength > 0 ? ilength : this.int({ min: 4, max: 8 });
 
@@ -348,23 +339,23 @@ export class DatatypeModule {
    * @param args.length Length of the string
    * @param args.case Case of the string. (`lower`, `upper`, `mixed`)
    * @param args.banned Characters that cannot appear in the string. It can be an array of characters or a string with all the characters
+   * @example
+   * modules.datatype.alphaNumeric() // "F43jUs"
+   * modules.datatype.alphaNumeric({ length: 5 }) // "n3jO4"
+   * modules.datatype.alphaNumeric({ length: 7, case = "lower" }) // "ow3kn42"
    * @returns string
    */
-
-  alphaNumeric(a?: AlphaNumericProps): string {
+  alphaNumeric({
+    length: ilength = this.int({ min: 1, max: 20 }),
+    case: icase = "mixed",
+    banned: ibanned,
+  }: AlphaNumericProps = {}): string {
     const utils = new ChacaUtils();
-    const {
-      length: ilength = this.int({ min: 1, max: 20 }),
-      case: icase = undefined,
-      banned: ibanned = undefined,
-    } = a ? a : {};
 
     const length =
-      ilength && ilength > 0 ? ilength : this.int({ min: 1, max: 20 });
+      ilength && ilength > 0 ? ilength : this.int({ min: 1, max: 10 });
 
     const banned: string[] = [];
-
-    const cass = icase ? icase : undefined;
 
     if (ibanned) {
       if (typeof ibanned === "string") {
@@ -383,12 +374,14 @@ export class DatatypeModule {
       return !is;
     });
 
-    const characters = this.filterCharacters(cass);
+    const characters = this.filterCharacters(icase);
     const selectCharacters = characters.filter((el) => {
       let is = true;
+
       banned.forEach((b) => {
         if (b === el) is = false;
       });
+
       return is;
     });
 
