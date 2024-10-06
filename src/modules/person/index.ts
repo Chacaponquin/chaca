@@ -97,10 +97,8 @@ export class PersonModule {
    * @example modules.person.firstName() // 'Juan'
    * @returns string
    */
-  firstName(a?: NameProps): string {
+  firstName({ language, sex }: NameProps): string {
     const utils = new ChacaUtils();
-
-    const { language = undefined, sex = undefined } = a ? a : {};
 
     return utils.oneOfArray(
       this.filterBySex(this.filterNameByLanguage(language), sex),
@@ -110,13 +108,11 @@ export class PersonModule {
   /**
    * Returns a last name from a selected lenguage
    * @param args.language (`en` | `es`). Default `en`
-   * @example modules.person.lastName()// 'Scott'
+   * @example modules.person.lastName() // 'Scott'
    * @returns string
    */
-  lastName(a?: LangugeProps): string {
+  lastName({ language }: LangugeProps = {}): string {
     const utils = new ChacaUtils();
-
-    const { language = undefined } = a ? a : {};
 
     return utils.oneOfArray(this.filterNameByLanguage(language).lastNames);
   }
@@ -127,14 +123,12 @@ export class PersonModule {
    * @param args.sex (`male` | `female`)
    * @example
    * modules.person.fullName() // Schema
-   * modules.person.fullName().value() // 'Juan Rodriguez Perez'
+   * modules.person.fullName() // 'Juan Rodriguez Perez'
    * @returns string
    */
-  fullName(a?: NameProps) {
+  fullName({ language, sex: isex }: NameProps = {}) {
     const utils = new ChacaUtils();
     const datatypeModule = new DatatypeModule();
-
-    const { language = undefined, sex: isex = undefined } = a ? a : {};
 
     const lan = this.filterNameByLanguage(language);
 
@@ -163,10 +157,8 @@ export class PersonModule {
    * @example modules.person.prefix() // 'Ms.'
    * @returns string
    */
-  prefix(a?: SexProps) {
+  prefix({ sex: isex }: SexProps = {}) {
     const utils = new ChacaUtils();
-
-    const { sex: isex = undefined } = a ? a : {};
 
     const sex = isex ? isex : undefined;
     const all = [

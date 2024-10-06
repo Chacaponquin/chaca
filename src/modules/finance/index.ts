@@ -65,10 +65,10 @@ export class FinanceModule {
    *
    * @returns string
    */
-  pin(a?: PinProps): string {
+  pin({ length }: PinProps = {}): string {
     const datatypeModule = new DatatypeModule();
 
-    const len = a?.length && a.length > 0 ? a.length : 4;
+    const len = length && length > 0 ? length : 4;
 
     return Array.from({ length: len })
       .map(() => String(datatypeModule.int({ min: 0, max: 9 })))
@@ -162,11 +162,14 @@ export class FinanceModule {
       length: 4,
       case: "upper",
     });
+
     const countryCode = utils.oneOfArray(IBAN.iso3166);
+
     const locationCode = datatypeModule.alphaNumeric({
       case: "upper",
       length: 2,
     });
+
     const branchCode = datatypeModule.boolean()
       ? datatypeModule.boolean()
         ? datatypeModule.alphaNumeric({ case: "upper", length: 3 })
@@ -242,15 +245,8 @@ export class FinanceModule {
    *
    * @returns string
    */
-  amount(a?: AmountProps): string {
+  amount({ max, min, precision, symbol: isymbol }: AmountProps = {}): string {
     const datatypeModule = new DatatypeModule();
-
-    const {
-      max = undefined,
-      min = undefined,
-      precision = undefined,
-      symbol: isymbol = undefined,
-    } = a ? a : {};
 
     const symbol = isymbol ? isymbol : "$";
 

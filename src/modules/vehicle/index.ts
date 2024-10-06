@@ -32,20 +32,20 @@ export class VehicleModule {
 
   /**
    * Returns a vehicle model name
-   * @example modules.vehicle.vehicleModel() // 'Model S'
+   * @example modules.vehicle.model() // 'Model S'
    * @returns string
    */
-  vehicleModel(): string {
+  model(): string {
     const utils = new ChacaUtils();
     return utils.oneOfArray(MODEL);
   }
 
   /**
    * Returns a vehicle type
-   * @example modules.vehicle.vehicleType() // 'Coupe'
+   * @example modules.vehicle.type() // 'Coupe'
    * @returns string
    */
-  vehicleType(): string {
+  type(): string {
     const utils = new ChacaUtils();
     return utils.oneOfArray(TYPE);
   }
@@ -56,7 +56,7 @@ export class VehicleModule {
    * @returns string
    */
   vehicle(): string {
-    return `${this.manufacturer()} ${this.vehicleModel()}`;
+    return `${this.manufacturer()} ${this.model()}`;
   }
 
   /**

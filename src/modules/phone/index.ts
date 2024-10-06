@@ -23,10 +23,8 @@ export class PhoneModule {
    * modules.phone.number({ format: '+53 #### ## ##' }) // '+53 5417 35 99'
    * @returns string
    */
-  number(a?: NumberProps): string {
+  number({ format: iformat }: NumberProps): string {
     const utils = new ChacaUtils();
-
-    const { format: iformat = undefined } = a ? a : {};
 
     const format: string = iformat ? iformat : `${this.prefix()} ### ### ##`;
 
@@ -55,14 +53,15 @@ export class PhoneModule {
    *
    * @returns string
    */
-  callDuration(a?: CallDurationProps): string {
+  callDuration({ max: imax, min: imin }: CallDurationProps): string {
     const datatypeModule = new DatatypeModule();
 
-    const { max: imax = undefined, min: imin = undefined } = a ? a : {};
-
-    const min: number = imin && imin >= 0 && imin < 60 ? imin : 0;
+    const min: number =
+      typeof imin === "number" && imin >= 0 && imin < 60 ? imin : 0;
     const max: number =
-      imax && imax < 60 && imax >= 0 && imax >= min ? imax : 59;
+      typeof imax === "number" && imax < 60 && imax >= 0 && imax >= min
+        ? imax
+        : 59;
 
     const minutes = datatypeModule.int({
       min,

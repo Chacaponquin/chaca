@@ -32,18 +32,25 @@ export class LoremModule {
    * @example modules.lorem.paragraphs()
    * @returns string
    */
-  paragraphs(a?: ParagraphsProps): string {
-    const {
-      maxSentences = undefined,
-      minSentences = undefined,
-      paragraphsCount = undefined,
-      separator: iseparator = undefined,
-    } = a ? a : {};
-
+  paragraphs({
+    maxSentences,
+    minSentences,
+    paragraphsCount,
+    separator: iseparator,
+  }: ParagraphsProps = {}): string {
     const separator = iseparator ? iseparator : "\n";
-    const cant = paragraphsCount && paragraphsCount > 0 ? paragraphsCount : 3;
-    const minS = minSentences && minSentences > 0 ? minSentences : undefined;
-    const maxS = maxSentences && maxSentences > 0 ? maxSentences : undefined;
+    const cant =
+      typeof paragraphsCount === "number" && paragraphsCount > 0
+        ? paragraphsCount
+        : 3;
+    const minS =
+      typeof minSentences === "number" && minSentences > 0
+        ? minSentences
+        : undefined;
+    const maxS =
+      typeof maxSentences === "number" && maxSentences > 0
+        ? maxSentences
+        : undefined;
 
     return loremIpsum({
       format: "plain",
@@ -64,18 +71,21 @@ export class LoremModule {
    * @example modules.lorem.sentences()
    * @returns
    */
-  sentences(a?: SentencesProps): string {
-    const {
-      sentencesCount = undefined,
-      separator: iseparator = undefined,
-      wordsMax = undefined,
-      wordsMin = undefined,
-    } = a ? a : {};
-
-    const cant = sentencesCount && sentencesCount > 0 ? sentencesCount : 3;
+  sentences({
+    sentencesCount,
+    separator: iseparator,
+    wordsMax,
+    wordsMin,
+  }: SentencesProps = {}): string {
+    const cant =
+      typeof sentencesCount === "number" && sentencesCount > 0
+        ? sentencesCount
+        : 3;
     const separator = iseparator ? iseparator : "\n";
-    const wordMin = wordsMin && wordsMin > 0 ? wordsMin : undefined;
-    const wordMax = wordsMax && wordsMax > 0 ? wordsMax : undefined;
+    const wordMin =
+      typeof wordsMin === "number" && wordsMin > 0 ? wordsMin : undefined;
+    const wordMax =
+      typeof wordsMax === "number" && wordsMax > 0 ? wordsMax : undefined;
 
     return loremIpsum({
       format: "plain",
@@ -88,14 +98,12 @@ export class LoremModule {
   }
 
   /**
-   * @param args.wordCount Number of words in the slug
+   * @param args.wordCount Number of words in the slug. Default `3`
    * @example modules.lorem.slug() // 'lorem-ipsum-ad'
    * @returns string
    */
-  slug(a?: SlugProps): string {
-    const { wordCount = undefined } = a ? a : {};
-
-    const cant = wordCount && wordCount > 0 ? wordCount : 3;
+  slug({ wordCount }: SlugProps = {}): string {
+    const cant = typeof wordCount === "number" && wordCount > 0 ? wordCount : 3;
 
     const words = loremIpsum({
       format: "plain",
@@ -117,9 +125,8 @@ export class LoremModule {
    * @example modules.lorem.words() // 'lorem ipsum in'
    * @returns string
    */
-  words(a?: WordsProps) {
-    const { count: icount = undefined } = a ? a : {};
-    const count = icount && icount > 0 ? icount : 5;
+  words({ count: icount }: WordsProps = {}) {
+    const count = typeof icount === "number" && icount > 0 ? icount : 5;
 
     return loremIpsum({ format: "plain", units: "words", count: count });
   }

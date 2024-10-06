@@ -22,15 +22,14 @@ export class ScienceModule {
 
   /**
    * Returns periodic table element
-   * @param args.type element format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
+   * @param args.type Element format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
    * @example
    * modules.science.periodicTableElement() // 'Curium'
    * modules.science.periodicTableElement({ type: 'symbol' }) // 'Zn'
    * @returns string
    */
-  periodicTableElement(a?: PeriodicTableProps): string {
+  periodicTableElement({ type = "name" }: PeriodicTableProps = {}): string {
     const utils = new ChacaUtils();
-    const { type = undefined } = a ? a : {};
 
     if (type === "name") {
       return utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
@@ -42,21 +41,20 @@ export class ScienceModule {
   /**
    * Returns a unit of measurement
    *
-   * @param args.type unit format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
+   * @param args.type Unit format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
    *
    * @example
    * modules.science.unit() // 'hertz (Hz)'
    * modules.science.unit({ type: 'symbol' }) // 'N'
    * @returns string
    */
-  unit(a?: UnitProps) {
+  unit({ type = "name" }: UnitProps = {}) {
     const utils = new ChacaUtils();
-    const { type = undefined } = a ? a : {};
 
     if (type === "symbol") {
       return utils.oneOfArray(UNITS.map((el) => el.symbol));
     }
 
-    return utils.oneOfArray(UNITS.map((el) => el.val));
+    return utils.oneOfArray(UNITS.map((el) => el.unit));
   }
 }

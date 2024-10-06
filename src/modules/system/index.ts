@@ -12,7 +12,7 @@ export type FileExtensions = {
   photo: string[];
 };
 
-export type FileNameProps = {
+export type FilenameProps = {
   ext?: string;
 };
 
@@ -24,17 +24,15 @@ export class SystemModule {
 
   /**
    * Returns a file name
-   * @param args.ext extension of the file
+   * @param args.ext File extension
    * @example
    * modules.system.filename() // 'academy.png'
    * modules.system.filename({ ext: 'gif' }) // 'academy_button_school.gif'
    * @returns string
    */
-  filename(a?: FileNameProps): string {
+  filename({ ext: iext }: FilenameProps = {}): string {
     const datatypeModule = new DatatypeModule();
     const wordModule = new WordModule();
-
-    const { ext: iext = undefined } = a || {};
 
     const ext =
       typeof iext === "string" && iext.length > 0 ? iext : this.fileExt();
@@ -66,11 +64,11 @@ export class SystemModule {
   fileExt(): string {
     const utils = new ChacaUtils();
 
-    const selTem = utils.oneOfArray(
-      Object.keys(FILE_EXTENSIONS),
-    ) as keyof FileExtensions;
+    const all = [] as string[];
 
-    return utils.oneOfArray(FILE_EXTENSIONS[selTem]);
+    Object.values(FILE_EXTENSIONS).forEach((values) => all.push(...values));
+
+    return utils.oneOfArray(all);
   }
 
   /**

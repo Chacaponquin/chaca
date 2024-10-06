@@ -136,14 +136,8 @@ export class InternetModule {
    *
    * @returns string
    */
-  email(a?: EmailArgs): string {
+  email({ firstName, lastName, provider: iprovider }: EmailArgs = {}): string {
     const utils = new ChacaUtils();
-
-    const {
-      firstName = undefined,
-      lastName = undefined,
-      provider: iprovider = undefined,
-    } = a ? a : {};
 
     const provider = iprovider
       ? iprovider
@@ -162,7 +156,7 @@ export class InternetModule {
   /**
    * Returns a password.
    *
-   * @param args.len The length of the password to generate. Defaults to `15`.
+   * @param args.length The length of the password to generate. Defaults to `15`.
    * @param args.memorable Whether the generated password should be memorable. Defaults to `false`.
    * @param args.pattern The pattern that all chars should match should match.
    * This option will be ignored, if `memorable` is `true`. Defaults to `/\w/`.
@@ -177,15 +171,13 @@ export class InternetModule {
    *
    * @returns string
    */
-  password(a?: PasswordArgs): string {
+  password({
+    length,
+    memorable: imemorable,
+    pattern: ipattern,
+    prefix: iprefix,
+  }: PasswordArgs = {}): string {
     const datatypeModule = new DatatypeModule();
-
-    const {
-      length = undefined,
-      memorable: imemorable = undefined,
-      pattern: ipattern = undefined,
-      prefix: iprefix = undefined,
-    } = a || {};
 
     const vowel = /[aeiouAEIOU]$/;
     const consonant = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]$/;
@@ -238,9 +230,7 @@ export class InternetModule {
    * @param args.secure Boolean that indicates if the url has a secure protocol or not
    * @returns
    */
-  url(a?: UrlArgs): string {
-    const { secure = undefined } = a ? a : {};
-
+  url({ secure }: UrlArgs = {}): string {
     if (typeof secure === "boolean") {
       const sec = secure ? "https" : "http";
 
@@ -259,15 +249,13 @@ export class InternetModule {
    * modules.internet.username({ firstName: 'pedro', lastName: 'Scott' }) // 'pedro_scott'
    * @returns string
    */
-  username(a?: UsernameArgs): string {
+  username({
+    firstName: ifirstName,
+    lastName: ilastName,
+  }: UsernameArgs = {}): string {
     const datatypeModule = new DatatypeModule();
     const personModule = new PersonModule();
     const utils = new ChacaUtils();
-
-    const {
-      firstName: ifirstName = undefined,
-      lastName: ilastName = undefined,
-    } = a ? a : {};
 
     const firstName = ifirstName
       ? utils.camelCase(ifirstName)
@@ -391,10 +379,8 @@ export class InternetModule {
    * @example modules.internet.emoji() // '🔎'
    * @returns string
    */
-  emoji(a?: EmojiProps): string {
+  emoji({ emoji: iemoji }: EmojiProps = {}): string {
     const utils = new ChacaUtils();
-
-    const { emoji: iemoji = undefined } = a ? a : {};
 
     const emoji = iemoji ? iemoji : undefined;
 

@@ -54,8 +54,8 @@ export type CharactersProps = {
 };
 
 export class DatatypeModule {
-  private readonly MIN_RANDOM_VALUE = -9999999;
-  private readonly MAX_RANDOM_VALUE = 9999999;
+  private readonly MIN_RANDOM_VALUE = -999999;
+  private readonly MAX_RANDOM_VALUE = 999999;
   private readonly MAX_PRECISION = 16;
 
   readonly constants = {

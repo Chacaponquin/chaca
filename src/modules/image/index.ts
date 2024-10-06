@@ -1,9 +1,22 @@
 import { DatatypeModule } from "../datatype";
 
+interface ImageProps {
+  width?: number;
+  height?: number;
+}
+
 export class ImageModule {
-  private buildUrl(category: string) {
-    const url = "https://source.unsplash.com/category";
-    return `${url}/${category}`;
+  private readonly datatypeModule = new DatatypeModule();
+
+  private buildUrl(
+    category: string,
+    {
+      height = this.datatypeModule.int({ min: 640, max: 4000 }),
+      width = this.datatypeModule.int({ min: 640, max: 4000 }),
+    }: ImageProps = {},
+  ) {
+    const url = `https://loremflickr.com/${width}/${height}/${category}`;
+    return url;
   }
 
   /**
@@ -13,8 +26,8 @@ export class ImageModule {
    * modules.image.food()
    * @returns string
    */
-  food(): string {
-    return this.buildUrl("food");
+  food(props?: ImageProps): string {
+    return this.buildUrl("food", props);
   }
 
   /**
@@ -24,8 +37,8 @@ export class ImageModule {
    * modules.image.event()
    * @returns string
    */
-  event(): string {
-    return this.buildUrl("event");
+  event(props?: ImageProps): string {
+    return this.buildUrl("event", props);
   }
 
   /**
@@ -35,8 +48,8 @@ export class ImageModule {
    * modules.image.wallpaper()
    * @returns string
    */
-  wallpaper(): string {
-    return this.buildUrl("wallpaper");
+  wallpaper(props?: ImageProps): string {
+    return this.buildUrl("wallpaper", props);
   }
 
   /**
@@ -46,8 +59,8 @@ export class ImageModule {
    * modules.image.treeDimension()
    * @returns string
    */
-  threeDimension(): string {
-    return this.buildUrl("3d");
+  threeDimension(props?: ImageProps): string {
+    return this.buildUrl("3d", props);
   }
 
   /**
@@ -57,8 +70,8 @@ export class ImageModule {
    * modules.image.architecture()
    * @returns string
    */
-  architecture(): string {
-    return this.buildUrl("architecture");
+  architecture(props?: ImageProps): string {
+    return this.buildUrl("architecture", props);
   }
 
   /**
@@ -68,8 +81,8 @@ export class ImageModule {
    * modules.image.nature()
    * @returns string
    */
-  nature(): string {
-    return this.buildUrl("nature");
+  nature(props?: ImageProps): string {
+    return this.buildUrl("nature", props);
   }
 
   /**
@@ -79,8 +92,8 @@ export class ImageModule {
    * modules.image.fashion()
    * @returns string
    */
-  fashion(): string {
-    return this.buildUrl("fashion");
+  fashion(props?: ImageProps): string {
+    return this.buildUrl("fashion", props);
   }
 
   /**
@@ -90,8 +103,8 @@ export class ImageModule {
    * modules.image.film()
    * @returns string
    */
-  film(): string {
-    return this.buildUrl("film");
+  film(props?: ImageProps): string {
+    return this.buildUrl("film", props);
   }
 
   /**
@@ -101,8 +114,8 @@ export class ImageModule {
    * modules.image.people()
    * @returns string
    */
-  people(): string {
-    return this.buildUrl("people");
+  people(props?: ImageProps): string {
+    return this.buildUrl("people", props);
   }
 
   /**
@@ -112,8 +125,8 @@ export class ImageModule {
    * modules.image.health()
    * @returns string
    */
-  health(): string {
-    return this.buildUrl("health");
+  health(props?: ImageProps): string {
+    return this.buildUrl("health", props);
   }
 
   /**
@@ -123,8 +136,8 @@ export class ImageModule {
    * modules.image.house()
    * @returns string
    */
-  house(): string {
-    return this.buildUrl("house");
+  house(props?: ImageProps): string {
+    return this.buildUrl("house", props);
   }
 
   /**
@@ -134,8 +147,8 @@ export class ImageModule {
    * modules.image.street()
    * @returns string
    */
-  street(): string {
-    return this.buildUrl("street");
+  street(props?: ImageProps): string {
+    return this.buildUrl("street", props);
   }
 
   /**
@@ -145,8 +158,8 @@ export class ImageModule {
    * modules.image.animal()
    * @returns string
    */
-  animal(): string {
-    return this.buildUrl("animal");
+  animal(props?: ImageProps): string {
+    return this.buildUrl("animal", props);
   }
 
   /**
@@ -156,8 +169,8 @@ export class ImageModule {
    * modules.image.spiritual()
    * @returns string
    */
-  spiritual(): string {
-    return this.buildUrl("spiritual");
+  spiritual(props?: ImageProps): string {
+    return this.buildUrl("spiritual", props);
   }
 
   /**
@@ -167,8 +180,8 @@ export class ImageModule {
    * modules.image.travel()
    * @returns string
    */
-  travel(): string {
-    return this.buildUrl("travel");
+  travel(props?: ImageProps): string {
+    return this.buildUrl("travel", props);
   }
 
   /**
@@ -178,8 +191,8 @@ export class ImageModule {
    * modules.image.art()
    * @returns string
    */
-  art(): string {
-    return this.buildUrl("art");
+  art(props?: ImageProps): string {
+    return this.buildUrl("art", props);
   }
 
   /**
@@ -189,8 +202,8 @@ export class ImageModule {
    * modules.image.history()
    * @returns string
    */
-  history(): string {
-    return this.buildUrl("history");
+  history(props?: ImageProps): string {
+    return this.buildUrl("history", props);
   }
 
   /**
@@ -200,8 +213,8 @@ export class ImageModule {
    * modules.image.sport()
    * @returns string
    */
-  sport(): string {
-    return this.buildUrl("sport");
+  sport(props?: ImageProps): string {
+    return this.buildUrl("sport", props);
   }
 
   /**
@@ -212,9 +225,8 @@ export class ImageModule {
    *
    * @returns string
    */
-  animateAvatar(): string {
-    const datatypeModule = new DatatypeModule();
-    const ran = datatypeModule.int({ min: 0, max: 1000 });
+  animatedAvatar(): string {
+    const ran = this.datatypeModule.int({ min: 0, max: 1000 });
 
     return `https://api.multiavatar.com/${ran}.svg`;
   }
