@@ -8,6 +8,13 @@ import {
 
 export type Case = "lower" | "upper" | "mixed";
 
+export type NumericProps = {
+  allowLeadingZeros?: boolean;
+  length?: number;
+  prefix?: string;
+  banned?: string[];
+};
+
 export type AlphaNumericProps = {
   length?: number;
   case?: Case;
@@ -406,13 +413,12 @@ export class DatatypeModule {
    * Returns an [octal](https://en.wikipedia.org/wiki/Octal) string.
    *
    * @param args The optional options object.
-   * @param args.length The number or range of characters to generate after the prefix. Defaults to `1`.
+   * @param args.length The number or range of characters to generate after the prefix.
    * @param args.prefix Prefix for the generated number. Defaults to `'0o'`.
    *
    * @example
    * modules.datatype.octal() // '0o3'
    * modules.datatype.octal({ length: 10 }) // '0o1526216210'
-   * modules.datatype.octal({ length: { min: 5, max: 10 } }) // '0o15263214'
    * modules.datatype.octal({ prefix: '0o' }) // '0o7'
    * modules.datatype.octal({ length: 10, prefix: 'oct_' }) // 'oct_1542153414'
    */
@@ -428,6 +434,62 @@ export class DatatypeModule {
 
     for (let i = 0; i < length; i++) {
       result += utils.oneOfArray(["0", "1", "2", "3", "4", "5", "6", "7"]);
+    }
+
+    return result;
+  }
+
+  /**
+   * Generates a given length string of digits.
+   *
+   * @param args Either the number of characters or the options to use.
+   * @param args.length The number or range of digits to generate.
+   * @param args.allowLeadingZeros Whether leading zeros are allowed or not. Defaults to `true`.
+   * @param args.banned An array of digits which should be excluded in the generated string. Defaults to `[]`.
+   * @param args.prefix Prefix for the generated string
+   *
+   * @example
+   * modules.datatype.numeric() // '2'
+   * modules.datatype.numeric({ length: 42, allowLeadingZeros: false }) // '72564846278453876543517840713421451546115'
+   * modules.datatype.numeric({ length: 6, exclude: ['0'] }) // '943228'
+   *
+   */
+  numeric({
+    length: ilength,
+    allowLeadingZeros = true,
+    prefix = "",
+    banned = [],
+  }: NumericProps = {}): string {
+    const utils = new ChacaUtils();
+    const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+    let result = prefix;
+    const length =
+      typeof ilength === "number" && ilength > 0
+        ? ilength
+        : this.int({ min: 1, max: 10 });
+
+    let firstNotZero = false;
+    for (let i = 0; i < length; i++) {
+      const value = utils.oneOfArray(
+        numbers
+          .filter((n) => {
+            if (!firstNotZero && !allowLeadingZeros) {
+              return n !== "0";
+            }
+
+            return true;
+          })
+          .filter((n) => !banned.includes(n)),
+      );
+
+      if (value !== undefined) {
+        result += value;
+
+        if (value !== "0") {
+          firstNotZero = true;
+        }
+      }
     }
 
     return result;

@@ -8,7 +8,8 @@
 
 ### Modules
 
-- Added `octal` module to `datatype`
+- 🎉 Added `datatype.octal`
+- 🎉 Added `datatype.numeric`
 
 ## 🪛 Fix
 
