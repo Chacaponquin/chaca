@@ -16,6 +16,10 @@ export type DatePastProps = {
   refDate?: ArgDate;
 };
 
+export type AnytimeProps = {
+  refDate?: ArgDate;
+};
+
 export type DateFutureProps = { years?: number; refDate?: ArgDate };
 
 export type BirthDateProps = {
@@ -324,6 +328,23 @@ export class DateModule {
           max: 60,
         })} ${unit} ago`;
     }
+  }
+
+  /**
+   * Generates a random date that can be either in the past or in the future.
+   *
+   * @param args.refDate The date to use as reference point for the newly generated date. Defaults to `new Date()`.
+   *
+   * @example
+   * faker.date.anytime() // '2022-07-31T01:33:29.567Z'
+   */
+  anytime({ refDate }: AnytimeProps = {}): Date {
+    const time = this.argToDate(refDate).getTime();
+
+    return this.between({
+      from: new Date(time - 1000 * 60 * 60 * 24 * 365),
+      to: new Date(time + 1000 * 60 * 60 * 24 * 365),
+    });
   }
 
   private argToDate(date: ArgDate | undefined): Date {
