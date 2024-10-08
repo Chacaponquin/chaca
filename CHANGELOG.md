@@ -10,8 +10,9 @@
 
 - 🎉 Added `datatype.octal`
 - 🎉 Added `datatype.numeric`
-- The prefix argument was added to the `datatype.alphaNumeric` module
 - 🎉 Added `id.nanoid`
+- 🎉 Added `color.human`
+- The `prefix` argument was added to the `datatype.alphaNumeric` module
 
 ## 🪛 Fix
 

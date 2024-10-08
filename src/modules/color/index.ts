@@ -1,6 +1,12 @@
 import { ChacaUtils } from "../../core/utils";
 import { DatatypeModule } from "../datatype";
-import { CSSSpace, CSS_FUNCTIONS, CSS_SPACES, CSSFunction } from "./constants";
+import {
+  CSSSpace,
+  CSS_FUNCTIONS,
+  CSS_SPACES,
+  CSSFunction,
+  HUMAN_COLORS,
+} from "./constants";
 import { Casing, ColorFormat, toColorFormat, formatHexColor } from "./helpers";
 
 export type RgbProps = {
@@ -32,7 +38,19 @@ export class ColorModule {
   readonly constants = {
     cssFunctions: CSS_FUNCTIONS,
     cssSpaces: CSS_SPACES,
+    human: HUMAN_COLORS,
   };
+
+  /**
+   * Returns a random human-readable color name.
+   *
+   * @example
+   * modules.color.human() // 'blue'
+   */
+  human(): string {
+    const utils = new ChacaUtils();
+    return utils.oneOfArray(HUMAN_COLORS);
+  }
 
   /**
    * Returns a random css supported color function name.
