@@ -1,4 +1,9 @@
 import { DatatypeModule } from "../datatype";
+import { nanoid } from "nanoid";
+
+export type NanoidProps = {
+  length?: number;
+};
 
 export class IdModule {
   /**
@@ -33,5 +38,20 @@ export class IdModule {
     };
 
     return RFC4122_TEMPLATE.replace(/[xy]/g, replacePlaceholders);
+  }
+
+  /**
+   * Generates a [Nano ID](https://github.com/ai/nanoid).
+   *
+   * @param length Length of the generated string. Defaults to `20`.
+   *
+   * @example
+   * modules.id.nanoid() // ptL0KpX_yRMI98JFr6B3n
+   * modules.id.nanoid({ length: 10 }) // VsvwSdm_Am
+   */
+  nanoid({ length: ilength }: NanoidProps = {}) {
+    const length = typeof ilength === "number" && ilength > 0 ? ilength : 20;
+
+    return nanoid(length);
   }
 }

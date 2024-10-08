@@ -98,6 +98,7 @@
   "dependencies": {
     "adm-zip": "^0.5.9",
     "lorem-ipsum": "^2.0.8",
+    "nanoid": "^5.0.7",
     "yargs": "^17.7.2"
   },
   "bugs": {

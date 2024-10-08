@@ -25,5 +25,5 @@ export const CSS_FUNCTIONS = [
   "color",
 ] as const;
 
-export type CSSFunction = (typeof CSS_FUNCTIONS)[number];
-export type CSSSpace = (typeof CSS_SPACES)[number];
+export type CSSFunction = typeof CSS_FUNCTIONS[number];
+export type CSSSpace = typeof CSS_SPACES[number];
