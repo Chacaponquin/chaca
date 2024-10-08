@@ -18,7 +18,8 @@ export type NumericProps = {
 export type AlphaNumericProps = {
   length?: number;
   case?: Case;
-  banned?: Array<string> | string;
+  banned?: string[] | string;
+  prefix?: string;
 };
 
 export type BinaryCodeProps = {
@@ -353,6 +354,8 @@ export class DatatypeModule {
    * @param args.length Length of the string
    * @param args.case Case of the string. (`lower`, `upper`, `mixed`)
    * @param args.banned Characters that cannot appear in the string. It can be an array of characters or a string with all the characters
+   * @param args.prefix Prefix for the generated string
+   *
    * @example
    * modules.datatype.alphaNumeric() // "F43jUs"
    * modules.datatype.alphaNumeric({ length: 5 }) // "n3jO4"
@@ -360,9 +363,10 @@ export class DatatypeModule {
    * @returns string
    */
   alphaNumeric({
-    length: ilength = this.int({ min: 1, max: 20 }),
+    length: ilength,
     case: icase = "mixed",
     banned: ibanned,
+    prefix = "",
   }: AlphaNumericProps = {}): string {
     const utils = new ChacaUtils();
 
@@ -401,8 +405,8 @@ export class DatatypeModule {
 
     const selectValues = [...selectCharacters, ...selectNumbers];
 
-    let retString = "";
-    for (let i = 1; i <= length; i++) {
+    let retString = prefix;
+    for (let i = 0; i < length; i++) {
       retString = retString.concat(utils.oneOfArray(selectValues));
     }
 
