@@ -18,6 +18,8 @@
 - 🎉 Added `internet.ip`
 - 🎉 Added `address.ordinalDirection`
 - 🎉 Added `lorem.word`
+- 🎉 Added `person.zodiacSign`
+- 🎉 Added `system.cron`
 - The `prefix` argument was added to the `datatype.alphaNumeric` module
 
 ## 🪛 Fix

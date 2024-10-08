@@ -12,11 +12,21 @@ export type FileExtensions = {
   photo: string[];
 };
 
+export interface CronProps {
+  includeYear?: boolean;
+  includeNonStandard?: boolean;
+}
+
 export type FilenameProps = {
   ext?: string;
 };
 
+const CRON_DAY_OF_WEEK = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+
 export class SystemModule {
+  private readonly datatypeModule = new DatatypeModule();
+  private readonly utils = new ChacaUtils();
+
   readonly constants = {
     fileExtensions: FILE_EXTENSIONS,
     mimeTypes: MIME_TYPES,
@@ -97,5 +107,77 @@ export class SystemModule {
    */
   filePath(): string {
     return `${this.directoryPath()}/${this.filename()}`;
+  }
+
+  /**
+   * Returns a [semantic version](https://semver.org).
+   *
+   * @example
+   * modules.system.semver() // '1.1.2'
+   */
+  semver(): string {
+    return [
+      this.datatypeModule.int({ min: 0, max: 9 }),
+      this.datatypeModule.int({ min: 0, max: 9 }),
+      this.datatypeModule.int({ min: 0, max: 9 }),
+    ].join(".");
+  }
+
+  /**
+   * Returns a random cron expression.
+   *
+   * @param args.includeYear Whether to include a year in the generated expression. Defaults to `false`.
+   * @param args.includeNonStandard Whether to include a `@yearly`, `@monthly`, `@daily`, etc text labels in the generated expression. Defaults to `false`.
+   *
+   * @example
+   * modules.system.cron() // '45 23 * * 6'
+   * modules.system.cron({ includeYear: true }) // '45 23 * * 6 2067'
+   * modules.system.cron({ includeYear: false }) // '45 23 * * 6'
+   * modules.system.cron({ includeNonStandard: false }) // '45 23 * * 6'
+   * modules.system.cron({ includeNonStandard: true }) // '@yearly'
+   */
+  cron({
+    includeYear = false,
+    includeNonStandard = false,
+  }: CronProps = {}): string {
+    // create the arrays to hold the available values for each component of the expression
+    const minutes = [this.datatypeModule.int({ min: 0, max: 59 }), "*"];
+    const hours = [this.datatypeModule.int({ min: 0, max: 23 }), "*"];
+    const days = [this.datatypeModule.int({ min: 1, max: 31 }), "*", "?"];
+    const months = [this.datatypeModule.int({ min: 1, max: 12 }), "*"];
+    const daysOfWeek = [
+      this.datatypeModule.int({ min: 0, max: 6 }),
+      this.utils.oneOfArray(CRON_DAY_OF_WEEK),
+      "*",
+      "?",
+    ];
+    const years = [this.datatypeModule.int({ min: 1970, max: 2099 }), "*"];
+
+    const minute = this.utils.oneOfArray(minutes);
+    const hour = this.utils.oneOfArray(hours);
+    const day = this.utils.oneOfArray(days);
+    const month = this.utils.oneOfArray(months);
+    const dayOfWeek = this.utils.oneOfArray(daysOfWeek);
+    const year = this.utils.oneOfArray(years);
+
+    // create and return the cron expression string
+    let standardExpression = `${minute} ${hour} ${day} ${month} ${dayOfWeek}`;
+    if (includeYear) {
+      standardExpression += ` ${year}`;
+    }
+
+    const nonStandardExpressions = [
+      "@annually",
+      "@daily",
+      "@hourly",
+      "@monthly",
+      "@reboot",
+      "@weekly",
+      "@yearly",
+    ];
+
+    return !includeNonStandard || this.datatypeModule.boolean()
+      ? standardExpression
+      : this.utils.oneOfArray(nonStandardExpressions);
   }
 }
