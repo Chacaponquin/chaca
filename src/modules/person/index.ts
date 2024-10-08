@@ -97,7 +97,7 @@ export class PersonModule {
    * @example modules.person.firstName() // 'Juan'
    * @returns string
    */
-  firstName({ language, sex }: NameProps): string {
+  firstName({ language, sex }: NameProps = {}): string {
     const utils = new ChacaUtils();
 
     return utils.oneOfArray(

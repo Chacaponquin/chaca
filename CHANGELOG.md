@@ -12,6 +12,7 @@
 - 🎉 Added `datatype.numeric`
 - 🎉 Added `id.nanoid`
 - 🎉 Added `color.human`
+- 🎉 Added `date.anytime`
 - The `prefix` argument was added to the `datatype.alphaNumeric` module
 
 ## 🪛 Fix
