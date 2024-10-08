@@ -8,6 +8,7 @@ import {
 } from "./constants";
 import { ChacaUtils } from "../../core/utils";
 import { DatatypeModule } from "../datatype";
+import { ZODIAC_SIGN } from "./constants/zodiac";
 
 export type AllLanguages = "es" | "en";
 
@@ -27,6 +28,8 @@ export type SexProps = {
 };
 
 export class PersonModule {
+  private readonly utils = new ChacaUtils();
+
   readonly constants = {
     jobLevels: JOBS.JOB_LEVELS,
     jobAreas: JOBS.JOBS_AREAS,
@@ -37,6 +40,7 @@ export class PersonModule {
     lastNames: [...NAMES.en.lastNames, ...NAMES.es.lastNames],
     languages: LANGUAGES,
     prefixes: PREFIXES,
+    zodiacSigns: ZODIAC_SIGN,
   };
 
   /**
@@ -149,6 +153,16 @@ export class PersonModule {
     ].filter((n) => n !== undefined);
 
     return fullName.join(" ");
+  }
+
+  /**
+   * Returns a random zodiac sign.
+   *
+   * @example
+   * modules.person.zodiacSign() // 'Pisces'
+   */
+  zodiacSign(): string {
+    return this.utils.oneOfArray(ZODIAC_SIGN);
   }
 
   /**

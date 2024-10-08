@@ -88,19 +88,16 @@ export class DatatypeModule {
    * Returns a [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#bigint_type) number.
    * The bounds are inclusive.
    *
-   * @param options Maximum value or options object.
-   * @param options.min Lower bound for generated bigint. Defaults to `0n`.
-   * @param options.max Upper bound for generated bigint. Defaults to `min + 999999999999999n`.
+   * @param args.min Lower bound for generated bigint. Defaults to `0n`.
+   * @param args.max Upper bound for generated bigint. Defaults to `min + 999999999999999n`.
    *
    * @throws When `min` is greater than `max`.
    *
    * @example
-   * faker.number.bigInt() // 55422n
-   * faker.number.bigInt({ min: 1000000n }) // 431433n
-   * faker.number.bigInt({ max: 100n }) // 42n
-   * faker.number.bigInt({ min: 10n, max: 100n }) // 36n
-   *
-   * @since 8.0.0
+   * modules.datatype.bigInt() // 55422n
+   * modules.datatype.bigInt({ min: 1000000n }) // 431433n
+   * modules.datatype.bigInt({ max: 100n }) // 42n
+   * modules.datatype.bigInt({ min: 10n, max: 100n }) // 36n
    */
   bigInt({ max: imax, min: imin }: BigIntProps = {}): bigint {
     const min = typeof imin === "bigint" ? imin : BigInt(0);
