@@ -20,6 +20,9 @@ type PinProps = {
 };
 
 export class FinanceModule {
+  private readonly datatypeModule = new DatatypeModule();
+  private readonly utils = new ChacaUtils();
+
   readonly constants = {
     accountTypes: ACCOUNT_TYPES,
     ibans: IBAN,
@@ -275,5 +278,27 @@ export class FinanceModule {
   moneyCode(): string {
     const utils = new ChacaUtils();
     return utils.oneOfArray(Object.values(MONEY_INFO).map((el) => el.code));
+  }
+
+  /**
+   * Generates a random Litecoin address.
+   *
+   * @example
+   * faker.finance.litecoinAddress() // 'MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW'
+   *
+   * @since 5.0.0
+   */
+  litecoinAddress(): string {
+    const addressLength = this.datatypeModule.int({ min: 26, max: 33 });
+
+    let result = this.utils.oneOfArray(["L", "M", "3"]);
+
+    for (let i = 0; i < addressLength - 1; i++) {
+      result += this.utils.oneOfArray(
+        "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ".split(""),
+      );
+    }
+
+    return result;
   }
 }

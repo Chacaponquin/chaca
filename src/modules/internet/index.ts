@@ -60,6 +60,8 @@ type UsernameArgs = {
 };
 
 export class InternetModule {
+  private readonly datatypeModule = new DatatypeModule();
+
   readonly constants = {
     emojis: EMOJIS,
     domainSuffixs: DOMAIN_SUFFIX,
@@ -510,5 +512,16 @@ export class InternetModule {
     const sel = utils.oneOfArray(Object.keys(HTTP_STATUS)) as keyof HttpStatus;
 
     return utils.oneOfArray(HTTP_STATUS[sel]);
+  }
+
+  /**
+   * Generates a random IPv4 or IPv6 address.
+   *
+   * @example
+   * faker.internet.ip() // '245.108.222.0'
+   * faker.internet.ip() // '4e5:f9c5:4337:abfd:9caf:1135:41ad:d8d3'
+   */
+  ip(): string {
+    return this.datatypeModule.boolean() ? this.ipv4() : this.ipv6();
   }
 }
