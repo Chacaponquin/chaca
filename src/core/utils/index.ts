@@ -14,12 +14,19 @@ export type TimeUnits =
   | "hours"
   | "months";
 
+export type SumDateRangeProps = {
+  date: Date;
+  value: number;
+  range: TimeUnits;
+};
+
 export class ChacaUtils {
   /**
    * Returns one element from an array
    * @param list Array of values to return
-   * @example chaca.utils.oneOfArray([1, 2, 3, 5, 4]) // 3
-   * @example chaca.utils.oneOfArray(['Hi!!!', 'Chaca the best!!!', 10]) // 'Chaca the best!!!'
+   * @example
+   * chaca.utils.oneOfArray([1, 2, 3, 5, 4]) // 3
+   * chaca.utils.oneOfArray(['Hi!!!', 'Chaca the best!!!', 10]) // 'Chaca the best!!!'
    */
   oneOfArray<T>(list: ReadonlyArray<T>) {
     return list[Math.floor(Math.random() * list.length)];
@@ -89,7 +96,7 @@ export class ChacaUtils {
    *
    * @returns string
    */
-  public camelCase(text: string): string {
+  camelCase(text: string): string {
     if (!this.isCapitalized(text)) {
       let returnString = "";
       let mayus = false;
@@ -152,29 +159,6 @@ export class ChacaUtils {
   }
 
   /**
-   * Returns a camel case text in capitalize notation from a string argument
-   * @param text string to capitalize
-   *
-   * @example
-   * chaca.utils.camelCase('Hello World') // 'HelloWorld'
-   * chaca.utils.camelCase('hiFriend') // 'HiFriend'
-   *
-   * @returns string
-   */
-  capitalizeCamelCase(text: string): string {
-    const result = this.camelCase(text);
-    let newResult = "";
-
-    for (let i = 0; i < result.length; i++) {
-      newResult = newResult.concat(
-        i === 0 ? result[i].toUpperCase() : result[i],
-      );
-    }
-
-    return newResult;
-  }
-
-  /**
    * @param word The string to capitalize
    *
    * @example
@@ -227,15 +211,7 @@ export class ChacaUtils {
    *
    * @returns string
    */
-  sumDateRange({
-    date,
-    range,
-    value,
-  }: {
-    date: Date;
-    value: number;
-    range: TimeUnits;
-  }): Date {
+  sumDateRange({ date, range, value }: SumDateRangeProps): Date {
     switch (range) {
       case "years":
         date.setFullYear(date.getFullYear() + value);

@@ -16,6 +16,12 @@ export type AlphaNumericProps = {
 
 export type BinaryCodeProps = {
   length?: number;
+  prefix?: string;
+};
+
+export type OctalProps = {
+  length?: number;
+  prefix?: string;
 };
 
 export type FloatProps = {
@@ -321,15 +327,16 @@ export class DatatypeModule {
    */
   binaryCode({
     length: ilength = this.int({ min: 4, max: 8 }),
+    prefix = "",
   }: BinaryCodeProps = {}): string {
     const utils = new ChacaUtils();
 
     const length = ilength > 0 ? ilength : this.int({ min: 4, max: 8 });
 
-    let ret = "";
+    let ret = prefix;
 
     for (let i = 1; i <= length; i++) {
-      ret = ret.concat(String(utils.oneOfArray([0, 1])));
+      ret += ret.concat(String(utils.oneOfArray([0, 1])));
     }
 
     return ret;
@@ -393,6 +400,37 @@ export class DatatypeModule {
     }
 
     return retString;
+  }
+
+  /**
+   * Returns an [octal](https://en.wikipedia.org/wiki/Octal) string.
+   *
+   * @param args The optional options object.
+   * @param args.length The number or range of characters to generate after the prefix. Defaults to `1`.
+   * @param args.prefix Prefix for the generated number. Defaults to `'0o'`.
+   *
+   * @example
+   * modules.datatype.octal() // '0o3'
+   * modules.datatype.octal({ length: 10 }) // '0o1526216210'
+   * modules.datatype.octal({ length: { min: 5, max: 10 } }) // '0o15263214'
+   * modules.datatype.octal({ prefix: '0o' }) // '0o7'
+   * modules.datatype.octal({ length: 10, prefix: 'oct_' }) // 'oct_1542153414'
+   */
+  octal({ length: ilength, prefix = "0o" }: OctalProps = {}): string {
+    const utils = new ChacaUtils();
+
+    const length =
+      typeof ilength === "number" && ilength > 0
+        ? ilength
+        : (ilength = this.int({ min: 1, max: 5 }));
+
+    let result = prefix;
+
+    for (let i = 0; i < length; i++) {
+      result += utils.oneOfArray(["0", "1", "2", "3", "4", "5", "6", "7"]);
+    }
+
+    return result;
   }
 
   private filterCharacters(fCase?: Case): string[] {
