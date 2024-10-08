@@ -2,6 +2,7 @@ import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries";
 import { ChacaUtils } from "../../core/utils";
 import { TIME_ZONE } from "./constants/time-zone";
 import { CARDINAL_DIRECTIONS } from "./constants/cardinal-directions";
+import { ORDINAL } from "./constants/ordinal";
 
 export type ZipCodeProps = {
   format?: string;
@@ -19,11 +20,14 @@ export type CountryProps = {
 };
 
 export class AddressModule {
+  private readonly utils = new ChacaUtils();
+
   readonly constants = {
     timeZones: TIME_ZONE,
     countries: COUNTRY_LIST,
     countriesCode: COUNTRY_CODE,
     cardinalDirections: CARDINAL_DIRECTIONS,
+    ordinalDirection: ORDINAL,
   };
 
   /**
@@ -91,5 +95,19 @@ export class AddressModule {
   countryCode(): string {
     const utils = new ChacaUtils();
     return utils.oneOfArray(COUNTRY_CODE);
+  }
+
+  /**
+   * Returns a random ordinal direction (northwest, southeast, etc).
+   *
+   * @param options Whether to use abbreviated or an options object.
+   * @param options.abbreviated If true this will return abbreviated directions (NW, SE, etc).
+   * Otherwise this will return the long name. Defaults to `false`.
+   *
+   * @example
+   * modules.address.ordinalDirection() // 'Northeast'
+   */
+  ordinalDirection(): string {
+    return this.utils.oneOfArray(ORDINAL);
   }
 }

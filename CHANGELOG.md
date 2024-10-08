@@ -15,6 +15,7 @@
 - 🎉 Added `date.anytime`
 - 🎉 Added `finance.litecoinAddress`
 - 🎉 Added `internet.ip`
+- 🎉 Added `address.ordinalDirection`
 - The `prefix` argument was added to the `datatype.alphaNumeric` module
 
 ## 🪛 Fix

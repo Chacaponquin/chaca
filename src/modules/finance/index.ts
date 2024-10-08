@@ -284,7 +284,7 @@ export class FinanceModule {
    * Generates a random Litecoin address.
    *
    * @example
-   * faker.finance.litecoinAddress() // 'MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW'
+   * modules.finance.litecoinAddress() // 'MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW'
    *
    * @since 5.0.0
    */

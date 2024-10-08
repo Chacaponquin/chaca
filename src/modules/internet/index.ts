@@ -518,8 +518,8 @@ export class InternetModule {
    * Generates a random IPv4 or IPv6 address.
    *
    * @example
-   * faker.internet.ip() // '245.108.222.0'
-   * faker.internet.ip() // '4e5:f9c5:4337:abfd:9caf:1135:41ad:d8d3'
+   * modules.internet.ip() // '245.108.222.0'
+   * modules.internet.ip() // '4e5:f9c5:4337:abfd:9caf:1135:41ad:d8d3'
    */
   ip(): string {
     return this.datatypeModule.boolean() ? this.ipv4() : this.ipv6();
