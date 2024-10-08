@@ -10,6 +10,7 @@
 
 - 🎉 Added `datatype.octal`
 - 🎉 Added `datatype.numeric`
+- 🎉 Added `datatype.bigInt`
 - 🎉 Added `id.nanoid`
 - 🎉 Added `color.human`
 - 🎉 Added `date.anytime`

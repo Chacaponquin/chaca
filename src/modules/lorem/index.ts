@@ -1,6 +1,11 @@
 import { loremIpsum } from "lorem-ipsum";
+import { DatatypeModule } from "../datatype";
 
 export type WordsProps = {
+  count?: number;
+};
+
+export type ParagraphProps = {
   count?: number;
 };
 
@@ -23,6 +28,8 @@ export type ParagraphsProps = {
 };
 
 export class LoremModule {
+  private readonly datatypeModule = new DatatypeModule();
+
   /**
    * @param args.paragraphsCount Number of paragraphs. Default `3`
    * @param args.separator Separator between paragraphs. Default `\n`
@@ -139,5 +146,29 @@ export class LoremModule {
    */
   word(): string {
     return loremIpsum({ format: "plain", units: "words", count: 1 });
+  }
+
+  /**
+   * Generates the given number of paragraphs.
+   * Generates a paragraph with the given number of sentences.
+   *
+   * @param args.count The number of sentences to generate.
+   *
+   * @example
+   * modules.lorem.paragraph()
+   *
+   */
+  paragraph({ count: icount }: ParagraphProps = {}): string {
+    const count =
+      typeof icount === "number" && icount > 0
+        ? icount
+        : this.datatypeModule.int({ min: 3, max: 10 });
+
+    return loremIpsum({
+      format: "plain",
+      paragraphUpperBound: count,
+      paragraphLowerBound: count,
+      units: "paragraphs",
+    });
   }
 }

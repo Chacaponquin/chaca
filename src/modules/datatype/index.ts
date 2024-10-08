@@ -1,13 +1,18 @@
 import { ChacaUtils } from "../../core/utils";
-import { SPECIAL_CHARACTERS } from "./constants/special_characters";
+import { SPECIAL_CHARACTERS } from "./constants/special-characters";
 import {
   LOWER_CHARACTERS,
   MIXED_CHARACTERS,
   UPPER_CHARACTERS,
 } from "./constants/characters";
+import { ChacaError } from "../../errors";
 
 export type Case = "lower" | "upper" | "mixed";
 
+export type BigIntProps = {
+  min?: bigint;
+  max?: bigint;
+};
 export type NumericProps = {
   allowLeadingZeros?: boolean;
   length?: number;
@@ -78,6 +83,50 @@ export class DatatypeModule {
     mixedCharacters: MIXED_CHARACTERS,
     specialCharacters: SPECIAL_CHARACTERS,
   };
+
+  /**
+   * Returns a [BigInt](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#bigint_type) number.
+   * The bounds are inclusive.
+   *
+   * @param options Maximum value or options object.
+   * @param options.min Lower bound for generated bigint. Defaults to `0n`.
+   * @param options.max Upper bound for generated bigint. Defaults to `min + 999999999999999n`.
+   *
+   * @throws When `min` is greater than `max`.
+   *
+   * @example
+   * faker.number.bigInt() // 55422n
+   * faker.number.bigInt({ min: 1000000n }) // 431433n
+   * faker.number.bigInt({ max: 100n }) // 42n
+   * faker.number.bigInt({ min: 10n, max: 100n }) // 36n
+   *
+   * @since 8.0.0
+   */
+  bigInt({ max: imax, min: imin }: BigIntProps = {}): bigint {
+    const min = typeof imin === "bigint" ? imin : BigInt(0);
+    const max = typeof imax === "bigint" ? imax : min + BigInt(999999999999999);
+
+    if (max === min) {
+      return min;
+    }
+
+    if (max < min) {
+      throw new ChacaError(`Max ${max} should be larger then min ${min}.`);
+    }
+
+    const delta = max - min;
+
+    const offset =
+      BigInt(
+        this.numeric({
+          length: delta.toString(10).length,
+          allowLeadingZeros: true,
+        }),
+      ) %
+      (delta + BigInt(1));
+
+    return min + offset;
+  }
 
   /**
    * Returns a keyboard special character

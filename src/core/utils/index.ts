@@ -4,7 +4,7 @@ import {
   MIXED_CHARACTERS,
   UPPER_CHARACTERS,
 } from "../../modules/datatype/constants/characters";
-import { SPECIAL_CHARACTERS } from "../../modules/datatype/constants/special_characters";
+import { SPECIAL_CHARACTERS } from "../../modules/datatype/constants/special-characters";
 
 export type TimeUnits =
   | "years"
