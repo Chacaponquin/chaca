@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Internet username test", () => {
   it("Without arguments", () => {

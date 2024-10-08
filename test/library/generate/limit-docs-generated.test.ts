@@ -1,5 +1,6 @@
 import { ChacaError } from "../../../src";
 import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
+import { describe, expect, it } from "vitest";
 
 const MAXIMUN_FOR_TEST = 100000;
 

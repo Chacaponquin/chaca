@@ -1,4 +1,5 @@
 import { chaca, modules } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Nested Object field tests", () => {
   it("Should return an object with user field as an object", () => {

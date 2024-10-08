@@ -1,4 +1,5 @@
 import { ChacaError, Schema, chaca } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 function valid(schema: Schema, step: number): boolean {
   const data = schema.array(10);

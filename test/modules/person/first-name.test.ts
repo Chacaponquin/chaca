@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Person first name tests", () => {
   it("No pass arguments. Should return one of the defined english first names", () => {

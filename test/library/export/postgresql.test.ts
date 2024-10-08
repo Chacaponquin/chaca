@@ -4,6 +4,7 @@ import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects"
 import { SCHEMA_WITH_ARRAY_FIELDS } from "../../utils/schemas/schema-with-array";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 import { checkFile } from "./utils/export-util";
+import { describe, expect, it, beforeAll } from "vitest";
 
 const ROOT = "./data/postgresql";
 const COUNT_DOCUMENTS = 50;

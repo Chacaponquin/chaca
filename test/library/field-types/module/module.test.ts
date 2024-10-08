@@ -1,4 +1,5 @@
 import { chaca } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Schema Field test", () => {
   it("Create an schema and use it in creation of data. Should return always 'a'", () => {
@@ -22,6 +23,6 @@ describe("# Schema Field test", () => {
       test: () => schema({ a: 5, b: 5 }),
     });
 
-    expect(dataSchema.object()["test"]).toBe(10);
+    expect(dataSchema.object().test).toBe(10);
   });
 });

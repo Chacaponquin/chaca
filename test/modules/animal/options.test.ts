@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Animal schema options tests", () => {
   it("Bear test", () => {

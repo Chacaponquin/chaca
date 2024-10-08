@@ -1,5 +1,6 @@
 import { ChacaError } from "../../../src/errors";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
+import { describe, expect, it } from "vitest";
 
 const root = "./data";
 

@@ -1,4 +1,5 @@
 import { chaca, modules, NotExistFieldError } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Ref field tests", () => {
   it("Create a correct ref field", () => {

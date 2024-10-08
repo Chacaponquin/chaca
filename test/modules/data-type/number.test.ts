@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 const TEST_COUNT_VALUES = 1000;
 
@@ -8,7 +9,7 @@ describe("# Datatype Number test", () => {
       modules.datatype.number(),
     );
 
-    expect(allValues.every((v) => Boolean(typeof v === "number"))).toBe(true);
+    expect(allValues.every((v) => typeof v === "number")).toBe(true);
   });
 
   it("With min argument", () => {

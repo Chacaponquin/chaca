@@ -1,4 +1,5 @@
 import { chaca, modules } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Custom field tests", () => {
   it("Custom function return a string", () => {
@@ -25,7 +26,7 @@ describe("# Custom field tests", () => {
 
     const docs = schema.object();
 
-    expect(docs["custom"]).toBe(docs["id"]);
+    expect(docs.custom).toBe(docs.id);
   });
 
   it("Custom function in a nested schema", () => {
@@ -63,6 +64,6 @@ describe("# Custom field tests", () => {
 
     const doc = schema.object();
 
-    expect(doc["user"]["followerInf"]["foo"]).toBe(doc["user"]["image"]);
+    expect(doc.user.followerInf.foo).toBe(doc.user.image);
   });
 });

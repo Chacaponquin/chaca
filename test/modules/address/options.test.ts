@@ -1,6 +1,7 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
-describe("# Address schema options test", () => {
+describe("# Address module options test", () => {
   it("Country code", () => {
     const value = modules.address.countryCode();
     const codes = modules.address.constants.countriesCode;

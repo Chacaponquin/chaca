@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Address Zip code option", () => {
   it("Code without arguments. Should return a code with 5 numbers", () => {

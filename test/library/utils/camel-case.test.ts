@@ -1,4 +1,5 @@
 import { chaca } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# CamelCase util test", () => {
   it("Pass 'Hello World' as argument. Should return 'helloWorld'", () => {

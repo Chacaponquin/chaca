@@ -1,14 +1,15 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 const TEST_COUNT_VALUES = 1000;
 
 describe("# Datatype Float test", () => {
   it("Without arguments. Should return float numbers", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
+    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
       modules.datatype.float(),
     );
 
-    expect(allValues.every((v) => Boolean(typeof v === "number"))).toBe(true);
+    expect(allValues.every((v) => typeof v === "number")).toBe(true);
   });
 
   it("With min argument", () => {

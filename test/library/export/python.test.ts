@@ -1,6 +1,7 @@
 import { chaca } from "../../../src";
 import { VARIANT_ARRAY } from "./utils/array-variate";
 import { checkFile } from "./utils/export-util";
+import { describe, expect, it } from "vitest";
 
 const filename = "python";
 const ROOT = "./data/python";

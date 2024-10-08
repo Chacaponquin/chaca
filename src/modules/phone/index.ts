@@ -53,7 +53,7 @@ export class PhoneModule {
    *
    * @returns string
    */
-  callDuration({ max: imax, min: imin }: CallDurationProps): string {
+  callDuration({ max: imax, min: imin }: CallDurationProps = {}): string {
     const datatypeModule = new DatatypeModule();
 
     const min: number =

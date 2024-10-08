@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Address country tests", () => {
   it("Without params. Should return a country", () => {

@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Internet email tests", () => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

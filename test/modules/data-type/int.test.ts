@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Datatype Int Number test", () => {
   const ARRAY_LENGTH_TEXT = 1000;

@@ -1,4 +1,5 @@
 import { chaca } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# ReplaceSymbols Util Test", () => {
   it("Pass undefined as argument. Should return an empty string", () => {

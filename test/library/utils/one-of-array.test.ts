@@ -1,4 +1,5 @@
 import { chaca } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# OneOfArray Util Test", () => {
   it("Pass empty array", () => {

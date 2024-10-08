@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Internet password tests", () => {
   it("Pass length: 10 as argument. Should return an password with length 10", () => {

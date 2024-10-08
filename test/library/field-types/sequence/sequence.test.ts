@@ -1,4 +1,5 @@
 import { ChacaError, chaca } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Sequence field tests", () => {
   it("Simple sequence definition", () => {

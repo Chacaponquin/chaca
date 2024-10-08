@@ -1,4 +1,5 @@
 import { chaca, PickFieldDefinitionError } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 function unique(array: number[]) {
   for (const value of array) {

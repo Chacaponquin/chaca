@@ -1,4 +1,5 @@
 import { ChacaError, modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 const TEST_COUNT_VALUES = 1000;
 

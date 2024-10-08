@@ -1,5 +1,6 @@
 import { chaca, Dataset } from "../../../src";
 import { LIBRARY_CASE_SCHEMA } from "../../utils/cases/library";
+import { describe, beforeAll, expect, it } from "vitest";
 
 const EXPORT_ROUTE = "./data/cases/library";
 const FILE_NAME = "caseLibrary";

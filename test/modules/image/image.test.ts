@@ -1,6 +1,7 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
-describe("# Image schema tests", () => {
+describe("# Image module tests", () => {
   it("Animal test", () => {
     const value = modules.image.animal();
     expect(typeof value).toBe("string");

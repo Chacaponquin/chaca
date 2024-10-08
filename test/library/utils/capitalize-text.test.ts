@@ -1,4 +1,5 @@
 import { chaca } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# capitalize Util Test", () => {
   it("Passing undefined as argument. Should return an error", () => {

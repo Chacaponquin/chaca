@@ -1,4 +1,5 @@
 import { modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 const validateTime = (
   text: string,
@@ -13,14 +14,15 @@ const validateTime = (
 
 describe("# Phone callDuration test", () => {
   describe("without arguments", () => {
-    const value = modules.phone.callDuration({});
-    it(`should return a string with two numbers between 0 and 59 VALUE=${value}`, () => {
+    const value = modules.phone.callDuration();
+
+    it(`Should return a string with two numbers between 0 and 59 VALUE=${value}`, () => {
       expect(typeof value === "string" && value.length === 5).toBe(true);
       expect(validateTime(value, { min: 0, max: 59 })).toBe(true);
     });
   });
 
-  describe("passing only max argument", () => {
+  describe("Passing only max argument", () => {
     describe("passing superior than 59", () => {
       const value = modules.phone.callDuration({ max: 90 });
       it(`should return a string with two numbers between 0 and 59 VALUE=${value}`, () => {

@@ -1,5 +1,6 @@
 import { chaca, Dataset } from "../../../src";
 import { COMMERCE_COMPANY_SCHEMAS } from "../../utils/cases/commerce-company";
+import { describe, beforeAll, expect, it } from "vitest";
 
 const EXPORT_ROUTE = "./data/cases/commerce_company";
 const FILE_NAME = "caseCommerceCompany";

@@ -101,8 +101,6 @@ export const TOURNAMENTE_SCHEMA = chaca.schema({
         const semisResult = createResults(semis);
         const finalResult = createResults(final);
 
-        console.log({ semis, final, quarter });
-
         allResults = [...quarterResults, ...semisResult, ...finalResult];
       }
 

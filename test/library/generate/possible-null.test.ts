@@ -1,4 +1,5 @@
 import { chaca, modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 function countNulls(array: any[]): number {
   let count = 0;
@@ -48,7 +49,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass possibleNull=100. Always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: () => modules.color.cmyk(), possibleNull: 100 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 1 },
       });
 
       const data = schema.array(50);
@@ -58,7 +59,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass possibleNull=number-greater-than-100. Always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: () => modules.color.cmyk(), possibleNull: 150 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 1.5 },
       });
 
       const data = schema.array(50);
@@ -68,7 +69,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a number between 0 and 100. Should return at least one null value", () => {
       const schema = chaca.schema({
-        null: { type: () => modules.color.cmyk(), possibleNull: 60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 0.6 },
       });
 
       const data = schema.array(50);
@@ -100,7 +101,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a function that return 100. Always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: () => modules.color.cmyk(), possibleNull: () => 100 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 1 },
       });
 
       const data = schema.array(50);
@@ -110,7 +111,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a function that return a number-greater-than-100. Always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: () => modules.color.cmyk(), possibleNull: () => 150 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 1.5 },
       });
 
       const data = schema.array(50);
@@ -120,7 +121,7 @@ describe("# Possible null fields tests", () => {
 
     it("Pass a function that return a number between 0 and 100. Should return at least one null value", () => {
       const schema = chaca.schema({
-        null: { type: () => modules.color.cmyk(), possibleNull: () => 60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 0.6 },
       });
 
       const data = schema.array(50);

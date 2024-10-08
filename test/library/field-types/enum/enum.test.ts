@@ -1,4 +1,5 @@
 import { EmptyEnumValuesError, chaca } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Enum field tests", () => {
   it("With empty array as argument. Should throw an error", () => {

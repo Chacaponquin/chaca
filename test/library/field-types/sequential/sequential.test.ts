@@ -1,4 +1,5 @@
 import { ChacaError, EmptySequentialValuesError, chaca } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Sequential Field test", () => {
   it("Try create an array sequential field. Should throw an error", () => {
@@ -13,7 +14,7 @@ describe("# Sequential Field test", () => {
 
   it("Try create an possible null sequential field", () => {
     const schema = chaca.schema({
-      test: { type: chaca.sequential([1, 2, 3, 4, 5]), possibleNull: 70 },
+      test: { type: chaca.sequential([1, 2, 3, 4, 5]), possibleNull: 0.7 },
     });
 
     const data = schema.array(5);

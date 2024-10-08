@@ -1,4 +1,5 @@
 import { ChacaError, chaca, modules } from "../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Schema generate tests", () => {
   const schema = chaca.schema({

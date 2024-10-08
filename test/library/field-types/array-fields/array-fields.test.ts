@@ -1,4 +1,5 @@
 import { chaca, modules } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 describe("# Array field tests", () => {
   it("Pass an empty object. Should return an array with length between 1 and 10", () => {

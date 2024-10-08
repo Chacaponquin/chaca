@@ -1,4 +1,5 @@
 import { ChacaError, chaca } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
 function count(data: any[], value: number): number {
   let count = 0;

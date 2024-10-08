@@ -1,5 +1,6 @@
 import { chaca, Dataset } from "../../../src";
 import { TOURNAMENT_SCHEMAS } from "../../utils/cases/tournament";
+import { describe, beforeAll, expect, it } from "vitest";
 
 const EXPORT_ROUTE = "./data/cases/tournament";
 const FILE_NAME = "case-tournament";

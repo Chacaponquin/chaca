@@ -3,6 +3,7 @@ import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
 import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 import { checkFile } from "./utils/export-util";
+import { describe, expect, it } from "vitest";
 
 const filename = "json";
 const ROOT = "./data/json";
