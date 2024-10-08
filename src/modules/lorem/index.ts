@@ -125,9 +125,19 @@ export class LoremModule {
    * @example modules.lorem.words() // 'lorem ipsum in'
    * @returns string
    */
-  words({ count: icount }: WordsProps = {}) {
+  words({ count: icount }: WordsProps = {}): string {
     const count = typeof icount === "number" && icount > 0 ? icount : 5;
 
     return loremIpsum({ format: "plain", units: "words", count: count });
+  }
+
+  /**
+   * Generates a word .
+   *
+   * @example
+   * modules.lorem.word() // 'temporibus'
+   */
+  word(): string {
+    return loremIpsum({ format: "plain", units: "words", count: 1 });
   }
 }

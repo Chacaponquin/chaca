@@ -16,6 +16,7 @@
 - 🎉 Added `finance.litecoinAddress`
 - 🎉 Added `internet.ip`
 - 🎉 Added `address.ordinalDirection`
+- 🎉 Added `lorem.word`
 - The `prefix` argument was added to the `datatype.alphaNumeric` module
 
 ## 🪛 Fix
