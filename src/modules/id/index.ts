@@ -1,5 +1,7 @@
 import { DatatypeModule } from "../datatype";
 import { nanoid } from "nanoid";
+import { ulid } from "ulid";
+import { createId } from "@paralleldrive/cuid2";
 
 export type NanoidProps = {
   length?: number;
@@ -53,5 +55,29 @@ export class IdModule {
     const length = typeof ilength === "number" && ilength > 0 ? ilength : 20;
 
     return nanoid(length);
+  }
+
+  /**
+   * Generates a [ULID](https://github.com/ulid/javascript)
+   *
+   * @example
+   * modules.id.ulid() // "01ARZ3NDEKTSV4RRFFQ69G5FAV"
+   *
+   * @returns string
+   */
+  ulid(): string {
+    return ulid();
+  }
+
+  /**
+   * Generates a [CUID](https://github.com/paralleldrive/cuid2)
+   *
+   * @example
+   * modules.id.cuid() // "tz4a98xxat96iws9zmbrgj3a"
+   *
+   * @returns string
+   */
+  cuid(): string {
+    return createId();
   }
 }
