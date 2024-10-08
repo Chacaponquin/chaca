@@ -12,7 +12,7 @@ describe("# Image schema tests", () => {
   });
 
   it("Animate avatar test", () => {
-    const value = modules.image.animateAvatar();
+    const value = modules.image.animatedAvatar();
     expect(typeof value).toBe("string");
   });
 
