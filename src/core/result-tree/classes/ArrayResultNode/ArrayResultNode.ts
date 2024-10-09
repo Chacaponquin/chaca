@@ -1,16 +1,16 @@
 import { ChacaError } from "../../../../errors";
-import { ChacaTreeNode } from "../../../input-tree/core";
+import { InputTreeNode } from "../../../input-tree/core";
 import { FieldNode } from "../FieldNode/FieldNode";
 import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
 
 interface Props {
   name: string;
-  fieldNode: ChacaTreeNode;
+  fieldNode: InputTreeNode;
 }
 
 export class ArrayResultNode extends FieldNode {
   private arrayNodes: FieldNode[] = [];
-  private fieldNode: ChacaTreeNode;
+  private fieldNode: InputTreeNode;
 
   constructor({ name, fieldNode }: Props) {
     super(name);

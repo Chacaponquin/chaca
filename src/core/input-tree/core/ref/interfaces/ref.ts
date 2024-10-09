@@ -1,4 +1,4 @@
-import { DocumentTree } from "../../../../result-tree/classes/DocumentTree/DocumentTree";
+import { DocumentTree } from "../../../../result-tree/classes/DocumentTree";
 import { SingleResultNode } from "../../../../result-tree/classes/SingleResultNode/SingleResultNode";
 
 export interface SearchedRefValue {

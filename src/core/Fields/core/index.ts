@@ -1,5 +1,5 @@
 import { EnumField } from "./enum/EnumField";
-import { KeyField } from "./key/KeyField";
+import { KeyField } from "./key";
 import { PickField } from "./pick";
 import { ProbabilityField } from "./probability";
 import { RefField } from "./ref";

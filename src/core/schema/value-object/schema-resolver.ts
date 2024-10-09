@@ -89,7 +89,7 @@ export class InputSchemaResolver {
     for (const [key, field] of Object.entries(obj)) {
       const resolverObject = {
         isArray: new FieldIsArray(),
-        possibleNull: 0,
+        possibleNull: new FieldPossibleNull(),
       } as ResolverObject;
 
       if ("type" in field) {
@@ -101,7 +101,7 @@ export class InputSchemaResolver {
         const configArray = new FieldIsArray(fieldObject.isArray);
         const configNull = new FieldPossibleNull(fieldObject.possibleNull);
 
-        resolverObject.possibleNull = configNull.value();
+        resolverObject.possibleNull = configNull;
         resolverObject.isArray = configArray;
       } else {
         const type = this.filter({ config: field });

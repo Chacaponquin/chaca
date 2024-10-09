@@ -6,10 +6,10 @@ import { DatatypeModule } from "../../../../modules/datatype";
 import { PickFieldProps } from "../../../fields/core/pick";
 import { FieldIsArray } from "../../../schema/value-object";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node";
+import { InputTreeNode } from "../node";
 import { Count, Values } from "./value-object";
 
-export class PickValueNode extends ChacaTreeNode {
+export class PickValueNode extends InputTreeNode {
   private datatypeModule = new DatatypeModule();
   private values: PickFieldProps;
 
@@ -31,7 +31,7 @@ export class PickValueNode extends ChacaTreeNode {
     }
   }
 
-  getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): InputTreeNode {
     return new PickValueNode(
       { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.values,

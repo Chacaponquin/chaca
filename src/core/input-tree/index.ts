@@ -11,7 +11,7 @@ import {
 } from "../resolvers/core";
 import { Schema } from "../schema";
 import {
-  ChacaTreeNode,
+  InputTreeNode,
   CustomValueNode,
   EnumValueNode,
   KeyValueNode,
@@ -27,28 +27,51 @@ import { SchemaStore } from "../schema-store/store";
 import { PickFieldResolver } from "../resolvers/core/pick";
 import { ChacaTreeNodeConfig } from "./interfaces/tree";
 import { FieldIsArray } from "../schema/value-object";
+import { ChacaUtils } from "../utils";
+import { PossibleNullMapper } from "./core/map/possible-null";
+import { NotNull } from "./core/possible-null";
 
 interface Props {
   schemaName: string;
   schemaToResolve: SchemaToResolve;
   schemasStore: SchemaStore;
+  count: number;
+}
+
+interface CreateNodeProps {
+  actualRoute: string[];
+  object: ResolverObject;
 }
 
 export class ChacaInputTree {
-  private nodes: ChacaTreeNode[] = [];
+  private nodes: InputTreeNode[] = [];
   private schemasStore: SchemaStore;
   private schemaName: string;
+  private count: number;
 
   // ref nodes
   private refToResolve: RefValueNode[] = [];
 
-  constructor({ schemaName, schemaToResolve, schemasStore }: Props) {
+  private readonly nullMapper: PossibleNullMapper;
+
+  constructor(
+    private readonly utils: ChacaUtils,
+    { schemaName, schemaToResolve, schemasStore, count }: Props,
+  ) {
+    this.nullMapper = new PossibleNullMapper(this.utils);
+
     this.schemasStore = schemasStore;
     this.schemaName = schemaName;
+    this.count = count;
 
     for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
       const fieldRoute = [this.schemaName, key];
-      const newNode = this.createNodeByType(fieldRoute, obj);
+
+      const newNode = this.createNodeByType({
+        actualRoute: fieldRoute,
+        object: obj,
+      });
+
       this.insertNode(newNode);
     }
   }
@@ -61,18 +84,24 @@ export class ChacaInputTree {
     return this.nodes;
   }
 
-  private createNodeByType(
-    actualRoute: string[],
-    object: ResolverObject,
-  ): ChacaTreeNode {
-    let returnNode: ChacaTreeNode;
+  private createNodeByType({
+    actualRoute,
+    object,
+  }: CreateNodeProps): InputTreeNode {
+    let returnNode: InputTreeNode;
 
     this.validateResolver(actualRoute, object);
+
+    const possibleNull = this.nullMapper.execute({
+      route: InputTreeNode.getRouteString(actualRoute),
+      value: object.possibleNull,
+      countDocs: this.count,
+    });
 
     const nodeConfig: ChacaTreeNodeConfig = {
       fieldTreeRoute: actualRoute,
       isArray: object.isArray,
-      possibleNull: object.possibleNull,
+      possibleNull: possibleNull,
     };
 
     if (object.type instanceof CustomFieldResolver) {
@@ -84,13 +113,11 @@ export class ChacaInputTree {
     } else if (object.type instanceof EnumFieldResolver) {
       returnNode = new EnumValueNode(nodeConfig, object.type.array);
     } else if (object.type instanceof MixedFieldResolver) {
-      returnNode = new MixedValueNode(nodeConfig);
+      const node = new MixedValueNode(nodeConfig);
 
-      this.createSubNodesOfMixedField(
-        actualRoute,
-        returnNode as MixedValueNode,
-        object.type.schema,
-      );
+      this.createSubNodesOfMixedField(actualRoute, node, object.type.schema);
+
+      returnNode = node;
     } else if (object.type instanceof RefFieldResolver) {
       const newRefNode = new RefValueNode(
         nodeConfig,
@@ -107,20 +134,20 @@ export class ChacaInputTree {
         fieldTreeRoute: actualRoute,
         valuesArray: object.type.valuesArray,
         config: object.type.config,
-        possibleNull: object.possibleNull,
+        possibleNull: possibleNull,
       });
     } else if (object.type instanceof SequenceFieldResolver) {
       returnNode = new SequenceValueNode({
         fieldTreeRoute: actualRoute,
         config: object.type.getConfig(),
-        possibleNull: object.possibleNull,
+        possibleNull: possibleNull,
       });
     } else if (object.type instanceof KeyFieldResolver) {
       if (object.type.fieldType instanceof SequenceFieldResolver) {
         const schemaValueNode = new SequenceValueNode({
           fieldTreeRoute: actualRoute,
           config: object.type.fieldType.getConfig(),
-          possibleNull: 0,
+          possibleNull: new NotNull(),
         });
 
         returnNode = new KeyValueNode(actualRoute, schemaValueNode);
@@ -129,7 +156,7 @@ export class ChacaInputTree {
           {
             fieldTreeRoute: actualRoute,
             isArray: new FieldIsArray(),
-            possibleNull: 0,
+            possibleNull: new NotNull(),
           },
           object.type.fieldType.fun,
         );
@@ -140,7 +167,7 @@ export class ChacaInputTree {
           {
             fieldTreeRoute: actualRoute,
             isArray: new FieldIsArray(),
-            possibleNull: 0,
+            possibleNull: new NotNull(),
           },
           object.type.fieldType.refField,
           this.schemasStore,
@@ -153,7 +180,9 @@ export class ChacaInputTree {
       }
     } else {
       throw new ChacaError(
-        `The field '${actualRoute.join(".")}' have an incorrect resolver`,
+        `The field '${InputTreeNode.getRouteString(
+          actualRoute,
+        )}' have an incorrect resolver`,
       );
     }
 
@@ -161,7 +190,7 @@ export class ChacaInputTree {
   }
 
   private validateResolver(route: string[], config: ResolverObject): void {
-    const name = ChacaTreeNode.getRouteString(route);
+    const name = InputTreeNode.getRouteString(route);
 
     // sequence
     if (config.type instanceof SequenceFieldResolver) {
@@ -202,12 +231,17 @@ export class ChacaInputTree {
     const object = schema.getSchemaObject();
     for (const [key, obj] of Object.entries<ResolverObject>(object)) {
       const fieldRoute = [...actualRoute, key];
-      const newNode = this.createNodeByType(fieldRoute, obj);
+
+      const newNode = this.createNodeByType({
+        actualRoute: fieldRoute,
+        object: obj,
+      });
+
       parentNode.insertNode(newNode);
     }
   }
 
-  insertNode(node: ChacaTreeNode) {
+  insertNode(node: InputTreeNode) {
     this.nodes.push(node);
   }
 
@@ -240,8 +274,8 @@ export class ChacaInputTree {
     this.refToResolve.forEach((r) => r.searchSchemaRef());
   }
 
-  getPossibleNullNodes(): ChacaTreeNode[] {
-    const nodes = [] as ChacaTreeNode[];
+  getPossibleNullNodes(): InputTreeNode[] {
+    const nodes = [] as InputTreeNode[];
 
     this.nodes.forEach((n) => {
       if (n.isPossibleNull()) {

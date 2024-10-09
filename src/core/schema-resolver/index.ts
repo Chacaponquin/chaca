@@ -1,13 +1,9 @@
-import {
-  ChacaError,
-  CyclicAccessDataError,
-  WrongArrayDefinitionError,
-} from "../../errors";
+import { ChacaError, CyclicAccessDataError } from "../../errors";
 import { ChacaUtils } from "../utils";
 import { SchemaToResolve } from "../schema/interfaces/schema";
 import { ChacaInputTree } from "../input-tree";
 import {
-  ChacaTreeNode,
+  InputTreeNode,
   CustomValueNode,
   EnumValueNode,
   MixedValueNode,
@@ -40,6 +36,11 @@ interface SchemaResolverProps {
   countDoc: number;
   schemaIndex: number;
   consoleVerbose: boolean;
+}
+
+interface CreateSolutionNodeProps {
+  field: InputTreeNode;
+  indexDoc: number;
 }
 
 export class SchemaResolver<K = any> {
@@ -92,8 +93,8 @@ export class SchemaResolver<K = any> {
     return keys;
   }
 
-  getPossibleNullNodes(): ChacaTreeNode[] {
-    let nodes = [] as ChacaTreeNode[];
+  getPossibleNullNodes(): InputTreeNode[] {
+    let nodes = [] as InputTreeNode[];
 
     if (this.inputTree) {
       nodes = this.inputTree.getPossibleNullNodes();
@@ -116,10 +117,11 @@ export class SchemaResolver<K = any> {
 
   buildInputTree(): void {
     if (this.inputTree === null) {
-      this.inputTree = new ChacaInputTree({
+      this.inputTree = new ChacaInputTree(this.utils, {
         schemaName: this.name,
         schemaToResolve: this.schemaObject,
         schemasStore: this.schemasStore,
+        count: this.countDoc,
       });
     }
   }
@@ -215,10 +217,10 @@ export class SchemaResolver<K = any> {
 
             // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
             for (const datField of this.inputTree.getFields()) {
-              const fieldSolutionNode = this.createSolutionNodeByType(
-                datField,
-                indexDoc,
-              );
+              const fieldSolutionNode = this.createSolutionNodeByType({
+                field: datField,
+                indexDoc: indexDoc,
+              });
 
               if (datField instanceof KeyValueNode) {
                 newDoc.insertKeyField(fieldSolutionNode);
@@ -267,7 +269,7 @@ export class SchemaResolver<K = any> {
   }
 
   private resolveArrayAndMixedFields(
-    field: ChacaTreeNode,
+    field: InputTreeNode,
     fieldSolution: FieldNode,
     indexDoc: number,
   ) {
@@ -287,57 +289,51 @@ export class SchemaResolver<K = any> {
 
   private createArrayFieldSolution(
     solutionArrayNode: ArrayResultNode,
-    field: ChacaTreeNode,
+    field: InputTreeNode,
     indexDoc: number,
   ) {
-    if (field.getIsArray().isValid()) {
-      const value = field.getIsArray().value();
+    const value = field.getIsArray().value();
 
-      if (value !== null) {
-        const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
+    if (value !== null) {
+      const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
 
-        const store = new DatasetStore({
-          schemasStore: this.schemasStore,
-          omitCurrentDocument: currentDocument,
-          omitResolver: this,
+      const store = new DatasetStore({
+        schemasStore: this.schemasStore,
+        omitCurrentDocument: currentDocument,
+        omitResolver: this,
+      });
+
+      let limit: Limit;
+      if (typeof value === "number") {
+        limit = value;
+      } else if (typeof value === "function") {
+        const result = value({
+          store: store,
+          currentFields: currentDocument.getDocumentObject(),
         });
 
-        let limit: Limit;
-        if (typeof value === "number") {
-          limit = value;
-        } else if (typeof value === "function") {
-          const result = value({
-            store: store,
-            currentFields: currentDocument.getDocumentObject(),
+        limit = result;
+      } else {
+        limit = value;
+      }
+
+      this.arrayCreator.execute({
+        value: limit,
+        route: field.getRouteString(),
+        func: () => {
+          // resolver el field y guardarlo en un nodo
+          const fieldSolutionNode = this.createSolutionNodeByType({
+            field: field.getNoArrayNode(),
+            indexDoc: indexDoc,
           });
 
-          limit = result;
-        } else {
-          limit = value;
-        }
+          // insertar el field en el array de soluciones
+          solutionArrayNode.insertNode(fieldSolutionNode);
 
-        this.arrayCreator.execute({
-          value: limit,
-          route: field.getRouteString(),
-          func: () => {
-            // resolver el field y guardarlo en un nodo
-            const fieldSolutionNode = this.createSolutionNodeByType(
-              field.getNoArrayNode(),
-              indexDoc,
-            );
-
-            // insertar el field en el array de soluciones
-            solutionArrayNode.insertNode(fieldSolutionNode);
-
-            // resolver el field en caso de ser un mixed field
-            this.resolveArrayAndMixedFields(field, fieldSolutionNode, indexDoc);
-          },
-        });
-      }
-    } else {
-      throw new WrongArrayDefinitionError(
-        `In field '${field.getRouteString()}'. The parameter isArray must be an integer, a function or an object with the limits { min, max }`,
-      );
+          // resolver el field en caso de ser un mixed field
+          this.resolveArrayAndMixedFields(field, fieldSolutionNode, indexDoc);
+        },
+      });
     }
   }
 
@@ -350,10 +346,10 @@ export class SchemaResolver<K = any> {
 
     for (const field of subFields) {
       // filtrar el subField segun su tipo
-      const subFieldSolutionNode = this.createSolutionNodeByType(
-        field,
-        indexDoc,
-      );
+      const subFieldSolutionNode = this.createSolutionNodeByType({
+        field: field,
+        indexDoc: indexDoc,
+      });
 
       // insertar la solucion del field en la solucion del mixed field pasado por parametro
       solutionMixedNode.insertNode(subFieldSolutionNode);
@@ -363,10 +359,10 @@ export class SchemaResolver<K = any> {
     }
   }
 
-  private createSolutionNodeByType(
-    field: ChacaTreeNode,
-    indexDoc: number,
-  ): FieldNode {
+  private createSolutionNodeByType({
+    field,
+    indexDoc,
+  }: CreateSolutionNodeProps): FieldNode {
     const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
 
     const store = new DatasetStore({
@@ -378,6 +374,7 @@ export class SchemaResolver<K = any> {
     const isNull = field.isNull({
       store: store,
       currentDocument: currentDocument,
+      index: indexDoc,
     });
 
     if (!isNull) {
@@ -407,6 +404,7 @@ export class SchemaResolver<K = any> {
         // en caso de ser un pick field
         else if (field instanceof PickValueNode) {
           const value = field.getValues();
+
           return new SingleResultNode({
             name: field.getNodeName(),
             value: value,
@@ -416,6 +414,7 @@ export class SchemaResolver<K = any> {
         // en caso de ser un field sequential
         else if (field instanceof SequentialValueNode) {
           const value = field.value();
+
           return new SingleResultNode({
             name: field.getNodeName(),
             value: value,

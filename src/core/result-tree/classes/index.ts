@@ -1,7 +1,7 @@
 import { SingleResultNode } from "./SingleResultNode/SingleResultNode";
 import { MixedFieldNode } from "./MixedFieldNode/MixedFieldNode";
 import { FieldNode } from "./FieldNode/FieldNode";
-import { DocumentTree } from "./DocumentTree/DocumentTree";
+import { DocumentTree } from "./DocumentTree";
 import { ArrayResultNode } from "./ArrayResultNode/ArrayResultNode";
 
 export {

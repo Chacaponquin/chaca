@@ -4,7 +4,7 @@ import { ChacaUtils } from "../../../utils";
 import { DatasetStore } from "../../../dataset-store";
 import { ProbabilityOption } from "../../../fields/core/probability";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node";
+import { InputTreeNode } from "../node";
 import { Input, InputChance } from "./value-object";
 import { FieldIsArray } from "../../../schema/value-object";
 
@@ -13,7 +13,7 @@ interface Props {
   currentDocument: DocumentTree<any>;
 }
 
-export class ProbabilityValueNode extends ChacaTreeNode {
+export class ProbabilityValueNode extends InputTreeNode {
   private options: ProbabilityOption[];
   private utils = new ChacaUtils();
 
@@ -26,7 +26,7 @@ export class ProbabilityValueNode extends ChacaTreeNode {
     }).value();
   }
 
-  public getNoArrayNode(): ChacaTreeNode {
+  public getNoArrayNode(): InputTreeNode {
     return new ProbabilityValueNode(
       { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.options,

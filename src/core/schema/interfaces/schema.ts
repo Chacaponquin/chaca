@@ -11,7 +11,7 @@ import {
 } from "../../fields/core";
 import { CustomField } from "../../fields/core/custom";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
-import { FieldIsArray } from "../value-object";
+import { FieldIsArray, FieldPossibleNull } from "../value-object";
 
 export type FieldTypes<R = any> =
   | CustomField<any, R>
@@ -53,7 +53,7 @@ export type SchemaToResolve = Record<string, ResolverObject>;
 export type ResolverObject = {
   type: IResolver;
   isArray: FieldIsArray;
-  possibleNull: FieldPossibleNullConfig;
+  possibleNull: FieldPossibleNull;
 };
 
 export type ArrayLimitObject = { min?: number; max?: number };
@@ -72,7 +72,6 @@ export type IsArrayFunctionProps<C = any> = {
   store: DatasetStore;
 };
 
-export type FieldPossibleNullConfig = number | PossibleNullFunction;
 export type PossibleNullFunction = (
   props: PossibleNullFunctionProps,
 ) => number | boolean;
@@ -84,4 +83,8 @@ export type PossibleNullFunctionProps<C = any> = {
 };
 
 export type IsArrayConfig = number | ArrayLimitObject | IsArrayFunction;
-export type PossibleNullConfig = boolean | number | PossibleNullFunction;
+export type PossibleNullConfig =
+  | boolean
+  | number
+  | PossibleNullFunction
+  | undefined;

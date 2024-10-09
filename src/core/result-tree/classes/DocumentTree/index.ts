@@ -2,18 +2,18 @@ import { ChacaError } from "../../../../errors";
 import { FieldNode } from "../FieldNode/FieldNode";
 import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
 
-export class DocumentTree<D> {
-  private nodes: Array<FieldNode> = [];
+export class DocumentTree<D = any> {
+  private nodes: FieldNode[] = [];
 
-  public insertField(newField: FieldNode) {
+  insertField(newField: FieldNode) {
     this.nodes.push(newField);
   }
 
-  public insertKeyField(newKey: FieldNode) {
+  insertKeyField(newKey: FieldNode) {
     this.nodes = [newKey, ...this.nodes];
   }
 
-  public getDocumentObject(): D {
+  getDocumentObject(): D {
     let returnObject = {} as D;
 
     for (const n of this.nodes) {
@@ -26,7 +26,7 @@ export class DocumentTree<D> {
     return returnObject;
   }
 
-  public getNodeByNodeRoute(fieldTreeRoute: Array<string>): FieldNode {
+  getNodeByNodeRoute(fieldTreeRoute: Array<string>): FieldNode {
     let returnValue = undefined;
 
     for (let i = 0; i < this.nodes.length && returnValue === undefined; i++) {
@@ -44,9 +44,7 @@ export class DocumentTree<D> {
     }
   }
 
-  public getRefValueByNodeRoute(
-    fieldTreeRoute: Array<string>,
-  ): SingleResultNode {
+  getRefValueByNodeRoute(fieldTreeRoute: Array<string>): SingleResultNode {
     let returnValue = undefined;
 
     for (let i = 0; i < this.nodes.length && returnValue === undefined; i++) {

@@ -1,4 +1,4 @@
-import { ChacaTreeNode } from "./node";
+import { InputTreeNode } from "./node";
 import { CustomValueNode } from "./custom";
 import { EnumValueNode } from "./enum";
 import { MixedValueNode } from "./mixed";
@@ -10,7 +10,7 @@ import { ProbabilityValueNode } from "./probability";
 import { PickValueNode } from "./pick";
 
 export {
-  ChacaTreeNode,
+  InputTreeNode,
   CustomValueNode,
   EnumValueNode,
   MixedValueNode,

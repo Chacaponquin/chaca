@@ -64,7 +64,7 @@ import {
   KeyField,
   KeyFieldProps,
   KeyAllowDataTypes,
-} from "./core/fields/core/key/KeyField";
+} from "./core/fields/core/key";
 
 import {
   SequenceField,

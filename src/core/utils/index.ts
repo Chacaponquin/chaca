@@ -1,4 +1,5 @@
 import { ChacaError } from "../../errors";
+import { DatatypeModule } from "../../modules/datatype";
 import {
   LOWER_CHARACTERS,
   MIXED_CHARACTERS,
@@ -20,7 +21,14 @@ export type SumDateRangeProps = {
   range: TimeUnits;
 };
 
+interface PickProps<T> {
+  values: T[];
+  count: number;
+}
+
 export class ChacaUtils {
+  private readonly datatypeModule = new DatatypeModule();
+
   /**
    * Returns one element from an array
    * @param list Array of values to return
@@ -236,5 +244,43 @@ export class ChacaUtils {
     }
 
     return date;
+  }
+
+  pick<T>({ values, count }: PickProps<T>): T[] {
+    if (count === values.length) {
+      return values;
+    } else {
+      const generate = (banned: number[]): number => {
+        let num = this.datatypeModule.int({
+          min: 0,
+          max: values.length,
+        });
+
+        while (banned.includes(num)) {
+          num = this.datatypeModule.int({
+            min: 0,
+            max: values.length,
+          });
+        }
+
+        return num;
+      };
+
+      const result = [] as T[];
+      const banned = [] as number[];
+
+      let i = 0;
+
+      while (i < count) {
+        const index = generate(banned);
+
+        banned.push(index);
+        result.push(values[index]);
+
+        i++;
+      }
+
+      return result;
+    }
   }
 }

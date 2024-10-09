@@ -1,6 +1,6 @@
 import { Schema } from "./core/schema";
 import { EnumField } from "./core/fields/core/enum/EnumField";
-import { KeyField, KeyFieldProps } from "./core/fields/core/key/KeyField";
+import { KeyField, KeyFieldProps } from "./core/fields/core/key";
 import { RefFieldConfig, FieldToRef, RefField } from "./core/fields/core/ref";
 import {
   SequenceField,

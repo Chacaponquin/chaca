@@ -2,24 +2,24 @@ import {
   EmptySequentialValuesError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
-import { FieldPossibleNullConfig } from "../../../schema/interfaces/schema";
 import { SequentialFieldConfig } from "../../../fields/core/sequential/SequentialField";
-import { ChacaTreeNode } from "../node";
+import { InputTreeNode } from "../node";
 import { FieldIsArray } from "../../../schema/value-object";
+import { PossibleNull } from "../possible-null";
 
 export interface SequentialValueNodeProps {
   fieldTreeRoute: string[];
   valuesArray: unknown[];
   config: Required<SequentialFieldConfig>;
-  possibleNull: FieldPossibleNullConfig;
+  possibleNull: PossibleNull;
 }
 
-export class SequentialValueNode extends ChacaTreeNode {
+export class SequentialValueNode extends InputTreeNode {
   private index = 0;
 
   private valuesArray: unknown[];
   private config: Required<SequentialFieldConfig>;
-  private possibleNull: FieldPossibleNullConfig;
+  private possibleNull: PossibleNull;
 
   constructor({
     config,
@@ -46,7 +46,7 @@ export class SequentialValueNode extends ChacaTreeNode {
     }
   }
 
-  getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): InputTreeNode {
     return new SequentialValueNode({
       fieldTreeRoute: this.getFieldRoute(),
       valuesArray: this.valuesArray,

@@ -28,7 +28,7 @@ import {
 } from "./core/primitive-types";
 import fs from "fs";
 import {
-  ChacaTreeNode,
+  InputTreeNode,
   KeyValueNode,
   RefValueNode,
 } from "../../../input-tree/core";
@@ -45,7 +45,7 @@ interface Props {
 export class SQLGenerator extends Generator {
   private schemasPrimaryKeys: KeyValueNode[] = [];
   private schemasForeignKeys: RefValueNode[] = [];
-  private schemaspossibleNull: ChacaTreeNode[] = [];
+  private schemaspossibleNull: InputTreeNode[] = [];
   private allTables: SQLTable[] = [];
   private dataGenerator: SQLDataGenerator;
 

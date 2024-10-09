@@ -21,12 +21,7 @@ export class FieldIsArray {
     let value: FieldIsArrayConfig;
 
     if (typeof isArray === "number") {
-      if (isArray >= 0) {
-        value = isArray;
-      } else {
-        value = null;
-        this.valid = false;
-      }
+      value = isArray;
     } else if (typeof isArray === "function") {
       value = isArray;
     } else if (typeof isArray === "object" && isArray !== null) {

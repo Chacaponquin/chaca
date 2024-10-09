@@ -1,20 +1,20 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
-import { FieldPossibleNullConfig } from "../../../schema/interfaces/schema";
 import { SequenceFieldProps } from "../../../fields/core/sequence/SequenceField";
-import { ChacaTreeNode } from "../node";
+import { InputTreeNode } from "../node";
 import { Config } from "./value-object";
 import { FieldIsArray } from "../../../schema/value-object";
+import { PossibleNull } from "../possible-null";
 
 interface Props {
-  fieldTreeRoute: Array<string>;
+  fieldTreeRoute: string[];
   config: Required<SequenceFieldProps>;
-  possibleNull: FieldPossibleNullConfig;
+  possibleNull: PossibleNull;
 }
 
-export class SequenceValueNode extends ChacaTreeNode {
+export class SequenceValueNode extends InputTreeNode {
   private actualValue: number;
   private _config: Required<SequenceFieldProps>;
-  private _possibleNull: FieldPossibleNullConfig;
+  private _possibleNull: PossibleNull;
 
   constructor({ config, fieldTreeRoute, possibleNull }: Props) {
     super({
@@ -51,7 +51,7 @@ export class SequenceValueNode extends ChacaTreeNode {
     }
   }
 
-  getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): InputTreeNode {
     return new SequenceValueNode({
       fieldTreeRoute: this.getNodeConfig().fieldTreeRoute,
       config: this._config,

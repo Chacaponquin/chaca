@@ -1,7 +1,7 @@
 import { ExportResolver } from "../export/ExportResolver";
 import { SchemaInput, SchemaToResolve } from "./interfaces/schema";
 import { FileConfig } from "../export/interfaces/export";
-import { InputSchemaResolver } from "./value-object/SchemaResolver";
+import { InputSchemaResolver } from "./value-object/schema-resolver";
 import { SchemaResolver } from "../schema-resolver";
 
 export class Schema<K = any> {

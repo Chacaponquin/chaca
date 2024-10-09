@@ -1,10 +1,11 @@
 import { ChacaError } from "../../../../errors";
 import { DatasetStore } from "../../../dataset-store";
-import { ChacaTreeNode } from "../node";
+import { InputTreeNode } from "../node";
 import { CustomValueNode } from "../custom";
 import { RefValueNode } from "../ref";
 import { SequenceValueNode } from "../sequence";
 import { FieldIsArray } from "../../../schema/value-object";
+import { NotNull } from "../possible-null";
 
 export type KeyFieldProps = RefValueNode | SequenceValueNode | CustomValueNode;
 
@@ -14,7 +15,7 @@ interface Props {
   currentSchemaResolver: number;
 }
 
-export class KeyValueNode extends ChacaTreeNode {
+export class KeyValueNode extends InputTreeNode {
   constructor(
     fieldTreeRoute: string[],
     private readonly fieldNode: KeyFieldProps,
@@ -22,11 +23,11 @@ export class KeyValueNode extends ChacaTreeNode {
     super({
       fieldTreeRoute: fieldTreeRoute,
       isArray: new FieldIsArray(),
-      possibleNull: 0,
+      possibleNull: new NotNull(),
     });
   }
 
-  getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): InputTreeNode {
     return new KeyValueNode(
       this.getNodeConfig().fieldTreeRoute,
       this.fieldNode,

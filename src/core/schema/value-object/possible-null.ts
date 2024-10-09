@@ -1,44 +1,36 @@
-import {
-  FieldPossibleNullConfig,
-  PossibleNullConfig,
-} from "../interfaces/schema";
+import { PossibleNullConfig } from "../interfaces/schema";
 
 export class FieldPossibleNull {
-  private _value: FieldPossibleNullConfig;
+  private _value: PossibleNullConfig;
 
-  constructor(posible?: PossibleNullConfig) {
-    this._value = this.validate(posible);
+  private valid = true;
+
+  constructor(possible?: PossibleNullConfig) {
+    this._value = this.validate(possible);
   }
 
-  public value() {
+  value() {
     return this._value;
   }
 
-  public static validateNumber(pos: number): number {
-    if (pos <= 100 && pos >= 0) {
-      return pos;
-    } else if (pos > 100) {
-      return 100;
-    } else if (pos < 0) {
-      return 0;
-    } else {
-      return 50;
-    }
+  isValid(): boolean {
+    return this.valid;
   }
 
-  public static validateBoolean(pos?: boolean): number {
-    return pos ? 50 : 0;
-  }
-
-  private validate(pos?: PossibleNullConfig): FieldPossibleNullConfig {
-    let value: FieldPossibleNullConfig;
+  private validate(pos?: PossibleNullConfig): PossibleNullConfig {
+    let value: PossibleNullConfig;
 
     if (typeof pos === "number") {
-      value = FieldPossibleNull.validateNumber(pos);
+      value = pos;
     } else if (typeof pos === "function") {
       value = pos;
+    } else if (typeof pos === "boolean") {
+      value = pos;
+    } else if (typeof pos === "undefined") {
+      value = undefined;
     } else {
-      value = FieldPossibleNull.validateBoolean(pos);
+      value = 0;
+      this.valid = false;
     }
 
     return value;

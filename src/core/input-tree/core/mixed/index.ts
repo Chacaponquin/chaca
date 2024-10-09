@@ -1,11 +1,11 @@
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node";
+import { InputTreeNode } from "../node";
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { KeyValueNode } from "../key";
 import { FieldIsArray } from "../../../schema/value-object";
 
-export class MixedValueNode extends ChacaTreeNode {
-  private nodes: ChacaTreeNode[] = [];
+export class MixedValueNode extends InputTreeNode {
+  private nodes: InputTreeNode[] = [];
 
   constructor(config: ChacaTreeNodeConfig) {
     super(config);
@@ -15,15 +15,15 @@ export class MixedValueNode extends ChacaTreeNode {
     return this.nodes;
   }
 
-  getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): InputTreeNode {
     return new MixedValueNode({
       ...this.getNodeConfig(),
       isArray: new FieldIsArray(),
     });
   }
 
-  getPossibleNullNodes(): ChacaTreeNode[] {
-    const nodes = [] as ChacaTreeNode[];
+  getPossibleNullNodes(): InputTreeNode[] {
+    const nodes = [] as InputTreeNode[];
 
     this.nodes.forEach((n) => {
       if (n.isPossibleNull()) {
@@ -54,7 +54,7 @@ export class MixedValueNode extends ChacaTreeNode {
     return keys;
   }
 
-  insertNode(node: ChacaTreeNode): void {
+  insertNode(node: InputTreeNode): void {
     this.nodes.push(node);
   }
 

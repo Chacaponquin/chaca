@@ -7,7 +7,7 @@ import {
 } from "../../../../errors";
 import { SchemaResolver } from "../../../schema-resolver";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node";
+import { InputTreeNode } from "../node";
 import { ChacaUtils } from "../../../utils";
 import { FieldToRefObject } from "../../../fields/core/ref";
 import { SchemaStore } from "../../../schema-store/store";
@@ -17,7 +17,7 @@ import { SearchedRefValue } from "./interfaces/ref";
 import { RefRoute } from "./value-object/route";
 import { FieldIsArray } from "../../../schema/value-object";
 
-export class RefValueNode extends ChacaTreeNode {
+export class RefValueNode extends InputTreeNode {
   private refFieldTreeRoute: string[];
   private schemaRefIndex: number | null = null;
   private allRefNodes: SearchedRefValue[] | null = null;
@@ -38,7 +38,7 @@ export class RefValueNode extends ChacaTreeNode {
   }
 
   getRefFieldRouteString(): string {
-    return ChacaTreeNode.getRouteString(this.refFieldTreeRoute);
+    return InputTreeNode.getRouteString(this.refFieldTreeRoute);
   }
 
   searchSchemaRef(): void {
@@ -187,7 +187,7 @@ export class RefValueNode extends ChacaTreeNode {
     this.schemaRefIndex = resolverIndex;
   }
 
-  getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): InputTreeNode {
     const newRefNode = new RefValueNode(
       { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.refField,

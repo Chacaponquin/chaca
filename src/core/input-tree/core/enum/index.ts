@@ -5,9 +5,9 @@ import {
 import { FieldIsArray } from "../../../schema/value-object";
 import { ChacaUtils } from "../../../utils";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { ChacaTreeNode } from "../node";
+import { InputTreeNode } from "../node";
 
-export class EnumValueNode extends ChacaTreeNode {
+export class EnumValueNode extends InputTreeNode {
   private readonly utils = new ChacaUtils();
 
   constructor(
@@ -30,7 +30,7 @@ export class EnumValueNode extends ChacaTreeNode {
     return selectOption ? selectOption : null;
   }
 
-  getNoArrayNode(): ChacaTreeNode {
+  getNoArrayNode(): InputTreeNode {
     return new EnumValueNode(
       { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.options,

@@ -7,7 +7,7 @@ import { SequenceField } from "../sequence/SequenceField";
  */
 export type KeyAllowDataTypes = string | number | Date;
 /**
- * Posible types for key schema field
+ * Possible types for key schema field
  */
 export type KeyFieldProps<C = any> =
   | RefField

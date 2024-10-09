@@ -1,17 +1,24 @@
 import { DocumentTree } from "../../../result-tree/classes";
-import { FieldPossibleNull } from "../../../schema/value-object";
 import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
+import { WrongArrayDefinitionError } from "../../../../errors";
 
 interface IsNullProps<K> {
   store: DatasetStore;
   currentDocument: DocumentTree<K>;
+  index: number;
 }
 
-export abstract class ChacaTreeNode {
-  constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {}
+export abstract class InputTreeNode {
+  constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {
+    if (!this.getIsArray().isValid()) {
+      throw new WrongArrayDefinitionError(
+        `In field '${this.getRouteString()}'. The isArray parameter must be an integer, a function or an object with the limits { min, max }`,
+      );
+    }
+  }
 
-  abstract getNoArrayNode(): ChacaTreeNode;
+  abstract getNoArrayNode(): InputTreeNode;
   abstract checkIfFieldExists(fieldTreeRoute: string[]): boolean;
 
   static getRouteString(route: string[]): string {
@@ -19,7 +26,7 @@ export abstract class ChacaTreeNode {
   }
 
   getRouteString(): string {
-    return ChacaTreeNode.getRouteString(this.getFieldRoute());
+    return InputTreeNode.getRouteString(this.getFieldRoute());
   }
 
   getNodeConfig(): ChacaTreeNodeConfig {
@@ -44,44 +51,16 @@ export abstract class ChacaTreeNode {
   }
 
   isPossibleNull(): boolean {
-    const pos = this.nodeConfig.possibleNull;
-    return typeof pos === "number" && pos > 0;
+    return this.getPossibleNull().can();
   }
 
-  private nullPossibility(num: number): boolean {
-    if (num > 0 && num < 100) {
-      const randomVal = Math.floor(Math.random() * 101);
+  isNull<K>({ currentDocument, store, index }: IsNullProps<K>): boolean {
+    const value = this.getPossibleNull();
 
-      if (randomVal <= num) {
-        return true;
-      } else {
-        return false;
-      }
-    } else if (num === 100) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  isNull<K>(props: IsNullProps<K>): boolean {
-    const possibleNull = this.nodeConfig.possibleNull;
-
-    if (typeof possibleNull === "number") {
-      return this.nullPossibility(possibleNull);
-    } else {
-      let result = possibleNull({
-        currentFields: props.currentDocument.getDocumentObject(),
-        store: props.store,
-      });
-
-      if (typeof result === "number") {
-        result = FieldPossibleNull.validateNumber(result);
-        return this.nullPossibility(result);
-      } else {
-        result = FieldPossibleNull.validateBoolean(result);
-        return this.nullPossibility(result);
-      }
-    }
+    return value.is({
+      index: index,
+      currentDocument: currentDocument,
+      store: store,
+    });
   }
 }
