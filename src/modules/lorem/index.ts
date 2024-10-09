@@ -20,6 +20,8 @@ export type SentencesProps = {
   wordsMin?: number;
 };
 
+export type SentenceProps = { wordsMax?: number; wordsMin?: number };
+
 export type ParagraphsProps = {
   paragraphsCount?: number;
   separator?: string;
@@ -169,6 +171,32 @@ export class LoremModule {
       paragraphUpperBound: count,
       paragraphLowerBound: count,
       units: "paragraphs",
+    });
+  }
+
+  /**
+   * Generates a single sentence.
+   *
+   * @param args.wordsMin Minimun of words in each sentence
+   * @param args.wordsMax Maximun of words in each sentence
+   *
+   * @example
+   * modules.lorem.sentence() // 'Voluptatum cupiditate suscipit autem eveniet aut dolorem aut officiis distinctio.'
+   * modules.lorem.sentence(5) // 'Laborum voluptatem officiis est et.'
+   * modules.lorem.sentence({ min: 3, max: 5 }) // 'Fugiat repellendus nisi.'
+   */
+  sentence({ wordsMax, wordsMin }: SentenceProps): string {
+    const wordMin =
+      typeof wordsMin === "number" && wordsMin > 0 ? wordsMin : undefined;
+    const wordMax =
+      typeof wordsMax === "number" && wordsMax > 0 ? wordsMax : undefined;
+
+    return loremIpsum({
+      format: "plain",
+      units: "sentences",
+      count: 1,
+      sentenceLowerBound: wordMin,
+      sentenceUpperBound: wordMax,
     });
   }
 }

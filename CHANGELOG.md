@@ -43,6 +43,8 @@
 - 🎉 Added `internet.ip`
 - 🎉 Added `address.ordinalDirection`
 - 🎉 Added `lorem.word`
+- 🎉 Added `lorem.sentence`
+- 🎉 Added `lorem.paragraph`
 - 🎉 Added `person.zodiacSign`
 - 🎉 Added `system.cron`
 - The `prefix` argument was added to the `datatype.alphaNumeric` module
@@ -67,10 +69,13 @@
 
 - 🔄 `Schema.generate` -> `Schema.array`
 - 🔄 `Schema.generateObject` -> `Schema.object`
+- 🔄 `FileConfig.fileName` -> `FileConfig.filename`
+- 🔄 `DatasetStore.getSchemaDocuments` -> `DatasetStore.currentDocuments`
 
 ### Modules
 
 - 🔄 `modules.animal.animalType` -> `modules.animal.type`
+- 🔄 `modules.id.mongodbID` -> `modules.id.mongodbId`
 
 # chaca@1.9.0
 
