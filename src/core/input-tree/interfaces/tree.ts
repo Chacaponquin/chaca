@@ -1,10 +1,8 @@
-import {
-  FieldIsArrayConfig,
-  FieldPossibleNullConfig,
-} from "../../schema/interfaces/schema";
+import { FieldPossibleNullConfig } from "../../schema/interfaces/schema";
+import { FieldIsArray } from "../../schema/value-object";
 
 export interface ChacaTreeNodeConfig {
   fieldTreeRoute: string[];
-  isArray: FieldIsArrayConfig;
+  isArray: FieldIsArray;
   possibleNull: FieldPossibleNullConfig;
 }

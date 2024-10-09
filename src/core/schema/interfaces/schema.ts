@@ -9,6 +9,7 @@ import {
   SequenceField,
   SequentialField,
 } from "../../fields/core";
+import { CustomField } from "../../fields/core/custom";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
 
 export type FieldTypes<R = any> =
@@ -55,7 +56,11 @@ export type ResolverObject = {
 };
 
 export type ArrayLimitObject = { min?: number; max?: number };
-export type FieldIsArrayConfig = Required<ArrayLimitObject> | null;
+export type FieldIsArrayConfig =
+  | ArrayLimitObject
+  | null
+  | number
+  | IsArrayFunction;
 export type IsArrayFunction = (
   props: IsArrayFunctionProps,
 ) => ArrayLimitObject | number;
@@ -79,14 +84,3 @@ export type PossibleNullFunctionProps<C = any> = {
 
 export type IsArrayConfig = number | ArrayLimitObject | IsArrayFunction;
 export type PossibleNullConfig = boolean | number | PossibleNullFunction;
-
-/**
- * Function that returns a value depending on the state of the current document and the dataset
- */
-export type CustomField<C = any, R = any> = (args: CustomFieldProps<C>) => R;
-export type CustomFieldProps<C = any> = {
-  /** Current schema document fields */
-  currentFields: C;
-  /** Store to interact with all datasets */
-  store: DatasetStore;
-};

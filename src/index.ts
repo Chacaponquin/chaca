@@ -1,15 +1,15 @@
 import {
   SchemaInput,
   FieldObjectInput,
-  CustomField,
   IsArrayConfig,
   PossibleNullConfig,
-  CustomFieldProps,
   FieldTypes,
   SchemaFieldConfig,
   PossibleNullFunction,
   PossibleNullFunctionProps,
 } from "./core/schema/interfaces/schema";
+
+import { CustomField, CustomFieldProps } from "./core/fields/core/custom";
 
 import {
   ExportFormat,

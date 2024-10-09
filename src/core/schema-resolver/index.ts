@@ -1,4 +1,8 @@
-import { ChacaError, CyclicAccessDataError } from "../../errors";
+import {
+  ChacaError,
+  CyclicAccessDataError,
+  WrongArrayDefinitionError,
+} from "../../errors";
 import { ChacaUtils } from "../utils";
 import { SchemaToResolve } from "../schema/interfaces/schema";
 import { ChacaInputTree } from "../input-tree";
@@ -26,8 +30,9 @@ import { SchemaStore } from "../schema-store/store";
 import { GetStoreValueConfig } from "../schema-store/interfaces/store";
 import { DatasetStore } from "../dataset-store";
 import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
-import { DatatypeModule } from "../../modules/datatype";
 import { CountDoc, SchemaName } from "./value-object";
+import { ArrayCretor, Limit } from "./core/array-creator";
+import { DatatypeModule } from "../../modules/datatype";
 
 interface SchemaResolverProps {
   name: string;
@@ -38,8 +43,8 @@ interface SchemaResolverProps {
 }
 
 export class SchemaResolver<K = any> {
-  private datatypeModule = new DatatypeModule();
   private utils = new ChacaUtils();
+  private readonly datatypeModule = new DatatypeModule();
 
   private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
@@ -51,7 +56,8 @@ export class SchemaResolver<K = any> {
   private isBuilding = false;
   private finishBuilding = false;
 
-  private schemasStore: SchemaStore = new SchemaStore([]);
+  private schemasStore = new SchemaStore([]);
+  private readonly arrayCreator = new ArrayCretor(this.datatypeModule);
 
   private consoleVerbose = false;
 
@@ -284,29 +290,54 @@ export class SchemaResolver<K = any> {
     field: ChacaTreeNode,
     indexDoc: number,
   ) {
-    const fieldIsArray = field.getIsArray();
+    if (field.getIsArray().isValid()) {
+      const value = field.getIsArray().value();
 
-    if (fieldIsArray !== null) {
-      // limite del arreglo de valores
-      const limit = this.datatypeModule.int({
-        min: fieldIsArray.min,
-        max: fieldIsArray.max,
-      });
+      if (value !== null) {
+        const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
 
-      // resolver el field hasta llegar al limite del array
-      for (let arrayIndex = 0; arrayIndex < limit; arrayIndex++) {
-        // resolver el field y guardarlo en un nodo
-        const fieldSolutionNode = this.createSolutionNodeByType(
-          field.getNoArrayNode(),
-          indexDoc,
-        );
+        const store = new DatasetStore({
+          schemasStore: this.schemasStore,
+          omitCurrentDocument: currentDocument,
+          omitResolver: this,
+        });
 
-        // insertar el field en el array de soluciones
-        solutionArrayNode.insertNode(fieldSolutionNode);
+        let limit: Limit;
+        if (typeof value === "number") {
+          limit = value;
+        } else if (typeof value === "function") {
+          const result = value({
+            store: store,
+            currentFields: currentDocument.getDocumentObject(),
+          });
 
-        // resolver el field en caso de ser un mixed field
-        this.resolveArrayAndMixedFields(field, fieldSolutionNode, indexDoc);
+          limit = result;
+        } else {
+          limit = value;
+        }
+
+        this.arrayCreator.execute({
+          value: limit,
+          route: field.getRouteString(),
+          func: () => {
+            // resolver el field y guardarlo en un nodo
+            const fieldSolutionNode = this.createSolutionNodeByType(
+              field.getNoArrayNode(),
+              indexDoc,
+            );
+
+            // insertar el field en el array de soluciones
+            solutionArrayNode.insertNode(fieldSolutionNode);
+
+            // resolver el field en caso de ser un mixed field
+            this.resolveArrayAndMixedFields(field, fieldSolutionNode, indexDoc);
+          },
+        });
       }
+    } else {
+      throw new WrongArrayDefinitionError(
+        `In field '${field.getRouteString()}'. The parameter isArray must be an integer, a function or an object with the limits { min, max }`,
+      );
     }
   }
 

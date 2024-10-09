@@ -1,8 +1,9 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
-import { CustomField } from "../../../schema/interfaces/schema";
 import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
+import { FieldIsArray } from "../../../schema/value-object";
+import { CustomField } from "../../../fields/core/custom";
 
 interface Props {
   fields: any;
@@ -16,7 +17,7 @@ export class CustomValueNode extends ChacaTreeNode {
 
   getNoArrayNode(): ChacaTreeNode {
     return new CustomValueNode(
-      { ...this.getNodeConfig(), isArray: null },
+      { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.func,
     );
   }

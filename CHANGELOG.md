@@ -5,6 +5,25 @@
 ### Core
 
 - The `Dataset` class was created to export various schemas in a relational way
+- You can now define the `isArray` parameter as a function that is executed when each document is created.
+
+  ```ts
+  const schema = chaca.schema({
+    image: {
+      type: () => modules.image.people(),
+      isArray: ({ currentFields, store }) => {
+        return 5;
+
+        // or
+
+        return {
+          min: 2,
+          max: 10,
+        };
+      },
+    },
+  });
+  ```
 
 ### Modules
 

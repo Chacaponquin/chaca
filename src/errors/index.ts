@@ -5,6 +5,14 @@ export class ChacaError extends Error {
   }
 }
 
+export class WrongArrayDefinitionError extends ChacaError {
+  constructor(message: string) {
+    super(message);
+
+    this.name = "ChacaError.WrongArrayDefinitionError";
+  }
+}
+
 export class EmptySequentialValuesError extends ChacaError {
   constructor(public readonly fieldRoute: string) {
     super(`There are no more sequential values for the field '${fieldRoute}'`);

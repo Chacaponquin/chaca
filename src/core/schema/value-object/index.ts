@@ -1,6 +1,6 @@
-import { FieldIsArray } from "./FieldIsArray";
-import { FieldPossibleNull } from "./FieldPossibleNull";
-import { InputKeyField } from "./Key";
+import { FieldIsArray } from "./array";
+import { FieldPossibleNull } from "./possible-null";
+import { InputKeyField } from "./key";
 import { InputSchemaResolver } from "./SchemaResolver";
 
 export { FieldIsArray, FieldPossibleNull, InputKeyField, InputSchemaResolver };

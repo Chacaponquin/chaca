@@ -28,9 +28,9 @@ import {
   SchemaInput,
   SchemaToResolve,
 } from "../interfaces/schema";
-import { FieldIsArray } from "./FieldIsArray";
-import { FieldPossibleNull } from "./FieldPossibleNull";
-import { InputKeyField } from "./Key";
+import { FieldIsArray } from "./array";
+import { FieldPossibleNull } from "./possible-null";
+import { InputKeyField } from "./key";
 
 interface Filter {
   config?: FieldTypes;
