@@ -4,6 +4,7 @@ import {
 } from "../../../../errors";
 import { DatatypeModule } from "../../../../modules/datatype";
 import { PickFieldProps } from "../../../fields/core/pick";
+import { FieldIsArray } from "../../../schema/value-object";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
 import { Count, Values } from "./value-object";
@@ -32,7 +33,7 @@ export class PickValueNode extends ChacaTreeNode {
 
   getNoArrayNode(): ChacaTreeNode {
     return new PickValueNode(
-      { ...this.getNodeConfig(), isArray: null },
+      { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.values,
     );
   }

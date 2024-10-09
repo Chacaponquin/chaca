@@ -21,7 +21,6 @@ import {
 import { IResolver } from "../../resolvers/interfaces/resolvers";
 import { Schema } from "..";
 import {
-  CustomField,
   FieldObjectInput,
   FieldTypes,
   ResolverObject,
@@ -52,7 +51,7 @@ export class InputSchemaResolver {
 
     if (config) {
       if (typeof config === "function") {
-        returnResolver = new CustomFieldResolver(config as CustomField);
+        returnResolver = new CustomFieldResolver(config);
       } else {
         if (config instanceof Schema) {
           returnResolver = new MixedFieldResolver(config);
@@ -89,7 +88,7 @@ export class InputSchemaResolver {
 
     for (const [key, field] of Object.entries(obj)) {
       const resolverObject = {
-        isArray: null,
+        isArray: new FieldIsArray(),
         possibleNull: 0,
       } as ResolverObject;
 
@@ -103,7 +102,7 @@ export class InputSchemaResolver {
         const configNull = new FieldPossibleNull(fieldObject.possibleNull);
 
         resolverObject.possibleNull = configNull.value();
-        resolverObject.isArray = configArray.value();
+        resolverObject.isArray = configArray;
       } else {
         const type = this.filter({ config: field });
         resolverObject.type = type;

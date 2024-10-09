@@ -2,6 +2,7 @@ import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { KeyValueNode } from "../key";
+import { FieldIsArray } from "../../../schema/value-object";
 
 export class MixedValueNode extends ChacaTreeNode {
   private nodes: ChacaTreeNode[] = [];
@@ -15,7 +16,10 @@ export class MixedValueNode extends ChacaTreeNode {
   }
 
   getNoArrayNode(): ChacaTreeNode {
-    return new MixedValueNode({ ...this.getNodeConfig(), isArray: null });
+    return new MixedValueNode({
+      ...this.getNodeConfig(),
+      isArray: new FieldIsArray(),
+    });
   }
 
   getPossibleNullNodes(): ChacaTreeNode[] {

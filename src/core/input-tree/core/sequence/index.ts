@@ -3,6 +3,7 @@ import { FieldPossibleNullConfig } from "../../../schema/interfaces/schema";
 import { SequenceFieldProps } from "../../../fields/core/sequence/SequenceField";
 import { ChacaTreeNode } from "../node";
 import { Config } from "./value-object";
+import { FieldIsArray } from "../../../schema/value-object";
 
 interface Props {
   fieldTreeRoute: Array<string>;
@@ -17,7 +18,7 @@ export class SequenceValueNode extends ChacaTreeNode {
 
   constructor({ config, fieldTreeRoute, possibleNull }: Props) {
     super({
-      isArray: null,
+      isArray: new FieldIsArray(),
       fieldTreeRoute: fieldTreeRoute,
       possibleNull: possibleNull,
     });

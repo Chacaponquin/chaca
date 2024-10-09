@@ -2,6 +2,7 @@ import {
   EmptyEnumValuesError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
+import { FieldIsArray } from "../../../schema/value-object";
 import { ChacaUtils } from "../../../utils";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
@@ -31,7 +32,7 @@ export class EnumValueNode extends ChacaTreeNode {
 
   getNoArrayNode(): ChacaTreeNode {
     return new EnumValueNode(
-      { ...this.getNodeConfig(), isArray: null },
+      { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.options,
     );
   }

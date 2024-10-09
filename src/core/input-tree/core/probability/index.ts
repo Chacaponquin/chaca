@@ -6,6 +6,7 @@ import { ProbabilityOption } from "../../../fields/core/probability";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { ChacaTreeNode } from "../node";
 import { Input, InputChance } from "./value-object";
+import { FieldIsArray } from "../../../schema/value-object";
 
 interface Props {
   store: DatasetStore;
@@ -27,7 +28,7 @@ export class ProbabilityValueNode extends ChacaTreeNode {
 
   public getNoArrayNode(): ChacaTreeNode {
     return new ProbabilityValueNode(
-      { ...this.getNodeConfig(), isArray: null },
+      { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.options,
     );
   }

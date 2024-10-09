@@ -15,6 +15,7 @@ import { SingleResultNode } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
 import { SearchedRefValue } from "./interfaces/ref";
 import { RefRoute } from "./value-object/route";
+import { FieldIsArray } from "../../../schema/value-object";
 
 export class RefValueNode extends ChacaTreeNode {
   private refFieldTreeRoute: string[];
@@ -188,7 +189,7 @@ export class RefValueNode extends ChacaTreeNode {
 
   getNoArrayNode(): ChacaTreeNode {
     const newRefNode = new RefValueNode(
-      { ...this.getNodeConfig(), isArray: null },
+      { ...this.getNodeConfig(), isArray: new FieldIsArray() },
       this.refField,
       this.schemasStore,
     );

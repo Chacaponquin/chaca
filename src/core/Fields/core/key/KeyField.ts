@@ -1,4 +1,4 @@
-import { CustomField } from "../../../schema/interfaces/schema";
+import { CustomField } from "../custom";
 import { RefField } from "../ref";
 import { SequenceField } from "../sequence/SequenceField";
 

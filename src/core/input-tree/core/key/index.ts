@@ -4,6 +4,7 @@ import { ChacaTreeNode } from "../node";
 import { CustomValueNode } from "../custom";
 import { RefValueNode } from "../ref";
 import { SequenceValueNode } from "../sequence";
+import { FieldIsArray } from "../../../schema/value-object";
 
 export type KeyFieldProps = RefValueNode | SequenceValueNode | CustomValueNode;
 
@@ -18,7 +19,11 @@ export class KeyValueNode extends ChacaTreeNode {
     fieldTreeRoute: string[],
     private readonly fieldNode: KeyFieldProps,
   ) {
-    super({ fieldTreeRoute: fieldTreeRoute, isArray: null, possibleNull: 0 });
+    super({
+      fieldTreeRoute: fieldTreeRoute,
+      isArray: new FieldIsArray(),
+      possibleNull: 0,
+    });
   }
 
   getNoArrayNode(): ChacaTreeNode {

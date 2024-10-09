@@ -11,6 +11,7 @@ import {
 } from "../../fields/core";
 import { CustomField } from "../../fields/core/custom";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
+import { FieldIsArray } from "../value-object";
 
 export type FieldTypes<R = any> =
   | CustomField<any, R>
@@ -51,7 +52,7 @@ export type SchemaToResolve = Record<string, ResolverObject>;
 
 export type ResolverObject = {
   type: IResolver;
-  isArray: FieldIsArrayConfig;
+  isArray: FieldIsArray;
   possibleNull: FieldPossibleNullConfig;
 };
 

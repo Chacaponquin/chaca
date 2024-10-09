@@ -25,6 +25,8 @@ import {
 import { SequentialFieldResolver } from "../resolvers/core/sequential";
 import { SchemaStore } from "../schema-store/store";
 import { PickFieldResolver } from "../resolvers/core/pick";
+import { ChacaTreeNodeConfig } from "./interfaces/tree";
+import { FieldIsArray } from "../schema/value-object";
 
 interface Props {
   schemaName: string;
@@ -67,7 +69,7 @@ export class ChacaInputTree {
 
     this.validateResolver(actualRoute, object);
 
-    const nodeConfig = {
+    const nodeConfig: ChacaTreeNodeConfig = {
       fieldTreeRoute: actualRoute,
       isArray: object.isArray,
       possibleNull: object.possibleNull,
@@ -124,14 +126,22 @@ export class ChacaInputTree {
         returnNode = new KeyValueNode(actualRoute, schemaValueNode);
       } else if (object.type.fieldType instanceof CustomFieldResolver) {
         const customNode = new CustomValueNode(
-          { fieldTreeRoute: actualRoute, isArray: null, possibleNull: 0 },
+          {
+            fieldTreeRoute: actualRoute,
+            isArray: new FieldIsArray(),
+            possibleNull: 0,
+          },
           object.type.fieldType.fun,
         );
 
         returnNode = new KeyValueNode(actualRoute, customNode);
       } else {
         const refValueNode = new RefValueNode(
-          { fieldTreeRoute: actualRoute, isArray: null, possibleNull: 0 },
+          {
+            fieldTreeRoute: actualRoute,
+            isArray: new FieldIsArray(),
+            possibleNull: 0,
+          },
           object.type.fieldType.refField,
           this.schemasStore,
         );

@@ -5,6 +5,7 @@ import {
 import { FieldPossibleNullConfig } from "../../../schema/interfaces/schema";
 import { SequentialFieldConfig } from "../../../fields/core/sequential/SequentialField";
 import { ChacaTreeNode } from "../node";
+import { FieldIsArray } from "../../../schema/value-object";
 
 export interface SequentialValueNodeProps {
   fieldTreeRoute: string[];
@@ -26,7 +27,12 @@ export class SequentialValueNode extends ChacaTreeNode {
     valuesArray,
     possibleNull,
   }: SequentialValueNodeProps) {
-    super({ fieldTreeRoute, isArray: null, possibleNull: possibleNull });
+    super({
+      fieldTreeRoute,
+      isArray: new FieldIsArray(),
+      possibleNull: possibleNull,
+    });
+
     this.valuesArray = valuesArray;
     this.config = config;
     this.possibleNull = possibleNull;
