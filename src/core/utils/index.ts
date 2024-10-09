@@ -213,6 +213,7 @@ export class ChacaUtils {
 
   /**
    * Sum a range value to a date
+   *
    * @param param.date date to modify
    * @param param.range time unit (`"years"` | `"seconds"` | `"minutes"` | `"days"`| `"hours"` | `"months"`)
    * @param param.value amount of time unit
@@ -246,7 +247,23 @@ export class ChacaUtils {
     return date;
   }
 
+  /**
+   * Chooses a series of elements from an array of values, preventing an element from being selected more than once
+   *
+   * @param args.values Values array
+   * @param args.count Number of items to select
+   *
+   * @example
+   * chaca.utils.pick({ values: [1, 2, 3, 4, 5], count: 2 }) // [2, 4]
+   * chaca.utils.pick({ values: [1, 2, 3, 4, 5], count: 3 }) // [1, 5, 3]
+   */
   pick<T>({ values, count }: PickProps<T>): T[] {
+    if (count > values.length) {
+      throw new ChacaError(
+        `The number of elements to select must be less or equal than the array length`,
+      );
+    }
+
     if (count === values.length) {
       return values;
     } else {

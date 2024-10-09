@@ -185,7 +185,7 @@ export class LoremModule {
    * modules.lorem.sentence(5) // 'Laborum voluptatem officiis est et.'
    * modules.lorem.sentence({ min: 3, max: 5 }) // 'Fugiat repellendus nisi.'
    */
-  sentence({ wordsMax, wordsMin }: SentenceProps): string {
+  sentence({ wordsMax, wordsMin }: SentenceProps = {}): string {
     const wordMin =
       typeof wordsMin === "number" && wordsMin > 0 ? wordsMin : undefined;
     const wordMax =
