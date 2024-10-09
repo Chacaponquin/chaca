@@ -38,23 +38,16 @@ export abstract class PossibleNull {
 
 export class BooleanNull extends PossibleNull {
   private readonly value: boolean;
-  private readonly route: string;
 
-  constructor({ value, route }: BooleanProps) {
+  constructor({ value }: BooleanProps) {
     super();
 
     this.value = value;
-    this.route = route;
   }
 
   is(): boolean {
     if (this.value) {
-      const type = new ProbabilityNull({
-        value: 0.5,
-        route: this.route,
-      });
-
-      return type.is();
+      return true;
     } else {
       return false;
     }
@@ -91,6 +84,8 @@ export class FunctionNull extends PossibleNull {
       type = new ProbabilityNull({ value: result, route: this.route });
     } else if (typeof result === "boolean") {
       type = new BooleanNull({ route: this.route, value: result });
+    } else if (typeof result === "undefined") {
+      type = new NotNull();
     } else {
       throw new WrongPossibleNullDefinitionError(
         `In field '${this.route}'. The parameter function possibleNull must return a boolean or a probability value between 0 and 1`,
@@ -135,6 +130,12 @@ export class ProbabilityNull extends PossibleNull {
   }
 
   is(): boolean {
+    if (this.value === 1) {
+      return true;
+    } else if (this.value === 0) {
+      return false;
+    }
+
     return Math.random() <= this.value;
   }
 

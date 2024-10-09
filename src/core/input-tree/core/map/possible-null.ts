@@ -19,14 +19,15 @@ interface Props {
 export class PossibleNullMapper {
   constructor(private readonly utils: ChacaUtils) {}
 
-  execute({ value, countDocs, route }: Props): PossibleNull {
-    if (!value.isValid()) {
+  execute({ value: ivalue, countDocs, route }: Props): PossibleNull {
+    if (!ivalue.isValid()) {
       throw new WrongPossibleNullDefinitionError(
         `In the field ${route}. The possibleNull parameter can be an integer, a float, or a function that returns the probability that the field has a null value.`,
       );
     }
 
     let result: PossibleNull;
+    const value = ivalue.value();
 
     if (typeof value === "number") {
       if (Number.isInteger(value)) {
@@ -46,7 +47,7 @@ export class PossibleNullMapper {
       result = new NotNull();
     } else {
       throw new WrongPossibleNullDefinitionError(
-        `In the field ${route}. The possibleNull parameter can be an integer, a float, or a function that returns the probability that the field has a null value.`,
+        `In the field '${route}'. The possibleNull parameter can be an integer, a float, or a function that returns the probability that the field has a null value.`,
       );
     }
 

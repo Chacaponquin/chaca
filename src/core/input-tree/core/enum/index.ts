@@ -2,15 +2,14 @@ import {
   EmptyEnumValuesError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
-import { FieldIsArray } from "../../../schema/value-object";
 import { ChacaUtils } from "../../../utils";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
+import { NotArray } from "../is-array";
 import { InputTreeNode } from "../node";
 
 export class EnumValueNode extends InputTreeNode {
-  private readonly utils = new ChacaUtils();
-
   constructor(
+    private readonly utils: ChacaUtils,
     config: ChacaTreeNodeConfig,
     readonly options: ReadonlyArray<unknown>,
   ) {
@@ -32,7 +31,8 @@ export class EnumValueNode extends InputTreeNode {
 
   getNoArrayNode(): InputTreeNode {
     return new EnumValueNode(
-      { ...this.getNodeConfig(), isArray: new FieldIsArray() },
+      this.utils,
+      { ...this.getNodeConfig(), isArray: new NotArray() },
       this.options,
     );
   }

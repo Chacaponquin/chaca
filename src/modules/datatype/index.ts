@@ -160,14 +160,10 @@ export class DatatypeModule {
     let maximun: number;
 
     if (typeof max === "number") {
-      if (minimun) {
-        if (max >= minimun) {
-          maximun = max;
-        } else {
-          maximun = this.MAX_RANDOM_VALUE;
-        }
-      } else {
+      if (max >= minimun) {
         maximun = max;
+      } else {
+        maximun = this.MAX_RANDOM_VALUE;
       }
     } else {
       maximun = this.MAX_RANDOM_VALUE;

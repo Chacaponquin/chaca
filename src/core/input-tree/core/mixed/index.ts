@@ -2,7 +2,7 @@ import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { InputTreeNode } from "../node";
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { KeyValueNode } from "../key";
-import { FieldIsArray } from "../../../schema/value-object";
+import { NotArray } from "../is-array";
 
 export class MixedValueNode extends InputTreeNode {
   private nodes: InputTreeNode[] = [];
@@ -18,7 +18,7 @@ export class MixedValueNode extends InputTreeNode {
   getNoArrayNode(): InputTreeNode {
     return new MixedValueNode({
       ...this.getNodeConfig(),
-      isArray: new FieldIsArray(),
+      isArray: new NotArray(),
     });
   }
 
@@ -63,6 +63,7 @@ export class MixedValueNode extends InputTreeNode {
       throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
       let found = false;
+
       for (let i = 0; i < this.nodes.length && !found; i++) {
         if (this.nodes[i].getNodeName() === fieldTreeRoute[0]) {
           const routeWithoutFirstElement = fieldTreeRoute.slice(1);

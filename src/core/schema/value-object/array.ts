@@ -1,8 +1,7 @@
-import { FieldIsArrayConfig, IsArrayConfig } from "../interfaces/schema";
+import { IsArrayConfig } from "../interfaces/schema";
 
 export class FieldIsArray {
-  private _value: FieldIsArrayConfig = null;
-
+  private readonly _value: IsArrayConfig;
   private valid = true;
 
   constructor(isArray?: IsArrayConfig) {
@@ -13,12 +12,19 @@ export class FieldIsArray {
     return this._value;
   }
 
+  can(): boolean {
+    return (
+      (typeof this._value === "number" && this._value > 0) ||
+      typeof this._value === "function"
+    );
+  }
+
   isValid(): boolean {
     return this.valid;
   }
 
-  private validate(isArray?: IsArrayConfig): FieldIsArrayConfig {
-    let value: FieldIsArrayConfig;
+  private validate(isArray?: IsArrayConfig): IsArrayConfig {
+    let value: IsArrayConfig;
 
     if (typeof isArray === "number") {
       value = isArray;
@@ -30,9 +36,9 @@ export class FieldIsArray {
 
       value = { min, max };
     } else if (typeof isArray === "undefined") {
-      value = null;
+      value = undefined;
     } else {
-      value = null;
+      value = undefined;
       this.valid = false;
     }
 

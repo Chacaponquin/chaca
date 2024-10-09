@@ -2,8 +2,8 @@ import { TryRefANoKeyFieldError } from "../../../../errors";
 import { SequenceFieldProps } from "../../../fields/core/sequence/SequenceField";
 import { InputTreeNode } from "../node";
 import { Config } from "./value-object";
-import { FieldIsArray } from "../../../schema/value-object";
 import { PossibleNull } from "../possible-null";
+import { NotArray } from "../is-array";
 
 interface Props {
   fieldTreeRoute: string[];
@@ -14,11 +14,10 @@ interface Props {
 export class SequenceValueNode extends InputTreeNode {
   private actualValue: number;
   private _config: Required<SequenceFieldProps>;
-  private _possibleNull: PossibleNull;
 
   constructor({ config, fieldTreeRoute, possibleNull }: Props) {
     super({
-      isArray: new FieldIsArray(),
+      isArray: new NotArray(),
       fieldTreeRoute: fieldTreeRoute,
       possibleNull: possibleNull,
     });
@@ -29,7 +28,6 @@ export class SequenceValueNode extends InputTreeNode {
     }).value();
 
     this.actualValue = config.starsWith;
-    this._possibleNull = possibleNull;
   }
 
   getConfig() {
@@ -53,9 +51,9 @@ export class SequenceValueNode extends InputTreeNode {
 
   getNoArrayNode(): InputTreeNode {
     return new SequenceValueNode({
-      fieldTreeRoute: this.getNodeConfig().fieldTreeRoute,
-      config: this._config,
-      possibleNull: this._possibleNull,
+      fieldTreeRoute: this.getFieldRoute(),
+      config: this.getConfig(),
+      possibleNull: this.getPossibleNull(),
     });
   }
 }

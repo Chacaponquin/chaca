@@ -1,8 +1,8 @@
-import { SingleResultNode } from "./SingleResultNode/SingleResultNode";
-import { MixedFieldNode } from "./MixedFieldNode/MixedFieldNode";
-import { FieldNode } from "./FieldNode/FieldNode";
+import { SingleResultNode } from "./SingleResultNode";
+import { MixedFieldNode } from "./MixedFieldNode";
+import { FieldNode } from "./FieldNode";
 import { DocumentTree } from "./DocumentTree";
-import { ArrayResultNode } from "./ArrayResultNode/ArrayResultNode";
+import { ArrayResultNode } from "./ArrayResultNode";
 
 export {
   ArrayResultNode,

@@ -1,6 +1,6 @@
 import { ChacaError } from "../../../../errors";
-import { FieldNode } from "../FieldNode/FieldNode";
-import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
+import { FieldNode } from "../FieldNode";
+import { SingleResultNode } from "../SingleResultNode";
 
 export class DocumentTree<D = any> {
   private nodes: FieldNode[] = [];

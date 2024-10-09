@@ -27,7 +27,6 @@ import { GetStoreValueConfig } from "../schema-store/interfaces/store";
 import { DatasetStore } from "../dataset-store";
 import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
 import { CountDoc, SchemaName } from "./value-object";
-import { ArrayCretor, Limit } from "./core/array-creator";
 import { DatatypeModule } from "../../modules/datatype";
 
 interface SchemaResolverProps {
@@ -44,7 +43,7 @@ interface CreateSolutionNodeProps {
 }
 
 export class SchemaResolver<K = any> {
-  private utils = new ChacaUtils();
+  private readonly utils = new ChacaUtils();
   private readonly datatypeModule = new DatatypeModule();
 
   private inputTree: ChacaInputTree | null = null;
@@ -58,7 +57,6 @@ export class SchemaResolver<K = any> {
   private finishBuilding = false;
 
   private schemasStore = new SchemaStore([]);
-  private readonly arrayCreator = new ArrayCretor(this.datatypeModule);
 
   private consoleVerbose = false;
 
@@ -117,7 +115,7 @@ export class SchemaResolver<K = any> {
 
   buildInputTree(): void {
     if (this.inputTree === null) {
-      this.inputTree = new ChacaInputTree(this.utils, {
+      this.inputTree = new ChacaInputTree(this.utils, this.datatypeModule, {
         schemaName: this.name,
         schemaToResolve: this.schemaObject,
         schemasStore: this.schemasStore,
@@ -228,13 +226,6 @@ export class SchemaResolver<K = any> {
                 // insertar la solucion del field en el documento
                 newDoc.insertField(fieldSolutionNode);
               }
-
-              // resolver el field actual en caso de ser un array o un mixed
-              this.resolveArrayAndMixedFields(
-                datField,
-                fieldSolutionNode,
-                indexDoc,
-              );
             }
           }
 
@@ -268,97 +259,6 @@ export class SchemaResolver<K = any> {
     return result;
   }
 
-  private resolveArrayAndMixedFields(
-    field: InputTreeNode,
-    fieldSolution: FieldNode,
-    indexDoc: number,
-  ) {
-    // en caso de que sea un mixed field
-    if (
-      field instanceof MixedValueNode &&
-      fieldSolution instanceof MixedFieldNode
-    ) {
-      this.createMixedSubFields(fieldSolution, field, indexDoc);
-    }
-
-    // en caso de que sea un array field
-    else if (fieldSolution instanceof ArrayResultNode) {
-      this.createArrayFieldSolution(fieldSolution, field, indexDoc);
-    }
-  }
-
-  private createArrayFieldSolution(
-    solutionArrayNode: ArrayResultNode,
-    field: InputTreeNode,
-    indexDoc: number,
-  ) {
-    const value = field.getIsArray().value();
-
-    if (value !== null) {
-      const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-
-      const store = new DatasetStore({
-        schemasStore: this.schemasStore,
-        omitCurrentDocument: currentDocument,
-        omitResolver: this,
-      });
-
-      let limit: Limit;
-      if (typeof value === "number") {
-        limit = value;
-      } else if (typeof value === "function") {
-        const result = value({
-          store: store,
-          currentFields: currentDocument.getDocumentObject(),
-        });
-
-        limit = result;
-      } else {
-        limit = value;
-      }
-
-      this.arrayCreator.execute({
-        value: limit,
-        route: field.getRouteString(),
-        func: () => {
-          // resolver el field y guardarlo en un nodo
-          const fieldSolutionNode = this.createSolutionNodeByType({
-            field: field.getNoArrayNode(),
-            indexDoc: indexDoc,
-          });
-
-          // insertar el field en el array de soluciones
-          solutionArrayNode.insertNode(fieldSolutionNode);
-
-          // resolver el field en caso de ser un mixed field
-          this.resolveArrayAndMixedFields(field, fieldSolutionNode, indexDoc);
-        },
-      });
-    }
-  }
-
-  private createMixedSubFields(
-    solutionMixedNode: MixedFieldNode,
-    mixedField: MixedValueNode,
-    indexDoc: number,
-  ): void {
-    const subFields = mixedField.getFields();
-
-    for (const field of subFields) {
-      // filtrar el subField segun su tipo
-      const subFieldSolutionNode = this.createSolutionNodeByType({
-        field: field,
-        indexDoc: indexDoc,
-      });
-
-      // insertar la solucion del field en la solucion del mixed field pasado por parametro
-      solutionMixedNode.insertNode(subFieldSolutionNode);
-
-      // resolver el subField en caso de ser un array o un mixed field
-      this.resolveArrayAndMixedFields(field, subFieldSolutionNode, indexDoc);
-    }
-  }
-
   private createSolutionNodeByType({
     field,
     indexDoc,
@@ -378,15 +278,40 @@ export class SchemaResolver<K = any> {
     });
 
     if (!isNull) {
+      const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
+      const store = new DatasetStore({
+        schemasStore: this.schemasStore,
+        omitCurrentDocument: currentDocument,
+        omitResolver: this,
+      });
+
+      const limit = field.getIsArray().execute({
+        currentDocument: currentDocument,
+        store: store,
+      });
+
       // en caso de ser un array
-      if (field.getIsArray()) {
-        return new ArrayResultNode({
+      if (limit !== undefined) {
+        const arrayNode = new ArrayResultNode({
           name: field.getNodeName(),
           fieldNode: field,
         });
+
+        for (let i = 0; i < limit; i++) {
+          // resolver el field y guardarlo en un nodo
+          const fieldSolutionNode = this.createSolutionNodeByType({
+            field: field.getNoArrayNode(),
+            indexDoc: indexDoc,
+          });
+
+          // insertar el field en el array de soluciones
+          arrayNode.insertNode(fieldSolutionNode);
+        }
+
+        return arrayNode;
       }
 
-      // en caso de no ser un array
+      // no es un array
       else {
         // en caso de ser un probability field
         if (field instanceof ProbabilityValueNode) {
@@ -438,6 +363,7 @@ export class SchemaResolver<K = any> {
         // en caso de ser un ref field
         else if (field instanceof RefValueNode) {
           const refValue = field.value(indexDoc, this.schemaIndex);
+
           return new SingleResultNode({
             name: field.getNodeName(),
             value: refValue,
@@ -473,7 +399,22 @@ export class SchemaResolver<K = any> {
 
         // en caso de ser un mixed field
         else if (field instanceof MixedValueNode) {
-          return new MixedFieldNode(field.getNodeName());
+          const mixedNode = new MixedFieldNode(field.getNodeName());
+
+          const subFields = field.getFields();
+
+          for (const field of subFields) {
+            // filtrar el subField segun su tipo
+            const subFieldSolutionNode = this.createSolutionNodeByType({
+              field: field,
+              indexDoc: indexDoc,
+            });
+
+            // insertar la solucion del field en la solucion del mixed field pasado por parametro
+            mixedNode.insertNode(subFieldSolutionNode);
+          }
+
+          return mixedNode;
         }
 
         // en caso de ser un enum field

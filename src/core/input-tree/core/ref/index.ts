@@ -15,15 +15,15 @@ import { SingleResultNode } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
 import { SearchedRefValue } from "./interfaces/ref";
 import { RefRoute } from "./value-object/route";
-import { FieldIsArray } from "../../../schema/value-object";
+import { NotArray } from "../is-array";
 
 export class RefValueNode extends InputTreeNode {
   private refFieldTreeRoute: string[];
   private schemaRefIndex: number | null = null;
   private allRefNodes: SearchedRefValue[] | null = null;
-  private utils = new ChacaUtils();
 
   constructor(
+    private readonly utils: ChacaUtils,
     config: ChacaTreeNodeConfig,
     readonly refField: FieldToRefObject,
     readonly schemasStore: SchemaStore,
@@ -189,7 +189,8 @@ export class RefValueNode extends InputTreeNode {
 
   getNoArrayNode(): InputTreeNode {
     const newRefNode = new RefValueNode(
-      { ...this.getNodeConfig(), isArray: new FieldIsArray() },
+      this.utils,
+      { ...this.getNodeConfig(), isArray: new NotArray() },
       this.refField,
       this.schemasStore,
     );

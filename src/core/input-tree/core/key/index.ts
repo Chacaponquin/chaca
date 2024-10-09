@@ -4,8 +4,8 @@ import { InputTreeNode } from "../node";
 import { CustomValueNode } from "../custom";
 import { RefValueNode } from "../ref";
 import { SequenceValueNode } from "../sequence";
-import { FieldIsArray } from "../../../schema/value-object";
 import { NotNull } from "../possible-null";
+import { NotArray } from "../is-array";
 
 export type KeyFieldProps = RefValueNode | SequenceValueNode | CustomValueNode;
 
@@ -22,7 +22,7 @@ export class KeyValueNode extends InputTreeNode {
   ) {
     super({
       fieldTreeRoute: fieldTreeRoute,
-      isArray: new FieldIsArray(),
+      isArray: new NotArray(),
       possibleNull: new NotNull(),
     });
   }

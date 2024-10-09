@@ -3,8 +3,8 @@ import {
   TryRefANoKeyFieldError,
 } from "../../../../errors";
 import { SequentialFieldConfig } from "../../../fields/core/sequential/SequentialField";
+import { NotArray } from "../is-array";
 import { InputTreeNode } from "../node";
-import { FieldIsArray } from "../../../schema/value-object";
 import { PossibleNull } from "../possible-null";
 
 export interface SequentialValueNodeProps {
@@ -19,7 +19,6 @@ export class SequentialValueNode extends InputTreeNode {
 
   private valuesArray: unknown[];
   private config: Required<SequentialFieldConfig>;
-  private possibleNull: PossibleNull;
 
   constructor({
     config,
@@ -29,13 +28,12 @@ export class SequentialValueNode extends InputTreeNode {
   }: SequentialValueNodeProps) {
     super({
       fieldTreeRoute,
-      isArray: new FieldIsArray(),
+      isArray: new NotArray(),
       possibleNull: possibleNull,
     });
 
     this.valuesArray = valuesArray;
     this.config = config;
-    this.possibleNull = possibleNull;
 
     if (Array.isArray(this.valuesArray)) {
       if (this.valuesArray.length === 0) {
@@ -51,7 +49,7 @@ export class SequentialValueNode extends InputTreeNode {
       fieldTreeRoute: this.getFieldRoute(),
       valuesArray: this.valuesArray,
       config: this.config,
-      possibleNull: this.possibleNull,
+      possibleNull: this.getPossibleNull(),
     });
   }
 

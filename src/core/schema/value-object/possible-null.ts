@@ -2,7 +2,6 @@ import { PossibleNullConfig } from "../interfaces/schema";
 
 export class FieldPossibleNull {
   private _value: PossibleNullConfig;
-
   private valid = true;
 
   constructor(possible?: PossibleNullConfig) {
@@ -15,6 +14,14 @@ export class FieldPossibleNull {
 
   isValid(): boolean {
     return this.valid;
+  }
+
+  can(): boolean {
+    return (
+      (typeof this._value === "number" && this._value > 0) ||
+      this._value === true ||
+      typeof this._value === "function"
+    );
   }
 
   private validate(pos?: PossibleNullConfig): PossibleNullConfig {

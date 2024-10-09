@@ -1,5 +1,5 @@
 import { ChacaError } from "../../../../errors";
-import { FieldNode } from "../FieldNode/FieldNode";
+import { FieldNode } from "../FieldNode";
 
 interface Props {
   name: string;

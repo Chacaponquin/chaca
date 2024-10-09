@@ -1,9 +1,9 @@
-import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
+import { SingleResultNode } from "../SingleResultNode";
 
 export abstract class FieldNode {
   constructor(readonly name: string) {}
 
-  protected abstract value(): unknown | Array<unknown>;
+  protected abstract value(): unknown | unknown[];
   abstract getNodeByRoute(fieldTreeRoute: Array<string>): FieldNode;
 
   protected abstract getRefValueByNodeRoute(

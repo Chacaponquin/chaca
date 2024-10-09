@@ -1,7 +1,7 @@
 import { ChacaError } from "../../../../errors";
 import { InputTreeNode } from "../../../input-tree/core";
-import { FieldNode } from "../FieldNode/FieldNode";
-import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
+import { FieldNode } from "../FieldNode";
+import { SingleResultNode } from "../SingleResultNode";
 
 interface Props {
   name: string;
@@ -18,7 +18,7 @@ export class ArrayResultNode extends FieldNode {
     this.fieldNode = fieldNode;
   }
 
-  value(): Array<unknown> {
+  value(): unknown[] {
     return this.arrayNodes.map((n) => n.getRealValue());
   }
 

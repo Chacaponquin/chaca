@@ -9,7 +9,7 @@ export type KeyFieldResolverProps =
   | CustomFieldResolver<any, any>;
 
 export class KeyFieldResolver extends IResolver {
-  constructor(readonly fieldType: KeyFieldResolverProps) {
+  constructor(readonly type: KeyFieldResolverProps) {
     super();
   }
 }

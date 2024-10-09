@@ -1,7 +1,6 @@
 import { DocumentTree } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { WrongArrayDefinitionError } from "../../../../errors";
 
 interface IsNullProps<K> {
   store: DatasetStore;
@@ -10,13 +9,7 @@ interface IsNullProps<K> {
 }
 
 export abstract class InputTreeNode {
-  constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {
-    if (!this.getIsArray().isValid()) {
-      throw new WrongArrayDefinitionError(
-        `In field '${this.getRouteString()}'. The isArray parameter must be an integer, a function or an object with the limits { min, max }`,
-      );
-    }
-  }
+  constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {}
 
   abstract getNoArrayNode(): InputTreeNode;
   abstract checkIfFieldExists(fieldTreeRoute: string[]): boolean;

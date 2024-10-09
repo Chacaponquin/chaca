@@ -1,9 +1,9 @@
 import { ChacaError } from "../../../../errors";
-import { FieldNode } from "../FieldNode/FieldNode";
-import { SingleResultNode } from "../SingleResultNode/SingleResultNode";
+import { FieldNode } from "../FieldNode";
+import { SingleResultNode } from "../SingleResultNode";
 
 export class MixedFieldNode extends FieldNode {
-  public nodes: Array<FieldNode> = [];
+  public nodes: FieldNode[] = [];
 
   public insertNode(node: FieldNode): void {
     this.nodes.push(node);

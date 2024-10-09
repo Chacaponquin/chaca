@@ -57,14 +57,10 @@ export type ResolverObject = {
 };
 
 export type ArrayLimitObject = { min?: number; max?: number };
-export type FieldIsArrayConfig =
-  | ArrayLimitObject
-  | null
-  | number
-  | IsArrayFunction;
+
 export type IsArrayFunction = (
   props: IsArrayFunctionProps,
-) => ArrayLimitObject | number;
+) => ArrayLimitObject | number | undefined;
 export type IsArrayFunctionProps<C = any> = {
   /** Current schema document fields */
   currentFields: C;
@@ -74,7 +70,7 @@ export type IsArrayFunctionProps<C = any> = {
 
 export type PossibleNullFunction = (
   props: PossibleNullFunctionProps,
-) => number | boolean;
+) => number | boolean | undefined;
 export type PossibleNullFunctionProps<C = any> = {
   /** Current schema document fields */
   currentFields: C;
@@ -82,7 +78,12 @@ export type PossibleNullFunctionProps<C = any> = {
   store: DatasetStore;
 };
 
-export type IsArrayConfig = number | ArrayLimitObject | IsArrayFunction;
+export type IsArrayConfig =
+  | number
+  | ArrayLimitObject
+  | IsArrayFunction
+  | undefined;
+
 export type PossibleNullConfig =
   | boolean
   | number

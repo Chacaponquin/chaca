@@ -4,16 +4,19 @@ import {
 } from "../../../../errors";
 import { DatatypeModule } from "../../../../modules/datatype";
 import { PickFieldProps } from "../../../fields/core/pick";
-import { FieldIsArray } from "../../../schema/value-object";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
+import { NotArray } from "../is-array";
 import { InputTreeNode } from "../node";
 import { Count, Values } from "./value-object";
 
 export class PickValueNode extends InputTreeNode {
-  private datatypeModule = new DatatypeModule();
   private values: PickFieldProps;
 
-  constructor(config: ChacaTreeNodeConfig, ivalues: PickFieldProps) {
+  constructor(
+    private readonly datatypeModule: DatatypeModule,
+    config: ChacaTreeNodeConfig,
+    ivalues: PickFieldProps,
+  ) {
     super(config);
 
     const route = this.getRouteString();
@@ -33,7 +36,8 @@ export class PickValueNode extends InputTreeNode {
 
   getNoArrayNode(): InputTreeNode {
     return new PickValueNode(
-      { ...this.getNodeConfig(), isArray: new FieldIsArray() },
+      this.datatypeModule,
+      { ...this.getNodeConfig(), isArray: new NotArray() },
       this.values,
     );
   }
