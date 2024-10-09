@@ -91,7 +91,7 @@ describe("# Probability Field Tests", () => {
       prob: chaca.probability([
         { chance: 0.9, value: 10 },
         { chance: 0.5, value: 5 },
-        { chance: 0.1, value: 1 },
+        { chance: 0.05, value: 1 },
       ]),
     });
 

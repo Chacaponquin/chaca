@@ -25,6 +25,10 @@
   });
   ```
 
+- Added exception `WrongPossibleNullDefinitionError` for errors in the definition of the parameter `possibleNull`
+- Added exception `WrongArrayDefinitionError` for errors in the definition of the parameter `isArray`
+- 🗑️ `chaca.multiGenerate` was removed
+
 ### Modules
 
 - 🎉 Added `datatype.octal`
