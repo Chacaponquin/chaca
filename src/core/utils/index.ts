@@ -26,6 +26,11 @@ interface PickProps<T> {
   count: number;
 }
 
+interface MultipleProps<T = any> {
+  count: number;
+  generator(index: number): T;
+}
+
 export class ChacaUtils {
   private readonly datatypeModule = new DatatypeModule();
 
@@ -257,7 +262,7 @@ export class ChacaUtils {
    * chaca.utils.pick({ values: [1, 2, 3, 4, 5], count: 2 }) // [2, 4]
    * chaca.utils.pick({ values: [1, 2, 3, 4, 5], count: 3 }) // [1, 5, 3]
    */
-  pick<T>({ values, count }: PickProps<T>): T[] {
+  pick<T = any>({ values, count }: PickProps<T>): T[] {
     if (count > values.length) {
       throw new ChacaError(
         `The number of elements to select must be less or equal than the array length`,
@@ -299,5 +304,26 @@ export class ChacaUtils {
 
       return result;
     }
+  }
+
+  /**
+   * Generates an array containing values returned by the given method.
+   *
+   * @param args.count The number of elements to generate.
+   *
+   * @example
+   * chaca.utils.multiple({ generator: () => modules.person.firstName(), count: 3 }) // [ 'Aniya', 'Norval', 'Dallin' ]
+   * chaca.utils.multiple({ generator: () => modules.person.firstName(), count: 3 }) // [ 'Santos', 'Lavinia', 'Lavinia' ]
+   * chaca.utils.multiple({ generator: (i) => `element-${i}`, count: 3 }) // [ 'element-0', 'element-1', 'element-2' ]
+   */
+  multiple<T = any>({ generator, count }: MultipleProps<T>): T[] {
+    const result = [] as T[];
+
+    for (let i = 0; i < count; i++) {
+      const value = generator(i);
+      result.push(value);
+    }
+
+    return result;
   }
 }

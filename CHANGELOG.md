@@ -49,6 +49,11 @@
 - 🎉 Added `system.cron`
 - The `prefix` argument was added to the `datatype.alphaNumeric` module
 
+### 🪛 Utils
+
+- 🎉 Added `utils.pick` to select elements from an array without being chosen more than once
+- 🎉 Added `utils.multiple` To create an array of values ​​from a generator
+
 ## 🪛 Fix
 
 ### Core
