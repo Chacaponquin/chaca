@@ -125,7 +125,11 @@ export class ChacaInputTree {
         object.type.values,
       );
     } else if (object.type instanceof ProbabilityFieldResolver) {
-      returnNode = new ProbabilityValueNode(nodeConfig, object.type.values);
+      returnNode = new ProbabilityValueNode(
+        this.utils,
+        nodeConfig,
+        object.type.values,
+      );
     } else if (object.type instanceof EnumFieldResolver) {
       returnNode = new EnumValueNode(this.utils, nodeConfig, object.type.array);
     } else if (object.type instanceof MixedFieldResolver) {
@@ -197,11 +201,9 @@ export class ChacaInputTree {
         returnNode = new KeyValueNode(actualRoute, refValueNode);
       }
     } else {
-      throw new ChacaError(
-        `The field '${InputTreeNode.getRouteString(
-          actualRoute,
-        )}' have an incorrect resolver`,
-      );
+      const route = InputTreeNode.getRouteString(actualRoute);
+
+      throw new ChacaError(`The field '${route}' have an incorrect resolver`);
     }
 
     return returnNode;

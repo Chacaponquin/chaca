@@ -15,9 +15,12 @@ interface Props {
 
 export class ProbabilityValueNode extends InputTreeNode {
   private options: ProbabilityOption[];
-  private utils = new ChacaUtils();
 
-  constructor(config: ChacaTreeNodeConfig, options: ProbabilityOption[]) {
+  constructor(
+    private readonly utils: ChacaUtils,
+    config: ChacaTreeNodeConfig,
+    options: ProbabilityOption[],
+  ) {
     super(config);
 
     this.options = new Input({
@@ -26,14 +29,15 @@ export class ProbabilityValueNode extends InputTreeNode {
     }).value();
   }
 
-  public getNoArrayNode(): InputTreeNode {
+  getNoArrayNode(): InputTreeNode {
     return new ProbabilityValueNode(
+      this.utils,
       { ...this.getNodeConfig(), isArray: new NotArray() },
       this.options,
     );
   }
 
-  public checkIfFieldExists(fieldTreeRoute: string[]): boolean {
+  checkIfFieldExists(fieldTreeRoute: string[]): boolean {
     if (fieldTreeRoute.length === 0) {
       throw new TryRefANoKeyFieldError(this.getRouteString());
     } else {
@@ -41,7 +45,7 @@ export class ProbabilityValueNode extends InputTreeNode {
     }
   }
 
-  public value(props: Props): unknown {
+  value(props: Props): unknown {
     const values = this.options.map((o) => o.value);
 
     const weights: number[] = this.options.map((o) => {
@@ -73,7 +77,7 @@ export class ProbabilityValueNode extends InputTreeNode {
     array: unknown[],
     weights: number[],
     size: number,
-  ): Array<unknown> {
+  ): unknown[] {
     const distribution = [];
 
     const sum = weights.reduce((a, b) => a + b);

@@ -11,7 +11,7 @@ export class EnumValueNode extends InputTreeNode {
   constructor(
     private readonly utils: ChacaUtils,
     config: ChacaTreeNodeConfig,
-    readonly options: ReadonlyArray<unknown>,
+    private readonly options: ReadonlyArray<unknown>,
   ) {
     super(config);
 
@@ -25,8 +25,7 @@ export class EnumValueNode extends InputTreeNode {
   }
 
   value() {
-    const selectOption = this.utils.oneOfArray(this.options);
-    return selectOption ? selectOption : null;
+    return this.utils.oneOfArray(this.options);
   }
 
   getNoArrayNode(): InputTreeNode {

@@ -215,16 +215,16 @@ export class SchemaResolver<K = any> {
 
             // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
             for (const datField of this.inputTree.getFields()) {
-              const fieldSolutionNode = this.createSolutionNodeByType({
+              const solution = this.createSolutionNode({
                 field: datField,
                 indexDoc: indexDoc,
               });
 
               if (datField instanceof KeyValueNode) {
-                newDoc.insertKeyField(fieldSolutionNode);
+                newDoc.insertKeyField(solution);
               } else {
                 // insertar la solucion del field en el documento
-                newDoc.insertField(fieldSolutionNode);
+                newDoc.insertField(solution);
               }
             }
           }
@@ -259,12 +259,11 @@ export class SchemaResolver<K = any> {
     return result;
   }
 
-  private createSolutionNodeByType({
+  private createSolutionNode({
     field,
     indexDoc,
   }: CreateSolutionNodeProps): FieldNode {
     const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-
     const store = new DatasetStore({
       schemasStore: this.schemasStore,
       omitCurrentDocument: currentDocument,
@@ -278,13 +277,6 @@ export class SchemaResolver<K = any> {
     });
 
     if (!isNull) {
-      const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-      const store = new DatasetStore({
-        schemasStore: this.schemasStore,
-        omitCurrentDocument: currentDocument,
-        omitResolver: this,
-      });
-
       const limit = field.getIsArray().execute({
         currentDocument: currentDocument,
         store: store,
@@ -299,13 +291,13 @@ export class SchemaResolver<K = any> {
 
         for (let i = 0; i < limit; i++) {
           // resolver el field y guardarlo en un nodo
-          const fieldSolutionNode = this.createSolutionNodeByType({
+          const solution = this.createSolutionNode({
             field: field.getNoArrayNode(),
             indexDoc: indexDoc,
           });
 
           // insertar el field en el array de soluciones
-          arrayNode.insertNode(fieldSolutionNode);
+          arrayNode.insertNode(solution);
         }
 
         return arrayNode;
@@ -372,14 +364,9 @@ export class SchemaResolver<K = any> {
 
         // en caso de ser un key field
         else if (field instanceof KeyValueNode) {
-          const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
           const keyValue = field.value({
             currentDocument: indexDoc,
-            store: new DatasetStore({
-              schemasStore: this.schemasStore,
-              omitCurrentDocument: currentDocument,
-              omitResolver: this,
-            }),
+            store: store,
             currentSchemaResolver: this.schemaIndex,
           });
 
@@ -405,7 +392,7 @@ export class SchemaResolver<K = any> {
 
           for (const field of subFields) {
             // filtrar el subField segun su tipo
-            const subFieldSolutionNode = this.createSolutionNodeByType({
+            const subFieldSolutionNode = this.createSolutionNode({
               field: field,
               indexDoc: indexDoc,
             });
@@ -421,7 +408,7 @@ export class SchemaResolver<K = any> {
         else if (field instanceof EnumValueNode) {
           return new SingleResultNode({
             name: field.getNodeName(),
-            value: this.utils.oneOfArray(field.options),
+            value: field.value(),
           });
         }
 

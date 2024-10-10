@@ -12,7 +12,7 @@ export class SchemaName {
   }
 
   private validate(name: string): string {
-    if (name && typeof name === "string" && name.trim() !== "") {
+    if (typeof name === "string" && name.trim() !== "") {
       return name;
     } else {
       throw new ChacaError("You must provide a name for the schema");
