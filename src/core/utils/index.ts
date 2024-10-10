@@ -31,6 +31,11 @@ interface MultipleProps<T = any> {
   generator(index: number): T;
 }
 
+interface ReplaceSymbolsProps {
+  symbols?: Record<string, string[]>;
+  banned?: string[];
+}
+
 export class ChacaUtils {
   private readonly datatypeModule = new DatatypeModule();
 
@@ -63,37 +68,51 @@ export class ChacaUtils {
    *
    * @returns string
    */
-  replaceSymbols(text: string): string {
+  replaceSymbols(
+    text: string,
+    { banned, symbols: ownSymbols }: ReplaceSymbolsProps = {
+      banned: [],
+      symbols: {},
+    },
+  ): string {
     let ret = "";
 
+    const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+    const symbols: Record<string, string[]> = {
+      "#": numbers,
+      "?": UPPER_CHARACTERS,
+      $: LOWER_CHARACTERS,
+      "*": [...numbers, ...MIXED_CHARACTERS],
+      ...ownSymbols,
+    };
+
     for (let i = 0; i < text.length; i++) {
-      let val: string;
+      let val: string = text[i];
 
-      if (text[i] === "#") {
-        val = this.oneOfArray([
-          "0",
-          "1",
-          "2",
-          "3",
-          "4",
-          "5",
-          "6",
-          "7",
-          "8",
-          "9",
-        ]);
-      } else if (text[i] === "?") {
-        val = this.oneOfArray(UPPER_CHARACTERS);
-      } else if (text[i] === "$") {
-        val = this.oneOfArray(LOWER_CHARACTERS);
-      } else if (text[i] === "*") {
-        val = this.oneOfArray([
-          ...["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
-          ...MIXED_CHARACTERS,
-        ]);
-      } else val = text[i];
+      for (const [key, values] of Object.entries(symbols)) {
+        if (text[i] === key) {
+          const options = values.filter((v) => {
+            if (banned) {
+              return !banned.includes(v);
+            }
 
-      ret = ret.concat(val);
+            return true;
+          });
+
+          if (options.length === 0) {
+            throw new ChacaError(
+              `For symbol '${key}' there are no values to choose`,
+            );
+          }
+
+          val = this.oneOfArray(options);
+
+          break;
+        }
+      }
+
+      ret += val;
     }
 
     return ret;

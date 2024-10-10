@@ -50,10 +50,11 @@
 - 🎉 Added `system.cron`
 - The `prefix` argument was added to the `datatype.alphaNumeric` module
 
-### 🪛 Utils
+### Utils
 
 - 🎉 Added `utils.pick` to select elements from an array without being chosen more than once
 - 🎉 Added `utils.multiple` To create an array of values ​​from a generator
+- 🎉 Added `banned` and `symbols` options on `utils.replaceSymbols`
 
 ## 🪛 Fix
 
@@ -81,6 +82,7 @@
 ### Modules
 
 - 🔄 `modules.animal.animalType` -> `modules.animal.type`
+- 🔄 `modules.image.animateAvatar` -> `modules.image.animatedAvatar`
 - 🔄 `modules.id.mongodbID` -> `modules.id.mongodbId`
 
 # chaca@1.9.0
