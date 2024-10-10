@@ -37,6 +37,7 @@
 - 🎉 Added `id.nanoid`
 - 🎉 Added `id.ulid`
 - 🎉 Added `id.cuid`
+- 🎉 Added `image.category`
 - 🎉 Added `color.human`
 - 🎉 Added `date.anytime`
 - 🎉 Added `finance.litecoinAddress`

@@ -1,15 +1,23 @@
 import { DatatypeModule } from "../datatype";
+import { WordModule } from "../word";
 
 interface ImageProps {
   width?: number;
   height?: number;
 }
 
+interface CategoryProps {
+  width?: number;
+  height?: number;
+  category?: string;
+}
+
 export class ImageModule {
   private readonly datatypeModule = new DatatypeModule();
+  private readonly wordModule = new WordModule();
 
   private buildUrl(
-    category: string,
+    category: string = this.wordModule.noun({ language: "en" }),
     {
       height = this.datatypeModule.int({ min: 640, max: 4000 }),
       width = this.datatypeModule.int({ min: 640, max: 4000 }),
@@ -20,10 +28,29 @@ export class ImageModule {
   }
 
   /**
+   * Returns an image url from a category
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
+   * @example
+   * modules.image.category({ category: "soccer" })
+   *
+   * @returns string
+   */
+  category(props: CategoryProps = {}): string {
+    return this.buildUrl(props.category, props);
+  }
+
+  /**
    * Return a food image url
    *
    * @example
    * modules.image.food()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   food(props?: ImageProps): string {
@@ -35,6 +62,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.event()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   event(props?: ImageProps): string {
@@ -46,6 +77,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.wallpaper()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   wallpaper(props?: ImageProps): string {
@@ -57,6 +92,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.treeDimension()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   threeDimension(props?: ImageProps): string {
@@ -68,6 +107,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.architecture()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   architecture(props?: ImageProps): string {
@@ -79,6 +122,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.nature()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   nature(props?: ImageProps): string {
@@ -90,6 +137,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.fashion()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   fashion(props?: ImageProps): string {
@@ -101,6 +152,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.film()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   film(props?: ImageProps): string {
@@ -112,6 +167,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.people()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   people(props?: ImageProps): string {
@@ -123,6 +182,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.health()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   health(props?: ImageProps): string {
@@ -134,6 +197,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.house()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   house(props?: ImageProps): string {
@@ -145,6 +212,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.street()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   street(props?: ImageProps): string {
@@ -156,6 +227,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.animal()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   animal(props?: ImageProps): string {
@@ -167,6 +242,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.spiritual()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   spiritual(props?: ImageProps): string {
@@ -178,6 +257,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.travel()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   travel(props?: ImageProps): string {
@@ -189,6 +272,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.art()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   art(props?: ImageProps): string {
@@ -200,6 +287,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.history()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   history(props?: ImageProps): string {
@@ -211,6 +302,10 @@ export class ImageModule {
    *
    * @example
    * modules.image.sport()
+   *
+   * @param args.witdh image width
+   * @param args.height image height
+   *
    * @returns string
    */
   sport(props?: ImageProps): string {
