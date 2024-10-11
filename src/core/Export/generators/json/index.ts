@@ -27,7 +27,7 @@ export class JsonGenerator extends Generator {
   }
 
   private async setFile(route: string, content: any): Promise<void> {
-    const jsonContent = JSON.stringify(content);
+    const jsonContent = JSON.stringify(content, undefined, 4);
     await fs.promises.writeFile(route, jsonContent, "utf-8");
   }
 
@@ -45,7 +45,7 @@ export class JsonGenerator extends Generator {
     const objectData = resolver.resolve();
 
     if (this.config.separate) {
-      const allRoutes: Array<string> = [];
+      const allRoutes: string[] = [];
 
       for (const [key, data] of Object.entries(objectData)) {
         const route = this.generateRoute(key);
