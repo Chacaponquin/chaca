@@ -35,6 +35,9 @@ import { NotArray } from "./core/is-array";
 import { Count } from "./core/pick/value-object/count";
 import { Values } from "./core/pick/value-object/values";
 import { ChancesArray } from "./core/probability/value-object/chances-array";
+import { Step } from "./core/sequence/value-object/step";
+import { StartsWith } from "./core/sequence/value-object/starts-with";
+import { ResolverValidator } from "./core/validators/resolver";
 
 interface Props {
   schemaName: string;
@@ -60,6 +63,8 @@ export class ChacaInputTree {
   private readonly nullMapper: PossibleNullMapper;
   private readonly arrayMapper: IsArrayMapper;
 
+  private readonly resolverValidator: ResolverValidator;
+
   constructor(
     private readonly utils: ChacaUtils,
     private readonly datatypeModule: DatatypeModule,
@@ -67,6 +72,8 @@ export class ChacaInputTree {
   ) {
     this.nullMapper = new PossibleNullMapper(this.utils);
     this.arrayMapper = new IsArrayMapper(this.datatypeModule);
+
+    this.resolverValidator = new ResolverValidator();
 
     this.schemasStore = schemasStore;
     this.schemaName = schemaName;
@@ -98,9 +105,9 @@ export class ChacaInputTree {
   }: CreateNodeProps): InputTreeNode {
     let returnNode: InputTreeNode;
 
-    this.validateResolver(actualRoute, object);
-
     const route = InputTreeNode.getRouteString(actualRoute);
+
+    this.resolverValidator.execute({ route: route, config: object });
 
     const possibleNull = this.nullMapper.execute({
       route: route,
@@ -176,16 +183,38 @@ export class ChacaInputTree {
         possibleNull: possibleNull,
       });
     } else if (object.type instanceof SequenceFieldResolver) {
+      const step = new Step({
+        route: route,
+        value: object.type.getConfig().step,
+      });
+
+      const startsWith = new StartsWith({
+        value: object.type.getConfig().starsWith,
+        route: route,
+      });
+
       returnNode = new SequenceValueNode({
         fieldTreeRoute: actualRoute,
-        config: object.type.getConfig(),
+        step: step,
+        startsWith: startsWith,
         possibleNull: possibleNull,
       });
     } else if (object.type instanceof KeyFieldResolver) {
       if (object.type.type instanceof SequenceFieldResolver) {
+        const step = new Step({
+          route: route,
+          value: object.type.type.getConfig().step,
+        });
+
+        const startsWith = new StartsWith({
+          value: object.type.type.getConfig().starsWith,
+          route: route,
+        });
+
         const schemaValueNode = new SequenceValueNode({
           fieldTreeRoute: actualRoute,
-          config: object.type.type.getConfig(),
+          step: step,
+          startsWith: startsWith,
           possibleNull: new NotNull(),
         });
 
@@ -225,41 +254,6 @@ export class ChacaInputTree {
     }
 
     return returnNode;
-  }
-
-  private validateResolver(route: string[], config: ResolverObject): void {
-    const name = InputTreeNode.getRouteString(route);
-
-    // sequence
-    if (config.type instanceof SequenceFieldResolver) {
-      if (config.isArray.can()) {
-        throw new ChacaError(
-          `The sequence field '${name}' can not be an array field`,
-        );
-      }
-    }
-
-    // sequential
-    else if (config.type instanceof SequentialFieldResolver) {
-      if (config.isArray.can()) {
-        throw new ChacaError(
-          `The sequential field '${name}' can not be an array field`,
-        );
-      }
-    }
-
-    // key
-    else if (config.type instanceof KeyFieldResolver) {
-      if (config.isArray.can()) {
-        throw new ChacaError(
-          `The key field '${name}' can not be an array field`,
-        );
-      }
-
-      if (config.possibleNull.can()) {
-        throw new ChacaError(`The key field '${name}' can not be a null field`);
-      }
-    }
   }
 
   private createSubNodesOfMixedField(

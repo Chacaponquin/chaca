@@ -1,42 +1,38 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
-import { SequenceFieldProps } from "../../../fields/core/sequence/SequenceField";
 import { InputTreeNode } from "../node";
-import { Config } from "./value-object";
 import { PossibleNull } from "../possible-null";
 import { NotArray } from "../is-array";
+import { Step } from "./value-object/step";
+import { StartsWith } from "./value-object/starts-with";
 
 interface Props {
   fieldTreeRoute: string[];
-  config: Required<SequenceFieldProps>;
+  step: Step;
+  startsWith: StartsWith;
   possibleNull: PossibleNull;
 }
 
 export class SequenceValueNode extends InputTreeNode {
   private actualValue: number;
-  private _config: Required<SequenceFieldProps>;
+  private readonly startsWith: StartsWith;
+  private readonly step: Step;
 
-  constructor({ config, fieldTreeRoute, possibleNull }: Props) {
+  constructor({ fieldTreeRoute, possibleNull, startsWith, step }: Props) {
     super({
       isArray: new NotArray(),
       fieldTreeRoute: fieldTreeRoute,
       possibleNull: possibleNull,
     });
 
-    this._config = new Config({
-      config: config,
-      route: this.getRouteString(),
-    }).value();
+    this.startsWith = startsWith;
+    this.step = step;
 
-    this.actualValue = config.starsWith;
-  }
-
-  getConfig() {
-    return this._config;
+    this.actualValue = startsWith.value();
   }
 
   value() {
     const returnValue = this.actualValue;
-    this.actualValue += this._config.step;
+    this.actualValue += this.step.value();
 
     return returnValue;
   }
@@ -52,7 +48,8 @@ export class SequenceValueNode extends InputTreeNode {
   getNoArrayNode(): InputTreeNode {
     return new SequenceValueNode({
       fieldTreeRoute: this.getFieldRoute(),
-      config: this.getConfig(),
+      startsWith: this.startsWith,
+      step: this.step,
       possibleNull: this.getPossibleNull(),
     });
   }
