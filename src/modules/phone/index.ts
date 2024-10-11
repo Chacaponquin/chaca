@@ -23,7 +23,7 @@ export class PhoneModule {
    * modules.phone.number({ format: '+53 #### ## ##' }) // '+53 5417 35 99'
    * @returns string
    */
-  number({ format: iformat }: NumberProps): string {
+  number({ format: iformat }: NumberProps = {}): string {
     const utils = new ChacaUtils();
 
     const format: string = iformat ? iformat : `${this.prefix()} ### ### ##`;

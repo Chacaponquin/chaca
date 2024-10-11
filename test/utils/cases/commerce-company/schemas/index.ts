@@ -75,7 +75,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
       let sumTaken = 0;
 
       filterPachagesByCharge(
-        store.get<Package>("Package"),
+        store.currentDocuments<Package>(),
         foundCharge.warehouse_id,
         store,
       ).forEach((p) => {
@@ -105,7 +105,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
       let sumTaken = 0;
 
       filterPachagesByCharge(
-        store.get<Package>("Package"),
+        store.currentDocuments<Package>(),
         foundCharge.warehouse_id,
         store,
       ).forEach((p) => {
@@ -126,7 +126,7 @@ export const CHARGE_PACKAGE_SCHEMA = chaca.schema<Package>({
     const foundCharge = findCharge(store, packageFields.charge_id);
 
     const filterPackages = filterPachagesByCharge(
-      store.get<Package>("Package"),
+      store.currentDocuments<Package>(),
       foundCharge.warehouse_id,
       store,
     ).filter(

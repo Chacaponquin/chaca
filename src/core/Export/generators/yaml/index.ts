@@ -1,5 +1,4 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { ChacaError } from "../../../../errors";
 import { Generator } from "../generator";
 import fs from "fs";
 import yaml from "js-yaml";
@@ -27,10 +26,6 @@ export class YamlGenerator extends Generator {
   }
 
   async createFile(data: any): Promise<string> {
-    if (!Array.isArray(data)) {
-      throw new ChacaError(`You can only export data that is inside an array`);
-    }
-
     const result = yaml.dump(data, { skipInvalid: true });
 
     await fs.promises.writeFile(this.route, result, "utf-8");

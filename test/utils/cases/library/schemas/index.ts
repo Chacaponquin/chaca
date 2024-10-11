@@ -34,7 +34,7 @@ export const USER_SANCTION_SCHEMA = chaca.schema({
   user_id: chaca.ref("Library_User.id", {
     where: ({ refFields: userFields, store }) => {
       return !store
-        .get("User_Sanction")
+        .currentDocuments()
         .some((s) => s.finish_date === null && userFields.id === s.user_id);
     },
   }),

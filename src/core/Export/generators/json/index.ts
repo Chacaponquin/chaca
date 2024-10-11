@@ -27,7 +27,7 @@ export class JsonGenerator extends Generator {
   }
 
   private async setFile(route: string, content: any): Promise<void> {
-    const jsonContent = JSON.stringify(content, undefined, 4);
+    const jsonContent = JSON.stringify(content, undefined, 3);
     await fs.promises.writeFile(route, jsonContent, "utf-8");
   }
 

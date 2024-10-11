@@ -33,7 +33,7 @@ export const GROUP_SCHEMA = chaca.schema({
   year: chaca.key(chaca.ref("Year.year_id")),
   group_number: chaca.key(({ currentFields: ownFields, store }) => {
     const allGroupsWithSameYear = store
-      .get("Group")
+      .currentDocuments()
       .filter((g) => g.year === ownFields.year);
 
     if (allGroupsWithSameYear.length === 0) {

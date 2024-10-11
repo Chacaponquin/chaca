@@ -46,7 +46,7 @@ describe("# Sequence field tests", () => {
     });
 
     const data = schema.array(5);
-    console.log(data);
+
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
 });

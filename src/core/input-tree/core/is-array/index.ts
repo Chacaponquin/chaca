@@ -45,7 +45,7 @@ export class LimitsArray extends IsArray {
     this.route = route;
 
     const min = limits.min === undefined ? 0 : limits.min;
-    const max = limits.max === undefined ? min + 9 : limits.max;
+    const max = limits.max === undefined ? min + 10 : limits.max;
 
     if (min < 0) {
       throw new WrongArrayDefinitionError(

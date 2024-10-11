@@ -2,14 +2,14 @@ import { chaca, modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("# Array field tests", () => {
-  it("Pass an empty object. Should return an array with length between 1 and 10", () => {
+  it("Pass an empty object. Should return an array with length between 0 and 10", () => {
     const schema = chaca.schema({
       id: { type: () => modules.id.mongodbId(), isArray: {} },
     });
     const docs = schema.object();
     const id = docs.id;
 
-    expect(id.length).toBeGreaterThanOrEqual(1);
+    expect(id.length).toBeGreaterThanOrEqual(0);
     expect(id.length).toBeLessThanOrEqual(10);
   });
 
