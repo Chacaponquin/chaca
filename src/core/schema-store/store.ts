@@ -12,15 +12,14 @@ interface ValueProps {
 export class SchemaStore {
   constructor(private schemas: SchemaResolver[]) {}
 
-  private validateFieldToGet(route: string): string[] {
-    if (typeof route === "string") {
-      const routeArray = route.split(".");
-      return routeArray;
-    } else {
+  private validateFieldToGet(route: string, caller: string): string[] {
+    if (typeof route !== "string") {
       throw new ChacaError(
-        "The field to get must be an array separated by points",
+        `From '${caller}'. The field to get must be an array separated by points`,
       );
     }
+
+    return route.split(".");
   }
 
   getResolverByIndex(index: number) {
@@ -40,7 +39,7 @@ export class SchemaStore {
     config,
     route,
   }: ValueProps): Array<FieldNode | DocumentTree<D>> {
-    const routeArray = this.validateFieldToGet(route);
+    const routeArray = this.validateFieldToGet(route, caller);
 
     let foundSchema = false;
     let values = [] as Array<FieldNode | DocumentTree<D>>;
@@ -49,15 +48,19 @@ export class SchemaStore {
       const currentSchema = this.schemas[i];
 
       if (currentSchema.getSchemaName() === routeArray[0]) {
-        if (currentSchema !== config.omitResolver) {
-          if (!currentSchema.dangerCyclic()) {
-            currentSchema.buildTrees();
-          } else {
-            throw new CyclicAccessDataError(
-              `From ${caller}, you are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
-            );
-          }
+        if (currentSchema === config.omitResolver) {
+          throw new ChacaError(
+            `From '${caller}'. You are trying to access the documents of the current schema, if you want this use the store.currentDocuments method`,
+          );
         }
+
+        if (currentSchema.dangerCyclic()) {
+          throw new CyclicAccessDataError(
+            `From '${caller}', you are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
+          );
+        }
+
+        currentSchema.buildTrees();
 
         values = currentSchema.getAllValuesByRoute(routeArray.slice(1), config);
 

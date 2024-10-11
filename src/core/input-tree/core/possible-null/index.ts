@@ -88,7 +88,8 @@ export class FunctionNull extends PossibleNull {
       type = new NotNull();
     } else {
       throw new WrongPossibleNullDefinitionError(
-        `In field '${this.route}'. The parameter function possibleNull must return a boolean or a probability value between 0 and 1`,
+        this.route,
+        `The parameter function possibleNull must return a boolean or a probability value between 0 and 1`,
       );
     }
 
@@ -124,18 +125,13 @@ export class ProbabilityNull extends PossibleNull {
 
     if (!(value >= 0 && value <= 1)) {
       throw new WrongPossibleNullDefinitionError(
-        `In field '${route}'. The possibleNull parameter in case of being a float number must be in the range of 0 to 1`,
+        route,
+        `The possibleNull parameter in case of being a float number must be in the range of 0 to 1`,
       );
     }
   }
 
   is(): boolean {
-    if (this.value === 1) {
-      return true;
-    } else if (this.value === 0) {
-      return false;
-    }
-
     return Math.random() <= this.value;
   }
 
@@ -153,7 +149,8 @@ export class AbsoluteNullCount extends PossibleNull {
 
     if (value < 0) {
       throw new WrongPossibleNullDefinitionError(
-        `In the field ${route}. The possibleNull parameter the numeric value must be greater or equal than 0`,
+        route,
+        `The possibleNull parameter the numeric value must be greater or equal than 0`,
       );
     }
 

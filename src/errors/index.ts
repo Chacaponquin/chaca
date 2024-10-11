@@ -6,16 +6,16 @@ export class ChacaError extends Error {
 }
 
 export class WrongArrayDefinitionError extends ChacaError {
-  constructor(message: string) {
-    super(message);
+  constructor(readonly fieldRoute: string, message: string) {
+    super(`On '${fieldRoute}'. ${message}`);
 
     this.name = "ChacaError.WrongArrayDefinitionError";
   }
 }
 
 export class WrongPossibleNullDefinitionError extends ChacaError {
-  constructor(message: string) {
-    super(message);
+  constructor(readonly fieldRoute: string, message: string) {
+    super(`On '${fieldRoute}'. ${message}`);
 
     this.name = `ChacaError.WrongPossibleNullDefinitionError`;
   }
