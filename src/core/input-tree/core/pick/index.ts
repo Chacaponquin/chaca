@@ -1,43 +1,33 @@
-import {
-  TryRefANoKeyFieldError,
-  PickFieldDefinitionError,
-} from "../../../../errors";
+import { TryRefANoKeyFieldError } from "../../../../errors";
 import { DatatypeModule } from "../../../../modules/datatype";
-import { PickFieldProps } from "../../../fields/core/pick";
+import { DatasetStore } from "../../../dataset-store";
+import { DocumentTree } from "../../../result-tree/classes";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { NotArray } from "../is-array";
 import { InputTreeNode } from "../node";
-import { Count, Values } from "./value-object";
+import { Count } from "./value-object/count";
+import { Values } from "./value-object/values";
+
+interface GetValuesProps {
+  currentDocument: DocumentTree;
+  store: DatasetStore;
+}
 
 export class PickValueNode extends InputTreeNode {
-  private values: PickFieldProps;
-
   constructor(
     private readonly datatypeModule: DatatypeModule,
     config: ChacaTreeNodeConfig,
-    ivalues: PickFieldProps,
+    private readonly count: Count,
+    private readonly values: Values,
   ) {
     super(config);
-
-    const route = this.getRouteString();
-
-    const count = new Count(route, ivalues.count);
-    const values = new Values(route, ivalues.values);
-
-    this.values = {
-      count: count.value,
-      values: values.value,
-    };
-
-    if (this.values.count > this.values.values.length) {
-      throw new PickFieldDefinitionError(route);
-    }
   }
 
   getNoArrayNode(): InputTreeNode {
     return new PickValueNode(
       this.datatypeModule,
       { ...this.getNodeConfig(), isArray: new NotArray() },
+      this.count,
       this.values,
     );
   }
@@ -50,20 +40,25 @@ export class PickValueNode extends InputTreeNode {
     }
   }
 
-  getValues(): unknown[] {
+  getValues({ currentDocument, store }: GetValuesProps): unknown[] {
     const result: unknown[] = [];
     const banned: number[] = [];
 
-    if (this.values.count === this.values.values.length) {
-      return this.values.values;
+    const limit = this.count.limit({
+      store: store,
+      currentDocument: currentDocument,
+    });
+
+    if (limit === this.values.length()) {
+      return this.values.values();
     } else {
       let i = 0;
 
-      while (i < this.values.count) {
+      while (i < limit) {
         const index = this.generate(banned);
 
         banned.push(index);
-        result.push(this.values.values[index]);
+        result.push(this.values.get(index));
 
         i++;
       }
@@ -75,11 +70,11 @@ export class PickValueNode extends InputTreeNode {
   private generate(banned: number[]): number {
     let num = this.datatypeModule.int({
       min: 0,
-      max: this.values.values.length,
+      max: this.values.length(),
     });
 
     while (banned.includes(num)) {
-      num = this.datatypeModule.int({ min: 0, max: this.values.values.length });
+      num = this.datatypeModule.int({ min: 0, max: this.values.length() });
     }
 
     return num;

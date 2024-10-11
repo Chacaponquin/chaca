@@ -28,6 +28,33 @@
 - Added exception `WrongPossibleNullDefinitionError` for errors in the definition of the parameter `possibleNull`
 - Added exception `WrongArrayDefinitionError` for errors in the definition of the parameter `isArray`
 - 🗑️ `chaca.multiGenerate` was removed
+- 🎉 The number of items to select in the `pick` field can be defined as a range of values ​​or a function that returns the number of values ​​to choose from.
+
+  ```ts
+  // range
+  chaca.pick({
+    values: [1, 2, 3, 4, 5],
+    count: {
+      min: 1,
+      max: 3,
+    },
+  });
+
+  // function
+  chaca.pick({
+    values: [1, 2, 3, 4, 5],
+    count: ({ store, currentFields }) => {
+      return 2;
+
+      // or
+
+      return {
+        min: 1,
+        max: 3,
+      };
+    },
+  });
+  ```
 
 ### Modules
 
@@ -73,6 +100,8 @@
     id: () => modules.id.uuid(),
   });
   ```
+
+- Probability values ​​for the `possibleNull` param must be in the range 0 to 1 now
 
 - 🔄 `Schema.generate` -> `Schema.array`
 - 🔄 `Schema.generateObject` -> `Schema.object`

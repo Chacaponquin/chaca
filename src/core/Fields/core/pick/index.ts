@@ -5,7 +5,7 @@ export interface PickFieldProps<V = any> {
   count: PickCount;
 }
 
-export type PickCount = number;
+export type PickCount = number | PickCountLimits | PickCountFunction;
 
 export type PickCountLimits = { min?: number; max?: number };
 

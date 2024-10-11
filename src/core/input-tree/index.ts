@@ -32,6 +32,8 @@ import { NotNull } from "./core/possible-null";
 import { IsArrayMapper } from "./core/map/is-array";
 import { DatatypeModule } from "../../modules/datatype";
 import { NotArray } from "./core/is-array";
+import { Count } from "./core/pick/value-object/count";
+import { Values } from "./core/pick/value-object/values";
 
 interface Props {
   schemaName: string;
@@ -119,10 +121,24 @@ export class ChacaInputTree {
     if (object.type instanceof CustomFieldResolver) {
       returnNode = new CustomValueNode(nodeConfig, object.type.fun);
     } else if (object.type instanceof PickFieldResolver) {
+      const route = InputTreeNode.getRouteString(actualRoute);
+
+      const values = new Values({
+        route: route,
+        values: object.type.values.values,
+      });
+
+      const count = Count.create(this.datatypeModule, {
+        count: object.type.values.count,
+        options: values,
+        route: route,
+      });
+
       returnNode = new PickValueNode(
         this.datatypeModule,
         nodeConfig,
-        object.type.values,
+        count,
+        values,
       );
     } else if (object.type instanceof ProbabilityFieldResolver) {
       returnNode = new ProbabilityValueNode(

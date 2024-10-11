@@ -320,7 +320,10 @@ export class SchemaResolver<K = any> {
 
         // en caso de ser un pick field
         else if (field instanceof PickValueNode) {
-          const value = field.getValues();
+          const value = field.getValues({
+            currentDocument: currentDocument,
+            store: store,
+          });
 
           return new SingleResultNode({
             name: field.getNodeName(),

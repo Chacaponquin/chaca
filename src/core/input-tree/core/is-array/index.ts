@@ -32,7 +32,8 @@ export abstract class IsArray {
 }
 
 export class LimitsArray extends IsArray {
-  private readonly limits: ArrayLimitObject;
+  private readonly min: number;
+  private readonly max: number;
   private readonly route: string;
 
   constructor(
@@ -42,12 +43,9 @@ export class LimitsArray extends IsArray {
     super();
 
     this.route = route;
-    this.limits = limits;
-  }
 
-  execute(): number {
-    const min = this.limits.min === undefined ? 0 : this.limits.min;
-    const max = this.limits.max === undefined ? min + 9 : this.limits.max;
+    const min = limits.min === undefined ? 0 : limits.min;
+    const max = limits.max === undefined ? min + 9 : limits.max;
 
     if (min < 0) {
       throw new WrongArrayDefinitionError(
@@ -67,7 +65,12 @@ export class LimitsArray extends IsArray {
       );
     }
 
-    const limit = this.datatypeModule.int({ min: min, max: max });
+    this.min = min;
+    this.max = max;
+  }
+
+  execute(): number {
+    const limit = this.datatypeModule.int({ min: this.min, max: this.max });
 
     return limit;
   }
