@@ -1,37 +1,27 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { DocumentTree } from "../../../result-tree/classes";
-import { ChacaUtils } from "../../../utils";
 import { DatasetStore } from "../../../dataset-store";
-import { ProbabilityOption } from "../../../fields/core/probability";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { InputTreeNode } from "../node";
-import { Input, InputChance } from "./value-object";
 import { NotArray } from "../is-array";
+import { ChancesArray } from "./value-object/chances-array";
 
 interface Props {
   store: DatasetStore;
-  currentDocument: DocumentTree<any>;
+  currentDocument: DocumentTree;
 }
 
 export class ProbabilityValueNode extends InputTreeNode {
-  private options: ProbabilityOption[];
+  private options: ChancesArray;
 
-  constructor(
-    private readonly utils: ChacaUtils,
-    config: ChacaTreeNodeConfig,
-    options: ProbabilityOption[],
-  ) {
+  constructor(config: ChacaTreeNodeConfig, options: ChancesArray) {
     super(config);
 
-    this.options = new Input({
-      options: options,
-      route: this.getRouteString(),
-    }).value();
+    this.options = options;
   }
 
   getNoArrayNode(): InputTreeNode {
     return new ProbabilityValueNode(
-      this.utils,
       { ...this.getNodeConfig(), isArray: new NotArray() },
       this.options,
     );
@@ -45,52 +35,7 @@ export class ProbabilityValueNode extends InputTreeNode {
     }
   }
 
-  value(props: Props): unknown {
-    const values = this.options.map((o) => o.value);
-
-    const weights: number[] = this.options.map((o) => {
-      const chance = o.chance;
-
-      if (typeof chance === "number") {
-        return chance;
-      } else {
-        let value = chance({
-          store: props.store,
-          currentFields: props.currentDocument.getDocumentObject(),
-        });
-
-        value = InputChance.validateChanceNumber({
-          route: this.getRouteString(),
-          value: value,
-        });
-
-        return value;
-      }
-    });
-
-    const distribution = this.createDistribution(values, weights, 10);
-
-    return this.utils.oneOfArray(distribution);
-  }
-
-  private createDistribution(
-    array: unknown[],
-    weights: number[],
-    size: number,
-  ): unknown[] {
-    const distribution = [];
-
-    const sum = weights.reduce((a, b) => a + b);
-    const quant = size / sum;
-
-    for (let i = 0; i < array.length; ++i) {
-      const limit = quant * weights[i];
-
-      for (let j = 0; j < limit; ++j) {
-        distribution.push(array[i]);
-      }
-    }
-
-    return distribution;
+  value(props: Props) {
+    return this.options.value(props);
   }
 }

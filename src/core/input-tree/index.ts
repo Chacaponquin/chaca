@@ -34,6 +34,7 @@ import { DatatypeModule } from "../../modules/datatype";
 import { NotArray } from "./core/is-array";
 import { Count } from "./core/pick/value-object/count";
 import { Values } from "./core/pick/value-object/values";
+import { ChancesArray } from "./core/probability/value-object/chances-array";
 
 interface Props {
   schemaName: string;
@@ -141,11 +142,12 @@ export class ChacaInputTree {
         values,
       );
     } else if (object.type instanceof ProbabilityFieldResolver) {
-      returnNode = new ProbabilityValueNode(
-        this.utils,
-        nodeConfig,
-        object.type.values,
-      );
+      const options = new ChancesArray(this.utils, {
+        options: object.type.values,
+        route: route,
+      });
+
+      returnNode = new ProbabilityValueNode(nodeConfig, options);
     } else if (object.type instanceof EnumFieldResolver) {
       returnNode = new EnumValueNode(this.utils, nodeConfig, object.type.array);
     } else if (object.type instanceof MixedFieldResolver) {

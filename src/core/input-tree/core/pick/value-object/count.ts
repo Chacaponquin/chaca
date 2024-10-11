@@ -138,7 +138,7 @@ export class FunctionCount extends Count {
     } else {
       throw new PickFieldDefinitionError(
         this.route,
-        `The number of items to choose on a pick field must be a number, an object with the range of items to choose from, or a function that returns one of the above options.`,
+        `The count function must return a range of values or a number indicating the number of values to choose.`,
       );
     }
 
