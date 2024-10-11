@@ -66,7 +66,7 @@ export class ChancesArray {
   }
 
   private createDistribution(
-    array: unknown[],
+    array: ChanceValue[],
     weights: number[],
     size: number,
   ): unknown[] {
@@ -79,7 +79,7 @@ export class ChancesArray {
       const limit = quant * weights[i];
 
       for (let j = 0; j < limit; ++j) {
-        distribution.push(array[i]);
+        distribution.push(array[i].value());
       }
     }
 

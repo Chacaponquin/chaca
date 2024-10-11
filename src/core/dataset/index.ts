@@ -1,6 +1,6 @@
 import { DatasetSchema } from "../dataset-resolver/interfaces/resolver";
 import { DatasetResolver } from "../dataset-resolver/resolver";
-import { ExportResolver } from "../export/ExportResolver";
+import { ExportResolver } from "../export";
 import { FileConfig } from "../export/interfaces/export";
 
 export class Dataset<K = any> {

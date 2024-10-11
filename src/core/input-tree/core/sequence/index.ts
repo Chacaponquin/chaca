@@ -4,6 +4,7 @@ import { PossibleNull } from "../possible-null";
 import { NotArray } from "../is-array";
 import { Step } from "./value-object/step";
 import { StartsWith } from "./value-object/starts-with";
+import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 
 interface Props {
   fieldTreeRoute: string[];
@@ -30,11 +31,18 @@ export class SequenceValueNode extends InputTreeNode {
     this.actualValue = startsWith.value();
   }
 
-  value() {
+  private value() {
     const returnValue = this.actualValue;
     this.actualValue += this.step.value();
 
     return returnValue;
+  }
+
+  generate(): FieldNode {
+    return new SingleResultNode({
+      name: this.getNodeName(),
+      value: this.value(),
+    });
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {

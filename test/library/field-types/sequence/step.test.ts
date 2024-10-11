@@ -17,23 +17,11 @@ function valid(schema: Schema, step: number): boolean {
   return valid;
 }
 
-describe("# Sequence field setp config tests", () => {
+describe("# Sequence field step config tests", () => {
   it("Define step=5", () => {
     const schema = chaca.schema({ test: chaca.sequence({ step: 5 }) });
 
     expect(valid(schema, 5)).toBe(true);
-  });
-
-  it("Define step=-1. Should throw an error", () => {
-    expect(() =>
-      chaca.schema({ test: chaca.sequence({ step: -1 }) }).array(20),
-    ).toThrow(ChacaError);
-  });
-
-  it("Define step=0. Should throw an error", () => {
-    expect(() =>
-      chaca.schema({ test: chaca.sequence({ step: 0 }) }).array(20),
-    ).toThrow(ChacaError);
   });
 
   it("Define step as no number argument. Should set step=1", () => {

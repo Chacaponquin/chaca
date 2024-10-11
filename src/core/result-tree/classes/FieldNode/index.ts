@@ -10,7 +10,7 @@ export abstract class FieldNode {
     fieldTreeRoute: string[],
   ): SingleResultNode;
 
-  getRefValueByRoute(fieldTreeRoute: Array<string>): SingleResultNode {
+  getRefValueByRoute(fieldTreeRoute: string[]): SingleResultNode {
     const value = this.getRefValueByNodeRoute(fieldTreeRoute);
     return value;
   }

@@ -33,7 +33,7 @@ describe("# Sequence field tests", () => {
 
   it("Object definition of possible null sequence field. At least one value should be null", () => {
     const schema = chaca.schema({
-      test: { type: chaca.sequence(), possibleNull: 50 },
+      test: { type: chaca.sequence(), possibleNull: 0.5 },
     });
 
     const data = schema.array(20);
@@ -46,6 +46,7 @@ describe("# Sequence field tests", () => {
     });
 
     const data = schema.array(5);
+    console.log(data);
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
 });

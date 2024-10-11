@@ -162,6 +162,13 @@ export class AbsoluteNullCount extends PossibleNull {
       all.push(i);
     }
 
+    if (value > all.length) {
+      throw new WrongPossibleNullDefinitionError(
+        route,
+        `The number of elements to select must be less or equal than the array length`,
+      );
+    }
+
     this.indexes = utils.pick({ values: all, count: value });
   }
 

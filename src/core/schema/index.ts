@@ -1,4 +1,4 @@
-import { ExportResolver } from "../export/ExportResolver";
+import { ExportResolver } from "../export";
 import { SchemaInput, SchemaToResolve } from "./interfaces/schema";
 import { FileConfig } from "../export/interfaces/export";
 import { InputSchemaResolver } from "./value-object/schema-resolver";

@@ -71,6 +71,10 @@ export type YamlFormatConfig = {
    * Boolean indicating whether all generated files are compressed into a zip
    */
   zip?: boolean;
+  /**
+   * If is `true`, the data generated from each schema will be placed in independent files
+   */
+  separate?: boolean;
 };
 
 export type JavascriptFormatConfig = {

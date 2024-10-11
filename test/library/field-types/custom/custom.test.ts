@@ -52,7 +52,6 @@ describe("# Custom field tests", () => {
     const schema = chaca.schema({
       user: chaca.schema({
         image: () => modules.image.people(),
-        custom: ({ currentFields: f }) => f.id,
         followerInf: chaca.schema({
           name: () => modules.person.firstName(),
           foo: ({ currentFields }) => {

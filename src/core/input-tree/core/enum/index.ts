@@ -2,6 +2,7 @@ import {
   EmptyEnumValuesError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
+import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 import { ChacaUtils } from "../../../utils";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { NotArray } from "../is-array";
@@ -24,7 +25,7 @@ export class EnumValueNode extends InputTreeNode {
     }
   }
 
-  value() {
+  private value() {
     return this.utils.oneOfArray(this.options);
   }
 
@@ -34,6 +35,13 @@ export class EnumValueNode extends InputTreeNode {
       { ...this.getNodeConfig(), isArray: new NotArray() },
       this.options,
     );
+  }
+
+  generate(): FieldNode {
+    return new SingleResultNode({
+      name: this.getNodeName(),
+      value: this.value(),
+    });
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {

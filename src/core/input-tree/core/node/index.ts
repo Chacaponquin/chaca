@@ -1,11 +1,18 @@
-import { DocumentTree } from "../../../result-tree/classes";
+import { DocumentTree, FieldNode } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 
-interface IsNullProps<K> {
+export interface IsNullProps<K> {
   store: DatasetStore;
   currentDocument: DocumentTree<K>;
   index: number;
+}
+
+export interface GenerateProps {
+  currentDocument: DocumentTree;
+  store: DatasetStore;
+  indexDoc: number;
+  schemaIndex: number;
 }
 
 export abstract class InputTreeNode {
@@ -13,6 +20,7 @@ export abstract class InputTreeNode {
 
   abstract getNoArrayNode(): InputTreeNode;
   abstract checkIfFieldExists(fieldTreeRoute: string[]): boolean;
+  abstract generate(props: GenerateProps): FieldNode;
 
   static getRouteString(route: string[]): string {
     return route.join(".");

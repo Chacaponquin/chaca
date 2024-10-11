@@ -13,7 +13,7 @@ import {
 import { ChacaUtils } from "./core/utils";
 import { SchemaInput } from "./core/schema/interfaces/schema";
 import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
-import { ExportResolver } from "./core/export/ExportResolver";
+import { ExportResolver } from "./core/export";
 import { FileConfig } from "./core/export/interfaces/export";
 import {
   ProbabilityOption,

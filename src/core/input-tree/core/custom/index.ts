@@ -1,9 +1,10 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { InputTreeNode } from "../node";
+import { GenerateProps, InputTreeNode } from "../node";
 import { CustomField } from "../../../fields/core/custom";
 import { NotArray } from "../is-array";
+import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 
 interface Props {
   fields: any;
@@ -22,7 +23,7 @@ export class CustomValueNode extends InputTreeNode {
     );
   }
 
-  value({ fields, datasetStore }: Props) {
+  private value({ fields, datasetStore }: Props) {
     const value = this.func({
       store: datasetStore,
       currentFields: fields,
@@ -37,5 +38,15 @@ export class CustomValueNode extends InputTreeNode {
     } else {
       return false;
     }
+  }
+
+  generate({ currentDocument, store }: GenerateProps): FieldNode {
+    return new SingleResultNode({
+      name: this.getNodeName(),
+      value: this.value({
+        datasetStore: store,
+        fields: currentDocument.getDocumentObject(),
+      }),
+    });
   }
 }

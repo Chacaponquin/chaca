@@ -5,17 +5,17 @@ import {
   NotExistFieldError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
-import { SchemaResolver } from "../../../schema-resolver";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { InputTreeNode } from "../node";
+import { GenerateProps, InputTreeNode } from "../node";
 import { ChacaUtils } from "../../../utils";
 import { FieldToRefObject } from "../../../fields/core/ref";
 import { SchemaStore } from "../../../schema-store/store";
-import { SingleResultNode } from "../../../result-tree/classes";
+import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
 import { SearchedRefValue } from "./interfaces/ref";
 import { RefRoute } from "./value-object/route";
 import { NotArray } from "../is-array";
+import { SchemaResolver } from "../../../schema-resolver";
 
 export class RefValueNode extends InputTreeNode {
   private refFieldTreeRoute: string[];
@@ -130,7 +130,7 @@ export class RefValueNode extends InputTreeNode {
     return returnRefValues;
   }
 
-  value(
+  private value(
     currentDocument: number,
     currentSchemaResolver: number,
   ): unknown | unknown[] {
@@ -184,6 +184,15 @@ export class RefValueNode extends InputTreeNode {
         `First find the schema resolver for the ref field '${this.getRouteString()}'`,
       );
     }
+  }
+
+  generate({ schemaIndex, indexDoc }: GenerateProps): FieldNode {
+    const refValue = this.value(indexDoc, schemaIndex);
+
+    return new SingleResultNode({
+      name: this.getNodeName(),
+      value: refValue,
+    });
   }
 
   setSchemaRef(resolverIndex: number): void {

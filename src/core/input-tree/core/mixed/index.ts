@@ -3,6 +3,7 @@ import { InputTreeNode } from "../node";
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { KeyValueNode } from "../key";
 import { NotArray } from "../is-array";
+import { FieldNode, MixedFieldNode } from "../../../result-tree/classes";
 
 export class MixedValueNode extends InputTreeNode {
   private nodes: InputTreeNode[] = [];
@@ -73,5 +74,9 @@ export class MixedValueNode extends InputTreeNode {
 
       return found;
     }
+  }
+
+  generate(): FieldNode {
+    return new MixedFieldNode(this.getNodeName());
   }
 }

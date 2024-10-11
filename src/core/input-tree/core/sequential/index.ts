@@ -3,6 +3,7 @@ import {
   TryRefANoKeyFieldError,
 } from "../../../../errors";
 import { SequentialFieldConfig } from "../../../fields/core/sequential/SequentialField";
+import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 import { NotArray } from "../is-array";
 import { InputTreeNode } from "../node";
 import { PossibleNull } from "../possible-null";
@@ -61,7 +62,7 @@ export class SequentialValueNode extends InputTreeNode {
     }
   }
 
-  value(): unknown {
+  private value(): unknown {
     if (this.config.loop) {
       if (this.index === this.valuesArray.length) {
         this.index = 0;
@@ -81,5 +82,12 @@ export class SequentialValueNode extends InputTreeNode {
         return returnValue;
       }
     }
+  }
+
+  generate(): FieldNode {
+    return new SingleResultNode({
+      name: this.getNodeName(),
+      value: this.value(),
+    });
   }
 }

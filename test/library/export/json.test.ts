@@ -9,7 +9,7 @@ const filename = "json";
 const ROOT = "./data/json";
 const COUNT_DOCUMENTS = 50;
 
-describe("# JSON Export Test", () => {
+describe("# Json export Test", () => {
   it("Pass zip=true. Should create a zip file", async () => {
     const route = await chaca.export(
       {},

@@ -51,6 +51,12 @@ interface CreateNodeProps {
   object: ResolverObject;
 }
 
+interface CreateSubNodesProps {
+  actualRoute: string[];
+  parentNode: MixedValueNode;
+  schema: Schema;
+}
+
 export class ChacaInputTree {
   private nodes: InputTreeNode[] = [];
   private schemasStore: SchemaStore;
@@ -80,10 +86,10 @@ export class ChacaInputTree {
     this.count = count;
 
     for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
-      const fieldRoute = [this.schemaName, key];
+      const route = [this.schemaName, key];
 
       const newNode = this.createNodeByType({
-        actualRoute: fieldRoute,
+        actualRoute: route,
         object: obj,
       });
 
@@ -129,8 +135,6 @@ export class ChacaInputTree {
     if (object.type instanceof CustomFieldResolver) {
       returnNode = new CustomValueNode(nodeConfig, object.type.fun);
     } else if (object.type instanceof PickFieldResolver) {
-      const route = InputTreeNode.getRouteString(actualRoute);
-
       const values = new Values({
         route: route,
         values: object.type.values.values,
@@ -160,7 +164,11 @@ export class ChacaInputTree {
     } else if (object.type instanceof MixedFieldResolver) {
       const node = new MixedValueNode(nodeConfig);
 
-      this.createSubNodesOfMixedField(actualRoute, node, object.type.schema);
+      this.createSubNodes({
+        actualRoute: actualRoute,
+        parentNode: node,
+        schema: object.type.schema,
+      });
 
       returnNode = node;
     } else if (object.type instanceof RefFieldResolver) {
@@ -248,20 +256,19 @@ export class ChacaInputTree {
         returnNode = new KeyValueNode(actualRoute, refValueNode);
       }
     } else {
-      const route = InputTreeNode.getRouteString(actualRoute);
-
       throw new ChacaError(`The field '${route}' have an incorrect resolver`);
     }
 
     return returnNode;
   }
 
-  private createSubNodesOfMixedField(
-    actualRoute: string[],
-    parentNode: MixedValueNode,
-    schema: Schema,
-  ) {
+  private createSubNodes({
+    actualRoute,
+    parentNode,
+    schema,
+  }: CreateSubNodesProps) {
     const object = schema.getSchemaObject();
+
     for (const [key, obj] of Object.entries<ResolverObject>(object)) {
       const fieldRoute = [...actualRoute, key];
 

@@ -2,24 +2,12 @@ import { ChacaError, CyclicAccessDataError } from "../../errors";
 import { ChacaUtils } from "../utils";
 import { SchemaToResolve } from "../schema/interfaces/schema";
 import { ChacaInputTree } from "../input-tree";
-import {
-  InputTreeNode,
-  CustomValueNode,
-  EnumValueNode,
-  MixedValueNode,
-  RefValueNode,
-  KeyValueNode,
-  SequentialValueNode,
-  SequenceValueNode,
-  ProbabilityValueNode,
-  PickValueNode,
-} from "../input-tree/core";
+import { InputTreeNode, RefValueNode, KeyValueNode } from "../input-tree/core";
 import { ChacaResultTree } from "../result-tree";
 import {
   DocumentTree,
   FieldNode,
   ArrayResultNode,
-  MixedFieldNode,
   SingleResultNode,
 } from "../result-tree/classes";
 import { SchemaStore } from "../schema-store/store";
@@ -28,6 +16,7 @@ import { DatasetStore } from "../dataset-store";
 import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
 import { CountDoc, SchemaName } from "./value-object";
 import { DatatypeModule } from "../../modules/datatype";
+import { SubFieldsCreator } from "./core/sub-fields-creator";
 
 interface SchemaResolverProps {
   name: string;
@@ -45,6 +34,8 @@ interface CreateSolutionNodeProps {
 export class SchemaResolver<K = any> {
   private readonly utils = new ChacaUtils();
   private readonly datatypeModule = new DatatypeModule();
+
+  private readonly subFieldsCreator = new SubFieldsCreator(this);
 
   private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
@@ -226,6 +217,12 @@ export class SchemaResolver<K = any> {
                 // insertar la solucion del field en el documento
                 newDoc.insertField(solution);
               }
+
+              this.subFieldsCreator.execute({
+                field: datField,
+                indexDoc: indexDoc,
+                node: solution,
+              });
             }
           }
 
@@ -259,11 +256,9 @@ export class SchemaResolver<K = any> {
     return result;
   }
 
-  private createSolutionNode({
-    field,
-    indexDoc,
-  }: CreateSolutionNodeProps): FieldNode {
+  createSolutionNode({ field, indexDoc }: CreateSolutionNodeProps): FieldNode {
     const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
+
     const store = new DatasetStore({
       schemasStore: this.schemasStore,
       omitCurrentDocument: currentDocument,
@@ -306,122 +301,14 @@ export class SchemaResolver<K = any> {
 
       // no es un array
       else {
-        // en caso de ser un probability field
-        if (field instanceof ProbabilityValueNode) {
-          const value = field.value({
-            store: store,
-            currentDocument: currentDocument,
-          });
+        const node = field.generate({
+          currentDocument: currentDocument,
+          indexDoc: indexDoc,
+          schemaIndex: this.schemaIndex,
+          store: store,
+        });
 
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: value,
-          });
-        }
-
-        // en caso de ser un pick field
-        else if (field instanceof PickValueNode) {
-          const value = field.getValues({
-            currentDocument: currentDocument,
-            store: store,
-          });
-
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: value,
-          });
-        }
-
-        // en caso de ser un field sequential
-        else if (field instanceof SequentialValueNode) {
-          const value = field.value();
-
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: value,
-          });
-        }
-
-        // en caso de ser un custom field
-        else if (field instanceof CustomValueNode) {
-          // obtener el valor de la funcion pasando como parametro el documento actual del ciclo
-          const value = field.value({
-            fields: currentDocument.getDocumentObject(),
-            datasetStore: store,
-          });
-
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: value,
-          });
-        }
-
-        // en caso de ser un ref field
-        else if (field instanceof RefValueNode) {
-          const refValue = field.value(indexDoc, this.schemaIndex);
-
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: refValue,
-          });
-        }
-
-        // en caso de ser un key field
-        else if (field instanceof KeyValueNode) {
-          const keyValue = field.value({
-            currentDocument: indexDoc,
-            store: store,
-            currentSchemaResolver: this.schemaIndex,
-          });
-
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: keyValue,
-          });
-        }
-
-        // en caso de ser un sequence
-        else if (field instanceof SequenceValueNode) {
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: field.value(),
-          });
-        }
-
-        // en caso de ser un mixed field
-        else if (field instanceof MixedValueNode) {
-          const mixedNode = new MixedFieldNode(field.getNodeName());
-
-          const subFields = field.getFields();
-
-          for (const field of subFields) {
-            // filtrar el subField segun su tipo
-            const subFieldSolutionNode = this.createSolutionNode({
-              field: field,
-              indexDoc: indexDoc,
-            });
-
-            // insertar la solucion del field en la solucion del mixed field pasado por parametro
-            mixedNode.insertNode(subFieldSolutionNode);
-          }
-
-          return mixedNode;
-        }
-
-        // en caso de ser un enum field
-        else if (field instanceof EnumValueNode) {
-          return new SingleResultNode({
-            name: field.getNodeName(),
-            value: field.value(),
-          });
-        }
-
-        // en caso de no ser ninguno de los anteriores
-        else {
-          throw new ChacaError(
-            `'${field.getNodeName()}' has an invalid method of solution`,
-          );
-        }
+        return node;
       }
     } else {
       return new SingleResultNode({

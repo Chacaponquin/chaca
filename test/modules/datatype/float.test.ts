@@ -1,9 +1,9 @@
 import { modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-const TEST_COUNT_VALUES = 1000;
+const TEST_COUNT_VALUES = 5000;
 
-describe("# Datatype Float test", () => {
+describe("# Datatype.float test", () => {
   it("Without arguments. Should return float numbers", () => {
     const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
       modules.datatype.float(),
@@ -42,6 +42,14 @@ describe("# Datatype Float test", () => {
     );
 
     expect(allValues.every((v) => !Number.isInteger(v))).toBe(true);
+    expect(
+      allValues.every((v) => {
+        const str = String(v);
+        const [_, float] = str.split(".");
+
+        return float.length >= 1;
+      }),
+    ).toBe(true);
   });
 
   it("With precision, max and min argumnets", () => {

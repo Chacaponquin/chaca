@@ -1,10 +1,14 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { DatatypeModule } from "../../../../modules/datatype";
 import { DatasetStore } from "../../../dataset-store";
-import { DocumentTree } from "../../../result-tree/classes";
+import {
+  DocumentTree,
+  FieldNode,
+  SingleResultNode,
+} from "../../../result-tree/classes";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { NotArray } from "../is-array";
-import { InputTreeNode } from "../node";
+import { GenerateProps, InputTreeNode } from "../node";
 import { Count } from "./value-object/count";
 import { Values } from "./value-object/values";
 
@@ -40,7 +44,7 @@ export class PickValueNode extends InputTreeNode {
     }
   }
 
-  getValues({ currentDocument, store }: GetValuesProps): unknown[] {
+  private getValues({ currentDocument, store }: GetValuesProps): unknown[] {
     const result: unknown[] = [];
     const banned: number[] = [];
 
@@ -55,7 +59,7 @@ export class PickValueNode extends InputTreeNode {
       let i = 0;
 
       while (i < limit) {
-        const index = this.generate(banned);
+        const index = this.generateIndex(banned);
 
         banned.push(index);
         result.push(this.values.get(index));
@@ -67,7 +71,7 @@ export class PickValueNode extends InputTreeNode {
     }
   }
 
-  private generate(banned: number[]): number {
+  private generateIndex(banned: number[]): number {
     let num = this.datatypeModule.int({
       min: 0,
       max: this.values.length(),
@@ -78,5 +82,12 @@ export class PickValueNode extends InputTreeNode {
     }
 
     return num;
+  }
+
+  generate(props: GenerateProps): FieldNode {
+    return new SingleResultNode({
+      name: this.getNodeName(),
+      value: this.getValues(props),
+    });
   }
 }

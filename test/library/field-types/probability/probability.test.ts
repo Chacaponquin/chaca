@@ -54,7 +54,9 @@ describe("# Probability Field Tests", () => {
 
     const data = schema.array(50);
 
-    expect(count(data, 10)).toBeGreaterThanOrEqual(30);
+    const total = count(data, 10);
+
+    expect(total).toBeGreaterThanOrEqual(30);
   });
 
   it("Probability field with 2 elements with 0.8 chance", () => {

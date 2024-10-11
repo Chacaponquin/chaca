@@ -31,10 +31,10 @@ export const COMPLETE_SCHEMA = chaca.schema({
       age: () => modules.datatype.int({ min: 18, max: 85 }),
       currentMovie: {
         type: chaca.schema({
-          movieName: () => modules.person.firstName(),
+          name: () => modules.person.firstName(),
           image: () => modules.image.event(),
         }),
-        possibleNull: 50,
+        possibleNull: 0.5,
       },
       email: () => modules.internet.email(),
     }),

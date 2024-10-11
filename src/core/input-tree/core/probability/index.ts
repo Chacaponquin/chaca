@@ -1,8 +1,12 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
-import { DocumentTree } from "../../../result-tree/classes";
+import {
+  DocumentTree,
+  FieldNode,
+  SingleResultNode,
+} from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
 import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { InputTreeNode } from "../node";
+import { GenerateProps, InputTreeNode } from "../node";
 import { NotArray } from "../is-array";
 import { ChancesArray } from "./value-object/chances-array";
 
@@ -35,7 +39,14 @@ export class ProbabilityValueNode extends InputTreeNode {
     }
   }
 
-  value(props: Props) {
+  private value(props: Props) {
     return this.options.value(props);
+  }
+
+  generate(props: GenerateProps): FieldNode {
+    return new SingleResultNode({
+      name: this.getNodeName(),
+      value: this.value(props),
+    });
   }
 }

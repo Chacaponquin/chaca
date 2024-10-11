@@ -18,11 +18,13 @@ export class ImageModule {
 
   private buildUrl(
     category: string = this.wordModule.noun({ language: "en" }),
-    {
-      height = this.datatypeModule.int({ min: 640, max: 4000 }),
-      width = this.datatypeModule.int({ min: 640, max: 4000 }),
-    }: ImageProps = {},
+    { height: iheight, width: iwidth }: ImageProps = {},
   ) {
+    const size = this.datatypeModule.int({ min: 640, max: 4000 });
+
+    const width = iwidth ? iwidth : size;
+    const height = iheight ? iheight : size;
+
     const url = `https://loremflickr.com/${width}/${height}/${category}`;
     return url;
   }

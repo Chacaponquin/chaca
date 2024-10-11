@@ -98,7 +98,7 @@ export class ExportResolver {
     }
 
     // object config
-    else if (typeof format === "object") {
+    else if (typeof format === "object" && format !== null) {
       if (format.ext === "json") {
         gen = new JsonGenerator({
           filename: this.config.filename,
@@ -147,6 +147,7 @@ export class ExportResolver {
           filename: this.config.filename,
           location: this.config.location,
           zip: format.zip,
+          separate: format.separate,
         });
       } else {
         throw new ChacaError(
