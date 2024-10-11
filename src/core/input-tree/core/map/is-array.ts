@@ -20,7 +20,8 @@ export class IsArrayMapper {
   execute({ value, route }: Props): IsArray {
     if (!value.isValid()) {
       throw new WrongArrayDefinitionError(
-        `In field '${route}'. The isArray parameter must be an integer, a function or an object with the limits { min, max }`,
+        route,
+        `The isArray parameter must be an integer, a function or an object with the limits { min, max }`,
       );
     }
 
@@ -43,7 +44,8 @@ export class IsArrayMapper {
       type = new NotArray();
     } else {
       throw new WrongArrayDefinitionError(
-        `In field '${route}'. The parameter isArray must be an integer, a function or an object with the limits { min, max }`,
+        route,
+        `The parameter isArray must be an integer, a function or an object with the limits { min, max }`,
       );
     }
 

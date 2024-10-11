@@ -22,7 +22,8 @@ export class PossibleNullMapper {
   execute({ value: ivalue, countDocs, route }: Props): PossibleNull {
     if (!ivalue.isValid()) {
       throw new WrongPossibleNullDefinitionError(
-        `In the field ${route}. The possibleNull parameter can be an integer, a float, or a function that returns the probability that the field has a null value.`,
+        route,
+        `The possibleNull parameter can be an integer, a float, or a function that returns the probability that the field has a null value.`,
       );
     }
 
@@ -47,7 +48,8 @@ export class PossibleNullMapper {
       result = new NotNull();
     } else {
       throw new WrongPossibleNullDefinitionError(
-        `In the field '${route}'. The possibleNull parameter can be an integer, a float, or a function that returns the probability that the field has a null value.`,
+        route,
+        `The possibleNull parameter can be an integer, a float, or a function that returns the probability that the field has a null value.`,
       );
     }
 
