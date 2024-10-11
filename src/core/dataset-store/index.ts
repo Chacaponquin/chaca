@@ -7,8 +7,9 @@ import { GetConfig } from "./value-object";
 
 interface Props {
   schemasStore: SchemaStore;
-  omitCurrentDocument: DocumentTree<any>;
+  omitCurrentDocument: DocumentTree;
   omitResolver: SchemaResolver;
+  caller: string;
 }
 
 /** Store to interact with all datasets */
@@ -16,11 +17,18 @@ export class DatasetStore {
   private readonly schemasStore: SchemaStore;
   private readonly omitCurrentDocument: DocumentTree<any>;
   private readonly omitResolver: SchemaResolver;
+  private readonly caller: string;
 
-  constructor({ omitCurrentDocument, omitResolver, schemasStore }: Props) {
+  constructor({
+    omitCurrentDocument,
+    omitResolver,
+    schemasStore,
+    caller,
+  }: Props) {
     this.omitResolver = omitResolver;
     this.omitCurrentDocument = omitCurrentDocument;
     this.schemasStore = schemasStore;
+    this.caller = caller;
   }
 
   get<R = any>(route: string, iconfig?: GetStoreConfig): R[] {
@@ -30,19 +38,23 @@ export class DatasetStore {
       config: iconfig,
     });
 
-    const foundNodes = this.schemasStore.value(route, config.value());
+    const foundNodes = this.schemasStore.value({
+      route: route,
+      config: config.value(),
+      caller: this.caller,
+    });
 
-    const returnValues = [] as R[];
+    const values = [] as R[];
 
     for (const node of foundNodes) {
       if (node instanceof FieldNode) {
-        returnValues.push(node.getRealValue() as R);
+        values.push(node.getRealValue() as R);
       } else {
-        returnValues.push(node.getDocumentObject());
+        values.push(node.getDocumentObject());
       }
     }
 
-    return returnValues;
+    return values;
   }
 
   currentDocuments<R = any>(): R[] {

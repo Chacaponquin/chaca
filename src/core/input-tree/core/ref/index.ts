@@ -99,6 +99,7 @@ export class RefValueNode extends InputTreeNode {
     const currentSchemaResolver = this.schemasStore.getResolverByIndex(
       currentSchemaResolverIndex,
     );
+
     const currentFields = currentSchemaResolver
       .getResultTree()
       .getDocumentByIndex(currentDocumentIndex)
@@ -112,6 +113,7 @@ export class RefValueNode extends InputTreeNode {
             schemasStore: this.schemasStore,
             omitCurrentDocument: refNode.document,
             omitResolver: currentSchemaResolver,
+            caller: this.getRouteString(),
           }),
           refFields: refNode.document.getDocumentObject(),
           currentFields,
@@ -133,6 +135,7 @@ export class RefValueNode extends InputTreeNode {
     currentSchemaResolver: number,
   ): unknown | unknown[] {
     const schemaRef = this.getSchemaRef();
+
     if (schemaRef) {
       if (!schemaRef.dangerCyclic()) {
         // build schema ref trees

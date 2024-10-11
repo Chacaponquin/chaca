@@ -3,6 +3,12 @@ import { DocumentTree, FieldNode } from "../result-tree/classes";
 import { SchemaResolver } from "../schema-resolver";
 import { GetStoreValueConfig } from "./interfaces/store";
 
+interface ValueProps {
+  route: string;
+  config: GetStoreValueConfig;
+  caller: string;
+}
+
 export class SchemaStore {
   constructor(private schemas: SchemaResolver[]) {}
 
@@ -29,10 +35,11 @@ export class SchemaStore {
     return this.schemas;
   }
 
-  value<D = any>(
-    route: string,
-    config: GetStoreValueConfig,
-  ): Array<FieldNode | DocumentTree<D>> {
+  value<D = any>({
+    caller,
+    config,
+    route,
+  }: ValueProps): Array<FieldNode | DocumentTree<D>> {
     const routeArray = this.validateFieldToGet(route);
 
     let foundSchema = false;
@@ -47,7 +54,7 @@ export class SchemaStore {
             currentSchema.buildTrees();
           } else {
             throw new CyclicAccessDataError(
-              `You are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
+              `From ${caller}, you are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
             );
           }
         }

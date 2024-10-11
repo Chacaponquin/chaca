@@ -268,6 +268,7 @@ export class SchemaResolver<K = any> {
       schemasStore: this.schemasStore,
       omitCurrentDocument: currentDocument,
       omitResolver: this,
+      caller: field.getRouteString(),
     });
 
     const isNull = field.isNull({
