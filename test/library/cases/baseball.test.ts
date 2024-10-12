@@ -39,7 +39,7 @@ describe("# Baseball Case Test", () => {
     await BASEBALL_CASE.export({
       filename: FILE_NAME,
       location: EXPORT_ROUTE,
-      format: { ext: "csv", zip: true },
+      format: { ext: "csv", zip: false },
       verbose: false,
     });
   });

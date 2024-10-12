@@ -25,8 +25,12 @@ export class YamlGenerator extends Generator {
     this.separate = Boolean(config.separate);
   }
 
+  createContent(data: any): string {
+    return yaml.dump(data, { skipInvalid: true, indent: 3 });
+  }
+
   async createFile(data: any): Promise<string> {
-    const result = yaml.dump(data, { skipInvalid: true });
+    const result = this.createContent(data);
 
     await fs.promises.writeFile(this.route, result, "utf-8");
 
@@ -46,7 +50,7 @@ export class YamlGenerator extends Generator {
       for (const [key, data] of Object.entries(relationalData)) {
         const route = this.generateRoute(key);
 
-        const result = yaml.dump(data, { skipInvalid: true });
+        const result = this.createContent(data);
         await fs.promises.writeFile(route, result, "utf-8");
 
         allRoutes.push(route);

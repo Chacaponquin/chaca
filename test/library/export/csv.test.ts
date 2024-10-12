@@ -1,6 +1,5 @@
-import { chaca, ChacaError } from "../../../src";
+import { chaca, ChacaError, modules } from "../../../src";
 import { COMPLETE_SCHEMA } from "../../utils/schemas/schema-complete";
-import { NESTED_OBJECT_SCHEMA } from "../../utils/schemas/schema-nested-objects";
 import { SIMPLE_SCHEMA } from "../../utils/schemas/simple-schema";
 import { checkFile } from "./utils/export-util";
 import { describe, expect, it, beforeAll } from "vitest";
@@ -11,12 +10,10 @@ const ext = "csv";
 
 describe("#Export CSV test", () => {
   let COMPLETE_SCHEMA_DATA: any;
-  let NESTED_OBJECTS_DATA: any;
   let SIMPLE_SCHEMA_DATA: any;
 
   beforeAll(() => {
     COMPLETE_SCHEMA_DATA = COMPLETE_SCHEMA.array(50);
-    NESTED_OBJECTS_DATA = NESTED_OBJECT_SCHEMA.array(50);
     SIMPLE_SCHEMA_DATA = SIMPLE_SCHEMA.array(50);
   });
 
@@ -75,40 +72,29 @@ describe("#Export CSV test", () => {
       expect(checkFile({ route, ext })).toBe(true);
     });
 
-    it("Array of similar objects", async () => {
-      await expect(
-        chaca.export(NESTED_OBJECTS_DATA, {
-          filename: filename + "SimpleObject",
-          location: ROOT,
-          format: "csv",
-        }),
-      ).rejects.toThrow(ChacaError);
+    it("Array of complete schema. Should be exported", async () => {
+      const route = await chaca.export(COMPLETE_SCHEMA_DATA, {
+        filename: filename + "ArrayCompleteSchema",
+        location: ROOT,
+        format: "csv",
+      });
+
+      expect(checkFile({ route: route, ext: "csv" })).toBe(true);
     });
 
-    it("Array of complete schema", async () => {
-      await expect(
-        chaca.export(COMPLETE_SCHEMA_DATA, {
-          filename: filename + "ArrayCompleteSchema",
-          location: ROOT,
-          format: "csv",
-        }),
-      ).rejects.toThrow(ChacaError);
-    });
-
-    it("Array of object with diferent properties", async () => {
+    it("Array of object with diferent properties. Should be exported", async () => {
       const data = [
         { name: "Hector", age: 20 },
-        { fullName: "Paquito antonio", favoriteNumber: 50 },
+        { fullName: modules.person.fullName(), favoriteNumber: 50 },
       ];
 
-      await expect(
-        async () =>
-          await chaca.export(data, {
-            filename: filename + "ArrayObjectDiferentProperties",
-            location: ROOT,
-            format: "csv",
-          }),
-      ).rejects.toThrow(ChacaError);
+      const route = await chaca.export(data, {
+        filename: filename + "ArrayObjectDiferentProperties",
+        location: ROOT,
+        format: { ext: "csv" },
+      });
+
+      expect(checkFile({ route: route, ext: "csv" })).toBe(true);
     });
   });
 });

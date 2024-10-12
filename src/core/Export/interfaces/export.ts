@@ -1,3 +1,5 @@
+import { CsvProps } from "../generators/csv";
+
 /** Export files extendsions */
 export type ExportFormat = Extensions | ExtensionConfigs;
 
@@ -107,11 +109,7 @@ export type JsonFormatConfig = {
 
 export type CsvFormatConfig = {
   ext: "csv";
-  /**
-   * Boolean indicating whether all generated files are compressed into a zip
-   */
-  zip?: boolean;
-};
+} & CsvProps;
 
 export type JavaFormatConfig = {
   ext: "java";

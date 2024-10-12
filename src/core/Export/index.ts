@@ -65,10 +65,7 @@ export class ExportResolver {
         location: this.config.location,
       });
     } else if (format === "csv") {
-      gen = new CsvGenerator({
-        filename: this.config.filename,
-        location: this.config.location,
-      });
+      gen = new CsvGenerator(this.config.filename, this.config.location, {});
     } else if (format === "java") {
       gen = new JavaGenerator({
         filename: this.config.filename,
@@ -106,11 +103,11 @@ export class ExportResolver {
           extConfig: { separate: format.separate, zip: format.zip },
         });
       } else if (format.ext === "csv") {
-        gen = new CsvGenerator({
-          filename: this.config.filename,
-          location: this.config.location,
-          zip: format.zip,
-        });
+        gen = new CsvGenerator(
+          this.config.filename,
+          this.config.location,
+          format,
+        );
       } else if (format.ext === "java") {
         gen = new JavaGenerator({
           filename: this.config.filename,
