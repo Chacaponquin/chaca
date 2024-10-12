@@ -4,26 +4,24 @@ import { Generator } from "../generator";
 import fs from "fs";
 
 interface Props {
-  filename: string;
-  location: string;
   zip?: boolean;
 }
 
 export class PythonGenerator extends Generator {
-  private importLibraries = [] as Array<string>;
+  private importLibraries = [] as string[];
   private zip: boolean;
 
-  constructor(config: Props) {
+  constructor(filename: string, location: string, config: Props) {
     super({
       extension: "py",
-      filename: config.filename,
-      location: config.location,
+      filename: filename,
+      location: location,
     });
 
     this.zip = Boolean(config.zip);
   }
 
-  public async createFile(data: any): Promise<string> {
+  async createFile(data: any): Promise<string> {
     const pythonCode = this.createDataCode(this.filename, data);
     const finalCode = this.buildFinalCode(pythonCode);
 
@@ -36,10 +34,8 @@ export class PythonGenerator extends Generator {
     }
   }
 
-  public async createRelationalFile(
-    resolver: DatasetResolver,
-  ): Promise<string> {
-    const allDeclarations = [] as Array<string>;
+  async createRelationalFile(resolver: DatasetResolver): Promise<string> {
+    const allDeclarations = [] as string[];
     resolver.getResolvers().forEach((r) => {
       const pythonCode = this.createDataCode(r.getSchemaName(), r.resolve());
       allDeclarations.push(pythonCode);
