@@ -88,10 +88,7 @@ export class ExportResolver {
         location: this.config.location,
       });
     } else if (format === "python") {
-      gen = new PythonGenerator({
-        filename: this.config.filename,
-        location: this.config.location,
-      });
+      gen = new PythonGenerator(this.config.filename, this.config.location, {});
     }
 
     // object config
@@ -128,9 +125,7 @@ export class ExportResolver {
           format: format.ext,
         });
       } else if (format.ext === "python") {
-        gen = new PythonGenerator({
-          filename: this.config.filename,
-          location: this.config.location,
+        gen = new PythonGenerator(this.config.filename, this.config.location, {
           zip: format.zip,
         });
       } else if (format.ext === "typescript") {
