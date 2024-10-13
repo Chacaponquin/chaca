@@ -1,8 +1,9 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { Generator } from "../generator";
-import fs from "fs";
+import { Filename } from "../generator/name";
+import { Route } from "../generator/route";
 
-interface ExtProps {
+export interface JsonProps {
   separate?: boolean;
   zip?: boolean;
 }
@@ -10,11 +11,11 @@ interface ExtProps {
 interface Props {
   filename: string;
   location: string;
-  extConfig: ExtProps;
+  extConfig: JsonProps;
 }
 
 export class JsonGenerator extends Generator {
-  private config: ExtProps;
+  private config: JsonProps;
 
   constructor({ extConfig, filename, location }: Props) {
     super({
@@ -26,47 +27,48 @@ export class JsonGenerator extends Generator {
     this.config = extConfig;
   }
 
-  private async setFile(route: string, content: any): Promise<void> {
-    const jsonContent = JSON.stringify(content, undefined, 3);
-    await fs.promises.writeFile(route, jsonContent, "utf-8");
+  private async setFile(route: Route, content: any): Promise<void> {
+    const json = JSON.stringify(content, undefined, 3);
+    await this.writeFile(route, json);
   }
 
-  async createFile(data: any): Promise<string> {
-    await this.setFile(this.route, data);
+  async createFile(data: any): Promise<string[]> {
+    const filename = new Filename(this.filename);
+    const route = this.generateRoute(filename);
+    await this.setFile(route, data);
 
     if (this.config.zip) {
-      return this.createFileZip();
+      const zip = this.createZip();
+      zip.add(route);
+
+      return [zip.route];
     } else {
-      return this.route;
+      return [route.value()];
     }
   }
 
-  async createRelationalFile(resolver: DatasetResolver): Promise<string> {
+  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
     const objectData = resolver.resolve();
 
     if (this.config.separate) {
-      const allRoutes: string[] = [];
+      const allRoutes: Route[] = [];
 
       for (const [key, data] of Object.entries(objectData)) {
-        const route = this.generateRoute(key);
+        const filename = new Filename(key);
+        const route = this.generateRoute(filename);
         await this.setFile(route, data);
 
         allRoutes.push(route);
       }
 
       if (this.config.zip) {
-        const { zip, zipPath } = this.createZip();
+        const zip = this.createZip();
 
-        for (const route of allRoutes) {
-          zip.addLocalFile(route);
-          await fs.promises.unlink(route);
-        }
+        await zip.multiple(allRoutes);
 
-        zip.writeZip(zipPath);
-
-        return zipPath;
+        return [zip.route];
       } else {
-        return this.baseLocation;
+        return allRoutes.map((r) => r.value());
       }
     } else {
       return await this.createFile(objectData);

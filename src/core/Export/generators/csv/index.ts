@@ -1,9 +1,9 @@
 import { Generator } from "../generator";
-import fs from "fs";
-import path from "path";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { json2csv } from "json-2-csv";
 import { DataValidator } from "./core/validator";
+import { Route } from "../generator/route";
+import { Filename } from "../generator/name";
 
 interface KeyConverter {
   field: string;
@@ -104,57 +104,51 @@ export class CsvGenerator extends Generator {
     });
   }
 
-  async createRelationalFile(resolver: DatasetResolver): Promise<string> {
-    const allData = resolver.resolve();
-    const allRoutes = [] as string[];
-
-    for (const [key, data] of Object.entries(allData)) {
-      const route = await this.setFile(key, data);
-      allRoutes.push(route);
-    }
-
+  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
     if (this.zip) {
-      const { zip, zipPath } = this.createZip();
+      const allRoutes = [] as Route[];
 
-      for (const route of allRoutes) {
-        zip.addLocalFile(route);
-        await fs.promises.unlink(route);
+      for (const r of resolver.getResolvers()) {
+        const filename = new Filename(r.getSchemaName());
+        const route = await this.setFile(filename, r.resolve());
+
+        allRoutes.push(route);
       }
 
-      zip.writeZip(zipPath);
+      const zip = this.createZip();
+      zip.multiple(allRoutes);
 
-      return zipPath;
+      return [zip.route];
     } else {
-      return this.baseLocation;
+      const filename = new Filename(this.filename);
+      const route = await this.setFile(filename, resolver.resolve());
+
+      return [route.value()];
     }
   }
 
-  async createFile(data: any): Promise<string> {
-    const fileRoute = await this.setFile(this.filename, data);
+  async createFile(data: any): Promise<string[]> {
+    const filename = new Filename(this.filename);
+    const route = await this.setFile(filename, data);
 
     if (this.zip) {
-      const { zip, zipPath } = this.createZip();
+      const zip = this.createZip();
+      zip.add(route);
 
-      zip.addLocalFile(fileRoute);
-      zip.writeZip(zipPath);
-
-      await fs.promises.unlink(fileRoute);
-
-      return zipPath;
+      return [zip.route];
     } else {
-      return fileRoute;
+      return [route.value()];
     }
   }
 
-  private async setFile(filename: string, data: any): Promise<string> {
+  private async setFile(filename: Filename, data: any): Promise<Route> {
     this.validator.execute(data);
 
-    const fileRoute = path.join(this.baseLocation, `${filename}.csv`);
-
+    const route = this.generateRoute(filename);
     const content = this.createContent(data);
 
-    await fs.promises.writeFile(fileRoute, content, "utf-8");
+    await this.writeFile(route, content);
 
-    return fileRoute;
+    return route;
   }
 }

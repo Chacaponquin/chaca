@@ -12,7 +12,7 @@ export class SQLDataGenerator {
     private readonly sqlTables: Array<SQLTable>,
   ) {}
 
-  public getData(): string {
+  code(): string {
     if (this.sqlExtension === "postgresql") {
       const generator = new PostgreSQL();
 
@@ -27,12 +27,12 @@ export class SQLDataGenerator {
 }
 
 export abstract class SQLExtensionGenerator {
-  public abstract createTableDataString(tables: Array<SQLTable>): string;
-  public abstract createTablesString(tables: Array<SQLTable>): string;
+  abstract createTableDataString(tables: SQLTable[]): string;
+  abstract createTablesString(tables: SQLTable[]): string;
 }
 
 export class PostgreSQL extends SQLExtensionGenerator {
-  public createTablesString(tables: Array<SQLTable>): string {
+  createTablesString(tables: SQLTable[]): string {
     let code = "";
 
     tables.forEach((table) => {
@@ -106,7 +106,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
     return code;
   }
 
-  public createTableDataString(tables: Array<SQLTable>): string {
+  createTableDataString(tables: SQLTable[]): string {
     let data = "";
 
     tables.forEach((table) => {

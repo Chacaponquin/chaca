@@ -3,6 +3,9 @@ import fs from "fs";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { ChacaUtils } from "../../../utils";
 import AdmZip from "adm-zip";
+import { Filename } from "./name";
+import { Route } from "./route";
+import { Zip } from "./zip";
 
 export interface Props {
   extension: string;
@@ -17,9 +20,7 @@ export abstract class Generator {
   protected location: string;
 
   protected ext: string;
-  protected route: string;
-  protected saveFileName: string;
-  protected baseLocation: string;
+  private readonly baseLocation: string;
 
   constructor({ filename, location, extension }: Props) {
     if (!fs.existsSync(location)) {
@@ -30,38 +31,30 @@ export abstract class Generator {
     this.location = location;
 
     this.ext = extension;
-    this.saveFileName = `${filename}.${this.ext}`;
     this.baseLocation = path.join("./", location);
-    this.route = this.generateRoute(filename);
   }
 
-  abstract createFile(data: any): Promise<string>;
-  abstract createRelationalFile(resolver: DatasetResolver): Promise<string>;
+  abstract createFile(data: any): Promise<string[]>;
+  abstract createRelationalFile(resolver: DatasetResolver): Promise<string[]>;
 
-  getRoute() {
-    return this.route;
+  protected generateRoute(filename: Filename): Route {
+    return new Route(filename, this.baseLocation, this.ext);
   }
 
-  protected generateRoute(name: string): string {
-    return `${path.join(this.baseLocation, `${name}.${this.ext}`)}`;
-  }
-
-  protected createZip() {
+  protected createZip(): Zip {
     const zip = new AdmZip();
-    const zipName = `${this.filename}.zip`;
-    const zipPath = path.join(this.baseLocation, zipName);
+    const zipName = new Filename(`${this.filename}.zip`);
 
-    return { zip, zipPath };
+    const zipPath = this.generateRoute(zipName).value();
+
+    return new Zip(zipPath, zip, this);
   }
 
-  protected async createFileZip(): Promise<string> {
-    const { zip, zipPath } = this.createZip();
+  async deleteFile(route: Route): Promise<void> {
+    await fs.promises.unlink(route.value());
+  }
 
-    zip.addLocalFile(this.route);
-    zip.writeZip(zipPath);
-
-    await fs.promises.unlink(this.route);
-
-    return zipPath;
+  async writeFile(route: Route, code: string): Promise<void> {
+    await fs.promises.writeFile(route.value(), code, "utf-8");
   }
 }

@@ -1,9 +1,8 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { Generator } from "../generator";
-import fs from "fs";
-import { Imports } from "./core/import";
 import { PythonCodeCreator } from "./core/creator";
-import { PythonClasses } from "./core/classes";
+import { Filename } from "../generator/name";
+import { Route } from "../generator/route";
 
 export interface PythonProps {
   zip?: boolean;
@@ -11,7 +10,8 @@ export interface PythonProps {
 }
 
 export class PythonGenerator extends Generator {
-  private zip: boolean;
+  private readonly zip: boolean;
+  private readonly separate: boolean;
 
   constructor(filename: string, location: string, config: PythonProps) {
     super({
@@ -20,46 +20,79 @@ export class PythonGenerator extends Generator {
       location: location,
     });
 
+    this.separate = Boolean(config.separate);
     this.zip = Boolean(config.zip);
   }
 
-  async createFile(data: any): Promise<string> {
-    const imports = new Imports();
+  async createFile(data: any): Promise<string[]> {
+    const creator = new PythonCodeCreator(this.utils);
 
-    const classes = new PythonClasses(imports);
-    const creator = new PythonCodeCreator(imports, classes);
+    const filename = new Filename(this.filename);
+    const route = this.generateRoute(filename);
 
-    const code = creator.execute(this.utils, {
+    const code = creator.execute({
       data: data,
       name: this.filename,
     });
 
-    await fs.promises.writeFile(this.route, code, "utf-8");
+    await this.writeFile(route, code);
 
     if (this.zip) {
-      return await this.createFileZip();
+      const zip = this.createZip();
+      zip.add(route);
+
+      return [zip.route];
     } else {
-      return this.route;
+      return [route.value()];
     }
   }
 
-  async createRelationalFile(resolver: DatasetResolver): Promise<string> {
-    const imports = new Imports();
-    const classes = new PythonClasses(imports);
-    const creator = new PythonCodeCreator(imports, classes);
-    const data = resolver.resolve();
+  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
+    const creator = new PythonCodeCreator(this.utils);
 
-    const code = creator.execute(this.utils, {
-      data: data,
-      name: this.filename,
-    });
+    if (this.separate) {
+      const allRoutes = [] as Route[];
 
-    await fs.promises.writeFile(this.route, code, "utf-8");
+      for (const r of resolver.getResolvers()) {
+        const code = creator.execute({
+          data: resolver.resolve(),
+          name: r.getSchemaName(),
+        });
+        const filename = new Filename(r.getSchemaName());
+        const route = this.generateRoute(filename);
 
-    if (this.zip) {
-      return await this.createFileZip();
+        await this.writeFile(route, code);
+
+        allRoutes.push(route);
+      }
+
+      if (this.zip) {
+        const zip = this.createZip();
+        zip.multiple(allRoutes);
+
+        return [zip.route];
+      } else {
+        return allRoutes.map((r) => r.value());
+      }
     } else {
-      return this.route;
+      const filename = new Filename(this.filename);
+      const route = this.generateRoute(filename);
+
+      const code = creator.execute({
+        data: resolver.resolve(),
+        name: this.filename,
+      });
+
+      await this.writeFile(route, code);
+
+      if (this.zip) {
+        const zip = this.createZip();
+        zip.add(route);
+
+        return [zip.route];
+      } else {
+        return [route.value()];
+      }
     }
   }
 }

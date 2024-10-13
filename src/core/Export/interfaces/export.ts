@@ -1,4 +1,8 @@
 import { CsvProps } from "../generators/csv";
+import { JavaProps } from "../generators/java";
+import { JavascriptProps } from "../generators/javascript";
+import { JsonProps } from "../generators/json";
+import { TypescriptProps } from "../generators/typescript";
 
 /** Export files extendsions */
 export type ExportFormat = Extensions | ExtensionConfigs;
@@ -81,31 +85,15 @@ export type YamlFormatConfig = {
 
 export type JavascriptFormatConfig = {
   ext: "javascript";
-  /**
-   * Boolean indicating whether all generated files are compressed into a zip
-   */
-  zip?: boolean;
-};
+} & JavascriptProps;
 
 export type TypescriptFormatConfig = {
   ext: "typescript";
-  /**
-   * Boolean indicating whether all generated files are compressed into a zip
-   */
-  zip?: boolean;
-};
+} & TypescriptProps;
 
 export type JsonFormatConfig = {
   ext: "json";
-  /**
-   * If is `true`, the data generated from each schema will be placed in independent files
-   */
-  separate?: boolean;
-  /**
-   * Boolean indicating whether all generated files are compressed into a zip
-   */
-  zip?: boolean;
-};
+} & JsonProps;
 
 export type CsvFormatConfig = {
   ext: "csv";
@@ -113,8 +101,4 @@ export type CsvFormatConfig = {
 
 export type JavaFormatConfig = {
   ext: "java";
-  /**
-   * Boolean indicating whether all generated files are compressed into a zip
-   */
-  zip?: boolean;
-};
+} & JavaProps;

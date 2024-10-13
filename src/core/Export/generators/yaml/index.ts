@@ -1,11 +1,10 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { Generator } from "../generator";
-import fs from "fs";
-import yaml from "js-yaml";
+import { Filename } from "../generator/name";
+import { YamlCodeCreator } from "./core/creator";
+import { Route } from "../generator/route";
 
-interface Props {
-  filename: string;
-  location: string;
+export interface YamlProps {
   zip?: boolean;
   separate?: boolean;
 }
@@ -14,64 +13,63 @@ export class YamlGenerator extends Generator {
   private readonly zip: boolean;
   private readonly separate: boolean;
 
-  constructor(config: Props) {
+  private readonly creator = new YamlCodeCreator();
+
+  constructor(filename: string, location: string, config: YamlProps) {
     super({
       extension: "yaml",
-      filename: config.filename,
-      location: config.location,
+      filename: filename,
+      location: location,
     });
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
   }
 
-  createContent(data: any): string {
-    return yaml.dump(data, { skipInvalid: true, indent: 3 });
-  }
+  async createFile(data: any): Promise<string[]> {
+    const filename = new Filename(this.filename);
+    const route = this.generateRoute(filename);
 
-  async createFile(data: any): Promise<string> {
-    const result = this.createContent(data);
+    const code = this.creator.execute(data);
 
-    await fs.promises.writeFile(this.route, result, "utf-8");
+    await this.writeFile(route, code);
 
     if (this.zip) {
-      return await this.createFileZip();
+      const zip = this.createZip();
+      zip.add(route);
+
+      return [zip.route];
     } else {
-      return this.route;
+      return [route.value()];
     }
   }
 
-  async createRelationalFile(resolver: DatasetResolver): Promise<string> {
-    const relationalData = resolver.resolve();
-
+  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
     if (this.separate) {
-      const allRoutes: string[] = [];
+      const routes: Route[] = [];
 
-      for (const [key, data] of Object.entries(relationalData)) {
-        const route = this.generateRoute(key);
+      for (const r of resolver.getResolvers()) {
+        const filename = new Filename(r.getSchemaName());
+        const route = this.generateRoute(filename);
 
-        const result = this.createContent(data);
-        await fs.promises.writeFile(route, result, "utf-8");
+        const code = this.creator.execute(r.resolve());
 
-        allRoutes.push(route);
+        await this.writeFile(route, code);
+
+        routes.push(route);
       }
 
       if (this.zip) {
-        const { zip, zipPath } = this.createZip();
+        const zip = this.createZip();
 
-        for (const route of allRoutes) {
-          zip.addLocalFile(route);
-          await fs.promises.unlink(route);
-        }
+        zip.multiple(routes);
 
-        zip.writeZip(zipPath);
-
-        return zipPath;
+        return [zip.route];
       } else {
-        return this.baseLocation;
+        return routes.map((r) => r.value());
       }
+    } else {
+      return await this.createFile(resolver.resolve());
     }
-
-    return await this.createFile(relationalData);
   }
 }

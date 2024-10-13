@@ -11,30 +11,29 @@ interface Props {
 }
 
 export class PythonCodeCreator {
-  constructor(
-    private readonly imports: Imports,
-    private readonly classes: PythonClasses,
-  ) {}
+  constructor(private readonly utils: ChacaUtils) {}
 
-  execute(utils: ChacaUtils, { data, name }: Props): string {
-    const preventName = new VariableName(utils, { name: name });
+  execute({ data, name }: Props): string {
+    const imports = new Imports();
+    const classes = new PythonClasses(imports);
+    const preventName = new VariableName(this.utils, { name: name });
 
     const parent = new Parent();
 
     const datatype = PythonDatatype.create(
-      utils,
-      this.imports,
+      this.utils,
+      imports,
       parent,
-      this.classes,
+      classes,
       {
         preventName: preventName,
         value: data,
       },
     );
 
-    let code = `${this.imports.string()}\n`;
+    let code = `${imports.string()}\n`;
 
-    code += `${this.classes.string()}\n`;
+    code += `${classes.string()}\n`;
 
     code += `data: ${datatype.declaration()} = ${datatype.string()}\n`;
 

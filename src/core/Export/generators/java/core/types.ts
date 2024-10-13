@@ -1,4 +1,4 @@
-import { ChacaError } from "../../../../../../errors";
+import { ChacaError } from "../../../../../errors";
 
 interface ObjectTypeField {
   key: string;
@@ -7,7 +7,7 @@ interface ObjectTypeField {
 
 export abstract class DataType {
   protected abstract equalType(otherType: DataType): boolean;
-  public equal(otherType: DataType): boolean {
+  equal(otherType: DataType): boolean {
     const areEqual =
       otherType instanceof NullType ||
       this instanceof NullType ||
@@ -15,7 +15,7 @@ export abstract class DataType {
     return areEqual;
   }
 
-  public static filterTypeByValue(value: any): DataType {
+  static filterTypeByValue(value: any): DataType {
     let returnType: DataType;
 
     if (typeof value === "string") {
@@ -55,7 +55,7 @@ export abstract class DataType {
 }
 
 export class RegExpType extends DataType {
-  constructor(public readonly value: RegExp) {
+  constructor(readonly value: RegExp) {
     super();
   }
 
@@ -65,7 +65,7 @@ export class RegExpType extends DataType {
 }
 
 export class BigintType extends DataType {
-  constructor(public readonly value: bigint) {
+  constructor(readonly value: bigint) {
     super();
   }
 
@@ -75,21 +75,21 @@ export class BigintType extends DataType {
 }
 
 export class StringType extends DataType {
-  constructor(public readonly value: string) {
+  constructor(readonly value: string) {
     super();
   }
 
-  public equalType(otherType: DataType): boolean {
+  equalType(otherType: DataType): boolean {
     return otherType instanceof StringType;
   }
 }
 
 export abstract class NumberType extends DataType {
-  constructor(public readonly value: number) {
+  constructor(readonly value: number) {
     super();
   }
 
-  public equalType(otherType: DataType): boolean {
+  equalType(otherType: DataType): boolean {
     return otherType instanceof NumberType;
   }
 }
@@ -98,33 +98,33 @@ export class FloatType extends NumberType {}
 export class IntegerType extends NumberType {}
 
 export class DateType extends DataType {
-  constructor(public readonly value: Date) {
+  constructor(readonly value: Date) {
     super();
   }
 
-  public equalType(otherType: DataType): boolean {
+  equalType(otherType: DataType): boolean {
     return otherType instanceof DateType;
   }
 }
 
 export class BooleanType extends DataType {
-  constructor(public readonly value: boolean) {
+  constructor(readonly value: boolean) {
     super();
   }
 
-  public equalType(otherType: DataType): boolean {
+  equalType(otherType: DataType): boolean {
     return otherType instanceof BooleanType;
   }
 }
 
 export class NullType extends DataType {
-  public equalType(otherType: DataType): boolean {
+  equalType(otherType: DataType): boolean {
     return otherType instanceof NullType;
   }
 }
 
 export class ObjectType extends DataType {
-  private keys: Array<ObjectTypeField> = [];
+  private keys: ObjectTypeField[] = [];
 
   constructor(object: any) {
     super();
@@ -133,11 +133,11 @@ export class ObjectType extends DataType {
     });
   }
 
-  public getKeys() {
+  getKeys() {
     return this.keys;
   }
 
-  public equalType(otherType: DataType): boolean {
+  equalType(otherType: DataType): boolean {
     if (otherType instanceof ObjectType) {
       if (otherType.keys.length === this.keys.length) {
         let areEqual = true;
@@ -216,15 +216,15 @@ export class ArrayType extends DataType {
     });
   }
 
-  public getArrayType() {
+  getArrayType() {
     return this.arrayType;
   }
 
-  public getValues() {
+  getValues() {
     return this.values;
   }
 
-  public equalType(otherType: DataType): boolean {
+  equalType(otherType: DataType): boolean {
     if (otherType instanceof ArrayType) {
       if (this.values.length && otherType.values.length) {
         if (this.values[0].equal(otherType.values[0])) {

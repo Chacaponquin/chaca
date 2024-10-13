@@ -1,8 +1,8 @@
 import { JsonGenerator } from "./json";
 import { Generator } from "./generator";
-import { JavascriptGenerator } from "./javascript/JavascriptGenerator";
+import { JavascriptGenerator } from "./javascript";
 import { CsvGenerator } from "./csv";
-import { JavaGenerator } from "./java/JavaGenerator";
+import { JavaGenerator } from "./java";
 import { TypescriptGenerator } from "./typescript";
 import { YamlGenerator } from "./yaml";
 import { SQLGenerator } from "./sql";

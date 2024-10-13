@@ -1,29 +1,56 @@
 import { Generator } from "../generator";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { JavascriptCodeCreator } from "../javascript/core/creator";
 import { Filename } from "../generator/name";
 import { Route } from "../generator/route";
+import { JavascriptCodeCreator } from "./core/creator";
 
-export interface TypescriptProps {
+export interface JavascriptProps {
   zip?: boolean;
   separate?: boolean;
 }
 
-export class TypescriptGenerator extends Generator {
+export class JavascriptGenerator extends Generator {
   private readonly zip: boolean;
   private readonly separate: boolean;
 
-  private readonly creator = new JavascriptCodeCreator(true);
+  private readonly creator = new JavascriptCodeCreator(false);
 
-  constructor(filename: string, location: string, config: TypescriptProps) {
+  constructor(filename: string, location: string, config: JavascriptProps) {
     super({
-      extension: "ts",
+      extension: "js",
       filename: filename,
       location: location,
     });
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
+  }
+
+  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
+    if (this.separate) {
+      const routes = [] as Route[];
+
+      for (const r of resolver.getResolvers()) {
+        const code = this.creator.execute(r.resolve());
+        const filename = new Filename(r.getSchemaName());
+        const route = this.generateRoute(filename);
+
+        await this.writeFile(route, code);
+
+        routes.push(route);
+      }
+
+      if (this.zip) {
+        const zip = this.createZip();
+        zip.multiple(routes);
+
+        return [zip.route];
+      } else {
+        return routes.map((r) => r.value());
+      }
+    } else {
+      return await this.createFile(resolver.resolve());
+    }
   }
 
   async createFile(data: any): Promise<string[]> {
@@ -41,34 +68,6 @@ export class TypescriptGenerator extends Generator {
       return [zip.route];
     } else {
       return [route.value()];
-    }
-  }
-
-  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
-    if (this.separate) {
-      const routes: Route[] = [];
-
-      for (const r of resolver.getResolvers()) {
-        const filename = new Filename(r.getSchemaName());
-        const route = this.generateRoute(filename);
-
-        const code = this.creator.execute(r.resolve());
-
-        await this.writeFile(route, code);
-
-        routes.push(route);
-      }
-
-      if (this.zip) {
-        const zip = this.createZip();
-        zip.multiple(routes);
-
-        return [zip.route];
-      } else {
-        return routes.map((r) => r.value());
-      }
-    } else {
-      return this.createFile(resolver.resolve());
     }
   }
 }

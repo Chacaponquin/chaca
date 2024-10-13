@@ -30,14 +30,14 @@ export class ExportResolver {
     };
   }
 
-  async data(data: any): Promise<string> {
+  async data(data: any): Promise<string[]> {
     const gen = this.filterGenerator();
     const route = await gen.createFile(data);
 
     return route;
   }
 
-  async relational(schemas: DatasetSchema[]): Promise<string> {
+  async relational(schemas: DatasetSchema[]): Promise<string[]> {
     const gen = this.filterGenerator();
     const resolver = new DatasetResolver({
       schemas: schemas,
@@ -60,33 +60,30 @@ export class ExportResolver {
         extConfig: {},
       });
     } else if (format === "javascript") {
-      gen = new JavascriptGenerator({
-        filename: this.config.filename,
-        location: this.config.location,
-      });
+      gen = new JavascriptGenerator(
+        this.config.filename,
+        this.config.location,
+        {},
+      );
     } else if (format === "csv") {
       gen = new CsvGenerator(this.config.filename, this.config.location, {});
     } else if (format === "java") {
-      gen = new JavaGenerator({
-        filename: this.config.filename,
-        location: this.config.location,
-      });
+      gen = new JavaGenerator(this.config.filename, this.config.location, {});
     } else if (format === "typescript") {
-      gen = new TypescriptGenerator({
-        filename: this.config.filename,
-        location: this.config.location,
-      });
+      gen = new TypescriptGenerator(
+        this.config.filename,
+        this.config.location,
+        {},
+      );
     } else if (format === "yaml") {
-      gen = new YamlGenerator({
-        filename: this.config.filename,
-        location: this.config.location,
-      });
+      gen = new YamlGenerator(this.config.filename, this.config.location, {});
     } else if (format === "postgresql") {
-      gen = new SQLGenerator({
-        filename: this.config.filename,
-        format: format,
-        location: this.config.location,
-      });
+      gen = new SQLGenerator(
+        this.config.filename,
+        this.config.location,
+        format,
+        {},
+      );
     } else if (format === "python") {
       gen = new PythonGenerator(this.config.filename, this.config.location, {});
     }
@@ -97,7 +94,7 @@ export class ExportResolver {
         gen = new JsonGenerator({
           filename: this.config.filename,
           location: this.config.location,
-          extConfig: { separate: format.separate, zip: format.zip },
+          extConfig: format,
         });
       } else if (format.ext === "csv") {
         gen = new CsvGenerator(
@@ -106,41 +103,44 @@ export class ExportResolver {
           format,
         );
       } else if (format.ext === "java") {
-        gen = new JavaGenerator({
-          filename: this.config.filename,
-          location: this.config.location,
-          zip: format.zip,
-        });
+        gen = new JavaGenerator(
+          this.config.filename,
+          this.config.location,
+          format,
+        );
       } else if (format.ext === "javascript") {
-        gen = new JavascriptGenerator({
-          filename: this.config.filename,
-          location: this.config.location,
-          zip: format.zip,
-        });
+        gen = new JavascriptGenerator(
+          this.config.filename,
+          this.config.location,
+          {
+            zip: format.zip,
+          },
+        );
       } else if (format.ext === "postgresql") {
-        gen = new SQLGenerator({
-          filename: this.config.filename,
-          location: this.config.location,
-          zip: format.zip,
-          format: format.ext,
-        });
+        gen = new SQLGenerator(
+          this.config.filename,
+          this.config.location,
+          format.ext,
+          format,
+        );
       } else if (format.ext === "python") {
-        gen = new PythonGenerator(this.config.filename, this.config.location, {
-          zip: format.zip,
-        });
+        gen = new PythonGenerator(
+          this.config.filename,
+          this.config.location,
+          format,
+        );
       } else if (format.ext === "typescript") {
-        gen = new TypescriptGenerator({
-          filename: this.config.filename,
-          location: this.config.location,
-          zip: format.zip,
-        });
+        gen = new TypescriptGenerator(
+          this.config.filename,
+          this.config.location,
+          format,
+        );
       } else if (format.ext === "yaml") {
-        gen = new YamlGenerator({
-          filename: this.config.filename,
-          location: this.config.location,
-          zip: format.zip,
-          separate: format.separate,
-        });
+        gen = new YamlGenerator(
+          this.config.filename,
+          this.config.location,
+          format,
+        );
       } else {
         throw new ChacaError(
           `Format '${this.config.format}' invalid for exportation`,
