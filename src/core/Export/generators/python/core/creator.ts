@@ -3,6 +3,7 @@ import { PythonClasses } from "./classes";
 import { Imports } from "./import";
 import { VariableName } from "./names";
 import { Parent } from "./parent";
+import { SpaceIndex } from "./space-index";
 import { PythonDatatype } from "./type";
 
 interface Props {
@@ -17,6 +18,7 @@ export class PythonCodeCreator {
     const imports = new Imports();
     const classes = new PythonClasses(imports);
     const preventName = new VariableName(this.utils, { name: name });
+    const index = new SpaceIndex();
 
     const parent = new Parent();
 
@@ -25,6 +27,7 @@ export class PythonCodeCreator {
       imports,
       parent,
       classes,
+      index,
       {
         preventName: preventName,
         value: data,

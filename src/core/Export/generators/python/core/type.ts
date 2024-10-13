@@ -4,6 +4,7 @@ import { PythonClasses } from "./classes";
 import { Imports } from "./import";
 import { VariableName } from "./names";
 import { Parent } from "./parent";
+import { SpaceIndex } from "./space-index";
 import { UnionDatatypes } from "./union";
 
 interface CreateProps {
@@ -21,6 +22,7 @@ export abstract class PythonDatatype {
     imports: Imports,
     parent: Parent,
     classes: PythonClasses,
+    index: SpaceIndex,
     { value, preventName }: CreateProps,
   ): PythonDatatype {
     let type: PythonDatatype;
@@ -40,7 +42,7 @@ export abstract class PythonDatatype {
     } else if (typeof value === "undefined") {
       type = new PythonNone(imports);
     } else if (Array.isArray(value)) {
-      const array = new PythonArray(imports);
+      const array = new PythonArray(imports, index);
 
       for (const v of value) {
         const datatype = PythonDatatype.create(
@@ -48,6 +50,7 @@ export abstract class PythonDatatype {
           imports,
           parent,
           classes,
+          index,
           {
             value: v,
             preventName: preventName,
@@ -66,7 +69,7 @@ export abstract class PythonDatatype {
       } else if (value instanceof RegExp) {
         type = new PythonRegExp(imports, value);
       } else {
-        const object = new PythonClass(preventName, parent);
+        const object = new PythonClass(preventName, parent, index);
 
         for (const [key, data] of Object.entries(value)) {
           const fieldName = new VariableName(utils, {
@@ -80,6 +83,7 @@ export abstract class PythonDatatype {
             imports,
             newParent,
             classes,
+            index,
             {
               value: data,
               preventName: fieldName,
@@ -246,7 +250,11 @@ export class PythonClass extends PythonDatatype {
   readonly _name: VariableName;
   readonly parent: Parent;
 
-  constructor(name: VariableName, parent: Parent) {
+  constructor(
+    name: VariableName,
+    parent: Parent,
+    private readonly index: SpaceIndex,
+  ) {
     super();
 
     this._name = name;
@@ -259,15 +267,19 @@ export class PythonClass extends PythonDatatype {
   }
 
   string(): string {
-    let code = `${this.name()}(`;
+    let code = `${this.name()}(\n`;
+
+    this.index.change(3);
 
     const fields = this.fields
-      .map((f) => `${f.name()}=${f.string()}`)
-      .join(", ");
+      .map((f) => this.index.create(`${f.name()}=${f.string()}`))
+      .join(",\n");
 
-    code += fields;
+    code += fields + "\n";
 
-    code += ")";
+    this.index.change(-3);
+
+    code += this.index.create(")");
 
     return code;
   }
@@ -293,7 +305,7 @@ export class PythonArray extends PythonDatatype {
   private readonly datatypes: UnionDatatypes;
   private readonly values: PythonDatatype[];
 
-  constructor(imports: Imports) {
+  constructor(imports: Imports, private readonly index: SpaceIndex) {
     super();
 
     this.values = [];
@@ -314,11 +326,16 @@ export class PythonArray extends PythonDatatype {
   }
 
   string(): string {
-    let code = `[`;
+    let code = `[\n`;
 
-    code += this.values.map((d) => d.string()).join(", ");
+    this.index.change(3);
 
-    code += "]";
+    code +=
+      this.values.map((d) => this.index.create(d.string())).join(",\n") + "\n";
+
+    this.index.change(-3);
+
+    code += this.index.create("]");
 
     return code;
   }
