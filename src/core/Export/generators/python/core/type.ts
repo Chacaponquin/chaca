@@ -1,9 +1,14 @@
 import { ChacaError } from "../../../../../errors";
+import { ChacaUtils } from "../../../../utils";
+import { PythonClasses } from "./classes";
+import { Imports } from "./import";
+import { VariableName } from "./names";
+import { Parent } from "./parent";
 import { UnionDatatypes } from "./union";
 
 interface CreateProps {
   value: any;
-  preventName: string;
+  preventName: VariableName;
 }
 
 export abstract class PythonDatatype {
@@ -11,7 +16,13 @@ export abstract class PythonDatatype {
   abstract declaration(): string;
   abstract equal(other: PythonDatatype): boolean;
 
-  static create({ value, preventName }: CreateProps): PythonDatatype {
+  static create(
+    utils: ChacaUtils,
+    imports: Imports,
+    parent: Parent,
+    classes: PythonClasses,
+    { value, preventName }: CreateProps,
+  ): PythonDatatype {
     let type: PythonDatatype;
 
     if (typeof value === "string") {
@@ -19,46 +30,68 @@ export abstract class PythonDatatype {
     } else if (typeof value === "number") {
       if (Number.isInteger(value)) {
         type = new PythonInt(value);
+      } else if (Number.isNaN(value)) {
+        type = new PythonNaN();
       } else {
         type = new PythonFloat(value);
       }
     } else if (typeof value === "boolean") {
       type = new PythonBoolean(value);
     } else if (typeof value === "undefined") {
-      type = new PythonNone();
+      type = new PythonNone(imports);
     } else if (Array.isArray(value)) {
-      const array = new PythonArray();
+      const array = new PythonArray(imports);
 
       for (const v of value) {
-        const datatype = PythonDatatype.create({
-          value: v,
-          preventName: preventName,
-        });
+        const datatype = PythonDatatype.create(
+          utils,
+          imports,
+          parent,
+          classes,
+          {
+            value: v,
+            preventName: preventName,
+          },
+        );
 
-        array.setDatatype(datatype);
+        array.setValue(datatype);
       }
 
       type = array;
     } else if (typeof value === "object") {
       if (value === null) {
-        type = new PythonNone();
+        type = new PythonNone(imports);
       } else if (value instanceof Date) {
-        type = new PythonDate(value);
+        type = new PythonDate(imports, value);
       } else if (value instanceof RegExp) {
-        type = new PythonRegExp(value);
+        type = new PythonRegExp(imports, value);
       } else {
-        const object = new PythonClass(preventName);
+        const object = new PythonClass(preventName, parent);
 
         for (const [key, data] of Object.entries(value)) {
-          const datatype = PythonDatatype.create({
-            value: data,
-            preventName: key,
+          const fieldName = new VariableName(utils, {
+            name: key,
           });
 
-          const field = new PythonClassField(key, datatype);
+          const newParent = Parent.create(parent, fieldName);
+
+          const datatype = PythonDatatype.create(
+            utils,
+            imports,
+            newParent,
+            classes,
+            {
+              value: data,
+              preventName: fieldName,
+            },
+          );
+
+          const field = new PythonClassField(fieldName, datatype);
 
           object.setField(field);
         }
+
+        classes.add(object);
 
         type = object;
       }
@@ -82,15 +115,29 @@ export class PythonString extends PythonDatatype {
   }
 
   string(): string {
-    return "";
+    return `"${this.value}"`;
   }
 
   declaration(): string {
-    return "";
+    return "str";
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    return other instanceof PythonString;
+  }
+}
+
+export class PythonNaN extends PythonDatatype {
+  declaration(): string {
+    return "float";
+  }
+
+  string(): string {
+    return `float('nan')`;
+  }
+
+  equal(other: PythonDatatype): boolean {
+    return other instanceof PythonNaN;
   }
 }
 
@@ -100,15 +147,21 @@ export class PythonFloat extends PythonDatatype {
   }
 
   string(): string {
-    return "";
+    if (this.value === Infinity) {
+      return "float('inf')";
+    } else if (this.value === -Infinity) {
+      return "float('-inf')";
+    }
+
+    return `${this.value}`;
   }
 
   declaration(): string {
-    return "";
+    return "float";
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    return other instanceof PythonFloat;
   }
 }
 
@@ -118,15 +171,15 @@ export class PythonInt extends PythonDatatype {
   }
 
   string(): string {
-    return "";
+    return `${this.value}`;
   }
 
   declaration(): string {
-    return "";
+    return "int";
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    return other instanceof PythonInt;
   }
 }
 
@@ -136,70 +189,99 @@ export class PythonBoolean extends PythonDatatype {
   }
 
   string(): string {
-    return "";
+    return this.value ? "True" : "False";
   }
 
   declaration(): string {
-    return "";
+    return "bool";
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    return other instanceof PythonBoolean;
   }
 }
 
 export class PythonNone extends PythonDatatype {
-  string(): string {
-    return "";
+  constructor(imports: Imports) {
+    super();
+
+    imports.add({ from: "typing", modules: ["Optional"] });
   }
 
-  declaration(): string {
-    return "";
+  string(): string {
+    return "None";
+  }
+
+  declaration() {
+    return "None";
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    return other instanceof PythonNone;
   }
 }
 
 export class PythonDate extends PythonDatatype {
-  constructor(private readonly value: Date) {
+  constructor(private readonly imports: Imports, private readonly value: Date) {
     super();
+
+    this.imports.add({ from: "datetime", modules: [] });
   }
 
   string(): string {
-    return "";
+    return `datetime.datetime.fromisoformat("${this.value.toISOString()}")`;
   }
 
   declaration(): string {
-    return "";
+    return "datetime.datetime";
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    return other instanceof PythonDate;
   }
 }
 
 export class PythonClass extends PythonDatatype {
-  private fields: PythonClassField[];
-  private name: string;
+  readonly fields: PythonClassField[];
+  readonly _name: VariableName;
+  readonly parent: Parent;
 
-  constructor(name: string) {
+  constructor(name: VariableName, parent: Parent) {
     super();
 
-    this.name = name;
+    this._name = name;
+    this.fields = [];
+    this.parent = parent;
+  }
+
+  name() {
+    return this._name.value("camel");
   }
 
   string(): string {
-    return "";
+    let code = `${this.name()}(`;
+
+    const fields = this.fields
+      .map((f) => `${f.name()}=${f.string()}`)
+      .join(", ");
+
+    code += fields;
+
+    code += ")";
+
+    return code;
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    if (other instanceof PythonClass) {
+      return true;
+    }
+
+    return false;
   }
 
   declaration(): string {
-    return "";
+    return this.name();
   }
 
   setField(field: PythonClassField): void {
@@ -208,28 +290,56 @@ export class PythonClass extends PythonDatatype {
 }
 
 export class PythonArray extends PythonDatatype {
-  values: UnionDatatypes;
+  private readonly datatypes: UnionDatatypes;
+  private readonly values: PythonDatatype[];
 
-  setDatatype(d: PythonDatatype): void {
-    this.values.setDatatype(d);
+  constructor(imports: Imports) {
+    super();
+
+    this.values = [];
+    this.datatypes = new UnionDatatypes(imports);
+
+    imports.add({ from: "typing", modules: ["List"] });
+  }
+
+  setValue(d: PythonDatatype): void {
+    this.datatypes.setDatatype(d);
+    this.values.push(d);
   }
 
   declaration(): string {
-    return "";
+    const types = this.datatypes.declaration();
+
+    return `List[${types}]`;
   }
 
   string(): string {
-    return "";
+    let code = `[`;
+
+    code += this.values.map((d) => d.string()).join(", ");
+
+    code += "]";
+
+    return code;
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    if (other instanceof PythonArray) {
+      return other.datatypes.equal(this.datatypes);
+    }
+
+    return false;
   }
 }
 
 export class PythonRegExp extends PythonDatatype {
-  constructor(private readonly value: RegExp) {
+  constructor(
+    private readonly imports: Imports,
+    private readonly value: RegExp,
+  ) {
     super();
+
+    this.imports.add({ from: "re", modules: [] });
   }
 
   string(): string {
@@ -237,24 +347,32 @@ export class PythonRegExp extends PythonDatatype {
   }
 
   declaration(): string {
-    return "";
+    return "re";
   }
 
   equal(other: PythonDatatype): boolean {
-    return true;
+    return other instanceof PythonRegExp;
   }
 }
 
 export class PythonClassField {
-  name: string;
-  datatypes: UnionDatatypes = new UnionDatatypes();
+  readonly _name: VariableName;
+  readonly datatype: PythonDatatype;
 
-  constructor(name: string, datatype: PythonDatatype) {
-    this.name = name;
-    this.datatypes.setDatatype(datatype);
+  constructor(name: VariableName, datatype: PythonDatatype) {
+    this._name = name;
+    this.datatype = datatype;
   }
 
-  string(): string {
-    return ``;
+  name(): string {
+    return this._name.value("snake");
+  }
+
+  string() {
+    return this.datatype.string();
+  }
+
+  definition(): string | null {
+    return this.datatype.declaration();
   }
 }

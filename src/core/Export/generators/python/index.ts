@@ -1,17 +1,19 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { ChacaError } from "../../../../errors";
 import { Generator } from "../generator";
 import fs from "fs";
+import { Imports } from "./core/import";
+import { PythonCodeCreator } from "./core/creator";
+import { PythonClasses } from "./core/classes";
 
-interface Props {
+export interface PythonProps {
   zip?: boolean;
+  separate?: boolean;
 }
 
 export class PythonGenerator extends Generator {
-  private importLibraries = [] as string[];
   private zip: boolean;
 
-  constructor(filename: string, location: string, config: Props) {
+  constructor(filename: string, location: string, config: PythonProps) {
     super({
       extension: "py",
       filename: filename,
@@ -22,10 +24,17 @@ export class PythonGenerator extends Generator {
   }
 
   async createFile(data: any): Promise<string> {
-    const pythonCode = this.createDataCode(this.filename, data);
-    const finalCode = this.buildFinalCode(pythonCode);
+    const imports = new Imports();
 
-    await fs.promises.writeFile(this.route, finalCode, "utf-8");
+    const classes = new PythonClasses(imports);
+    const creator = new PythonCodeCreator(imports, classes);
+
+    const code = creator.execute(this.utils, {
+      data: data,
+      name: this.filename,
+    });
+
+    await fs.promises.writeFile(this.route, code, "utf-8");
 
     if (this.zip) {
       return await this.createFileZip();
@@ -35,123 +44,22 @@ export class PythonGenerator extends Generator {
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string> {
-    const allDeclarations = [] as string[];
-    resolver.getResolvers().forEach((r) => {
-      const pythonCode = this.createDataCode(r.getSchemaName(), r.resolve());
-      allDeclarations.push(pythonCode);
+    const imports = new Imports();
+    const classes = new PythonClasses(imports);
+    const creator = new PythonCodeCreator(imports, classes);
+    const data = resolver.resolve();
+
+    const code = creator.execute(this.utils, {
+      data: data,
+      name: this.filename,
     });
 
-    const code = allDeclarations.join("\n\n");
-
-    const finalCode = this.buildFinalCode(code);
-    await fs.promises.writeFile(this.route, finalCode, "utf-8");
+    await fs.promises.writeFile(this.route, code, "utf-8");
 
     if (this.zip) {
       return await this.createFileZip();
     } else {
       return this.route;
-    }
-  }
-
-  private buildFinalCode(pythonCode: string): string {
-    let code = pythonCode;
-    const importCode = this.createImportCode();
-
-    if (importCode) {
-      code = importCode + "\n\n" + pythonCode;
-    }
-
-    return code;
-  }
-
-  private createImportCode(): string {
-    if (this.importLibraries.length) {
-      const importStrings = this.importLibraries.map((i) => `import ${i}`);
-      const importCode = importStrings.join("\n");
-
-      return importCode;
-    } else {
-      return "";
-    }
-  }
-
-  private createDataCode(name: string, data: any): string {
-    const variableName = this.utils.camelCase(name);
-    const pythonCode = `${variableName} = ${this.filterValueByType(data)}`;
-
-    return pythonCode;
-  }
-
-  private filterValueByType(value: any): string {
-    let returnValueCode = "None";
-
-    if (typeof value === "string") {
-      returnValueCode = `${JSON.stringify(value)}`;
-    } else if (typeof value === "number") {
-      if (value === Infinity) {
-        returnValueCode = `float('inf')`;
-      } else if (Number.isNaN(value)) {
-        returnValueCode = `float('nan')`;
-      } else if (value === -Infinity) {
-        returnValueCode = `float('-inf')`;
-      } else {
-        returnValueCode = `${value}`;
-      }
-    } else if (typeof value === "boolean") {
-      if (value) {
-        returnValueCode = "True";
-      } else {
-        returnValueCode = "False";
-      }
-    } else if (typeof value === "undefined") {
-      returnValueCode = "None";
-    } else if (typeof value === "object") {
-      if (value === null) {
-        returnValueCode = "None";
-      } else if (Array.isArray(value)) {
-        const valuesString = value.map((v) => this.filterValueByType(v));
-        returnValueCode = `[${valuesString.join(", ")}]`;
-      } else if (value instanceof Date) {
-        this.insertImportLibrary("datetime");
-        returnValueCode = this.createDateCode(value);
-      } else if (value instanceof RegExp) {
-        this.insertImportLibrary("re");
-        returnValueCode = `re.compile(r'${value.source}')`;
-      } else {
-        returnValueCode = this.createObjectCode(value);
-      }
-    } else if (typeof value === "function") {
-      throw new ChacaError(`You can not export a function in a python file.`);
-    } else if (typeof value === "symbol") {
-      throw new ChacaError(`You can not export a Symbol in a python file.`);
-    } else if (typeof value === "bigint") {
-      returnValueCode = value.toString();
-    }
-
-    return returnValueCode;
-  }
-
-  private createDateCode(date: Date): string {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-
-    const codigoPython = `datetime.datetime(${year}, ${month}, ${day})`;
-    return codigoPython;
-  }
-
-  private createObjectCode(object: any): string {
-    const keysString = [] as Array<string>;
-    for (const [key, value] of Object.entries(object)) {
-      keysString.push(`'${key}': ${this.filterValueByType(value)}`);
-    }
-
-    return `{${keysString.join(", ")}}`;
-  }
-
-  private insertImportLibrary(lib: string): void {
-    if (!this.importLibraries.includes(lib)) {
-      this.importLibraries.push(lib);
     }
   }
 }
