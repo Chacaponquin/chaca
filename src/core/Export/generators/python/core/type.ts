@@ -1,11 +1,12 @@
 import { ChacaError } from "../../../../../errors";
 import { ChacaUtils } from "../../../../utils";
+import { VariableName } from "../../../core/names";
+import { SpaceIndex } from "../../../core/space-index";
 import { PythonClasses } from "./classes";
 import { Imports } from "./import";
-import { VariableName } from "./names";
-import { Parent } from "./parent";
-import { SpaceIndex } from "./space-index";
+import { Parent } from "../../../core/parent";
 import { UnionDatatypes } from "./union";
+import { Datatype } from "../../../core/datatype";
 
 interface CreateProps {
   value: any;
@@ -25,50 +26,56 @@ export abstract class PythonDatatype {
     index: SpaceIndex,
     { value, preventName }: CreateProps,
   ): PythonDatatype {
-    let type: PythonDatatype;
+    const type = Datatype.filter(value, {
+      string(value) {
+        return new PythonString(value);
+      },
+      int(value) {
+        return new PythonInt(value);
+      },
+      float(value) {
+        return new PythonFloat(value);
+      },
+      nan(value) {
+        return new PythonFloat(value);
+      },
+      undefined() {
+        return new PythonNone(imports);
+      },
+      boolean(value) {
+        return new PythonBoolean(value);
+      },
+      array(value) {
+        const array = new PythonArray(imports, index);
 
-    if (typeof value === "string") {
-      type = new PythonString(value);
-    } else if (typeof value === "number") {
-      if (Number.isInteger(value)) {
-        type = new PythonInt(value);
-      } else if (Number.isNaN(value)) {
-        type = new PythonNaN();
-      } else {
-        type = new PythonFloat(value);
-      }
-    } else if (typeof value === "boolean") {
-      type = new PythonBoolean(value);
-    } else if (typeof value === "undefined") {
-      type = new PythonNone(imports);
-    } else if (Array.isArray(value)) {
-      const array = new PythonArray(imports, index);
+        for (const v of value) {
+          const datatype = PythonDatatype.create(
+            utils,
+            imports,
+            parent,
+            classes,
+            index,
+            {
+              value: v,
+              preventName: preventName,
+            },
+          );
 
-      for (const v of value) {
-        const datatype = PythonDatatype.create(
-          utils,
-          imports,
-          parent,
-          classes,
-          index,
-          {
-            value: v,
-            preventName: preventName,
-          },
-        );
+          array.setValue(datatype);
+        }
 
-        array.setValue(datatype);
-      }
-
-      type = array;
-    } else if (typeof value === "object") {
-      if (value === null) {
-        type = new PythonNone(imports);
-      } else if (value instanceof Date) {
-        type = new PythonDate(imports, value);
-      } else if (value instanceof RegExp) {
-        type = new PythonRegExp(imports, value);
-      } else {
+        return array;
+      },
+      null() {
+        return new PythonNone(imports);
+      },
+      date(value) {
+        return new PythonDate(imports, value);
+      },
+      regexp(value) {
+        return new PythonRegExp(imports, value);
+      },
+      object(value) {
         const object = new PythonClass(preventName, parent, index);
 
         for (const [key, data] of Object.entries(value)) {
@@ -97,17 +104,18 @@ export abstract class PythonDatatype {
 
         classes.add(object);
 
-        type = object;
-      }
-    } else if (typeof value === "function") {
-      throw new ChacaError(`You can not export a function in a python file.`);
-    } else if (typeof value === "symbol") {
-      throw new ChacaError(`You can not export a Symbol in a python file.`);
-    } else if (typeof value === "bigint") {
-      type = new PythonInt(value);
-    } else {
-      type = new PythonString(String(value));
-    }
+        return object;
+      },
+      bigint(value) {
+        return new PythonInt(value);
+      },
+      function() {
+        throw new ChacaError(`You can not export a function in a python file.`);
+      },
+      symbol() {
+        throw new ChacaError(`You can not export a Symbol in a python file.`);
+      },
+    });
 
     return type;
   }
@@ -119,7 +127,7 @@ export class PythonString extends PythonDatatype {
   }
 
   string(): string {
-    return `"${this.value}"`;
+    return `${JSON.stringify(this.value)}`;
   }
 
   declaration(): string {
@@ -128,20 +136,6 @@ export class PythonString extends PythonDatatype {
 
   equal(other: PythonDatatype): boolean {
     return other instanceof PythonString;
-  }
-}
-
-export class PythonNaN extends PythonDatatype {
-  declaration(): string {
-    return "float";
-  }
-
-  string(): string {
-    return `float('nan')`;
-  }
-
-  equal(other: PythonDatatype): boolean {
-    return other instanceof PythonNaN;
   }
 }
 
@@ -155,6 +149,8 @@ export class PythonFloat extends PythonDatatype {
       return "float('inf')";
     } else if (this.value === -Infinity) {
       return "float('-inf')";
+    } else if (Number.isNaN(this.value)) {
+      return `float('nan')`;
     }
 
     return `${this.value}`;
@@ -269,7 +265,7 @@ export class PythonClass extends PythonDatatype {
   string(): string {
     let code = `${this.name()}(\n`;
 
-    this.index.change(3);
+    this.index.push();
 
     const fields = this.fields
       .map((f) => this.index.create(`${f.name()}=${f.string()}`))
@@ -277,7 +273,7 @@ export class PythonClass extends PythonDatatype {
 
     code += fields + "\n";
 
-    this.index.change(-3);
+    this.index.reverse();
 
     code += this.index.create(")");
 
@@ -328,12 +324,12 @@ export class PythonArray extends PythonDatatype {
   string(): string {
     let code = `[\n`;
 
-    this.index.change(3);
+    this.index.push();
 
     code +=
       this.values.map((d) => this.index.create(d.string())).join(",\n") + "\n";
 
-    this.index.change(-3);
+    this.index.reverse();
 
     code += this.index.create("]");
 
@@ -364,7 +360,7 @@ export class PythonRegExp extends PythonDatatype {
   }
 
   declaration(): string {
-    return "re";
+    return "re.Pattern";
   }
 
   equal(other: PythonDatatype): boolean {

@@ -13,7 +13,7 @@ export class JavascriptGenerator extends Generator {
   private readonly zip: boolean;
   private readonly separate: boolean;
 
-  private readonly creator = new JavascriptCodeCreator(false);
+  private readonly creator: JavascriptCodeCreator;
 
   constructor(filename: string, location: string, config: JavascriptProps) {
     super({
@@ -24,6 +24,8 @@ export class JavascriptGenerator extends Generator {
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
+
+    this.creator = new JavascriptCodeCreator(this.utils);
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
@@ -31,7 +33,11 @@ export class JavascriptGenerator extends Generator {
       const routes = [] as Route[];
 
       for (const r of resolver.getResolvers()) {
-        const code = this.creator.execute(r.resolve());
+        const code = this.creator.execute({
+          data: r.resolve(),
+          name: r.getSchemaName(),
+          types: false,
+        });
         const filename = new Filename(r.getSchemaName());
         const route = this.generateRoute(filename);
 
@@ -57,7 +63,11 @@ export class JavascriptGenerator extends Generator {
     const filename = new Filename(this.filename);
     const route = this.generateRoute(filename);
 
-    const code = this.creator.execute(data);
+    const code = this.creator.execute({
+      data: data,
+      name: this.filename,
+      types: false,
+    });
 
     await this.writeFile(route, code);
 

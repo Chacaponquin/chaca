@@ -1,16 +1,14 @@
 export class SpaceIndex {
   private value: number;
+  private readonly step: number;
 
-  constructor() {
+  constructor(v: number) {
+    this.step = v;
     this.value = 0;
   }
 
-  static create(p: SpaceIndex): SpaceIndex {
-    const newIndex = new SpaceIndex();
-
-    newIndex.value = p.value;
-
-    return newIndex;
+  reverse(): void {
+    this.value = this.value - this.step;
   }
 
   create(v: string): string {
@@ -23,7 +21,7 @@ export class SpaceIndex {
     return `${space}${v}`;
   }
 
-  change(n: number): void {
-    this.value = this.value + n;
+  push(): void {
+    this.value = this.value + this.step;
   }
 }

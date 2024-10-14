@@ -1,10 +1,10 @@
-import { ChacaUtils } from "../../../../utils";
+import { ChacaUtils } from "../../utils";
 
 interface Props {
   name: string;
 }
 
-type Case = "camel" | "snake";
+export type Case = "camel" | "snake" | "none";
 
 export class VariableName {
   readonly _name: string;
@@ -16,8 +16,10 @@ export class VariableName {
   value(c: Case) {
     if (c === "camel") {
       return this.utils.capitalize(this.utils.camelCase(this._name));
-    } else {
+    } else if (c === "snake") {
       return this.utils.snakeCase(this._name);
+    } else {
+      return this._name;
     }
   }
 }

@@ -1,19 +1,16 @@
 import { VariableName } from "../../../core/names";
-import { Imports } from "./import";
 import { Parent } from "../../../core/parent";
-import { PythonClass, PythonDatatype } from "./type";
+import { JavascriptClass, JavascriptDatatype } from "./types";
 import { UnionDatatypes } from "./union";
 
 export class SaveClassField {
   private _name: VariableName;
   readonly datatypes: UnionDatatypes;
 
-  constructor(imports: Imports, name: VariableName, datatype: PythonDatatype) {
-    this.datatypes = new UnionDatatypes(imports);
+  constructor(name: VariableName, datatype: JavascriptDatatype) {
+    this.datatypes = new UnionDatatypes();
     this.datatypes.setDatatype(datatype);
     this._name = name;
-
-    imports.add({ from: "typing", modules: ["TypedDict"] });
   }
 
   name() {
@@ -27,7 +24,7 @@ export class SaveClassField {
   }
 }
 
-export class SavePythonClass {
+export class SaveJavascriptClass {
   readonly parent: Parent;
   private _name: VariableName;
   readonly fields: SaveClassField[];
@@ -42,7 +39,7 @@ export class SavePythonClass {
     return this._name.value("camel");
   }
 
-  merge(other: SavePythonClass): void {
+  merge(other: SaveJavascriptClass): void {
     for (const field of other.fields) {
       const found = this.fields.find((f) => f.name() === field.name());
 
@@ -55,36 +52,34 @@ export class SavePythonClass {
   }
 
   definition(): string {
-    let code = `class ${this.name()}(TypedDict):\n`;
+    let code = `interface ${this.name()} {\n`;
 
     this.fields.forEach((f) => {
       code += `   ${f.name()}: ${f.datatypes.declaration()}\n`;
     });
 
+    code += "}\n";
+
     return code;
   }
 }
 
-export class PythonClasses {
-  private readonly classes: SavePythonClass[];
+export class JavascriptClasses {
+  private readonly classes: SaveJavascriptClass[];
 
-  constructor(private readonly imports: Imports) {
+  constructor() {
     this.classes = [];
   }
 
-  add(c: PythonClass): void {
+  add(c: JavascriptClass): void {
     const fields = [] as SaveClassField[];
     for (const field of c.fields) {
-      const saveField = new SaveClassField(
-        this.imports,
-        field._name,
-        field.datatype,
-      );
+      const saveField = new SaveClassField(field._name, field.datatype);
 
       fields.push(saveField);
     }
 
-    const save = new SavePythonClass(c._name, c.parent, fields);
+    const save = new SaveJavascriptClass(c._name, c.parent, fields);
 
     let found = false;
     for (const c of this.classes) {
