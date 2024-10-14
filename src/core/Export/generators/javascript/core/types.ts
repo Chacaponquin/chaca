@@ -187,7 +187,7 @@ export class JavascriptClassField {
     return this.datatype.string();
   }
 
-  definition(): string | null {
+  definition(): string {
     return this.datatype.definition();
   }
 }

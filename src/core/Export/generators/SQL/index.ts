@@ -1,12 +1,11 @@
 import { ExportSQLFormat } from "../../interfaces/export";
 import { Generator } from "../generator";
-import { SQLTable } from "./core/table";
 import {
   InputTreeNode,
   KeyValueNode,
   RefValueNode,
 } from "../../../input-tree/core";
-import { SQLDataGenerator } from "./core/generators/postgres";
+import { PostgreSQL, SQLDataGenerator } from "./core/generators/postgres";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { Filename } from "../generator/name";
 
@@ -18,7 +17,6 @@ export class SQLGenerator extends Generator {
   private schemasPrimaryKeys: KeyValueNode[] = [];
   private schemasForeignKeys: RefValueNode[] = [];
   private schemaspossibleNull: InputTreeNode[] = [];
-  private allTables: SQLTable[] = [];
   private generator: SQLDataGenerator;
 
   private readonly zip: boolean;
@@ -35,7 +33,8 @@ export class SQLGenerator extends Generator {
       location: location,
     });
 
-    this.generator = new SQLDataGenerator(format, this.allTables);
+    const generator = new PostgreSQL();
+    this.generator = new SQLDataGenerator(generator);
 
     this.zip = Boolean(config.zip);
   }

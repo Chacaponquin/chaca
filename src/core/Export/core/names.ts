@@ -13,6 +13,10 @@ export class VariableName {
     this._name = name;
   }
 
+  name() {
+    return this._name;
+  }
+
   value(c: Case) {
     if (c === "camel") {
       return this.utils.capitalize(this.utils.camelCase(this._name));
