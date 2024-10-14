@@ -21,13 +21,13 @@ export class Schema<K = any> {
    * @param config Configuration of the file you want to export (name, location, format)
    * @returns Promise<string>
    */
-  async export(documents: number, config: FileConfig): Promise<string> {
+  async export(documents: number, config: FileConfig): Promise<string[]> {
     const resolver = new ExportResolver(config);
-    const fileRoute = await resolver.relational([
+    const routes = await resolver.relational([
       { name: config.filename, documents: documents, schema: this },
     ]);
 
-    return fileRoute;
+    return routes;
   }
 
   /**

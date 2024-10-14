@@ -14,9 +14,11 @@ export class Dataset<K = any> {
    * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    * @param config.verbose Show log in console progretion
    */
-  async export(config: FileConfig): Promise<string> {
+  async export(config: FileConfig): Promise<string[]> {
     const resolver = new ExportResolver(config);
-    return await resolver.relational(this.schemas);
+    const routes = await resolver.relational(this.schemas);
+
+    return routes;
   }
 
   generate(): K {

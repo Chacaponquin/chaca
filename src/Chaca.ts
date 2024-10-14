@@ -117,7 +117,7 @@ export class Chaca {
    * @returns
    * Promise<string>
    */
-  async export(data: any, config: FileConfig): Promise<string> {
+  async export(data: any, config: FileConfig): Promise<string[]> {
     const resolver = new ExportResolver(config);
     const route = await resolver.data(data);
 
