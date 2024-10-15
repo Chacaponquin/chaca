@@ -17,6 +17,10 @@ export class VariableName {
     return this._name;
   }
 
+  equal(other: VariableName): boolean {
+    return other._name === this._name;
+  }
+
   value(c: Case) {
     if (c === "camel") {
       return this.utils.capitalize(this.utils.camelCase(this._name));

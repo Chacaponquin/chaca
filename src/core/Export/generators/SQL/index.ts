@@ -1,22 +1,17 @@
 import { ExportSQLFormat } from "../../interfaces/export";
 import { Generator } from "../generator";
-import {
-  InputTreeNode,
-  KeyValueNode,
-  RefValueNode,
-} from "../../../input-tree/core";
-import { PostgreSQL, SQLDataGenerator } from "./core/generators/postgres";
+import { PostgreSQL } from "./core/generators/postgres";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { Filename } from "../generator/name";
+import { SQLDataGenerator } from "./core/generators/base";
+import { SQLTables } from "./core/table/tables";
+import { DataValidator } from "./core/generators/validator";
 
 export interface SQLProps {
   zip?: boolean;
 }
 
 export class SQLGenerator extends Generator {
-  private schemasPrimaryKeys: KeyValueNode[] = [];
-  private schemasForeignKeys: RefValueNode[] = [];
-  private schemaspossibleNull: InputTreeNode[] = [];
   private generator: SQLDataGenerator;
 
   private readonly zip: boolean;
@@ -34,27 +29,40 @@ export class SQLGenerator extends Generator {
     });
 
     const generator = new PostgreSQL();
-    this.generator = new SQLDataGenerator(generator);
+    const validator = new DataValidator();
+    this.generator = new SQLDataGenerator(this.utils, generator, validator);
 
     this.zip = Boolean(config.zip);
   }
 
   async createRelationalFile(resolvers: DatasetResolver): Promise<string[]> {
-    resolvers.getResolvers().forEach((r) => {
-      const allKeys = r.getKeyNodes();
-      allKeys.forEach((k) => this.schemasPrimaryKeys.push(k));
-
-      const allRefs = r.getRefNodes();
-      allRefs.forEach((r) => this.schemasForeignKeys.push(r));
-
-      const allpossibleNull = r.getPossibleNullNodes();
-      allpossibleNull.forEach((n) => this.schemaspossibleNull.push(n));
-    });
-
     const filename = new Filename(this.filename);
     const route = this.generateRoute(filename);
 
-    await this.writeFile(route, this.generator.code());
+    const allTables = new SQLTables(this.utils);
+
+    resolvers.getResolvers().forEach((r) => {
+      const tables = new SQLTables(this.utils);
+
+      this.generator.build({
+        name: r.getSchemaName(),
+        data: r.resolve(),
+        tables: tables,
+        config: {
+          keys: r.getKeyNodes(),
+          refs: r.getRefNodes(),
+          nulls: r.getPossibleNullNodes(),
+        },
+      });
+
+      for (const table of tables.tables) {
+        allTables.add(table);
+      }
+    });
+
+    const code = this.generator.code(allTables);
+
+    await this.writeFile(route, code);
 
     if (this.zip) {
       const zip = this.createZip();
@@ -69,7 +77,17 @@ export class SQLGenerator extends Generator {
   async createFile(data: any): Promise<string[]> {
     const filename = new Filename(this.filename);
     const route = this.generateRoute(filename);
-    const code = this.generator.code();
+
+    const tables = new SQLTables(this.utils);
+
+    this.generator.build({
+      name: this.filename,
+      data: data,
+      tables: tables,
+      config: { keys: [], nulls: [], refs: [] },
+    });
+
+    const code = this.generator.code(tables);
 
     await this.writeFile(route, code);
 

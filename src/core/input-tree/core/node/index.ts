@@ -26,6 +26,10 @@ export abstract class InputTreeNode {
     return route.join(".");
   }
 
+  getParentName(): string {
+    return this.nodeConfig.fieldTreeRoute.at(-2) as string;
+  }
+
   getRouteString(): string {
     return InputTreeNode.getRouteString(this.getFieldRoute());
   }

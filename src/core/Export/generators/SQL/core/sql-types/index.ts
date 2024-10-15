@@ -4,12 +4,35 @@ import { Datatype } from "../../../../core/datatype";
 import { VariableName } from "../../../../core/names";
 import { Parent } from "../../../../core/parent";
 import { SpaceIndex } from "../../../../core/space-index";
+import { SQLColumn } from "../table/column";
+import { SQLTable } from "../table/table";
 import { SQLTables } from "../table/tables";
+
+export interface RefTable {
+  table: SQLTable;
+  column: SQLColumn;
+}
 
 export abstract class SQLDatatype {
   abstract definition(): string;
   abstract string(): string;
+  protected abstract greaterThan(other: SQLDatatype): boolean;
   protected abstract similar(other: SQLDatatype): boolean;
+  abstract refValue(): SQLDatatype;
+
+  private _ref: RefTable | null;
+
+  constructor() {
+    this._ref = null;
+  }
+
+  ref() {
+    return this._ref;
+  }
+
+  setRef(ref: RefTable) {
+    this._ref = ref;
+  }
 
   isSimilar(other: SQLDatatype): boolean {
     if (other instanceof SQLNull || this instanceof SQLNull) {
@@ -19,6 +42,14 @@ export abstract class SQLDatatype {
     return other.similar(this);
   }
 
+  isGreaterThan(other: SQLDatatype): boolean {
+    if (other instanceof SQLNull) {
+      return true;
+    }
+
+    return this.greaterThan(other);
+  }
+
   static create(
     utils: ChacaUtils,
     preventName: VariableName,
@@ -26,46 +57,50 @@ export abstract class SQLDatatype {
     index: SpaceIndex,
     tables: SQLTables,
     value: any,
-  ): SQLDatatype {
-    const type = Datatype.filter<SQLDatatype>(value, {
+  ): SQLDatatype[] {
+    const type = Datatype.filter<SQLDatatype[]>(value, {
       int(value) {
-        return new SQLInteger(value);
+        return [new SQLInteger(value)];
       },
       float(value) {
-        return new SQLFloat(value);
+        return [new SQLFloat(value)];
       },
       bigint(value) {
-        return new SQLBigint(value);
+        return [new SQLBigint(value)];
       },
       boolean(value) {
-        return new SQLBoolean(value);
+        return [new SQLBoolean(value)];
       },
       date(value) {
-        return new SQLDate(value);
+        return [new SQLDate(value)];
       },
       function() {
-        throw new ChacaError(``);
+        throw new ChacaError(`hola`);
       },
       null() {
-        return new SQLNull();
+        return [new SQLNull()];
       },
       nan(value) {
-        return new SQLFloat(value);
+        return [new SQLFloat(value)];
       },
       symbol() {
-        throw new ChacaError(``);
+        throw new ChacaError(`hola`);
       },
       string(value) {
-        return new SQLVarchar(value);
+        if (value.length < 255) {
+          return [new SQLVarchar(value)];
+        }
+
+        return [new SQLText(value)];
       },
       regexp(value) {
-        return new SQLText(String(value));
+        return [new SQLText(String(value))];
       },
       undefined() {
-        return new SQLNull();
+        return [new SQLNull()];
       },
       object(value) {
-        const object = new SQLClass(preventName, parent, index);
+        const object = new SQLClass(preventName, parent);
 
         for (const [key, data] of Object.entries(value)) {
           const fieldName = new VariableName(utils, {
@@ -74,7 +109,7 @@ export abstract class SQLDatatype {
 
           const newParent = Parent.create(parent, fieldName);
 
-          const datatype = SQLDatatype.create(
+          const datatypes = SQLDatatype.create(
             utils,
             fieldName,
             newParent,
@@ -83,14 +118,14 @@ export abstract class SQLDatatype {
             data,
           );
 
-          const field = new SQLClassField(fieldName, datatype);
+          const field = new SQLClassField(fieldName, datatypes);
 
           object.add(field);
         }
 
-        tables.addClass(object);
+        const keys = tables.addClass(object);
 
-        return object;
+        return keys;
       },
       array(value) {
         const array = new SQLArray(parent);
@@ -108,9 +143,7 @@ export abstract class SQLDatatype {
           array.add(sub);
         }
 
-        tables.addArray(array);
-
-        return array;
+        return tables.addArray(array);
       },
     });
 
@@ -118,37 +151,29 @@ export abstract class SQLDatatype {
   }
 }
 
-export class SQLArray extends SQLDatatype {
-  private values: SQLDatatype[];
+export class SQLArray {
+  readonly values: SQLDatatype[][];
+  readonly parent: Parent;
 
-  constructor(readonly parent: Parent) {
-    super();
-
+  constructor(parent: Parent) {
     this.values = [];
+    this.parent = parent;
   }
 
-  string(): string {
-    return "";
-  }
-
-  similar(other: SQLDatatype): boolean {
-    return other instanceof SQLArray;
-  }
-
-  definition(): string {
-    return "";
-  }
-
-  add(field: SQLDatatype) {
+  add(fields: SQLDatatype[]) {
     if (this.values.length === 0) {
-      this.values.push(field);
+      this.values.push(fields);
     } else {
-      const similar = field.isSimilar(this.values[0]);
+      const save = [] as SQLDatatype[];
 
-      if (similar) {
-        this.values.push(field);
-      } else {
-        throw new ChacaError(``);
+      for (let i = 0; i < fields.length; i++) {
+        const similar = fields[i].isSimilar(this.values[0][i]);
+
+        if (similar) {
+          save.push(fields[i]);
+        } else {
+          throw new ChacaError(`hola array`);
+        }
       }
     }
   }
@@ -159,8 +184,16 @@ export class SQLBoolean extends SQLDatatype {
     super();
   }
 
+  greaterThan(): boolean {
+    return false;
+  }
+
   definition(): string {
     return "BOOLEAN";
+  }
+
+  refValue(): SQLDatatype {
+    return this;
   }
 
   string(): string {
@@ -177,6 +210,10 @@ export class SQLDate extends SQLDatatype {
     super();
   }
 
+  refValue(): SQLDatatype {
+    return this;
+  }
+
   definition(): string {
     return "DATE";
   }
@@ -188,11 +225,19 @@ export class SQLDate extends SQLDatatype {
   similar(other: SQLDatatype): boolean {
     return other instanceof SQLDate;
   }
+
+  greaterThan(): boolean {
+    return false;
+  }
 }
 
 export class SQLNull extends SQLDatatype {
   constructor() {
     super();
+  }
+
+  refValue(): SQLDatatype {
+    return this;
   }
 
   definition(): string {
@@ -201,6 +246,10 @@ export class SQLNull extends SQLDatatype {
 
   string(): string {
     return `NULL`;
+  }
+
+  greaterThan(): boolean {
+    return false;
   }
 
   similar(other: SQLDatatype): boolean {
@@ -226,8 +275,20 @@ export class SQLBigint extends SQLNumber {
     super(value);
   }
 
+  refValue(): SQLDatatype {
+    return this;
+  }
+
   definition(): string {
     return "BIGINT";
+  }
+
+  greaterThan(other: SQLDatatype): boolean {
+    if (other instanceof SQLNumber) {
+      return true;
+    }
+
+    return false;
   }
 
   string(): string {
@@ -238,6 +299,14 @@ export class SQLBigint extends SQLNumber {
 export class SQLInteger extends SQLNumber {
   constructor(value: number) {
     super(value);
+  }
+
+  refValue(): SQLDatatype {
+    return this;
+  }
+
+  greaterThan(): boolean {
+    return false;
   }
 
   definition(): string {
@@ -252,6 +321,18 @@ export class SQLInteger extends SQLNumber {
 export class SQLFloat extends SQLNumber {
   constructor(value: number) {
     super(value);
+  }
+
+  refValue(): SQLDatatype {
+    return this;
+  }
+
+  greaterThan(other: SQLDatatype): boolean {
+    if (other instanceof SQLInteger) {
+      return true;
+    }
+
+    return false;
   }
 
   definition(): string {
@@ -303,8 +384,20 @@ export class SQLText extends SQLString {
     super(value);
   }
 
+  refValue(): SQLDatatype {
+    return this;
+  }
+
   definition(): string {
     return "TEXT";
+  }
+
+  greaterThan(other: SQLDatatype): boolean {
+    if (other instanceof SQLString) {
+      return true;
+    }
+
+    return false;
   }
 }
 
@@ -316,20 +409,22 @@ export class SQLVarchar extends SQLString {
   definition(): string {
     return "VARCHAR(255)";
   }
+
+  refValue(): SQLDatatype {
+    return this;
+  }
+
+  greaterThan(): boolean {
+    return false;
+  }
 }
 
-export class SQLClass extends SQLDatatype {
+export class SQLClass {
   readonly fields: SQLClassField[];
   readonly _name: VariableName;
   readonly parent: Parent;
 
-  constructor(
-    name: VariableName,
-    parent: Parent,
-    private readonly index: SpaceIndex,
-  ) {
-    super();
-
+  constructor(name: VariableName, parent: Parent) {
     this._name = name;
     this.fields = [];
     this.parent = parent;
@@ -339,50 +434,16 @@ export class SQLClass extends SQLDatatype {
     this.fields.push(field);
   }
 
-  similar(other: SQLDatatype): boolean {
-    return other instanceof SQLClass;
-  }
-
   name() {
-    return this._name.value("camel");
-  }
-
-  string(): string {
-    let code = `{\n`;
-
-    this.index.push();
-
-    const fields = this.fields
-      .map((f) => this.index.create(`${f.name()}: ${f.string()}`))
-      .join(",\n");
-
-    code += fields + "\n";
-
-    this.index.reverse();
-
-    code += this.index.create("}");
-
-    return code;
-  }
-
-  equal(other: SQLDatatype): boolean {
-    if (other instanceof SQLClass) {
-      return true;
-    }
-
-    return false;
-  }
-
-  definition(): string {
-    return this.name();
+    return this._name.value("snake");
   }
 }
 
 export class SQLClassField {
   readonly _name: VariableName;
-  readonly datatype: SQLDatatype;
+  readonly datatype: SQLDatatype[];
 
-  constructor(name: VariableName, datatype: SQLDatatype) {
+  constructor(name: VariableName, datatype: SQLDatatype[]) {
     this._name = name;
     this.datatype = datatype;
   }
@@ -390,12 +451,26 @@ export class SQLClassField {
   name(): string {
     return this._name.value("snake");
   }
+}
 
-  string() {
-    return this.datatype.string();
+export class SQLSerial extends SQLNumber {
+  constructor(v: number) {
+    super(v);
+  }
+
+  refValue(): SQLDatatype {
+    return new SQLInteger(Number(this.value));
+  }
+
+  string(): string {
+    return `${this.value}`;
   }
 
   definition(): string {
-    return this.datatype.definition();
+    return "SERIAL";
+  }
+
+  greaterThan(): boolean {
+    return false;
   }
 }

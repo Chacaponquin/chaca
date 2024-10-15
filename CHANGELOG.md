@@ -83,6 +83,8 @@
 - 🎉 Added `utils.pick` to select elements from an array without being chosen more than once
 - 🎉 Added `utils.multiple` To create an array of values ​​from a generator
 - 🎉 Added `banned` and `symbols` options on `utils.replaceSymbols`
+- 🗑️ Deleted `utils.capitalCamelCase`
+- 🎉 Added `utils.snakeCase`
 
 ## 🪛 Fix
 
