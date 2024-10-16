@@ -1,4 +1,5 @@
 import { ChacaError } from "../../errors";
+import { InputTreeNode, KeyValueNode, RefValueNode } from "../input-tree/core";
 import { SchemaResolver } from "../schema-resolver";
 import { DatasetSchema } from "./interfaces/resolver";
 
@@ -78,5 +79,35 @@ export class DatasetResolver<K = any> {
     });
 
     return data;
+  }
+
+  getRefsNodes() {
+    const nodes = [] as RefValueNode[];
+
+    this.resolvers.forEach((r) => {
+      nodes.push(...r.getRefNodes());
+    });
+
+    return nodes;
+  }
+
+  getPossibleNullNodes() {
+    const nodes = [] as InputTreeNode[];
+
+    this.resolvers.forEach((r) => {
+      nodes.push(...r.getPossibleNullNodes());
+    });
+
+    return nodes;
+  }
+
+  getKeyNodes() {
+    const nodes = [] as KeyValueNode[];
+
+    this.resolvers.forEach((r) => {
+      nodes.push(...r.getKeyNodes());
+    });
+
+    return nodes;
   }
 }

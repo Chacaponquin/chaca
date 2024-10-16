@@ -3,7 +3,7 @@ import { SQLTable } from "../table/table";
 import { SQLTables } from "../table/tables";
 
 interface ColumnProps {
-  action(column: SQLColumn): void;
+  action(column: SQLColumn, table: SQLTable): void;
   search: { table: string; column: string };
 }
 
@@ -30,7 +30,7 @@ export class Searcher {
       const column = table.find(search.column);
 
       if (column) {
-        action(column);
+        action(column, table);
       }
     }
   }

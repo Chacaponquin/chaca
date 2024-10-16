@@ -16,6 +16,7 @@ import { SearchedRefValue } from "./interfaces/ref";
 import { RefRoute } from "./value-object/route";
 import { NotArray } from "../is-array";
 import { SchemaResolver } from "../../../schema-resolver";
+import { NodeRoute } from "../node/value-object/route";
 
 export class RefValueNode extends InputTreeNode {
   private refFieldTreeRoute: string[];
@@ -33,8 +34,8 @@ export class RefValueNode extends InputTreeNode {
     this.refFieldTreeRoute = new RefRoute(this.refField.refField).value();
   }
 
-  getRefFieldRoute() {
-    return this.refFieldTreeRoute;
+  getRefFieldRoute(): NodeRoute {
+    return new NodeRoute(this.refFieldTreeRoute);
   }
 
   getRefFieldRouteString(): string {

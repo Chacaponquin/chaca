@@ -6,7 +6,10 @@ export class PostgreSQL extends SQLExtensionGenerator {
     let code = ``;
 
     for (const table of tables.tables) {
-      const columns = table.columns.map((c) => c.name()).join(", ");
+      const columns = table
+        .columns()
+        .map((c) => c.name())
+        .join(", ");
 
       code += `INSERT INTO ${table.name()} (${columns})\n`;
 
@@ -31,7 +34,8 @@ export class PostgreSQL extends SQLExtensionGenerator {
     for (const table of tables.tables) {
       code += `CREATE TABLE ${table.name()} (\n`;
 
-      const columns = table.columns
+      const columns = table
+        .columns()
         .map((column) => {
           let code = ``;
 

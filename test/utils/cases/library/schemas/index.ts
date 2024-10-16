@@ -107,6 +107,6 @@ export const BOOK_LOAN_SCHEMA = chaca.schema({
         to: new Date(),
       });
     },
-    possibleNull: 40,
+    possibleNull: 0.4,
   },
 });

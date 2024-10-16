@@ -6,14 +6,14 @@ import { Filename } from "../generator/name";
 import { SQLDataGenerator } from "./core/generators/base";
 import { SQLTables } from "./core/table/tables";
 import { DataValidator } from "./core/generators/validator";
+import { TableOrganizer } from "./core/generators/organizer";
+import { TablesFixer } from "./core/generators/fixer";
 
 export interface SQLProps {
   zip?: boolean;
 }
 
 export class SQLGenerator extends Generator {
-  private generator: SQLDataGenerator;
-
   private readonly zip: boolean;
 
   constructor(
@@ -28,39 +28,46 @@ export class SQLGenerator extends Generator {
       location: location,
     });
 
-    const generator = new PostgreSQL();
-    const validator = new DataValidator();
-    this.generator = new SQLDataGenerator(this.utils, generator, validator);
-
     this.zip = Boolean(config.zip);
   }
 
-  async createRelationalFile(resolvers: DatasetResolver): Promise<string[]> {
+  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
     const filename = new Filename(this.filename);
+
     const route = this.generateRoute(filename);
 
+    const fixer = new TablesFixer(this.utils, {
+      keys: resolver.getKeyNodes(),
+      nulls: resolver.getPossibleNullNodes(),
+      refs: resolver.getRefsNodes(),
+    });
     const allTables = new SQLTables(this.utils);
+    const organizer = new TableOrganizer();
 
-    resolvers.getResolvers().forEach((r) => {
+    const validator = new DataValidator();
+    const postgres = new PostgreSQL();
+    const generator = new SQLDataGenerator(
+      this.utils,
+      postgres,
+      validator,
+      fixer,
+    );
+
+    const resolvers = organizer.execute({ resolver: resolver });
+
+    resolvers.forEach((r) => {
       const tables = new SQLTables(this.utils);
 
-      this.generator.build({
+      generator.build({
         name: r.getSchemaName(),
         data: r.resolve(),
         tables: tables,
-        config: {
-          keys: r.getKeyNodes(),
-          refs: r.getRefNodes(),
-          nulls: r.getPossibleNullNodes(),
-        },
       });
 
-      for (const table of tables.tables) {
-        allTables.add(table);
-      }
+      tables.tables.forEach((t) => allTables.add(t));
     });
 
-    const code = this.generator.code(allTables);
+    const code = generator.code(allTables);
 
     await this.writeFile(route, code);
 
@@ -78,16 +85,29 @@ export class SQLGenerator extends Generator {
     const filename = new Filename(this.filename);
     const route = this.generateRoute(filename);
 
-    const tables = new SQLTables(this.utils);
+    const fixer = new TablesFixer(this.utils, {
+      keys: [],
+      nulls: [],
+      refs: [],
+    });
 
-    this.generator.build({
+    const tables = new SQLTables(this.utils);
+    const validator = new DataValidator();
+    const postgres = new PostgreSQL();
+    const generator = new SQLDataGenerator(
+      this.utils,
+      postgres,
+      validator,
+      fixer,
+    );
+
+    generator.build({
       name: this.filename,
       data: data,
       tables: tables,
-      config: { keys: [], nulls: [], refs: [] },
     });
 
-    const code = this.generator.code(tables);
+    const code = generator.code(tables);
 
     await this.writeFile(route, code);
 
