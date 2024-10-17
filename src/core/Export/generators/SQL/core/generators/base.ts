@@ -1,10 +1,10 @@
 import { ChacaUtils } from "../../../../../utils";
-import { ValueCreator } from "../sql-types";
 import { SQLTable } from "../table/table";
 import { SQLTables } from "../table/tables";
 import { TablesFixer } from "./fixer";
 import { ObjectTableName } from "./names";
 import { DataValidator } from "./validator";
+import { ValueCreator } from "./value-creator";
 
 export abstract class SQLExtensionGenerator {
   abstract tables(tables: SQLTables): string;
@@ -32,6 +32,7 @@ export class SQLDataGenerator {
     const creator = new ValueCreator(this.utils, this.fixer, tables);
 
     const table = new SQLTable(this.utils, name, false);
+    tables.add(table);
 
     // create data
     for (const value of data) {
