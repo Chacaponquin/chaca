@@ -17,7 +17,7 @@ export class Parent {
   }
 
   string() {
-    return this.route.map((r) => r._name).join(".");
+    return this.route.map((r) => r.name()).join(".");
   }
 
   equal(other: Parent) {

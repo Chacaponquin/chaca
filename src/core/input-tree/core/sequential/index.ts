@@ -6,14 +6,8 @@ import { SequentialFieldConfig } from "../../../fields/core/sequential/Sequentia
 import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 import { NotArray } from "../is-array";
 import { InputTreeNode } from "../node";
+import { NodeRoute } from "../node/value-object/route";
 import { PossibleNull } from "../possible-null";
-
-export interface SequentialValueNodeProps {
-  fieldTreeRoute: string[];
-  valuesArray: unknown[];
-  config: Required<SequentialFieldConfig>;
-  possibleNull: PossibleNull;
-}
 
 export class SequentialValueNode extends InputTreeNode {
   private index = 0;
@@ -21,19 +15,15 @@ export class SequentialValueNode extends InputTreeNode {
   private valuesArray: unknown[];
   private config: Required<SequentialFieldConfig>;
 
-  constructor({
-    config,
-    fieldTreeRoute,
-    valuesArray,
-    possibleNull,
-  }: SequentialValueNodeProps) {
-    super({
-      fieldTreeRoute,
-      isArray: new NotArray(),
-      possibleNull: possibleNull,
-    });
+  constructor(
+    route: NodeRoute,
+    possibleNull: PossibleNull,
+    array: unknown[],
+    config: Required<SequentialFieldConfig>,
+  ) {
+    super(route, new NotArray(), possibleNull);
 
-    this.valuesArray = valuesArray;
+    this.valuesArray = array;
     this.config = config;
 
     if (Array.isArray(this.valuesArray)) {
@@ -46,12 +36,12 @@ export class SequentialValueNode extends InputTreeNode {
   }
 
   getNoArrayNode(): InputTreeNode {
-    return new SequentialValueNode({
-      fieldTreeRoute: this.getFieldRoute(),
-      valuesArray: this.valuesArray,
-      config: this.config,
-      possibleNull: this.getPossibleNull(),
-    });
+    return new SequentialValueNode(
+      this.route,
+      this.possibleNull,
+      this.valuesArray,
+      this.config,
+    );
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {

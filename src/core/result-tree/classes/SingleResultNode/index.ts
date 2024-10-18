@@ -1,4 +1,5 @@
 import { ChacaError } from "../../../../errors";
+import { NodeRoute } from "../../../input-tree/core/node/value-object/route";
 import { FieldNode } from "../FieldNode";
 
 interface Props {
@@ -19,12 +20,12 @@ export class SingleResultNode extends FieldNode {
     return this._value;
   }
 
-  changeIsTaken(fieldRoute: string[]) {
-    this._taken.push(fieldRoute.join("."));
+  changeIsTaken(fieldRoute: NodeRoute) {
+    this._taken.push(fieldRoute.string());
   }
 
-  isTaken(fieldRoute: string[]): boolean {
-    return this._taken.includes(fieldRoute.join("."));
+  isTaken(fieldRoute: NodeRoute): boolean {
+    return this._taken.includes(fieldRoute.string());
   }
 
   getNodeByRoute(fieldTreeRoute: string[]): FieldNode {

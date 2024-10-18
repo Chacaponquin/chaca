@@ -5,10 +5,11 @@ import {
   SingleResultNode,
 } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { GenerateProps, InputTreeNode } from "../node";
-import { NotArray } from "../is-array";
+import { IsArray, NotArray } from "../is-array";
 import { ChancesArray } from "./value-object/chances-array";
+import { NodeRoute } from "../node/value-object/route";
+import { PossibleNull } from "../possible-null";
 
 interface Props {
   store: DatasetStore;
@@ -18,15 +19,22 @@ interface Props {
 export class ProbabilityValueNode extends InputTreeNode {
   private options: ChancesArray;
 
-  constructor(config: ChacaTreeNodeConfig, options: ChancesArray) {
-    super(config);
+  constructor(
+    route: NodeRoute,
+    isArray: IsArray,
+    possibleNull: PossibleNull,
+    options: ChancesArray,
+  ) {
+    super(route, isArray, possibleNull);
 
     this.options = options;
   }
 
   getNoArrayNode(): InputTreeNode {
     return new ProbabilityValueNode(
-      { ...this.getNodeConfig(), isArray: new NotArray() },
+      this.route,
+      new NotArray(),
+      this.possibleNull,
       this.options,
     );
   }

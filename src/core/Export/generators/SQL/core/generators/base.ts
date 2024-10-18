@@ -2,7 +2,8 @@ import { ChacaUtils } from "../../../../../utils";
 import { SQLTable } from "../table/table";
 import { SQLTables } from "../table/tables";
 import { TablesFixer } from "./fixer";
-import { ObjectTableName } from "./names";
+import { TableName } from "./names";
+import { Route } from "./route";
 import { DataValidator } from "./validator";
 import { ValueCreator } from "./value-creator";
 
@@ -15,6 +16,7 @@ interface BuildProps {
   name: string;
   data: any;
   tables: SQLTables;
+  generateIds: boolean;
 }
 
 export class SQLDataGenerator {
@@ -25,11 +27,17 @@ export class SQLDataGenerator {
     private readonly fixer: TablesFixer,
   ) {}
 
-  build({ name: iname, data, tables }: BuildProps) {
+  build({ name: iname, data, tables, generateIds }: BuildProps) {
     this.validator.execute(data);
 
-    const name = new ObjectTableName(this.utils, iname);
-    const creator = new ValueCreator(this.utils, this.fixer, tables);
+    const route = new Route([iname]);
+    const name = new TableName(this.utils, route);
+    const creator = new ValueCreator(
+      this.utils,
+      this.fixer,
+      tables,
+      generateIds,
+    );
 
     const table = new SQLTable(this.utils, name, false);
     tables.add(table);
@@ -37,7 +45,7 @@ export class SQLDataGenerator {
     // create data
     for (const value of data) {
       creator.execute({
-        name: iname,
+        route: route,
         parent: table,
         table: table,
         value: value,
@@ -46,11 +54,13 @@ export class SQLDataGenerator {
   }
 
   code(tables: SQLTables): string {
+    this.fixer.fixTableNames(tables);
+    this.fixer.fixColumnNames(tables);
+    this.fixer.fixRefFields(tables);
+
     let code = ``;
 
     code += this.generator.tables(tables);
-
-    code += "\n";
 
     code += this.generator.values(tables);
 

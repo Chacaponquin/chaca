@@ -5,25 +5,20 @@ import { NotArray } from "../is-array";
 import { Step } from "./value-object/step";
 import { StartsWith } from "./value-object/starts-with";
 import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
-
-interface Props {
-  fieldTreeRoute: string[];
-  step: Step;
-  startsWith: StartsWith;
-  possibleNull: PossibleNull;
-}
+import { NodeRoute } from "../node/value-object/route";
 
 export class SequenceValueNode extends InputTreeNode {
   private actualValue: number;
   private readonly startsWith: StartsWith;
   private readonly step: Step;
 
-  constructor({ fieldTreeRoute, possibleNull, startsWith, step }: Props) {
-    super({
-      isArray: new NotArray(),
-      fieldTreeRoute: fieldTreeRoute,
-      possibleNull: possibleNull,
-    });
+  constructor(
+    route: NodeRoute,
+    possibleNull: PossibleNull,
+    startsWith: StartsWith,
+    step: Step,
+  ) {
+    super(route, new NotArray(), possibleNull);
 
     this.startsWith = startsWith;
     this.step = step;
@@ -54,11 +49,11 @@ export class SequenceValueNode extends InputTreeNode {
   }
 
   getNoArrayNode(): InputTreeNode {
-    return new SequenceValueNode({
-      fieldTreeRoute: this.getFieldRoute(),
-      startsWith: this.startsWith,
-      step: this.step,
-      possibleNull: this.getPossibleNull(),
-    });
+    return new SequenceValueNode(
+      this.route,
+      this.possibleNull,
+      this.startsWith,
+      this.step,
+    );
   }
 }

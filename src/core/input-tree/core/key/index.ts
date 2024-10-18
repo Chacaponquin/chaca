@@ -6,26 +6,17 @@ import { SequenceValueNode } from "../sequence";
 import { NotNull } from "../possible-null";
 import { NotArray } from "../is-array";
 import { FieldNode } from "../../../result-tree/classes";
+import { NodeRoute } from "../node/value-object/route";
 
 export type KeyFieldProps = RefValueNode | SequenceValueNode | CustomValueNode;
 
 export class KeyValueNode extends InputTreeNode {
-  constructor(
-    fieldTreeRoute: string[],
-    private readonly fieldNode: KeyFieldProps,
-  ) {
-    super({
-      fieldTreeRoute: fieldTreeRoute,
-      isArray: new NotArray(),
-      possibleNull: new NotNull(),
-    });
+  constructor(route: NodeRoute, private readonly fieldNode: KeyFieldProps) {
+    super(route, new NotArray(), new NotNull());
   }
 
   getNoArrayNode(): InputTreeNode {
-    return new KeyValueNode(
-      this.getNodeConfig().fieldTreeRoute,
-      this.fieldNode,
-    );
+    return new KeyValueNode(this.route, this.fieldNode);
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {

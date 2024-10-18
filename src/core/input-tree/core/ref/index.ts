@@ -5,7 +5,6 @@ import {
   NotExistFieldError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { GenerateProps, InputTreeNode } from "../node";
 import { ChacaUtils } from "../../../utils";
 import { FieldToRefObject } from "../../../fields/core/ref";
@@ -14,9 +13,10 @@ import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
 import { SearchedRefValue } from "./interfaces/ref";
 import { RefRoute } from "./value-object/route";
-import { NotArray } from "../is-array";
+import { IsArray, NotArray } from "../is-array";
 import { SchemaResolver } from "../../../schema-resolver";
 import { NodeRoute } from "../node/value-object/route";
+import { PossibleNull } from "../possible-null";
 
 export class RefValueNode extends InputTreeNode {
   private refFieldTreeRoute: string[];
@@ -25,21 +25,19 @@ export class RefValueNode extends InputTreeNode {
 
   constructor(
     private readonly utils: ChacaUtils,
-    config: ChacaTreeNodeConfig,
+    route: NodeRoute,
+    isArray: IsArray,
+    possibleNull: PossibleNull,
     readonly refField: FieldToRefObject,
     readonly schemasStore: SchemaStore,
   ) {
-    super(config);
+    super(route, isArray, possibleNull);
 
     this.refFieldTreeRoute = new RefRoute(this.refField.refField).value();
   }
 
   getRefFieldRoute(): NodeRoute {
     return new NodeRoute(this.refFieldTreeRoute);
-  }
-
-  getRefFieldRouteString(): string {
-    return InputTreeNode.getRouteString(this.refFieldTreeRoute);
   }
 
   searchSchemaRef(): void {
@@ -157,7 +155,7 @@ export class RefValueNode extends InputTreeNode {
           if (noTakenValues.length === 0) {
             throw new NotEnoughValuesForRefError(
               this.getRouteString(),
-              this.getRefFieldRouteString(),
+              this.getRefFieldRoute().string(),
             );
           } else {
             const node = this.utils.oneOfArray(noTakenValues);
@@ -169,7 +167,7 @@ export class RefValueNode extends InputTreeNode {
           if (allValues.length === 0) {
             throw new NotEnoughValuesForRefError(
               this.getRouteString(),
-              this.getRefFieldRouteString(),
+              this.getRefFieldRoute().string(),
             );
           }
 
@@ -177,7 +175,7 @@ export class RefValueNode extends InputTreeNode {
         }
       } else {
         throw new CyclicAccessDataError(
-          `The field ${this.getRouteString()} is trying to access ${this.getRefFieldRouteString()}, and it uses that field to create itself`,
+          `The field ${this.getRouteString()} is trying to access ${this.getRefFieldRoute().string()}, and it uses that field to create itself`,
         );
       }
     } else {
@@ -203,7 +201,9 @@ export class RefValueNode extends InputTreeNode {
   getNoArrayNode(): InputTreeNode {
     const newRefNode = new RefValueNode(
       this.utils,
-      { ...this.getNodeConfig(), isArray: new NotArray() },
+      this.route,
+      new NotArray(),
+      this.possibleNull,
       this.refField,
       this.schemasStore,
     );

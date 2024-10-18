@@ -4,17 +4,20 @@ import {
 } from "../../../../errors";
 import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 import { ChacaUtils } from "../../../utils";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { NotArray } from "../is-array";
+import { IsArray, NotArray } from "../is-array";
 import { InputTreeNode } from "../node";
+import { NodeRoute } from "../node/value-object/route";
+import { PossibleNull } from "../possible-null";
 
 export class EnumValueNode extends InputTreeNode {
   constructor(
     private readonly utils: ChacaUtils,
-    config: ChacaTreeNodeConfig,
+    route: NodeRoute,
+    isArray: IsArray,
+    possibleNull: PossibleNull,
     private readonly options: ReadonlyArray<unknown>,
   ) {
-    super(config);
+    super(route, isArray, possibleNull);
 
     if (Array.isArray(options)) {
       if (options.length === 0) {
@@ -32,7 +35,9 @@ export class EnumValueNode extends InputTreeNode {
   getNoArrayNode(): InputTreeNode {
     return new EnumValueNode(
       this.utils,
-      { ...this.getNodeConfig(), isArray: new NotArray() },
+      this.route,
+      new NotArray(),
+      this.possibleNull,
       this.options,
     );
   }

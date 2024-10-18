@@ -6,9 +6,10 @@ import {
   FieldNode,
   SingleResultNode,
 } from "../../../result-tree/classes";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree";
-import { NotArray } from "../is-array";
+import { IsArray, NotArray } from "../is-array";
 import { GenerateProps, InputTreeNode } from "../node";
+import { NodeRoute } from "../node/value-object/route";
+import { PossibleNull } from "../possible-null";
 import { Count } from "./value-object/count";
 import { Values } from "./value-object/values";
 
@@ -20,17 +21,21 @@ interface GetValuesProps {
 export class PickValueNode extends InputTreeNode {
   constructor(
     private readonly datatypeModule: DatatypeModule,
-    config: ChacaTreeNodeConfig,
+    route: NodeRoute,
+    isArray: IsArray,
+    possibleNull: PossibleNull,
     private readonly count: Count,
     private readonly values: Values,
   ) {
-    super(config);
+    super(route, isArray, possibleNull);
   }
 
   getNoArrayNode(): InputTreeNode {
     return new PickValueNode(
       this.datatypeModule,
-      { ...this.getNodeConfig(), isArray: new NotArray() },
+      this.route,
+      new NotArray(),
+      this.possibleNull,
       this.count,
       this.values,
     );

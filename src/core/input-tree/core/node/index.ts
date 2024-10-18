@@ -1,6 +1,8 @@
 import { DocumentTree, FieldNode } from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree";
+import { NodeRoute } from "./value-object/route";
+import { IsArray } from "../is-array";
+import { PossibleNull } from "../possible-null";
 
 export interface IsNullProps<K> {
   store: DatasetStore;
@@ -16,43 +18,34 @@ export interface GenerateProps {
 }
 
 export abstract class InputTreeNode {
-  constructor(private readonly nodeConfig: ChacaTreeNodeConfig) {}
+  constructor(
+    protected readonly route: NodeRoute,
+    protected readonly isArray: IsArray,
+    protected readonly possibleNull: PossibleNull,
+  ) {}
 
   abstract getNoArrayNode(): InputTreeNode;
   abstract checkIfFieldExists(fieldTreeRoute: string[]): boolean;
   abstract generate(props: GenerateProps): FieldNode;
 
-  static getRouteString(route: string[]): string {
-    return route.join(".");
-  }
-
-  getParentName(): string {
-    return this.nodeConfig.fieldTreeRoute.at(-2) as string;
-  }
-
   getRouteString(): string {
-    return InputTreeNode.getRouteString(this.getFieldRoute());
-  }
-
-  getNodeConfig(): ChacaTreeNodeConfig {
-    return this.nodeConfig;
+    return this.route.string();
   }
 
   getNodeName(): string {
-    const arrayRoute = this.nodeConfig.fieldTreeRoute;
-    return arrayRoute[arrayRoute.length - 1];
+    return this.route.name();
   }
 
   getFieldRoute() {
-    return this.nodeConfig.fieldTreeRoute;
+    return this.route;
   }
 
   getIsArray() {
-    return this.nodeConfig.isArray;
+    return this.isArray;
   }
 
   getPossibleNull() {
-    return this.nodeConfig.possibleNull;
+    return this.possibleNull;
   }
 
   isPossibleNull(): boolean {

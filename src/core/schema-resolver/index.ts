@@ -35,7 +35,7 @@ export class SchemaResolver<K = any> {
   private readonly utils = new ChacaUtils();
   private readonly datatypeModule = new DatatypeModule();
 
-  private readonly subFieldsCreator = new SubFieldsCreator(this);
+  private readonly subFieldsCreator: SubFieldsCreator;
 
   private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
@@ -64,6 +64,7 @@ export class SchemaResolver<K = any> {
     this.countDoc = new CountDoc(countDoc).value();
     this.schemaIndex = schemaIndex;
     this.consoleVerbose = consoleVerbose;
+    this.subFieldsCreator = new SubFieldsCreator(this);
   }
 
   resolve(): K[] {

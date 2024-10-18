@@ -1,10 +1,11 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { DatasetStore } from "../../../dataset-store";
-import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { GenerateProps, InputTreeNode } from "../node";
 import { CustomField } from "../../../fields/core/custom";
-import { NotArray } from "../is-array";
+import { IsArray, NotArray } from "../is-array";
 import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
+import { NodeRoute } from "../node/value-object/route";
+import { PossibleNull } from "../possible-null";
 
 interface Props {
   fields: any;
@@ -12,13 +13,20 @@ interface Props {
 }
 
 export class CustomValueNode extends InputTreeNode {
-  constructor(config: ChacaTreeNodeConfig, private readonly func: CustomField) {
-    super(config);
+  constructor(
+    route: NodeRoute,
+    isArray: IsArray,
+    possibleNull: PossibleNull,
+    private readonly func: CustomField,
+  ) {
+    super(route, isArray, possibleNull);
   }
 
   getNoArrayNode(): InputTreeNode {
     return new CustomValueNode(
-      { ...this.getNodeConfig(), isArray: new NotArray() },
+      this.route,
+      new NotArray(),
+      this.possibleNull,
       this.func,
     );
   }

@@ -7,7 +7,7 @@ interface Props {
 export type Case = "camel" | "snake" | "none";
 
 export class VariableName {
-  readonly _name: string;
+  private _name: string;
 
   constructor(private readonly utils: ChacaUtils, { name }: Props) {
     this._name = name;
@@ -15,6 +15,10 @@ export class VariableName {
 
   name() {
     return this._name;
+  }
+
+  set(name: string) {
+    this._name = name;
   }
 
   equal(other: VariableName): boolean {

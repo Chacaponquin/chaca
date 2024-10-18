@@ -1,19 +1,29 @@
 export class NodeRoute {
-  private readonly route: string[];
+  private readonly _route: string[];
 
   constructor(route: string[]) {
-    this.route = route;
+    this._route = route;
   }
 
-  parent(): string {
-    return this.route.at(-2) as string;
+  array() {
+    return this._route;
+  }
+
+  create(name: string) {
+    return new NodeRoute([...this._route, name]);
+  }
+
+  parent(): NodeRoute {
+    const r = this._route.filter((_, i) => i !== this._route.length - 1);
+
+    return new NodeRoute(r);
   }
 
   name(): string {
-    return this.route.at(-1) as string;
+    return this._route.at(-1) as string;
   }
 
   string(): string {
-    return this.route.join(".");
+    return this._route.join(".");
   }
 }

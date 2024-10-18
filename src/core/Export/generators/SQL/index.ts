@@ -62,6 +62,7 @@ export class SQLGenerator extends Generator {
         name: r.getSchemaName(),
         data: r.resolve(),
         tables: tables,
+        generateIds: false,
       });
 
       tables.tables.forEach((t) => allTables.add(t));
@@ -105,6 +106,7 @@ export class SQLGenerator extends Generator {
       name: this.filename,
       data: data,
       tables: tables,
+      generateIds: true,
     });
 
     const code = generator.code(tables);

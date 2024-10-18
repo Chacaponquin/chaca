@@ -1,3 +1,21 @@
 {
-  "extends": "./tsconfig.base.json"
+  "compilerOptions": {
+    "outDir": "lib",
+    "target": "ES6",
+    "removeComments": false,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "downlevelIteration": true,
+    "isolatedModules": true,
+    "declaration": true
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "lib", "data"]
 }

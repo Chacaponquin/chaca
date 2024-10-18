@@ -1,15 +1,16 @@
 import { SQLColumn } from "../table/column";
 import { SQLTable } from "../table/table";
 import { SQLTables } from "../table/tables";
+import { TableName } from "./names";
 
 interface ColumnProps {
   action(column: SQLColumn, table: SQLTable): void;
-  search: { table: string; column: string };
+  search: { table: TableName; column: string };
 }
 
 interface TableProps {
   action(table: SQLTable): void;
-  search: string;
+  search: TableName;
 }
 
 export class Searcher {

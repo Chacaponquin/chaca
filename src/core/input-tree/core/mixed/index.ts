@@ -1,15 +1,16 @@
-import { ChacaTreeNodeConfig } from "../../interfaces/tree";
 import { InputTreeNode } from "../node";
 import { TryRefANoKeyFieldError } from "../../../../errors";
 import { KeyValueNode } from "../key";
-import { NotArray } from "../is-array";
+import { IsArray, NotArray } from "../is-array";
 import { FieldNode, MixedFieldNode } from "../../../result-tree/classes";
+import { NodeRoute } from "../node/value-object/route";
+import { PossibleNull } from "../possible-null";
 
 export class MixedValueNode extends InputTreeNode {
   private nodes: InputTreeNode[] = [];
 
-  constructor(config: ChacaTreeNodeConfig) {
-    super(config);
+  constructor(route: NodeRoute, isArray: IsArray, possibleNull: PossibleNull) {
+    super(route, isArray, possibleNull);
   }
 
   getFields() {
@@ -17,10 +18,7 @@ export class MixedValueNode extends InputTreeNode {
   }
 
   getNoArrayNode(): InputTreeNode {
-    return new MixedValueNode({
-      ...this.getNodeConfig(),
-      isArray: new NotArray(),
-    });
+    return new MixedValueNode(this.route, new NotArray(), this.possibleNull);
   }
 
   getPossibleNullNodes(): InputTreeNode[] {
