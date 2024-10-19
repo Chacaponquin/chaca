@@ -54,7 +54,7 @@ export class ValueCreator {
         return [new SQLDate(value)];
       },
       function() {
-        throw new ChacaError(`hola`);
+        throw new ChacaError(`You can not export a function into a sql file.`);
       },
       null() {
         return [new SQLNull()];
@@ -63,7 +63,7 @@ export class ValueCreator {
         return [new SQLFloat(value)];
       },
       symbol() {
-        throw new ChacaError(`hola`);
+        throw new ChacaError(`You can not export a Symbol into a sql file.`);
       },
       string(value) {
         if (value.length < 255) {

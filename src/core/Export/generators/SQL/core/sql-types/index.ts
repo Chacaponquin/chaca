@@ -4,6 +4,7 @@ export abstract class SQLDatatype {
   protected abstract greaterThan(other: SQLDatatype): boolean;
   protected abstract similar(other: SQLDatatype): boolean;
   abstract refValue(): SQLDatatype;
+  abstract primitive(): string;
 
   isSimilar(other: SQLDatatype): boolean {
     if (other instanceof SQLNull || this instanceof SQLNull) {
@@ -25,6 +26,10 @@ export abstract class SQLDatatype {
 export class SQLBoolean extends SQLDatatype {
   constructor(private readonly value: boolean) {
     super();
+  }
+
+  primitive(): string {
+    return "boolean";
   }
 
   greaterThan(): boolean {
@@ -53,6 +58,10 @@ export class SQLDate extends SQLDatatype {
     super();
   }
 
+  primitive(): string {
+    return "Date";
+  }
+
   refValue(): SQLDatatype {
     return this;
   }
@@ -77,6 +86,10 @@ export class SQLDate extends SQLDatatype {
 export class SQLNull extends SQLDatatype {
   constructor() {
     super();
+  }
+
+  primitive(): string {
+    return "null";
   }
 
   refValue(): SQLDatatype {
@@ -118,6 +131,10 @@ export class SQLBigint extends SQLNumber {
     super(value);
   }
 
+  primitive(): string {
+    return "bigint";
+  }
+
   refValue(): SQLDatatype {
     return this;
   }
@@ -144,6 +161,10 @@ export class SQLInteger extends SQLNumber {
     super(value);
   }
 
+  primitive(): string {
+    return "number";
+  }
+
   refValue(): SQLDatatype {
     return this;
   }
@@ -164,6 +185,10 @@ export class SQLInteger extends SQLNumber {
 export class SQLFloat extends SQLNumber {
   constructor(value: number) {
     super(value);
+  }
+
+  primitive(): string {
+    return "number";
   }
 
   refValue(): SQLDatatype {
@@ -202,6 +227,10 @@ export abstract class SQLString extends SQLDatatype {
 
   similar(other: SQLDatatype): boolean {
     return other instanceof SQLString;
+  }
+
+  primitive(): string {
+    return "string";
   }
 
   string(): string {
@@ -265,6 +294,10 @@ export class SQLVarchar extends SQLString {
 export class SQLSerial extends SQLNumber {
   constructor(v: number) {
     super(v);
+  }
+
+  primitive(): string {
+    return "number";
   }
 
   refValue(): SQLDatatype {

@@ -119,7 +119,13 @@ export class SQLTable {
       if (found.similar(column)) {
         found.setDatatype(column.datatype());
       } else {
-        throw new ChacaError(``);
+        const route = `${this.name()}.${column.name()}`;
+        const type1 = found.datatype().primitive();
+        const type2 = column.datatype().primitive();
+
+        throw new ChacaError(
+          `The values for column '${route}' exist as values of type ${type1} and ${type2}. The data must be uniform`,
+        );
       }
 
       return found;
