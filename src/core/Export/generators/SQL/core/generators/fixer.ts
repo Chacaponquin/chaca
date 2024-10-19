@@ -53,6 +53,10 @@ export class TablesFixer {
           searcher.column({
             search: { column: name, table: tableName },
             action(column) {
+              if (ref.isUnique()) {
+                column.setUnique(true);
+              }
+
               column.setRef({ column: refColumn, table: refTable });
             },
           });

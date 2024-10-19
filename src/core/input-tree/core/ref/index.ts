@@ -36,6 +36,10 @@ export class RefValueNode extends InputTreeNode {
     this.refFieldTreeRoute = new RefRoute(this.refField.refField).value();
   }
 
+  isUnique() {
+    return this.refField.unique;
+  }
+
   getRefFieldRoute(): NodeRoute {
     return new NodeRoute(this.refFieldTreeRoute);
   }

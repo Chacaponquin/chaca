@@ -44,10 +44,14 @@ export class PostgreSQL extends SQLExtensionGenerator {
 
           if (column.isKey()) {
             code += ` PRIMARY KEY`;
-          }
+          } else {
+            if (column.isUnique()) {
+              code += ` UNIQUE`;
+            }
 
-          if (!column.isNull() && !column.isKey()) {
-            code += ` NOT NULL`;
+            if (!column.isNull()) {
+              code += ` NOT NULL`;
+            }
           }
 
           const ref = column.ref();

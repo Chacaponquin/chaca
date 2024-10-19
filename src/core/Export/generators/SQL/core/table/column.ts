@@ -42,6 +42,14 @@ export class SQLColumn {
     this._name = name;
   }
 
+  setUnique(v: boolean) {
+    this._unique = v;
+  }
+
+  isUnique() {
+    return this._unique;
+  }
+
   datatype() {
     return this._datatype;
   }
