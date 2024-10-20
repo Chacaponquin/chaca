@@ -49,9 +49,9 @@ describe("# Library case test", () => {
   });
 
   it("Java", async () => {
-    await chaca.export(CASE_DATA, {
+    await CASE.export({
       filename: FILE_NAME,
-      format: { ext: "java", zip: true },
+      format: { ext: "java", zip: false },
       location: EXPORT_ROUTE,
     });
   });

@@ -1,242 +1,403 @@
 import { ChacaError } from "../../../../../errors";
+import { SpaceIndex } from "../../../core/space-index";
+import { SaveJavaClass, SaveJavaClassField } from "./classes";
+import { Import, Imports } from "./import";
+import { Parent } from "./parent";
 
-interface ObjectTypeField {
-  key: string;
-  dataType: DataType;
-}
+export abstract class JavaDatatype {
+  abstract equal(other: JavaDatatype): boolean;
+  abstract definition(imports: Imports): string;
+  abstract string(index: SpaceIndex, imports: Imports): string;
+  protected abstract similar(other: JavaDatatype): boolean;
+  protected abstract greaterThan(other: JavaDatatype): boolean;
 
-export abstract class DataType {
-  protected abstract equalType(otherType: DataType): boolean;
-  equal(otherType: DataType): boolean {
-    const areEqual =
-      otherType instanceof NullType ||
-      this instanceof NullType ||
-      this.equalType(otherType);
-    return areEqual;
+  greater(other: JavaDatatype): JavaDatatype {
+    return this.greaterThan(other) ? this : other;
   }
 
-  static filterTypeByValue(value: any): DataType {
-    let returnType: DataType;
+  isSimilar(other: JavaDatatype): boolean {
+    return (
+      this.equal(other) ||
+      this.similar(other) ||
+      this instanceof JavaNull ||
+      other instanceof JavaNull
+    );
+  }
+}
 
-    if (typeof value === "string") {
-      returnType = new StringType(value);
-    } else if (typeof value === "symbol") {
-      throw new ChacaError(`You can not export a Symbol to a java file`);
-    } else if (typeof value === "function") {
-      throw new ChacaError(`You can not export a function to a java file`);
-    } else if (typeof value === "number") {
-      if (Number.isInteger(value)) {
-        returnType = new IntegerType(value);
-      } else {
-        returnType = new FloatType(value);
-      }
-    } else if (typeof value === "boolean") {
-      returnType = new BooleanType(value);
-    } else if (typeof value === "undefined") {
-      returnType = new NullType();
-    } else if (typeof value === "bigint") {
-      returnType = new BigintType(value);
+export class JavaString extends JavaDatatype {
+  constructor(private readonly value: string) {
+    super();
+  }
+
+  protected similar(): boolean {
+    return false;
+  }
+
+  greaterThan(): boolean {
+    return false;
+  }
+
+  definition(): string {
+    return "String";
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaString;
+  }
+
+  string(): string {
+    return `${JSON.stringify(this.value)}`;
+  }
+}
+
+abstract class JavaNumber extends JavaDatatype {
+  protected similar(other: JavaDatatype): boolean {
+    return other instanceof JavaNumber;
+  }
+}
+
+export class JavaFloat extends JavaNumber {
+  constructor(private readonly value: number) {
+    super();
+  }
+
+  greaterThan(other: JavaDatatype): boolean {
+    return other instanceof JavaInt;
+  }
+
+  definition(): string {
+    return `Float`;
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaFloat;
+  }
+
+  string(): string {
+    if (this.value === Infinity) {
+      return "Float.POSITIVE_INFINITY";
+    } else if (this.value === -Infinity) {
+      return "Float.NEGATIVE_INFINITY";
+    } else if (Number.isNaN(this.value)) {
+      return "Float.NaN";
     } else {
-      if (Array.isArray(value)) {
-        returnType = new ArrayType(value);
-      } else if (value instanceof Date) {
-        returnType = new DateType(value);
-      } else if (value === null) {
-        returnType = new NullType();
-      } else if (value instanceof RegExp) {
-        returnType = new RegExpType(value);
-      } else {
-        returnType = new ObjectType(value);
-      }
-    }
-
-    return returnType;
-  }
-}
-
-export class RegExpType extends DataType {
-  constructor(readonly value: RegExp) {
-    super();
-  }
-
-  protected equalType(otherType: DataType): boolean {
-    return otherType instanceof RegExpType;
-  }
-}
-
-export class BigintType extends DataType {
-  constructor(readonly value: bigint) {
-    super();
-  }
-
-  protected equalType(otherType: DataType): boolean {
-    return otherType instanceof BigintType;
-  }
-}
-
-export class StringType extends DataType {
-  constructor(readonly value: string) {
-    super();
-  }
-
-  equalType(otherType: DataType): boolean {
-    return otherType instanceof StringType;
-  }
-}
-
-export abstract class NumberType extends DataType {
-  constructor(readonly value: number) {
-    super();
-  }
-
-  equalType(otherType: DataType): boolean {
-    return otherType instanceof NumberType;
-  }
-}
-
-export class FloatType extends NumberType {}
-export class IntegerType extends NumberType {}
-
-export class DateType extends DataType {
-  constructor(readonly value: Date) {
-    super();
-  }
-
-  equalType(otherType: DataType): boolean {
-    return otherType instanceof DateType;
-  }
-}
-
-export class BooleanType extends DataType {
-  constructor(readonly value: boolean) {
-    super();
-  }
-
-  equalType(otherType: DataType): boolean {
-    return otherType instanceof BooleanType;
-  }
-}
-
-export class NullType extends DataType {
-  equalType(otherType: DataType): boolean {
-    return otherType instanceof NullType;
-  }
-}
-
-export class ObjectType extends DataType {
-  private keys: ObjectTypeField[] = [];
-
-  constructor(object: any) {
-    super();
-    Object.entries(object).forEach(([key, value]) => {
-      this.keys.push({ key: key, dataType: DataType.filterTypeByValue(value) });
-    });
-  }
-
-  getKeys() {
-    return this.keys;
-  }
-
-  equalType(otherType: DataType): boolean {
-    if (otherType instanceof ObjectType) {
-      if (otherType.keys.length === this.keys.length) {
-        let areEqual = true;
-
-        for (let i = 0; i < this.keys.length && areEqual; i++) {
-          let foundEqualKey = false;
-          const currentThisKey = this.keys[i];
-
-          for (let j = 0; j < otherType.keys.length && !foundEqualKey; j++) {
-            const currentOtherKey = otherType.keys[j];
-            if (currentOtherKey.key === currentThisKey.key) {
-              if (currentOtherKey.dataType.equal(currentThisKey.dataType)) {
-                foundEqualKey = true;
-
-                if (
-                  currentOtherKey.dataType instanceof NumberType &&
-                  currentThisKey.dataType instanceof NumberType
-                ) {
-                  if (
-                    currentOtherKey.dataType instanceof FloatType ||
-                    currentThisKey.dataType instanceof FloatType
-                  ) {
-                    currentThisKey.dataType = new FloatType(
-                      currentThisKey.dataType.value,
-                    );
-                    currentOtherKey.dataType = new FloatType(
-                      currentOtherKey.dataType.value,
-                    );
-                  }
-                }
-              }
-            }
-          }
-
-          if (!foundEqualKey) {
-            areEqual = false;
-          }
-        }
-
-        return areEqual;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
+      return `${this.value}`;
     }
   }
 }
 
-export class ArrayType extends DataType {
-  private values: Array<DataType> = [];
-  private arrayType: DataType | null = null;
+export class JavaInt extends JavaNumber {
+  constructor(private readonly value: number) {
+    super();
+  }
 
-  constructor(array: Array<any>) {
+  greaterThan(): boolean {
+    return false;
+  }
+
+  string(): string {
+    return `${this.value}`;
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaInt;
+  }
+
+  definition(): string {
+    return "Integer";
+  }
+}
+
+export class JavaBoolean extends JavaDatatype {
+  constructor(private readonly value: boolean) {
+    super();
+  }
+
+  protected similar(): boolean {
+    return false;
+  }
+
+  greaterThan(): boolean {
+    return false;
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaBoolean;
+  }
+
+  definition(): string {
+    return "boolean";
+  }
+
+  string(): string {
+    return this.value ? "true" : "false";
+  }
+}
+
+export class JavaBigint extends JavaDatatype {
+  constructor(private readonly value: bigint) {
+    super();
+  }
+
+  protected similar(): boolean {
+    return false;
+  }
+
+  greaterThan(): boolean {
+    return false;
+  }
+
+  string(): string {
+    return `BigInteger`;
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaBigint;
+  }
+
+  definition(): string {
+    return `BigInteger.valueOf(${Number(this.value)})`;
+  }
+}
+
+export class JavaDate extends JavaDatatype {
+  constructor(private readonly value: Date) {
+    super();
+  }
+
+  protected similar(): boolean {
+    return false;
+  }
+
+  greaterThan(): boolean {
+    return false;
+  }
+
+  string(_: SpaceIndex, imports: Imports): string {
+    imports.add(new Import(["java", "time", "LocalDateTime"]));
+
+    return `LocalDateTime.parse("${this.value.toISOString()}");`;
+  }
+
+  definition(imports: Imports): string {
+    imports.add(new Import(["java", "time", "LocalDateTime"]));
+
+    return "LocalDateTime";
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaDate;
+  }
+}
+
+export class JavaRegexp extends JavaDatatype {
+  constructor(private readonly value: RegExp) {
+    super();
+  }
+
+  greaterThan(): boolean {
+    return false;
+  }
+
+  protected similar(): boolean {
+    return false;
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaRegexp;
+  }
+
+  string(_: SpaceIndex, imports: Imports): string {
+    imports.add(new Import(["java", "util", "regex", "Pattern"]));
+
+    return `Patter.compile("${String(this.value)}")`;
+  }
+
+  definition(imports: Imports): string {
+    imports.add(new Import(["java", "util", "regex", "Pattern"]));
+
+    return "Pattern";
+  }
+}
+
+export class JavaNull extends JavaDatatype {
+  string(): string {
+    return "null";
+  }
+
+  protected similar(): boolean {
+    return true;
+  }
+
+  greaterThan(): boolean {
+    return false;
+  }
+
+  definition(): string {
+    return "Object";
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaNull;
+  }
+}
+
+export class JavaClass extends JavaDatatype {
+  readonly fields: JavaClassField[];
+  readonly save: SaveJavaClass;
+  readonly parent: Parent;
+
+  constructor(save: SaveJavaClass, parent: Parent) {
     super();
 
-    array.forEach((v) => {
-      const valueType = DataType.filterTypeByValue(v);
+    this.save = save;
+    this.fields = [];
+    this.parent = parent;
+  }
 
-      if (this.values.length) {
-        if (this.values[0].equal(valueType)) {
-          this.values.push(valueType);
+  greaterThan(): boolean {
+    return false;
+  }
 
-          if (this.arrayType instanceof NumberType) {
-            if (valueType instanceof FloatType) {
-              this.arrayType = valueType;
-            }
-          }
+  protected similar(other: JavaDatatype): boolean {
+    return other instanceof JavaClass;
+  }
+
+  name() {
+    return this.save.name();
+  }
+
+  string(index: SpaceIndex, imports: Imports): string {
+    let code = index.create(`new ${this.name()}(\n`);
+
+    index.push();
+
+    code += this.save.fields
+      .map((f) => {
+        const found = this.fields.find((sf) => sf.save === f);
+
+        if (found) {
+          return index.create(`${found.string(index, imports)}`);
         } else {
-          throw new ChacaError(`The array has different value types`);
+          return `null`;
         }
+      })
+      .join(",\n");
+
+    index.reverse();
+
+    code += "\n" + index.create(")\n");
+
+    return code;
+  }
+
+  equal(other: JavaDatatype): boolean {
+    if (other instanceof JavaClass) {
+      return true;
+    }
+
+    return false;
+  }
+
+  definition(): string {
+    return this.name();
+  }
+
+  setField(field: JavaClassField): void {
+    this.fields.push(field);
+  }
+}
+
+export class JavaClassField {
+  readonly datatype: JavaDatatype;
+  readonly save: SaveJavaClassField;
+
+  constructor(datatype: JavaDatatype, save: SaveJavaClassField) {
+    this.datatype = datatype;
+    this.save = save;
+  }
+
+  name() {
+    return this.save.name();
+  }
+
+  string(index: SpaceIndex, imports: Imports) {
+    return this.datatype.string(index, imports);
+  }
+
+  definition(imports: Imports): string {
+    return this.datatype.definition(imports);
+  }
+}
+
+export class JavaArray extends JavaDatatype {
+  private values: JavaDatatype[];
+  private datatype: JavaDatatype | null;
+
+  constructor() {
+    super();
+
+    this.values = [];
+    this.datatype = null;
+  }
+
+  protected similar(): boolean {
+    return false;
+  }
+
+  protected greaterThan(): boolean {
+    return false;
+  }
+
+  definition(imports: Imports): string {
+    imports.add(new Import(["java", "util", "List"]));
+
+    if (this.datatype) {
+      return `List<${this.datatype.definition(imports)}>`;
+    } else {
+      return `List<Object>`;
+    }
+  }
+
+  string(index: SpaceIndex, imports: Imports): string {
+    imports.add(
+      new Import(["java", "util", "List"]),
+      new Import(["java", "util", "Arrays"]),
+    );
+
+    let code = `Arrays.asList(\n`;
+
+    index.push();
+
+    code += this.values
+      .map((v) => {
+        return index.create(`${v.string(index, imports)}`);
+      })
+      .join(",\n");
+
+    index.reverse();
+
+    code += "\n" + index.create(")");
+
+    return code;
+  }
+
+  equal(other: JavaDatatype): boolean {
+    return other instanceof JavaArray;
+  }
+
+  add(value: JavaDatatype): void {
+    if (this.datatype) {
+      if (this.datatype.isSimilar(value)) {
+        this.datatype = this.datatype.greater(value);
       } else {
-        this.values.push(valueType);
-        this.arrayType = valueType;
-      }
-    });
-  }
-
-  getArrayType() {
-    return this.arrayType;
-  }
-
-  getValues() {
-    return this.values;
-  }
-
-  equalType(otherType: DataType): boolean {
-    if (otherType instanceof ArrayType) {
-      if (this.values.length && otherType.values.length) {
-        if (this.values[0].equal(otherType.values[0])) {
-          return true;
-        } else {
-          return false;
-        }
-      } else {
-        return true;
+        throw new ChacaError(``);
       }
     } else {
-      return false;
+      this.datatype = value;
     }
+
+    this.values.push(value);
   }
 }

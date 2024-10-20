@@ -26,7 +26,7 @@ export abstract class PythonDatatype {
     index: SpaceIndex,
     { value, preventName }: CreateProps,
   ): PythonDatatype {
-    const type = Datatype.filter(value, {
+    const type = Datatype.filter<PythonDatatype>(value, {
       string(value) {
         return new PythonString(value);
       },
@@ -110,10 +110,12 @@ export abstract class PythonDatatype {
         return new PythonInt(value);
       },
       function() {
-        throw new ChacaError(`You can not export a function in a python file.`);
+        throw new ChacaError(
+          `You can not export a function into a python file.`,
+        );
       },
       symbol() {
-        throw new ChacaError(`You can not export a Symbol in a python file.`);
+        throw new ChacaError(`You can not export a Symbol into a python file.`);
       },
     });
 
@@ -385,7 +387,7 @@ export class PythonClassField {
     return this.datatype.string();
   }
 
-  definition(): string | null {
+  definition(): string {
     return this.datatype.declaration();
   }
 }
