@@ -1,10 +1,9 @@
 import { ChacaUtils } from "../../../../utils";
-import { VariableName } from "../../../core/names";
 import { SpaceIndex } from "../../../core/space-index";
 import { PythonClasses } from "./classes";
 import { Imports } from "./import";
-import { Parent } from "../../../core/parent";
-import { PythonDatatype } from "./type";
+import { Route } from "./route";
+import { ValueCreator } from "./value-creator";
 
 interface Props {
   data: any;
@@ -16,28 +15,25 @@ export class PythonCodeCreator {
 
   execute({ data, name }: Props): string {
     const imports = new Imports();
-    const classes = new PythonClasses(imports);
-    const preventName = new VariableName(this.utils, { name: name });
+    const classes = new PythonClasses();
+    const route = new Route([name]);
     const index = new SpaceIndex(2);
-    const parent = new Parent();
+    const creator = new ValueCreator(this.utils, classes);
 
-    const datatype = PythonDatatype.create(
-      this.utils,
-      imports,
-      parent,
-      classes,
-      index,
-      {
-        preventName: preventName,
-        value: data,
-      },
-    );
+    const datatype = creator.execute({ route: route, value: data });
 
-    let code = `${imports.string()}\n`;
+    const classesDef = classes.definition(index, imports);
+    const declaration = datatype.declaration(imports);
+    const content = datatype.string(index, imports);
+    const imp = imports.string();
 
-    code += `${classes.string()}\n`;
+    let code = ``;
 
-    code += `data: ${datatype.declaration()} = ${datatype.string()}\n`;
+    if (imp !== "") code += `${imports.string()}\n`;
+
+    code += `${classesDef}\n`;
+
+    code += `data: ${declaration} = ${content}\n`;
 
     return code;
   }

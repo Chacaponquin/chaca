@@ -72,11 +72,21 @@ describe("# Library case test", () => {
     });
   });
 
-  it("Python", async () => {
-    await chaca.export(CASE_DATA, {
-      location: EXPORT_ROUTE,
-      filename: FILE_NAME,
-      format: "python",
+  describe("Python", () => {
+    it("Python separate=true", async () => {
+      await CASE.export({
+        location: EXPORT_ROUTE,
+        filename: FILE_NAME,
+        format: { ext: "python", separate: true },
+      });
+    });
+
+    it("Python separate=false", async () => {
+      await CASE.export({
+        location: EXPORT_ROUTE,
+        filename: FILE_NAME,
+        format: { ext: "python", separate: false },
+      });
     });
   });
 });

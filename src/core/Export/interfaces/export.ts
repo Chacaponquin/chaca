@@ -2,9 +2,12 @@ import { CsvProps } from "../generators/csv";
 import { JavaProps } from "../generators/java";
 import { JavascriptProps } from "../generators/javascript";
 import { JsonProps } from "../generators/json";
+import { PythonProps } from "../generators/python";
+import { SQLProps } from "../generators/sql";
 import { TypescriptProps } from "../generators/typescript";
+import { YamlProps } from "../generators/yaml";
 
-/** Export files extendsions */
+/** Export files extensions */
 export type ExportFormat = Extensions | ExtensionConfigs;
 
 export type Extensions =
@@ -57,31 +60,15 @@ export type ExtensionConfigs =
 
 export type PostgresqlFormatConfig = {
   ext: "postgresql";
-  /**
-   * Boolean indicating whether all generated files are compressed into a zip
-   */
-  zip?: boolean;
-};
+} & SQLProps;
 
 export type PythonFormatConfig = {
   ext: "python";
-  /**
-   * Boolean indicating whether all generated files are compressed into a zip
-   */
-  zip?: boolean;
-};
+} & PythonProps;
 
 export type YamlFormatConfig = {
   ext: "yaml";
-  /**
-   * Boolean indicating whether all generated files are compressed into a zip
-   */
-  zip?: boolean;
-  /**
-   * If is `true`, the data generated from each schema will be placed in independent files
-   */
-  separate?: boolean;
-};
+} & YamlProps;
 
 export type JavascriptFormatConfig = {
   ext: "javascript";

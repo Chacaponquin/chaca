@@ -55,7 +55,7 @@ export class PythonGenerator extends Generator {
 
       for (const r of resolver.getResolvers()) {
         const code = creator.execute({
-          data: resolver.resolve(),
+          data: r.resolve(),
           name: r.getSchemaName(),
         });
         const filename = new Filename(r.getSchemaName());

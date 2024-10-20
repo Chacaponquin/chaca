@@ -1,126 +1,12 @@
-import { ChacaError } from "../../../../../errors";
-import { ChacaUtils } from "../../../../utils";
-import { VariableName } from "../../../core/names";
 import { SpaceIndex } from "../../../core/space-index";
-import { PythonClasses } from "./classes";
 import { Imports } from "./import";
-import { Parent } from "../../../core/parent";
 import { UnionDatatypes } from "./union";
-import { Datatype } from "../../../core/datatype";
-
-interface CreateProps {
-  value: any;
-  preventName: VariableName;
-}
+import { SaveClassField, SavePythonClass } from "./classes";
 
 export abstract class PythonDatatype {
-  abstract string(): string;
-  abstract declaration(): string;
+  abstract string(index: SpaceIndex, imports: Imports): string;
+  abstract declaration(imports: Imports): string;
   abstract equal(other: PythonDatatype): boolean;
-
-  static create(
-    utils: ChacaUtils,
-    imports: Imports,
-    parent: Parent,
-    classes: PythonClasses,
-    index: SpaceIndex,
-    { value, preventName }: CreateProps,
-  ): PythonDatatype {
-    const type = Datatype.filter<PythonDatatype>(value, {
-      string(value) {
-        return new PythonString(value);
-      },
-      int(value) {
-        return new PythonInt(value);
-      },
-      float(value) {
-        return new PythonFloat(value);
-      },
-      nan(value) {
-        return new PythonFloat(value);
-      },
-      undefined() {
-        return new PythonNone(imports);
-      },
-      boolean(value) {
-        return new PythonBoolean(value);
-      },
-      array(value) {
-        const array = new PythonArray(imports, index);
-
-        for (const v of value) {
-          const datatype = PythonDatatype.create(
-            utils,
-            imports,
-            parent,
-            classes,
-            index,
-            {
-              value: v,
-              preventName: preventName,
-            },
-          );
-
-          array.setValue(datatype);
-        }
-
-        return array;
-      },
-      null() {
-        return new PythonNone(imports);
-      },
-      date(value) {
-        return new PythonDate(imports, value);
-      },
-      regexp(value) {
-        return new PythonRegExp(imports, value);
-      },
-      object(value) {
-        const object = new PythonClass(preventName, parent, index);
-
-        for (const [key, data] of Object.entries(value)) {
-          const fieldName = new VariableName(utils, {
-            name: key,
-          });
-
-          const newParent = Parent.create(parent, fieldName);
-
-          const datatype = PythonDatatype.create(
-            utils,
-            imports,
-            newParent,
-            classes,
-            index,
-            {
-              value: data,
-              preventName: fieldName,
-            },
-          );
-
-          const field = new PythonClassField(fieldName, datatype);
-
-          object.setField(field);
-        }
-
-        classes.add(object);
-
-        return object;
-      },
-      bigint(value) {
-        return new PythonInt(value);
-      },
-      function() {
-        throw new ChacaError(
-          `You can not export a function into a python file.`,
-        );
-      },
-      symbol() {
-        throw new ChacaError(`You can not export a Symbol into a python file.`);
-      },
-    });
-
-    return type;
-  }
 }
 
 export class PythonString extends PythonDatatype {
@@ -204,10 +90,8 @@ export class PythonBoolean extends PythonDatatype {
 }
 
 export class PythonNone extends PythonDatatype {
-  constructor(imports: Imports) {
+  constructor() {
     super();
-
-    imports.add({ from: "typing", modules: ["Optional"] });
   }
 
   string(): string {
@@ -224,17 +108,19 @@ export class PythonNone extends PythonDatatype {
 }
 
 export class PythonDate extends PythonDatatype {
-  constructor(private readonly imports: Imports, private readonly value: Date) {
+  constructor(private readonly value: Date) {
     super();
-
-    this.imports.add({ from: "datetime", modules: [] });
   }
 
-  string(): string {
+  string(_: SpaceIndex, imports: Imports): string {
+    imports.add({ from: "datetime", modules: [] });
+
     return `datetime.datetime.fromisoformat("${this.value.toISOString()}")`;
   }
 
-  declaration(): string {
+  declaration(imports: Imports): string {
+    imports.add({ from: "datetime", modules: [] });
+
     return "datetime.datetime";
   }
 
@@ -245,39 +131,33 @@ export class PythonDate extends PythonDatatype {
 
 export class PythonClass extends PythonDatatype {
   readonly fields: PythonClassField[];
-  readonly _name: VariableName;
-  readonly parent: Parent;
+  readonly save: SavePythonClass;
 
-  constructor(
-    name: VariableName,
-    parent: Parent,
-    private readonly index: SpaceIndex,
-  ) {
+  constructor(save: SavePythonClass) {
     super();
 
-    this._name = name;
     this.fields = [];
-    this.parent = parent;
+    this.save = save;
   }
 
   name() {
-    return this._name.value("camel");
+    return this.save.name();
   }
 
-  string(): string {
+  string(index: SpaceIndex, imports: Imports): string {
     let code = `${this.name()}(\n`;
 
-    this.index.push();
+    index.push();
 
     const fields = this.fields
-      .map((f) => this.index.create(`${f.name()}=${f.string()}`))
+      .map((f) => index.create(`${f.name()}=${f.string(index, imports)}`))
       .join(",\n");
 
     code += fields + "\n";
 
-    this.index.reverse();
+    index.reverse();
 
-    code += this.index.create(")");
+    code += index.create(")");
 
     return code;
   }
@@ -296,6 +176,7 @@ export class PythonClass extends PythonDatatype {
 
   setField(field: PythonClassField): void {
     this.fields.push(field);
+    this.save.setField(field);
   }
 }
 
@@ -303,13 +184,11 @@ export class PythonArray extends PythonDatatype {
   private readonly datatypes: UnionDatatypes;
   private readonly values: PythonDatatype[];
 
-  constructor(imports: Imports, private readonly index: SpaceIndex) {
+  constructor() {
     super();
 
     this.values = [];
-    this.datatypes = new UnionDatatypes(imports);
-
-    imports.add({ from: "typing", modules: ["List"] });
+    this.datatypes = new UnionDatatypes();
   }
 
   setValue(d: PythonDatatype): void {
@@ -317,23 +196,27 @@ export class PythonArray extends PythonDatatype {
     this.values.push(d);
   }
 
-  declaration(): string {
-    const types = this.datatypes.declaration();
+  declaration(imports: Imports): string {
+    imports.add({ from: "typing", modules: ["List"] });
+
+    const types = this.datatypes.declaration(imports);
 
     return `List[${types}]`;
   }
 
-  string(): string {
+  string(index: SpaceIndex, imports: Imports): string {
     let code = `[\n`;
 
-    this.index.push();
+    index.push();
 
     code +=
-      this.values.map((d) => this.index.create(d.string())).join(",\n") + "\n";
+      this.values
+        .map((d) => index.create(d.string(index, imports)))
+        .join(",\n") + "\n";
 
-    this.index.reverse();
+    index.reverse();
 
-    code += this.index.create("]");
+    code += index.create("]");
 
     return code;
   }
@@ -348,20 +231,19 @@ export class PythonArray extends PythonDatatype {
 }
 
 export class PythonRegExp extends PythonDatatype {
-  constructor(
-    private readonly imports: Imports,
-    private readonly value: RegExp,
-  ) {
+  constructor(private readonly value: RegExp) {
     super();
-
-    this.imports.add({ from: "re", modules: [] });
   }
 
-  string(): string {
+  string(_: SpaceIndex, imports: Imports): string {
+    imports.add({ from: "re", modules: [] });
+
     return `re.compile(r'${this.value.source}')`;
   }
 
-  declaration(): string {
+  declaration(imports: Imports): string {
+    imports.add({ from: "re", modules: [] });
+
     return "re.Pattern";
   }
 
@@ -371,23 +253,23 @@ export class PythonRegExp extends PythonDatatype {
 }
 
 export class PythonClassField {
-  readonly _name: VariableName;
+  readonly save: SaveClassField;
   readonly datatype: PythonDatatype;
 
-  constructor(name: VariableName, datatype: PythonDatatype) {
-    this._name = name;
+  constructor(save: SaveClassField, datatype: PythonDatatype) {
     this.datatype = datatype;
+    this.save = save;
   }
 
   name(): string {
-    return this._name.value("snake");
+    return this.save.name();
   }
 
-  string() {
-    return this.datatype.string();
+  string(index: SpaceIndex, imports: Imports) {
+    return this.datatype.string(index, imports);
   }
 
-  definition(): string {
-    return this.datatype.declaration();
+  definition(imports: Imports): string {
+    return this.datatype.declaration(imports);
   }
 }

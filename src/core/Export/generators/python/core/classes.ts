@@ -1,65 +1,88 @@
-import { VariableName } from "../../../core/names";
+import { SpaceIndex } from "../../../core/space-index";
 import { Imports } from "./import";
-import { Parent } from "../../../core/parent";
-import { PythonClass, PythonDatatype } from "./type";
+import { PythonClassFieldName, PythonClassName } from "./names";
+import { PythonClassField, PythonDatatype } from "./type";
 import { UnionDatatypes } from "./union";
 
 export class SaveClassField {
-  private _name: VariableName;
+  private _name: PythonClassFieldName;
   readonly datatypes: UnionDatatypes;
 
-  constructor(imports: Imports, name: VariableName, datatype: PythonDatatype) {
-    this.datatypes = new UnionDatatypes(imports);
+  constructor(name: PythonClassFieldName, datatype: PythonDatatype) {
+    this.datatypes = new UnionDatatypes();
     this.datatypes.setDatatype(datatype);
     this._name = name;
+  }
 
-    imports.add({ from: "typing", modules: ["TypedDict"] });
+  setDatatype(d: PythonDatatype): void {
+    this.datatypes.setDatatype(d);
   }
 
   name() {
-    return this._name.value("snake");
+    return this._name.string();
   }
 
-  merge(other: SaveClassField): void {
-    for (const datatype of other.datatypes.datatypes) {
-      this.datatypes.setDatatype(datatype);
-    }
+  equal(other: SaveClassField): boolean {
+    return other._name.equal(this._name);
+  }
+
+  declaration(imports: Imports) {
+    imports.add({ from: "typing", modules: ["TypedDict"] });
+
+    return this.datatypes.declaration(imports);
   }
 }
 
 export class SavePythonClass {
-  readonly parent: Parent;
-  private _name: VariableName;
+  private _name: PythonClassName;
   readonly fields: SaveClassField[];
 
-  constructor(name: VariableName, parent: Parent, fields: SaveClassField[]) {
-    this.fields = fields;
-    this.parent = parent;
+  constructor(name: PythonClassName) {
+    this.fields = [];
     this._name = name;
   }
 
-  name() {
-    return this._name.value("camel");
-  }
+  setField(field: PythonClassField) {
+    const found = this.fields.find((f) => f === field.save);
 
-  merge(other: SavePythonClass): void {
-    for (const field of other.fields) {
-      const found = this.fields.find((f) => f.name() === field.name());
-
-      if (found) {
-        found.merge(field);
-      } else {
-        this.fields.push(field);
-      }
+    if (found) {
+      found.setDatatype(field.datatype);
     }
   }
 
-  definition(): string {
+  equal(other: SavePythonClass): boolean {
+    return other._name.equal(this._name);
+  }
+
+  name() {
+    return this._name.string();
+  }
+
+  search(field: SaveClassField): SaveClassField {
+    const found = this.fields.find((f) => f.equal(field));
+
+    if (found) {
+      return found;
+    } else {
+      this.fields.push(field);
+      return field;
+    }
+  }
+
+  definition(index: SpaceIndex, imports: Imports): string {
+    imports.add({ from: "typing", modules: ["TypedDict"] });
+
     let code = `class ${this.name()}(TypedDict):\n`;
 
-    this.fields.forEach((f) => {
-      code += `   ${f.name()}: ${f.datatypes.declaration()}\n`;
-    });
+    index.push();
+
+    code += this.fields
+      .map((f) => {
+        return index.create(`${f.name()}: ${f.datatypes.declaration(imports)}`);
+      })
+      .join("\n");
+
+    index.reverse();
 
     return code;
   }
@@ -68,44 +91,31 @@ export class SavePythonClass {
 export class PythonClasses {
   private readonly classes: SavePythonClass[];
 
-  constructor(private readonly imports: Imports) {
+  constructor() {
     this.classes = [];
   }
 
-  add(c: PythonClass): void {
-    const fields = [] as SaveClassField[];
-    for (const field of c.fields) {
-      const saveField = new SaveClassField(
-        this.imports,
-        field._name,
-        field.datatype,
-      );
+  search(name: PythonClassName): SavePythonClass {
+    const create = new SavePythonClass(name);
+    const found = this.classes.find((c) => c.equal(create));
 
-      fields.push(saveField);
-    }
-
-    const save = new SavePythonClass(c._name, c.parent, fields);
-
-    let found = false;
-    for (const c of this.classes) {
-      if (c.parent.equal(save.parent)) {
-        c.merge(save);
-
-        found = true;
-      }
-    }
-
-    if (!found) {
-      this.classes.push(save);
+    if (found) {
+      return found;
+    } else {
+      this.classes.push(create);
+      return create;
     }
   }
 
-  string(): string {
+  definition(index: SpaceIndex, imports: Imports): string {
     let code = ``;
 
-    this.classes.forEach((c) => {
-      code += `${c.definition()}\n`;
-    });
+    code += this.classes
+      .reverse()
+      .map((c) => {
+        return `${c.definition(index, imports)}\n`;
+      })
+      .join("\n");
 
     return code;
   }

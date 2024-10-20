@@ -4,10 +4,8 @@ import { PythonDatatype } from "./type";
 export class UnionDatatypes {
   readonly datatypes: PythonDatatype[];
 
-  constructor(imports: Imports) {
+  constructor() {
     this.datatypes = [];
-
-    imports.add({ from: "typing", modules: ["Union"] });
   }
 
   setDatatype(dat: PythonDatatype) {
@@ -22,13 +20,17 @@ export class UnionDatatypes {
     return this.datatypes.length;
   }
 
-  declaration(): string {
+  declaration(imports: Imports): string {
     if (this.datatypes.length === 1) {
       const type = this.datatypes[0];
 
-      return `${type.declaration()}`;
+      return `${type.declaration(imports)}`;
     } else {
-      const types = this.datatypes.map((d) => d.declaration()).join(", ");
+      imports.add({ from: "typing", modules: ["Union"] });
+
+      const types = this.datatypes
+        .map((d) => d.declaration(imports))
+        .join(", ");
 
       return `Union[${types}]`;
     }
