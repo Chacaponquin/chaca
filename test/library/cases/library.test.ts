@@ -40,11 +40,21 @@ describe("# Library case test", () => {
     });
   });
 
-  it("Typescript", async () => {
-    await chaca.export(CASE_DATA, {
-      filename: FILE_NAME,
-      format: "typescript",
-      location: EXPORT_ROUTE,
+  describe("Typescript", () => {
+    it("separate=true", async () => {
+      await CASE.export({
+        filename: FILE_NAME,
+        format: { ext: "typescript", separate: true },
+        location: EXPORT_ROUTE,
+      });
+    });
+
+    it("separate=false", async () => {
+      await CASE.export({
+        filename: FILE_NAME,
+        format: { ext: "typescript", separate: false },
+        location: EXPORT_ROUTE,
+      });
     });
   });
 
@@ -56,11 +66,21 @@ describe("# Library case test", () => {
     });
   });
 
-  it("Javascript", async () => {
-    await chaca.export(CASE_DATA, {
-      filename: FILE_NAME,
-      format: "javascript",
-      location: EXPORT_ROUTE,
+  describe("Javascript", () => {
+    it("separate=true", async () => {
+      await CASE.export({
+        filename: FILE_NAME,
+        format: { ext: "javascript", separate: true },
+        location: EXPORT_ROUTE,
+      });
+    });
+
+    it("separate=false", async () => {
+      await CASE.export({
+        filename: FILE_NAME,
+        format: { ext: "javascript", separate: false },
+        location: EXPORT_ROUTE,
+      });
     });
   });
 
@@ -73,7 +93,7 @@ describe("# Library case test", () => {
   });
 
   describe("Python", () => {
-    it("Python separate=true", async () => {
+    it("separate=true", async () => {
       await CASE.export({
         location: EXPORT_ROUTE,
         filename: FILE_NAME,
@@ -81,7 +101,7 @@ describe("# Library case test", () => {
       });
     });
 
-    it("Python separate=false", async () => {
+    it("separate=false", async () => {
       await CASE.export({
         location: EXPORT_ROUTE,
         filename: FILE_NAME,

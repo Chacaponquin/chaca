@@ -13,6 +13,10 @@ export class Route {
     return this.route.join(".");
   }
 
+  clone() {
+    return new Route(this.route);
+  }
+
   equal(other: Route): boolean {
     return other.route.join(".") === this.route.join(".");
   }

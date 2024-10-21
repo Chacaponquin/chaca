@@ -53,7 +53,7 @@ export class ValueCreator {
         const array = new PythonArray();
 
         for (const v of value) {
-          const datatype = this.execute({ route: route, value: v });
+          const datatype = this.execute({ route: route.clone(), value: v });
 
           array.setValue(datatype);
         }

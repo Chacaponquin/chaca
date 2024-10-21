@@ -1,54 +1,78 @@
-import { VariableName } from "../../../core/names";
-import { Parent } from "../../../core/parent";
-import { JavascriptClass, JavascriptDatatype } from "./types";
+import { JavascriptClassFieldName, JavascriptClassName } from "./names";
+import {
+  JavascriptClassField,
+  JavascriptDatatype,
+  JavascriptUndefined,
+} from "./types";
 import { UnionDatatypes } from "./union";
 
 export class SaveClassField {
-  private _name: VariableName;
+  private _name: JavascriptClassFieldName;
   readonly datatypes: UnionDatatypes;
+  private _optional: boolean;
 
-  constructor(name: VariableName, datatype: JavascriptDatatype) {
+  constructor(name: JavascriptClassFieldName, datatype: JavascriptDatatype) {
     this.datatypes = new UnionDatatypes();
     this.datatypes.setDatatype(datatype);
     this._name = name;
+    this._optional = false;
+  }
+
+  setDatatype(d: JavascriptDatatype): void {
+    if (d instanceof JavascriptUndefined) {
+      this._optional = true;
+    } else {
+      this.datatypes.setDatatype(d);
+    }
+  }
+
+  optional() {
+    return this._optional;
+  }
+
+  equal(other: SaveClassField): boolean {
+    return other._name.equal(this._name);
   }
 
   name() {
-    return this._name.value("snake");
-  }
-
-  merge(other: SaveClassField): void {
-    for (const datatype of other.datatypes.datatypes) {
-      this.datatypes.setDatatype(datatype);
-    }
+    return this._name.string();
   }
 }
 
 export class SaveJavascriptClass {
-  readonly parent: Parent;
-  private _name: VariableName;
+  private _name: JavascriptClassName;
   readonly fields: SaveClassField[];
 
-  constructor(name: VariableName, parent: Parent, fields: SaveClassField[]) {
-    this.fields = fields;
-    this.parent = parent;
+  constructor(name: JavascriptClassName) {
+    this.fields = [];
     this._name = name;
   }
 
-  name() {
-    return this._name.value("camel");
+  setField(f: JavascriptClassField) {
+    const found = this.fields.find((sf) => sf === f.save);
+
+    if (found) {
+      found.setDatatype(f.datatype);
+    }
   }
 
-  merge(other: SaveJavascriptClass): void {
-    for (const field of other.fields) {
-      const found = this.fields.find((f) => f.name() === field.name());
+  search(create: SaveClassField) {
+    const found = this.fields.find((f) => f.equal(create));
 
-      if (found) {
-        found.merge(field);
-      } else {
-        this.fields.push(field);
-      }
+    if (found) {
+      return found;
+    } else {
+      this.fields.push(create);
+      return create;
     }
+  }
+
+  name() {
+    return this._name.string();
+  }
+
+  equal(other: SaveJavascriptClass): boolean {
+    return this._name.equal(other._name);
   }
 
   definition(): string {
@@ -71,36 +95,26 @@ export class JavascriptClasses {
     this.classes = [];
   }
 
-  add(c: JavascriptClass): void {
-    const fields = [] as SaveClassField[];
-    for (const field of c.fields) {
-      const saveField = new SaveClassField(field._name, field.datatype);
+  search(create: SaveJavascriptClass) {
+    const found = this.classes.find((c) => c.equal(create));
 
-      fields.push(saveField);
-    }
-
-    const save = new SaveJavascriptClass(c._name, c.parent, fields);
-
-    let found = false;
-    for (const c of this.classes) {
-      if (c.parent.equal(save.parent)) {
-        c.merge(save);
-
-        found = true;
-      }
-    }
-
-    if (!found) {
-      this.classes.push(save);
+    if (found) {
+      return found;
+    } else {
+      this.classes.push(create);
+      return create;
     }
   }
 
   string(): string {
     let code = ``;
 
-    this.classes.forEach((c) => {
-      code += `${c.definition()}\n`;
-    });
+    code += this.classes
+      .reverse()
+      .map((c) => {
+        return `${c.definition()}\n`;
+      })
+      .join("\n");
 
     return code;
   }

@@ -1,9 +1,8 @@
 import { ChacaUtils } from "../../../../utils";
 import { JavascriptClasses } from "./classes";
-import { VariableName } from "../../../core/names";
 import { SpaceIndex } from "../../../core/space-index";
-import { JavascriptDatatype } from "./types";
-import { Parent } from "../../../core/parent";
+import { ValueCreator } from "./value-creator";
+import { Route } from "./route";
 
 interface Props {
   types: boolean;
@@ -16,26 +15,22 @@ export class JavascriptCodeCreator {
 
   execute({ data, name, types }: Props): string {
     const classes = new JavascriptClasses();
-    const preventName = new VariableName(this.utils, { name: name });
+    const route = new Route([name]);
     const index = new SpaceIndex(2);
-    const parent = new Parent();
+    const creator = new ValueCreator(classes, this.utils);
 
-    const datatype = JavascriptDatatype.create(
-      this.utils,
-      index,
-      parent,
-      classes,
-      { preventName: preventName, value: data },
-    );
+    const datatype = creator.execute({ route: route, value: data });
 
     let code = ``;
 
     if (!types) {
-      code += `const data = ${datatype.string()}`;
+      code += `const data = ${datatype.string(index)}`;
     } else {
-      code += `${classes.string()}\n`;
+      code += `${classes.string()}`;
 
-      code += `const data: ${datatype.definition()} = ${datatype.string()}`;
+      code += `export const data: ${datatype.definition()} = ${datatype.string(
+        index,
+      )}`;
     }
 
     return code;

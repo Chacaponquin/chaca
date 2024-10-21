@@ -1,154 +1,42 @@
-import { ChacaError } from "../../../../../errors";
-import { ChacaUtils } from "../../../../utils";
-import { JavascriptClasses } from "./classes";
-import { VariableName } from "../../../core/names";
 import { SpaceIndex } from "../../../core/space-index";
 import { UnionDatatypes } from "./union";
-import { Parent } from "../../../core/parent";
-import { Datatype } from "../../../core/datatype";
+import { SaveClassField, SaveJavascriptClass } from "./classes";
 
-interface Props {
-  preventName: VariableName;
-  value: any;
-}
 export abstract class JavascriptDatatype {
-  abstract string(): string;
+  abstract string(index: SpaceIndex): string;
   abstract definition(): string;
   abstract equal(other: JavascriptDatatype): boolean;
-
-  static create(
-    utils: ChacaUtils,
-    index: SpaceIndex,
-    parent: Parent,
-    classes: JavascriptClasses,
-    { preventName, value }: Props,
-  ): JavascriptDatatype {
-    const type = Datatype.filter(value, {
-      string(value) {
-        return new JavascriptString(value);
-      },
-      int(value) {
-        return new JavascriptNumber(value);
-      },
-      float(value) {
-        return new JavascriptNumber(value);
-      },
-      nan() {
-        return new JavascriptNumber(value);
-      },
-      bigint(value) {
-        return new JavascriptBignInt(value);
-      },
-      function() {
-        throw new ChacaError(
-          `You can not export a function to a javascript file.`,
-        );
-      },
-      boolean(value) {
-        return new JavascriptBoolean(value);
-      },
-      undefined() {
-        return new JavascriptUndefined();
-      },
-      array(value) {
-        const array = new JavascriptArray(index);
-
-        for (const v of value) {
-          const sub = JavascriptDatatype.create(utils, index, parent, classes, {
-            value: v,
-            preventName: preventName,
-          });
-
-          array.setValue(sub);
-        }
-
-        return array;
-      },
-      symbol() {
-        throw new ChacaError(
-          `You can not export a Symbol to a javascript file.`,
-        );
-      },
-      null() {
-        return new JavascriptNull();
-      },
-      date(value) {
-        return new JavascriptDate(value);
-      },
-      regexp(value) {
-        return new JavascriptRegExp(value);
-      },
-      object(value) {
-        const object = new JavascriptClass(preventName, parent, index);
-
-        for (const [key, data] of Object.entries(value)) {
-          const fieldName = new VariableName(utils, {
-            name: key,
-          });
-
-          const newParent = Parent.create(parent, fieldName);
-
-          const datatype = JavascriptDatatype.create(
-            utils,
-            index,
-            newParent,
-            classes,
-            {
-              value: data,
-              preventName: fieldName,
-            },
-          );
-
-          const field = new JavascriptClassField(fieldName, datatype);
-
-          object.setField(field);
-        }
-
-        classes.add(object);
-
-        return object;
-      },
-    });
-
-    return type;
-  }
 }
 
 export class JavascriptClass extends JavascriptDatatype {
   readonly fields: JavascriptClassField[];
-  readonly _name: VariableName;
-  readonly parent: Parent;
+  readonly save: SaveJavascriptClass;
 
-  constructor(
-    name: VariableName,
-    parent: Parent,
-    private readonly index: SpaceIndex,
-  ) {
+  constructor(save: SaveJavascriptClass) {
     super();
 
-    this._name = name;
+    this.save = save;
     this.fields = [];
-    this.parent = parent;
   }
 
   name() {
-    return this._name.value("camel");
+    return this.save.name();
   }
 
-  string(): string {
+  string(index: SpaceIndex): string {
     let code = `{\n`;
 
-    this.index.push();
+    index.push();
 
     const fields = this.fields
-      .map((f) => this.index.create(`${f.name()}: ${f.string()}`))
+      .map((f) => index.create(`${f.name()}: ${f.string(index)}`))
       .join(",\n");
 
     code += fields + "\n";
 
-    this.index.reverse();
+    index.reverse();
 
-    code += this.index.create("}");
+    code += index.create("}");
 
     return code;
   }
@@ -167,24 +55,25 @@ export class JavascriptClass extends JavascriptDatatype {
 
   setField(field: JavascriptClassField): void {
     this.fields.push(field);
+    this.save.setField(field);
   }
 }
 
 export class JavascriptClassField {
-  readonly _name: VariableName;
+  readonly save: SaveClassField;
   readonly datatype: JavascriptDatatype;
 
-  constructor(name: VariableName, datatype: JavascriptDatatype) {
-    this._name = name;
+  constructor(save: SaveClassField, datatype: JavascriptDatatype) {
+    this.save = save;
     this.datatype = datatype;
   }
 
   name(): string {
-    return this._name.value("snake");
+    return this.save.name();
   }
 
-  string() {
-    return this.datatype.string();
+  string(index: SpaceIndex) {
+    return this.datatype.string(index);
   }
 
   definition(): string {
@@ -196,7 +85,7 @@ export class JavascriptArray extends JavascriptDatatype {
   private readonly values: JavascriptDatatype[];
   private readonly datatypes: UnionDatatypes;
 
-  constructor(private readonly index: SpaceIndex) {
+  constructor() {
     super();
 
     this.datatypes = new UnionDatatypes();
@@ -214,17 +103,21 @@ export class JavascriptArray extends JavascriptDatatype {
     this.values.push(v);
   }
 
-  string(): string {
+  string(index: SpaceIndex): string {
     let code = `[\n`;
 
-    this.index.push();
+    index.push();
 
     code +=
-      this.values.map((d) => this.index.create(d.string())).join(",\n") + "\n";
+      this.values
+        .map((d) => {
+          return index.create(d.string(index));
+        })
+        .join(",\n") + "\n";
 
-    this.index.reverse();
+    index.reverse();
 
-    code += this.index.create("]");
+    code += index.create("]");
 
     return code;
   }

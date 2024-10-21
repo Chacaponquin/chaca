@@ -11,7 +11,7 @@ export class FileName {
     this._value = name;
   }
 
-  public value() {
+  value() {
     return this._value;
   }
 }

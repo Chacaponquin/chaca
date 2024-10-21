@@ -30,21 +30,4 @@ export class UnionDatatypes {
       return types;
     }
   }
-
-  equal(union: UnionDatatypes): boolean {
-    const [min, max] =
-      union.length() >= this.length() ? [this, union] : [union, this];
-
-    let equal = true;
-    for (const datatype of min.datatypes) {
-      const exist = max.datatypes.some((d) => d.equal(datatype));
-
-      if (!exist) {
-        equal = false;
-        break;
-      }
-    }
-
-    return equal;
-  }
 }
