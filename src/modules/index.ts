@@ -18,7 +18,7 @@ import { ColorModule } from "./color";
 export class ChacaModules {
   readonly internet = new InternetModule();
   readonly datatype = new DatatypeModule();
-  readonly id = new IdModule();
+  readonly id = new IdModule(this.datatype);
   readonly lorem = new LoremModule();
   readonly image = new ImageModule();
   readonly system = new SystemModule();

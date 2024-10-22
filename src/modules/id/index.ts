@@ -45,7 +45,7 @@ export class IdModule {
    * modules.id.nanoid({ length: 10 }) // VsvwSdm_Am
    */
   nanoid({ length: ilength }: NanoidProps = {}) {
-    const length = typeof ilength === "number" && ilength > 0 ? ilength : 20;
+    const length = typeof ilength === "number" && ilength >= 0 ? ilength : 20;
 
     return nanoid(length);
   }
