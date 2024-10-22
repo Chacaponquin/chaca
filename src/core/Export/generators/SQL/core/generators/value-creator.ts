@@ -1,6 +1,7 @@
 import { ChacaError } from "../../../../../../errors";
 import { ChacaUtils } from "../../../../../utils";
 import { Datatype } from "../../../../core/datatype";
+import { SkipInvalid } from "../../../../core/skip-invalid";
 import {
   SQLDatatype,
   SQLFloat,
@@ -33,6 +34,7 @@ export class ValueCreator {
     private readonly utils: ChacaUtils,
     private readonly fixer: TablesFixer,
     private readonly tables: SQLTables,
+    private readonly skipInvalid: SkipInvalid,
     private readonly generateIds: boolean,
   ) {}
 
@@ -53,7 +55,11 @@ export class ValueCreator {
       date(value) {
         return [new SQLDate(value)];
       },
-      function() {
+      function: () => {
+        if (this.skipInvalid.value()) {
+          return [];
+        }
+
         throw new ChacaError(`You can not export a function into a sql file.`);
       },
       null() {
@@ -62,7 +68,11 @@ export class ValueCreator {
       nan(value) {
         return [new SQLFloat(value)];
       },
-      symbol() {
+      symbol: () => {
+        if (this.skipInvalid.value()) {
+          return [];
+        }
+
         throw new ChacaError(`You can not export a Symbol into a sql file.`);
       },
       string(value) {

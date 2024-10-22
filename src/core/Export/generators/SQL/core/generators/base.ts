@@ -1,4 +1,5 @@
 import { ChacaUtils } from "../../../../../utils";
+import { SkipInvalid } from "../../../../core/skip-invalid";
 import { SQLTable } from "../table/table";
 import { SQLTables } from "../table/tables";
 import { TablesFixer } from "./fixer";
@@ -25,6 +26,7 @@ export class SQLDataGenerator {
     private readonly generator: SQLExtensionGenerator,
     private readonly validator: DataValidator,
     private readonly fixer: TablesFixer,
+    private readonly skipInvalid: SkipInvalid,
   ) {}
 
   build({ name: iname, data, tables, generateIds }: BuildProps) {
@@ -36,6 +38,7 @@ export class SQLDataGenerator {
       this.utils,
       this.fixer,
       tables,
+      this.skipInvalid,
       generateIds,
     );
 

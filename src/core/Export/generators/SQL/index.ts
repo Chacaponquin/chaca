@@ -9,14 +9,16 @@ import { DataValidator } from "./core/generators/validator";
 import { TableOrganizer } from "./core/generators/organizer";
 import { TablesFixer } from "./core/generators/fixer";
 import { ChacaUtils } from "../../../utils";
-import { IndentConfig, ZipConfig } from "../params";
+import { IndentConfig, SkipInvalidConfig, ZipConfig } from "../params";
 import { SpaceIndex } from "../../core/space-index";
+import { SkipInvalid } from "../../core/skip-invalid";
 
-export type SQLProps = ZipConfig & IndentConfig;
+export type SQLProps = ZipConfig & IndentConfig & SkipInvalidConfig;
 
 export class SQLGenerator extends Generator {
   private readonly zip: boolean;
   private readonly indent: SpaceIndex;
+  private readonly skipInvalid: SkipInvalid;
 
   constructor(
     utils: ChacaUtils,
@@ -33,6 +35,7 @@ export class SQLGenerator extends Generator {
 
     this.zip = Boolean(config.zip);
     this.indent = new SpaceIndex(config.indent);
+    this.skipInvalid = new SkipInvalid(config.skipInvalid);
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
@@ -55,6 +58,7 @@ export class SQLGenerator extends Generator {
       postgres,
       validator,
       fixer,
+      this.skipInvalid,
     );
 
     const resolvers = organizer.execute({ resolver: resolver });
@@ -104,6 +108,7 @@ export class SQLGenerator extends Generator {
       postgres,
       validator,
       fixer,
+      this.skipInvalid,
     );
 
     generator.build({
