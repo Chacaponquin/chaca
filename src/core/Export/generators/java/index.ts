@@ -8,14 +8,22 @@ import { DataValidator } from "./core/validator";
 import { JavaCodeCreator } from "./core/code-creator";
 import { SpaceIndex } from "../../core/space-index";
 import { Route } from "../generator/route";
-import { IndentConfig, ZipConfig } from "../params";
+import { IndentConfig, SkipInvalidConfig, ZipConfig } from "../params";
 import { ChacaUtils } from "../../../utils";
+import { SkipInvalid } from "../../core/skip-invalid";
+import { Package } from "./value-object/package";
 
-export type JavaProps = ZipConfig & IndentConfig;
+export type JavaProps = ZipConfig &
+  IndentConfig &
+  SkipInvalidConfig & {
+    /**Name of the package in which the classes will be found. Default `chaca.data` */
+    package?: string;
+  };
 
 export class JavaGenerator extends Generator {
   private readonly zip: boolean;
   private readonly creator: JavaCodeCreator;
+  private readonly skipInvalid: SkipInvalid;
 
   constructor(
     utils: ChacaUtils,
@@ -30,14 +38,22 @@ export class JavaGenerator extends Generator {
     });
 
     this.zip = Boolean(config.zip);
+
     this.creator = new JavaCodeCreator({
       indent: new SpaceIndex(config.indent),
+      package: new Package(config.package),
     });
+
+    this.skipInvalid = new SkipInvalid(config.skipInvalid);
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
     const classes = new JavaClasses();
-    const valueCreator = new ValueCreator(this.utils, classes);
+    const valueCreator = new ValueCreator(
+      this.utils,
+      classes,
+      this.skipInvalid,
+    );
     const validator = new DataValidator();
     const creator = new ClassesCreator(valueCreator, validator);
 
@@ -72,7 +88,11 @@ export class JavaGenerator extends Generator {
 
   async createFile(data: any): Promise<string[]> {
     const classes = new JavaClasses();
-    const valueCreator = new ValueCreator(this.utils, classes);
+    const valueCreator = new ValueCreator(
+      this.utils,
+      classes,
+      this.skipInvalid,
+    );
     const validator = new DataValidator();
     const creator = new ClassesCreator(valueCreator, validator);
 

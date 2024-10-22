@@ -1,6 +1,7 @@
 import { ChacaError } from "../../../../../errors";
 import { ChacaUtils } from "../../../../utils";
 import { Datatype } from "../../../core/datatype";
+import { SkipInvalid } from "../../../core/skip-invalid";
 import { JavaClasses } from "./classes";
 import { JavaClassFieldName, JavaClassName } from "./names";
 import { Parent } from "./parent";
@@ -28,10 +29,11 @@ export class ValueCreator {
   constructor(
     private readonly utils: ChacaUtils,
     private readonly classes: JavaClasses,
+    private readonly skipInvalid: SkipInvalid,
   ) {}
 
-  execute({ value, parent }: CreateProps): JavaDatatype {
-    const type = Datatype.filter<JavaDatatype>(value, {
+  execute({ value, parent }: CreateProps): JavaDatatype | null {
+    const type = Datatype.filter<JavaDatatype | null>(value, {
       bigint(value) {
         return new JavaBigint(value);
       },
@@ -44,8 +46,12 @@ export class ValueCreator {
       regexp: (value) => {
         return new JavaRegexp(value);
       },
-      function() {
-        throw new ChacaError(``);
+      function: () => {
+        if (this.skipInvalid.value()) {
+          return null;
+        }
+
+        throw new ChacaError(`You can not export a function into a java file.`);
       },
       date(value) {
         return new JavaDate(value);
@@ -53,8 +59,14 @@ export class ValueCreator {
       null() {
         return new JavaNull();
       },
-      symbol() {
-        throw new ChacaError(``);
+      symbol: () => {
+        if (this.skipInvalid.value()) {
+          return null;
+        }
+
+        throw new ChacaError(
+          `You can not export a Symbol into a javascript file.`,
+        );
       },
       float(value) {
         return new JavaFloat(value);
@@ -84,11 +96,13 @@ export class ValueCreator {
             parent: newParent,
           });
 
-          const saveField = saveClass.find(fieldName, datatype);
+          if (datatype) {
+            const saveField = saveClass.find(fieldName, datatype);
 
-          const field = new JavaClassField(datatype, saveField);
+            const field = new JavaClassField(datatype, saveField);
 
-          object.setField(field);
+            object.setField(field);
+          }
         }
 
         saveClass.add(object);
@@ -101,7 +115,9 @@ export class ValueCreator {
         for (const v of value) {
           const datatype = this.execute({ parent: parent, value: v });
 
-          array.add(datatype);
+          if (datatype) {
+            array.add(datatype);
+          }
         }
 
         return array;

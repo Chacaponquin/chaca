@@ -1,9 +1,11 @@
 import { SpaceIndex } from "../../../core/space-index";
+import { Package } from "../value-object/package";
 import { JavaClasses } from "./classes";
 import { Import, Imports } from "./import";
 
 interface Props {
   indent: SpaceIndex;
+  package: Package;
 }
 
 export interface CodeResult {
@@ -23,7 +25,7 @@ export class JavaCodeCreator {
       const definition = c.definition(this.config.indent, imports);
       const imp = imports.string();
 
-      let content = `package ip.quicktype;\n\n`;
+      let content = this.config.package.string();
 
       if (imp !== "") {
         content += imp + "\n\n";
@@ -42,7 +44,7 @@ export class JavaCodeCreator {
   private main(classes: JavaClasses): string {
     const imports = new Imports();
 
-    let code = `package io.quicktype;\n\n`;
+    let code = this.config.package.string();
 
     // create content
     let content = ``;

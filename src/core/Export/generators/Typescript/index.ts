@@ -4,10 +4,19 @@ import { JavascriptCodeCreator } from "../javascript/core/creator";
 import { Filename } from "../generator/name";
 import { Route } from "../generator/route";
 import { ChacaUtils } from "../../../utils";
-import { IndentConfig, SeparateConfig, ZipConfig } from "../params";
+import {
+  IndentConfig,
+  SeparateConfig,
+  SkipInvalidConfig,
+  ZipConfig,
+} from "../params";
 import { SpaceIndex } from "../../core/space-index";
+import { SkipInvalid } from "../../core/skip-invalid";
 
-export type TypescriptProps = ZipConfig & SeparateConfig & IndentConfig;
+export type TypescriptProps = ZipConfig &
+  SeparateConfig &
+  IndentConfig &
+  SkipInvalidConfig;
 
 export class TypescriptGenerator extends Generator {
   private readonly zip: boolean;
@@ -34,6 +43,7 @@ export class TypescriptGenerator extends Generator {
       utils,
       new SpaceIndex(config.indent),
       true,
+      new SkipInvalid(config.skipInvalid),
     );
   }
 

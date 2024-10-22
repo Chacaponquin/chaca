@@ -12,3 +12,7 @@ export interface SeparateConfig {
   /**The data of each schema must be separated into separate files. Default `false` */
   separate?: boolean;
 }
+
+export interface SkipInvalidConfig {
+  skipInvalid?: boolean;
+}

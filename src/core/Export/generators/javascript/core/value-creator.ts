@@ -1,6 +1,7 @@
 import { ChacaError } from "../../../../../errors";
 import { ChacaUtils } from "../../../../utils";
 import { Datatype } from "../../../core/datatype";
+import { SkipInvalid } from "../../../core/skip-invalid";
 import {
   JavascriptClasses,
   SaveClassField,
@@ -32,10 +33,11 @@ export class ValueCreator {
   constructor(
     private readonly classes: JavascriptClasses,
     private readonly utils: ChacaUtils,
+    private readonly skipInvalid: SkipInvalid,
   ) {}
 
-  execute({ route, value }: Props): JavascriptDatatype {
-    const type = Datatype.filter<JavascriptDatatype>(value, {
+  execute({ route, value }: Props): JavascriptDatatype | null {
+    const type = Datatype.filter<JavascriptDatatype | null>(value, {
       string(value) {
         return new JavascriptString(value);
       },
@@ -51,10 +53,14 @@ export class ValueCreator {
       bigint(value) {
         return new JavascriptBignInt(value);
       },
-      function() {
-        throw new ChacaError(
-          `You can not export a function to a javascript file.`,
-        );
+      function: () => {
+        if (this.skipInvalid.value()) {
+          return null;
+        } else {
+          throw new ChacaError(
+            `You can not export a function to a javascript file.`,
+          );
+        }
       },
       boolean(value) {
         return new JavascriptBoolean(value);
@@ -68,15 +74,21 @@ export class ValueCreator {
         for (const v of value) {
           const sub = this.execute({ route: route.clone(), value: v });
 
-          array.setValue(sub);
+          if (sub) {
+            array.setValue(sub);
+          }
         }
 
         return array;
       },
-      symbol() {
-        throw new ChacaError(
-          `You can not export a Symbol into a javascript file.`,
-        );
+      symbol: () => {
+        if (this.skipInvalid.value()) {
+          return null;
+        } else {
+          throw new ChacaError(
+            `You can not export a Symbol into a javascript file.`,
+          );
+        }
       },
       null() {
         return new JavascriptNull();
@@ -100,13 +112,15 @@ export class ValueCreator {
             route: route.create(key),
           });
 
-          const saveField = save.search(
-            new SaveClassField(fieldname, datatype),
-          );
+          if (datatype) {
+            const saveField = save.search(
+              new SaveClassField(fieldname, datatype),
+            );
 
-          const field = new JavascriptClassField(saveField, datatype);
+            const field = new JavascriptClassField(saveField, datatype);
 
-          object.setField(field);
+            object.setField(field);
+          }
         }
 
         return object;
