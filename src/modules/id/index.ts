@@ -2,12 +2,15 @@ import { DatatypeModule } from "../datatype";
 import { nanoid } from "nanoid";
 import { ulid } from "ulid";
 import { createId } from "@paralleldrive/cuid2";
+import { v4 } from "uuid";
 
 export type NanoidProps = {
   length?: number;
 };
 
 export class IdModule {
+  constructor(private readonly datatypeModule: DatatypeModule) {}
+
   /**
    * Returns a MongoDB [ObjectId](https://docs.mongodb.com/manual/reference/method/ObjectId/) string.
    *
@@ -17,8 +20,7 @@ export class IdModule {
    * @returns string
    */
   mongodbId(): string {
-    const datatypeModule = new DatatypeModule();
-    return datatypeModule.hexadecimal({ case: "lower", length: 24 });
+    return this.datatypeModule.hexadecimal({ case: "lower", length: 24 });
   }
 
   /**
@@ -30,16 +32,7 @@ export class IdModule {
    * @returns string
    */
   uuid(): string {
-    const datatypeModule = new DatatypeModule();
-    const RFC4122_TEMPLATE = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
-
-    const replacePlaceholders = (placeholder: string) => {
-      const random = datatypeModule.int({ min: 0, max: 15 });
-      const value = placeholder === "x" ? random : (random & 0x3) | 0x8;
-      return value.toString(16);
-    };
-
-    return RFC4122_TEMPLATE.replace(/[xy]/g, replacePlaceholders);
+    return v4();
   }
 
   /**
