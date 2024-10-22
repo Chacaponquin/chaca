@@ -1,4 +1,5 @@
 export interface ZipConfig {
+  /**The generated files are stored in a zip file. Default `false` */
   zip?: boolean;
 }
 
