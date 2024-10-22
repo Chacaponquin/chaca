@@ -2,9 +2,13 @@ import { DatasetSchema } from "../dataset-resolver/interfaces/resolver";
 import { DatasetResolver } from "../dataset-resolver/resolver";
 import { ExportResolver } from "../export";
 import { FileConfig } from "../export/interfaces/export";
+import { ChacaUtils } from "../utils";
 
 export class Dataset<K = any> {
-  constructor(private readonly schemas: DatasetSchema[]) {}
+  constructor(
+    private readonly schemas: DatasetSchema[],
+    private readonly utils: ChacaUtils,
+  ) {}
 
   /**
    * Generate and export data from relational schemas
@@ -15,7 +19,7 @@ export class Dataset<K = any> {
    * @param config.verbose Show log in console progretion
    */
   async export(config: FileConfig): Promise<string[]> {
-    const resolver = new ExportResolver(config);
+    const resolver = new ExportResolver(this.utils, config);
     const routes = await resolver.relational(this.schemas);
 
     return routes;

@@ -3,11 +3,12 @@ import { SchemaInput, SchemaToResolve } from "./interfaces/schema";
 import { FileConfig } from "../export/interfaces/export";
 import { InputSchemaResolver } from "./value-object/schema-resolver";
 import { SchemaResolver } from "../schema-resolver";
+import { ChacaUtils } from "../utils";
 
 export class Schema<K = any> {
   private schemaResolver: SchemaToResolve;
 
-  constructor(input: SchemaInput) {
+  constructor(input: SchemaInput, private readonly utils: ChacaUtils) {
     this.schemaResolver = new InputSchemaResolver(input).value();
   }
 
@@ -22,7 +23,7 @@ export class Schema<K = any> {
    * @returns Promise<string>
    */
   async export(documents: number, config: FileConfig): Promise<string[]> {
-    const resolver = new ExportResolver(config);
+    const resolver = new ExportResolver(this.utils, config);
     const routes = await resolver.relational([
       { name: config.filename, documents: documents, schema: this },
     ]);

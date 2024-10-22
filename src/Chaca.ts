@@ -35,7 +35,7 @@ export class Chaca {
    * }
    */
   schema<K = any>(input: SchemaInput): Schema<K> {
-    const newSchema = new Schema<K>(input);
+    const newSchema = new Schema<K>(input, this.utils);
     return newSchema;
   }
 
@@ -45,7 +45,7 @@ export class Chaca {
    *
    * @example
    * {
-   *    field: chaca.ref('Schema.fieldToRef')
+   *    field: chaca.ref('schema.field')
    * }
    */
   ref(field: FieldToRef, config?: RefFieldConfig): RefField {
@@ -118,7 +118,7 @@ export class Chaca {
    * Promise<string>
    */
   async export(data: any, config: FileConfig): Promise<string[]> {
-    const resolver = new ExportResolver(config);
+    const resolver = new ExportResolver(this.utils, config);
     const route = await resolver.data(data);
 
     return route;
@@ -129,7 +129,7 @@ export class Chaca {
    * @param schemas Array with the schemas config
    */
   dataset<K = any>(schemas: DatasetSchema[]): Dataset<K> {
-    const dataset = new Dataset<K>(schemas);
+    const dataset = new Dataset<K>(schemas, this.utils);
     return dataset;
   }
 
