@@ -1,12 +1,13 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { ChacaUtils } from "../../../utils";
+import { SpaceIndex } from "../../core/space-index";
 import { Generator } from "../generator";
 import { Filename } from "../generator/name";
 import { Route } from "../generator/route";
+import { IndentConfig, SeparateConfig, ZipConfig } from "../params";
+import { JsonCodeCreator } from "./core/creator";
 
-export interface JsonProps {
-  separate?: boolean;
-  zip?: boolean;
-}
+export type JsonProps = SeparateConfig & ZipConfig & IndentConfig;
 
 interface Props {
   filename: string;
@@ -15,27 +16,25 @@ interface Props {
 }
 
 export class JsonGenerator extends Generator {
-  private config: JsonProps;
+  private readonly config: JsonProps;
+  private readonly creator: JsonCodeCreator;
 
-  constructor({ extConfig, filename, location }: Props) {
-    super({
+  constructor(utils: ChacaUtils, { extConfig, filename, location }: Props) {
+    super(utils, {
       extension: "json",
       filename: filename,
       location: location,
     });
 
     this.config = extConfig;
-  }
-
-  private async setFile(route: Route, content: any): Promise<void> {
-    const json = JSON.stringify(content, undefined, 3);
-    await this.writeFile(route, json);
+    this.creator = new JsonCodeCreator(new SpaceIndex(extConfig.indent));
   }
 
   async createFile(data: any): Promise<string[]> {
     const filename = new Filename(this.filename);
     const route = this.generateRoute(filename);
-    await this.setFile(route, data);
+    const code = this.creator.execute(data);
+    await this.writeFile(route, code);
 
     if (this.config.zip) {
       const zip = this.createZip();
@@ -56,7 +55,8 @@ export class JsonGenerator extends Generator {
       for (const [key, data] of Object.entries(objectData)) {
         const filename = new Filename(key);
         const route = this.generateRoute(filename);
-        await this.setFile(route, data);
+        const code = this.creator.execute(data);
+        await this.writeFile(route, code);
 
         allRoutes.push(route);
       }
