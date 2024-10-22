@@ -3,11 +3,11 @@ import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { Filename } from "../generator/name";
 import { Route } from "../generator/route";
 import { JavascriptCodeCreator } from "./core/creator";
+import { ChacaUtils } from "../../../utils";
+import { IndentConfig, SeparateConfig, ZipConfig } from "../params";
+import { SpaceIndex } from "../../core/space-index";
 
-export interface JavascriptProps {
-  zip?: boolean;
-  separate?: boolean;
-}
+export type JavascriptProps = ZipConfig & SeparateConfig & IndentConfig;
 
 export class JavascriptGenerator extends Generator {
   private readonly zip: boolean;
@@ -15,8 +15,13 @@ export class JavascriptGenerator extends Generator {
 
   private readonly creator: JavascriptCodeCreator;
 
-  constructor(filename: string, location: string, config: JavascriptProps) {
-    super({
+  constructor(
+    utils: ChacaUtils,
+    filename: string,
+    location: string,
+    config: JavascriptProps,
+  ) {
+    super(utils, {
       extension: "js",
       filename: filename,
       location: location,
@@ -25,7 +30,11 @@ export class JavascriptGenerator extends Generator {
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
 
-    this.creator = new JavascriptCodeCreator(this.utils);
+    this.creator = new JavascriptCodeCreator(
+      this.utils,
+      new SpaceIndex(config.indent),
+      false,
+    );
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
@@ -36,7 +45,6 @@ export class JavascriptGenerator extends Generator {
         const code = this.creator.execute({
           data: r.resolve(),
           name: r.getSchemaName(),
-          types: false,
         });
         const filename = new Filename(r.getSchemaName());
         const route = this.generateRoute(filename);
@@ -66,7 +74,6 @@ export class JavascriptGenerator extends Generator {
     const code = this.creator.execute({
       data: data,
       name: this.filename,
-      types: false,
     });
 
     await this.writeFile(route, code);
