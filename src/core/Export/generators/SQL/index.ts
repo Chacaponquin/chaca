@@ -8,27 +8,31 @@ import { SQLTables } from "./core/table/tables";
 import { DataValidator } from "./core/generators/validator";
 import { TableOrganizer } from "./core/generators/organizer";
 import { TablesFixer } from "./core/generators/fixer";
+import { ChacaUtils } from "../../../utils";
+import { IndentConfig, ZipConfig } from "../params";
+import { SpaceIndex } from "../../core/space-index";
 
-export interface SQLProps {
-  zip?: boolean;
-}
+export type SQLProps = ZipConfig & IndentConfig;
 
 export class SQLGenerator extends Generator {
   private readonly zip: boolean;
+  private readonly indent: SpaceIndex;
 
   constructor(
+    utils: ChacaUtils,
     filename: string,
     location: string,
     format: ExportSQLFormat,
     config: SQLProps,
   ) {
-    super({
+    super(utils, {
       extension: "sql",
       filename: filename,
       location: location,
     });
 
     this.zip = Boolean(config.zip);
+    this.indent = new SpaceIndex(config.indent);
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
@@ -45,7 +49,7 @@ export class SQLGenerator extends Generator {
     const organizer = new TableOrganizer();
 
     const validator = new DataValidator();
-    const postgres = new PostgreSQL();
+    const postgres = new PostgreSQL(this.indent);
     const generator = new SQLDataGenerator(
       this.utils,
       postgres,
@@ -94,7 +98,7 @@ export class SQLGenerator extends Generator {
 
     const tables = new SQLTables(this.utils);
     const validator = new DataValidator();
-    const postgres = new PostgreSQL();
+    const postgres = new PostgreSQL(this.indent);
     const generator = new SQLDataGenerator(
       this.utils,
       postgres,

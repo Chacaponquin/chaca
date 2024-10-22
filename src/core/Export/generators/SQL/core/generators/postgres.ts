@@ -1,7 +1,12 @@
+import { SpaceIndex } from "../../../../core/space-index";
 import { SQLTables } from "../table/tables";
 import { SQLExtensionGenerator } from "./base";
 
 export class PostgreSQL extends SQLExtensionGenerator {
+  constructor(private readonly index: SpaceIndex) {
+    super();
+  }
+
   values(tables: SQLTables): string {
     let code = ``;
 
@@ -18,9 +23,13 @@ export class PostgreSQL extends SQLExtensionGenerator {
       const values = [] as string[];
 
       table.iterate((row) => {
+        this.index.push();
+
         const v = row.map((v) => v.string()).join(", ");
-        const rowCode = `   (${v})`;
+        const rowCode = this.index.create(`(${v})`);
         values.push(rowCode);
+
+        this.index.reverse();
       });
 
       code += `${values.join(",\n")}\n\n`;
@@ -40,7 +49,9 @@ export class PostgreSQL extends SQLExtensionGenerator {
         .map((column) => {
           let code = ``;
 
-          code += `   ${column.name()} ${column.definition()}`;
+          this.index.push();
+
+          code += this.index.create(`${column.name()} ${column.definition()}`);
 
           if (column.isKey()) {
             code += ` PRIMARY KEY`;
@@ -61,6 +72,8 @@ export class PostgreSQL extends SQLExtensionGenerator {
 
             code += ` REFERENCES ${table}(${col})`;
           }
+
+          this.index.reverse();
 
           return code;
         })

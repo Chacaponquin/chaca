@@ -1,4 +1,5 @@
 import { json2csv } from "json-2-csv";
+import { DataValidator } from "./validator";
 
 interface KeyConverter {
   field: string;
@@ -33,9 +34,14 @@ export interface CodeProps {
 }
 
 export class CsvCodeCreator {
-  constructor(private readonly config: CodeProps) {}
+  constructor(
+    private readonly config: CodeProps,
+    private readonly validator: DataValidator,
+  ) {}
 
   execute(data: any): string {
+    this.validator.execute(data);
+
     return json2csv(data, {
       trimFieldValues: this.config.trim?.fields,
       trimHeaderFields: this.config.trim?.header,

@@ -10,7 +10,6 @@ import { CodeProps, CsvCodeCreator } from "./core/creator";
 export type CsvProps = ZipConfig & CodeProps;
 
 export class CsvGenerator extends Generator {
-  private readonly validator: DataValidator;
   private readonly creator: CsvCodeCreator;
 
   private readonly zip: boolean;
@@ -38,18 +37,20 @@ export class CsvGenerator extends Generator {
       location: location,
     });
 
-    this.validator = new DataValidator();
-    this.creator = new CsvCodeCreator({
-      trim: trim,
-      delimiter: delimiter,
-      excludeKeys: excludeKeys,
-      expandArrayObjects: expandArrayObjects,
-      expandNestedObjects: expandNestedObjects,
-      sortHeader: sortHeader,
-      unwindArrays: unwindArrays,
-      keys: keys,
-      parseValue: parseValue,
-    });
+    this.creator = new CsvCodeCreator(
+      {
+        trim: trim,
+        delimiter: delimiter,
+        excludeKeys: excludeKeys,
+        expandArrayObjects: expandArrayObjects,
+        expandNestedObjects: expandNestedObjects,
+        sortHeader: sortHeader,
+        unwindArrays: unwindArrays,
+        keys: keys,
+        parseValue: parseValue,
+      },
+      new DataValidator(),
+    );
 
     this.zip = Boolean(zip);
   }
@@ -60,7 +61,10 @@ export class CsvGenerator extends Generator {
 
       for (const r of resolver.getResolvers()) {
         const filename = new Filename(r.getSchemaName());
-        const route = await this.setFile(filename, r.resolve());
+        const route = this.generateRoute(filename);
+        const code = this.creator.execute(r.resolve());
+
+        await this.writeFile(route, code);
 
         allRoutes.push(route);
       }
@@ -71,7 +75,9 @@ export class CsvGenerator extends Generator {
       return [zip.route];
     } else {
       const filename = new Filename(this.filename);
-      const route = await this.setFile(filename, resolver.resolve());
+      const code = this.creator.execute(resolver.resolve());
+      const route = this.generateRoute(filename);
+      await this.writeFile(route, code);
 
       return [route.value()];
     }
@@ -80,7 +86,8 @@ export class CsvGenerator extends Generator {
   async createFile(data: any): Promise<string[]> {
     const filename = new Filename(this.filename);
     const code = this.creator.execute(data);
-    const route = await this.setFile(filename, code);
+    const route = this.generateRoute(filename);
+    await this.writeFile(route, code);
 
     if (this.zip) {
       const zip = this.createZip();
@@ -90,16 +97,5 @@ export class CsvGenerator extends Generator {
     } else {
       return [route.value()];
     }
-  }
-
-  private async setFile(filename: Filename, data: any): Promise<Route> {
-    this.validator.execute(data);
-
-    const route = this.generateRoute(filename);
-    const content = this.creator.execute(data);
-
-    await this.writeFile(route, content);
-
-    return route;
   }
 }
