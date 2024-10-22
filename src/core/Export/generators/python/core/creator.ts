@@ -1,4 +1,5 @@
 import { ChacaUtils } from "../../../../utils";
+import { SkipInvalid } from "../../../core/skip-invalid";
 import { SpaceIndex } from "../../../core/space-index";
 import { PythonClasses } from "./classes";
 import { Imports } from "./import";
@@ -11,30 +12,38 @@ interface Props {
 }
 
 export class PythonCodeCreator {
-  constructor(private readonly utils: ChacaUtils) {}
+  constructor(
+    private readonly utils: ChacaUtils,
+    private readonly skipInvalid: SkipInvalid,
+    private readonly indent: SpaceIndex,
+  ) {}
 
   execute({ data, name }: Props): string {
     const imports = new Imports();
     const classes = new PythonClasses();
     const route = new Route([name]);
-    const index = new SpaceIndex(2);
-    const creator = new ValueCreator(this.utils, classes);
+    const creator = new ValueCreator(this.utils, classes, this.skipInvalid);
 
     const datatype = creator.execute({ route: route, value: data });
 
-    const classesDef = classes.definition(index, imports);
-    const declaration = datatype.declaration(imports);
-    const content = datatype.string(index, imports);
-    const imp = imports.string();
+    const classesDef = classes.definition(this.indent, imports);
 
-    let code = ``;
+    if (datatype) {
+      const declaration = datatype.declaration(imports);
+      const content = datatype.string(this.indent, imports);
+      const imp = imports.string();
 
-    if (imp !== "") code += `${imports.string()}\n`;
+      let code = ``;
 
-    code += `${classesDef}\n`;
+      if (imp !== "") code += `${imports.string()}\n`;
 
-    code += `data: ${declaration} = ${content}\n`;
+      code += `${classesDef}\n`;
 
-    return code;
+      code += `data: ${declaration} = ${content}\n`;
+
+      return code;
+    } else {
+      return ``;
+    }
   }
 }

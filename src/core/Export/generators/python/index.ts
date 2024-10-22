@@ -3,18 +3,34 @@ import { Generator } from "../generator";
 import { PythonCodeCreator } from "./core/creator";
 import { Filename } from "../generator/name";
 import { Route } from "../generator/route";
+import { ChacaUtils } from "../../../utils";
+import {
+  IndentConfig,
+  SeparateConfig,
+  SkipInvalidConfig,
+  ZipConfig,
+} from "../params";
+import { SkipInvalid } from "../../core/skip-invalid";
+import { SpaceIndex } from "../../core/space-index";
 
-export interface PythonProps {
-  zip?: boolean;
-  separate?: boolean;
-}
+export type PythonProps = ZipConfig &
+  SeparateConfig &
+  IndentConfig &
+  SkipInvalidConfig;
 
 export class PythonGenerator extends Generator {
   private readonly zip: boolean;
   private readonly separate: boolean;
 
-  constructor(filename: string, location: string, config: PythonProps) {
-    super({
+  private readonly creator: PythonCodeCreator;
+
+  constructor(
+    utils: ChacaUtils,
+    filename: string,
+    location: string,
+    config: PythonProps,
+  ) {
+    super(utils, {
       extension: "py",
       filename: filename,
       location: location,
@@ -22,15 +38,19 @@ export class PythonGenerator extends Generator {
 
     this.separate = Boolean(config.separate);
     this.zip = Boolean(config.zip);
+
+    this.creator = new PythonCodeCreator(
+      utils,
+      new SkipInvalid(config.skipInvalid),
+      new SpaceIndex(config.indent),
+    );
   }
 
   async createFile(data: any): Promise<string[]> {
-    const creator = new PythonCodeCreator(this.utils);
-
     const filename = new Filename(this.filename);
     const route = this.generateRoute(filename);
 
-    const code = creator.execute({
+    const code = this.creator.execute({
       data: data,
       name: this.filename,
     });
@@ -48,13 +68,11 @@ export class PythonGenerator extends Generator {
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
-    const creator = new PythonCodeCreator(this.utils);
-
     if (this.separate) {
       const allRoutes = [] as Route[];
 
       for (const r of resolver.getResolvers()) {
-        const code = creator.execute({
+        const code = this.creator.execute({
           data: r.resolve(),
           name: r.getSchemaName(),
         });
@@ -78,7 +96,7 @@ export class PythonGenerator extends Generator {
       const filename = new Filename(this.filename);
       const route = this.generateRoute(filename);
 
-      const code = creator.execute({
+      const code = this.creator.execute({
         data: resolver.resolve(),
         name: this.filename,
       });

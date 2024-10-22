@@ -1,6 +1,7 @@
 import { ChacaError } from "../../../../../errors";
 import { ChacaUtils } from "../../../../utils";
 import { Datatype } from "../../../core/datatype";
+import { SkipInvalid } from "../../../core/skip-invalid";
 import { PythonClasses, SaveClassField } from "./classes";
 import { PythonClassFieldName, PythonClassName } from "./names";
 import { Route } from "./route";
@@ -27,10 +28,11 @@ export class ValueCreator {
   constructor(
     private readonly utils: ChacaUtils,
     private readonly classes: PythonClasses,
+    private readonly skipInvalid: SkipInvalid,
   ) {}
 
-  execute({ route, value }: Props): PythonDatatype {
-    const type = Datatype.filter<PythonDatatype>(value, {
+  execute({ route, value }: Props): PythonDatatype | null {
+    const type = Datatype.filter<PythonDatatype | null>(value, {
       string(value) {
         return new PythonString(value);
       },
@@ -55,7 +57,9 @@ export class ValueCreator {
         for (const v of value) {
           const datatype = this.execute({ route: route.clone(), value: v });
 
-          array.setValue(datatype);
+          if (datatype) {
+            array.setValue(datatype);
+          }
         }
 
         return array;
@@ -83,13 +87,15 @@ export class ValueCreator {
             value: data,
           });
 
-          const saveField = save.search(
-            new SaveClassField(fieldname, datatype),
-          );
+          if (datatype) {
+            const saveField = save.search(
+              new SaveClassField(fieldname, datatype),
+            );
 
-          const field = new PythonClassField(saveField, datatype);
+            const field = new PythonClassField(saveField, datatype);
 
-          object.setField(field);
+            object.setField(field);
+          }
         }
 
         return object;
@@ -97,12 +103,20 @@ export class ValueCreator {
       bigint(value) {
         return new PythonInt(value);
       },
-      function() {
+      function: () => {
+        if (this.skipInvalid.value()) {
+          return null;
+        }
+
         throw new ChacaError(
           `You can not export a function into a python file.`,
         );
       },
-      symbol() {
+      symbol: () => {
+        if (this.skipInvalid.value()) {
+          return null;
+        }
+
         throw new ChacaError(`You can not export a Symbol into a python file.`);
       },
     });
