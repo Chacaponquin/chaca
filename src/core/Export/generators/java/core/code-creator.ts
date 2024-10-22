@@ -2,24 +2,25 @@ import { SpaceIndex } from "../../../core/space-index";
 import { JavaClasses } from "./classes";
 import { Import, Imports } from "./import";
 
+interface Props {
+  indent: SpaceIndex;
+}
+
 export interface CodeResult {
   filename: string;
   content: string;
 }
 
 export class JavaCodeCreator {
-  constructor(
-    private readonly classes: JavaClasses,
-    private readonly index: SpaceIndex,
-  ) {}
+  constructor(private readonly config: Props) {}
 
-  execute(): CodeResult[] {
+  execute(classes: JavaClasses): CodeResult[] {
     const codes: CodeResult[] = [];
 
-    for (const c of this.classes.classes) {
+    for (const c of classes.classes) {
       const imports = new Imports();
 
-      const definition = c.definition(this.index, imports);
+      const definition = c.definition(this.config.indent, imports);
       const imp = imports.string();
 
       let content = `package ip.quicktype;\n\n`;
@@ -33,12 +34,12 @@ export class JavaCodeCreator {
       codes.push({ content: content, filename: c.name() });
     }
 
-    codes.push({ content: this.main(), filename: "Main" });
+    codes.push({ content: this.main(classes), filename: "Main" });
 
     return codes;
   }
 
-  private main(): string {
+  private main(classes: JavaClasses): string {
     const imports = new Imports();
 
     let code = `package io.quicktype;\n\n`;
@@ -46,15 +47,17 @@ export class JavaCodeCreator {
     // create content
     let content = ``;
 
-    content += this.index.create("public class Main {\n");
+    content += this.config.indent.create("public class Main {\n");
 
-    this.index.push();
+    this.config.indent.push();
 
-    content += this.index.create(`public static void main(String[] args) {\n`);
+    content += this.config.indent.create(
+      `public static void main(String[] args) {\n`,
+    );
 
-    this.index.push();
+    this.config.indent.push();
 
-    content += this.classes.classes
+    content += classes.classes
       .map((c) => {
         imports.add(
           new Import(["java", "util", "List"]),
@@ -64,21 +67,21 @@ export class JavaCodeCreator {
         const definition = c.name();
         const variable = c.variable();
 
-        let code = this.index.create(
+        let code = this.config.indent.create(
           `List<${definition}> ${variable} = new LinkedList<>();\n`,
         );
 
         code += c.values
           .map((v) => {
-            let code = this.index.create(`${variable}.add(\n`);
+            let code = this.config.indent.create(`${variable}.add(\n`);
 
-            this.index.push();
+            this.config.indent.push();
 
-            code += v.string(this.index, imports);
+            code += v.string(this.config.indent, imports);
 
-            this.index.reverse();
+            this.config.indent.reverse();
 
-            code += this.index.create(")");
+            code += this.config.indent.create(")");
 
             return code;
           })
@@ -88,13 +91,13 @@ export class JavaCodeCreator {
       })
       .join(";\n\n");
 
-    this.index.reverse();
+    this.config.indent.reverse();
 
-    content += "\n" + this.index.create(`}`);
+    content += "\n" + this.config.indent.create(`}`);
 
-    this.index.reverse();
+    this.config.indent.reverse();
 
-    content += "\n" + this.index.create(`}`);
+    content += "\n" + this.config.indent.create(`}`);
 
     // create code
     const imp = imports.string();

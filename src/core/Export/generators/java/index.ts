@@ -8,31 +8,38 @@ import { DataValidator } from "./core/validator";
 import { JavaCodeCreator } from "./core/code-creator";
 import { SpaceIndex } from "../../core/space-index";
 import { Route } from "../generator/route";
+import { IndentConfig, ZipConfig } from "../params";
+import { ChacaUtils } from "../../../utils";
 
-export interface JavaProps {
-  zip?: boolean;
-}
+export type JavaProps = ZipConfig & IndentConfig;
 
 export class JavaGenerator extends Generator {
   private readonly zip: boolean;
+  private readonly creator: JavaCodeCreator;
 
-  constructor(filename: string, location: string, config: JavaProps) {
-    super({
+  constructor(
+    utils: ChacaUtils,
+    filename: string,
+    location: string,
+    config: JavaProps,
+  ) {
+    super(utils, {
       extension: "java",
       filename: filename,
       location: location,
     });
 
     this.zip = Boolean(config.zip);
+    this.creator = new JavaCodeCreator({
+      indent: new SpaceIndex(config.indent),
+    });
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
     const classes = new JavaClasses();
-    const index = new SpaceIndex(3);
     const valueCreator = new ValueCreator(this.utils, classes);
     const validator = new DataValidator();
     const creator = new ClassesCreator(valueCreator, validator);
-    const codeCreator = new JavaCodeCreator(classes, index);
 
     for (const r of resolver.getResolvers()) {
       creator.execute({
@@ -42,7 +49,9 @@ export class JavaGenerator extends Generator {
     }
 
     const routes = [] as Route[];
-    for (const { content, filename: ifilename } of codeCreator.execute()) {
+    for (const { content, filename: ifilename } of this.creator.execute(
+      classes,
+    )) {
       const filename = new Filename(ifilename);
       const route = this.generateRoute(filename);
 
@@ -63,11 +72,9 @@ export class JavaGenerator extends Generator {
 
   async createFile(data: any): Promise<string[]> {
     const classes = new JavaClasses();
-    const index = new SpaceIndex(3);
     const valueCreator = new ValueCreator(this.utils, classes);
     const validator = new DataValidator();
     const creator = new ClassesCreator(valueCreator, validator);
-    const codeCreator = new JavaCodeCreator(classes, index);
 
     creator.execute({
       name: this.filename,
@@ -75,7 +82,9 @@ export class JavaGenerator extends Generator {
     });
 
     const routes = [] as Route[];
-    for (const { content, filename: ifilename } of codeCreator.execute()) {
+    for (const { content, filename: ifilename } of this.creator.execute(
+      classes,
+    )) {
       const filename = new Filename(ifilename);
       const route = this.generateRoute(filename);
 

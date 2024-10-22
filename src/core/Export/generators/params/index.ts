@@ -5,7 +5,7 @@ export interface ZipConfig {
 
 export interface IndentConfig {
   /**Indentation width to use (in spaces). Default `2` */
-  index?: number;
+  indent?: number;
 }
 
 export interface SeparateConfig {

@@ -40,7 +40,7 @@ export class YamlGenerator extends Generator {
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
     this.creator = new YamlCodeCreator({
-      indent: new SpaceIndex(config.index),
+      indent: new SpaceIndex(config.indent),
       lineWidth: config.lineWidth,
       quotingType: config.quotingType,
       sortKeys: config.sortKeys,
