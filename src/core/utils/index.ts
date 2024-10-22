@@ -37,10 +37,11 @@ interface ReplaceSymbolsProps {
 }
 
 export class ChacaUtils {
-  private readonly datatypeModule = new DatatypeModule();
+  private readonly datatypeModule = new DatatypeModule(this);
 
   /**
    * Returns one element from an array
+   *
    * @param list Array of values to return
    * @example
    * chaca.utils.oneOfArray([1, 2, 3, 5, 4]) // 3

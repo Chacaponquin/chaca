@@ -77,6 +77,8 @@ export class DatatypeModule {
   private readonly MAX_RANDOM_VALUE = 999999;
   private readonly MAX_PRECISION = 16;
 
+  constructor(private readonly utils: ChacaUtils) {}
+
   readonly constants = {
     upperCharacters: UPPER_CHARACTERS,
     lowerCharacters: LOWER_CHARACTERS,
@@ -190,6 +192,10 @@ export class DatatypeModule {
 
     let range: number;
     if (typeof max === "number" && typeof min === "number") {
+      if (min > max) {
+        throw new ChacaError(``);
+      }
+
       range = max - min;
     } else if (typeof max === "number" && typeof min === "undefined") {
       range = max;
@@ -410,8 +416,6 @@ export class DatatypeModule {
     banned: ibanned,
     prefix = "",
   }: AlphaNumericProps = {}): string {
-    const utils = new ChacaUtils();
-
     const length =
       ilength && ilength > 0 ? ilength : this.int({ min: 1, max: 10 });
 
@@ -449,7 +453,7 @@ export class DatatypeModule {
 
     let retString = prefix;
     for (let i = 0; i < length; i++) {
-      retString = retString.concat(utils.oneOfArray(selectValues));
+      retString = retString.concat(this.utils.oneOfArray(selectValues));
     }
 
     return retString;

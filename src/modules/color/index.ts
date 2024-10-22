@@ -35,6 +35,11 @@ export type ColorByCSSColorSpaceProps = {
 };
 
 export class ColorModule {
+  constructor(
+    private readonly utils: ChacaUtils,
+    private readonly datatypeModule: DatatypeModule,
+  ) {}
+
   readonly constants = {
     cssFunctions: CSS_FUNCTIONS,
     cssSpaces: CSS_SPACES,
@@ -48,8 +53,7 @@ export class ColorModule {
    * modules.color.human() // 'blue'
    */
   human(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(HUMAN_COLORS);
+    return this.utils.oneOfArray(HUMAN_COLORS);
   }
 
   /**
@@ -59,8 +63,7 @@ export class ColorModule {
    * modules.color.cssSupportedFunction() // 'rgb'
    */
   cssSupportedFunction() {
-    const utils = new ChacaUtils();
-    const value = utils.oneOfArray(CSS_FUNCTIONS);
+    const value = this.utils.oneOfArray(CSS_FUNCTIONS);
     return value;
   }
 
@@ -71,8 +74,7 @@ export class ColorModule {
    * modules.color.cssSupportedSpace() // 'display-p3'
    */
   cssSupportedSpace() {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(CSS_SPACES);
+    return this.utils.oneOfArray(CSS_SPACES);
   }
 
   /**
@@ -98,13 +100,11 @@ export class ColorModule {
     casing = "mixed",
     prefix = "#",
   }: RgbProps = {}): string {
-    const datatypeModule = new DatatypeModule();
-
     let color: string | number[];
     let cssFunction: CSSFunction = "rgb";
 
     if (format === "hex") {
-      color = datatypeModule.hexadecimal({
+      color = this.datatypeModule.hexadecimal({
         length: includeAlpha ? 8 : 6,
       });
 
@@ -113,11 +113,11 @@ export class ColorModule {
     }
 
     color = Array.from({ length: 3 }).map(() =>
-      datatypeModule.int({ min: 0, max: 255 }),
+      this.datatypeModule.int({ min: 0, max: 255 }),
     );
 
     if (includeAlpha) {
-      color.push(datatypeModule.float({ min: 0, max: 1, precision: 2 }));
+      color.push(this.datatypeModule.float({ min: 0, max: 1, precision: 2 }));
       cssFunction = "rgba";
     }
 
@@ -142,10 +142,8 @@ export class ColorModule {
    * modules.color.cmyk({ format: 'binary' }) // (8-32 bits) x 4
    */
   cmyk({ format = "css" }: CmykProps = {}): string {
-    const datatypeModule = new DatatypeModule();
-
     const color: number[] = Array.from({ length: 4 }).map(() =>
-      datatypeModule.float({ min: 0, max: 1, precision: 2 }),
+      this.datatypeModule.float({ min: 0, max: 1, precision: 2 }),
     );
 
     return toColorFormat(color, format, "cmyk");
@@ -164,12 +162,10 @@ export class ColorModule {
    * modules.color.hsl({ format: 'binary', includeAlpha: true }) // (8-32 bits) x 4
    */
   hsl({ format = "css", includeAlpha = false }: HslProps = {}): string {
-    const datatypeModule = new DatatypeModule();
-
-    const hsl: number[] = [datatypeModule.int({ min: 0, max: 360 })];
+    const hsl: number[] = [this.datatypeModule.int({ min: 0, max: 360 })];
 
     for (let i = 0; i < (includeAlpha ? 3 : 2); i++) {
-      const value = datatypeModule.float({ min: 0, max: 1, precision: 3 });
+      const value = this.datatypeModule.float({ min: 0, max: 1, precision: 3 });
 
       hsl.push(value);
     }
@@ -187,12 +183,10 @@ export class ColorModule {
    * modules.color.hwb({ format: 'binary' }) // (8-32 bits x 3)
    */
   hwb({ format = "css" }: HwbProps = {}): string {
-    const datatypeModule = new DatatypeModule();
-
-    const hsl: number[] = [datatypeModule.int({ min: 0, max: 360 })];
+    const hsl: number[] = [this.datatypeModule.int({ min: 0, max: 360 })];
 
     for (let i = 0; i < 2; i++) {
-      hsl.push(datatypeModule.float({ min: 0, max: 1, precision: 3 }));
+      hsl.push(this.datatypeModule.float({ min: 0, max: 1, precision: 3 }));
     }
 
     return toColorFormat(hsl, format, "hwb");
@@ -211,12 +205,10 @@ export class ColorModule {
    * modules.color.lch({ format: 'binary' }) // (8-32 bits x 3)
    */
   lch({ format = "css" }: LchProps = {}): string {
-    const datatypeModule = new DatatypeModule();
-
-    const lch = [datatypeModule.float({ min: 0, max: 1, precision: 6 })];
+    const lch = [this.datatypeModule.float({ min: 0, max: 1, precision: 6 })];
 
     for (let i = 0; i < 2; i++) {
-      lch.push(datatypeModule.number({ min: 0, max: 230, precision: 1 }));
+      lch.push(this.datatypeModule.number({ min: 0, max: 230, precision: 1 }));
     }
 
     return toColorFormat(lch, format, "lch");
@@ -236,10 +228,8 @@ export class ColorModule {
     format = "css",
     space = "sRGB",
   }: ColorByCSSColorSpaceProps = {}) {
-    const datatypeModule = new DatatypeModule();
-
     const color = Array.from({ length: 3 }).map(() =>
-      datatypeModule.float({ min: 0, max: 1, precision: 4 }),
+      this.datatypeModule.float({ min: 0, max: 1, precision: 4 }),
     );
 
     return toColorFormat(color, format, "color", space);
