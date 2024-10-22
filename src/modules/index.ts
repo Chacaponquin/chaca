@@ -14,17 +14,18 @@ import { AnimalModule } from "./animal";
 import { ScienceModule } from "./science";
 import { WordModule } from "./word";
 import { ColorModule } from "./color";
+import { ChacaUtils } from "../core/utils";
 
 export class ChacaModules {
   readonly internet = new InternetModule();
-  readonly datatype = new DatatypeModule();
-  readonly id = new IdModule(this.datatype);
+  readonly datatype: DatatypeModule;
+  readonly id: IdModule;
   readonly lorem = new LoremModule();
   readonly image = new ImageModule();
   readonly system = new SystemModule();
   readonly finance = new FinanceModule();
   readonly phone = new PhoneModule();
-  readonly address = new AddressModule();
+  readonly address: AddressModule;
   readonly word = new WordModule();
   readonly vehicle = new VehicleModule();
   readonly date = new DateModule();
@@ -32,4 +33,12 @@ export class ChacaModules {
   readonly animal = new AnimalModule();
   readonly science = new ScienceModule();
   readonly color = new ColorModule();
+
+  constructor() {
+    const utils = new ChacaUtils();
+
+    this.address = new AddressModule(utils);
+    this.datatype = new DatatypeModule();
+    this.id = new IdModule(this.datatype);
+  }
 }

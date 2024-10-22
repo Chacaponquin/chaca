@@ -1,8 +1,8 @@
 import { COUNTRY_CODE, COUNTRY_LIST } from "./constants/countries";
-import { ChacaUtils } from "../../core/utils";
 import { TIME_ZONE } from "./constants/time-zone";
 import { CARDINAL_DIRECTIONS } from "./constants/cardinal-directions";
 import { ORDINAL } from "./constants/ordinal";
+import { ChacaUtils } from "../../core/utils";
 
 export type ZipCodeProps = {
   format?: string;
@@ -20,7 +20,7 @@ export type CountryProps = {
 };
 
 export class AddressModule {
-  private readonly utils = new ChacaUtils();
+  constructor(private readonly utils: ChacaUtils) {}
 
   readonly constants = {
     timeZones: TIME_ZONE,
@@ -39,10 +39,8 @@ export class AddressModule {
    * @returns string
    */
   zipCode({ format: iformat }: ZipCodeProps = {}): string {
-    const utils = new ChacaUtils();
-
     const format = typeof iformat === "string" ? iformat : "#####";
-    return utils.replaceSymbols(format);
+    return this.utils.replaceSymbols(format);
   }
 
   /**
@@ -51,8 +49,7 @@ export class AddressModule {
    * @returns string
    */
   timeZone(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(TIME_ZONE);
+    return this.utils.oneOfArray(TIME_ZONE);
   }
 
   /**
@@ -61,8 +58,7 @@ export class AddressModule {
    * @returns string
    */
   cardinalDirection(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.constants.cardinalDirections);
+    return this.utils.oneOfArray(this.constants.cardinalDirections);
   }
 
   /**
@@ -72,19 +68,17 @@ export class AddressModule {
    * @returns string
    */
   country({ continent }: CountryProps = {}): string {
-    const utils = new ChacaUtils();
-
     if (continent && typeof continent === "string") {
       const filterList = COUNTRY_LIST.filter(
         (el) => el.continent === continent,
       );
 
       if (filterList.length > 0) {
-        return utils.oneOfArray(filterList.map((el) => el.country));
+        return this.utils.oneOfArray(filterList.map((el) => el.country));
       }
     }
 
-    return utils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
+    return this.utils.oneOfArray(COUNTRY_LIST.map((el) => el.country));
   }
 
   /**
@@ -93,16 +87,11 @@ export class AddressModule {
    * @returns string
    */
   countryCode(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(COUNTRY_CODE);
+    return this.utils.oneOfArray(COUNTRY_CODE);
   }
 
   /**
    * Returns a random ordinal direction (northwest, southeast, etc).
-   *
-   * @param options Whether to use abbreviated or an options object.
-   * @param options.abbreviated If true this will return abbreviated directions (NW, SE, etc).
-   * Otherwise this will return the long name. Defaults to `false`.
    *
    * @example
    * modules.address.ordinalDirection() // 'Northeast'
