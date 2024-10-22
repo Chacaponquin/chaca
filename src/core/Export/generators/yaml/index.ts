@@ -3,20 +3,35 @@ import { Generator } from "../generator";
 import { Filename } from "../generator/name";
 import { YamlCodeCreator } from "./core/creator";
 import { Route } from "../generator/route";
+import { ChacaUtils } from "../../../utils";
+import { IndentConfig, SeparateConfig, ZipConfig } from "../params";
+import { SpaceIndex } from "../../core/space-index";
 
-export interface YamlProps {
-  zip?: boolean;
-  separate?: boolean;
-}
+export type YamlProps = {
+  /**If `true`, sort keys when dumping YAML. If is a `function`, use the function to sort the keys. Default `false`*/
+  sortKeys?: boolean | ((a: any, b: any) => number);
+
+  /**Set max line width. Default `80`*/
+  lineWidth?: number;
+
+  /**Strings will be quoted using this quoting style. Default `'` */
+  quotingType?: "'" | '"';
+} & ZipConfig &
+  SeparateConfig &
+  IndentConfig;
 
 export class YamlGenerator extends Generator {
   private readonly zip: boolean;
   private readonly separate: boolean;
+  private readonly creator: YamlCodeCreator;
 
-  private readonly creator = new YamlCodeCreator();
-
-  constructor(filename: string, location: string, config: YamlProps) {
-    super({
+  constructor(
+    utils: ChacaUtils,
+    filename: string,
+    location: string,
+    config: YamlProps,
+  ) {
+    super(utils, {
       extension: "yaml",
       filename: filename,
       location: location,
@@ -24,6 +39,12 @@ export class YamlGenerator extends Generator {
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
+    this.creator = new YamlCodeCreator({
+      indent: new SpaceIndex(config.index),
+      lineWidth: config.lineWidth,
+      quotingType: config.quotingType,
+      sortKeys: config.sortKeys,
+    });
   }
 
   async createFile(data: any): Promise<string[]> {

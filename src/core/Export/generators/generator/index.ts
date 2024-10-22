@@ -14,15 +14,16 @@ export interface Props {
 }
 
 export abstract class Generator {
-  protected utils = new ChacaUtils();
-
   protected filename: string;
   protected location: string;
 
   protected ext: string;
   private readonly baseLocation: string;
 
-  constructor({ filename, location, extension }: Props) {
+  constructor(
+    protected readonly utils: ChacaUtils,
+    { filename, location, extension }: Props,
+  ) {
     if (!fs.existsSync(location)) {
       fs.mkdirSync(location, { recursive: true });
     }
