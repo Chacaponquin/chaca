@@ -14,6 +14,8 @@ export type UnitProps = {
 };
 
 export class ScienceModule {
+  constructor(private readonly utils: ChacaUtils) {}
+
   readonly constants = {
     units: UNITS,
     periodicTableElements: PERIODIC_TABLE_ELEMETNS,
@@ -23,19 +25,18 @@ export class ScienceModule {
   /**
    * Returns periodic table element
    * @param args.type Element format. Can be (`'name'` | `'symbol'`). Defaults `'name'`
+   *
    * @example
    * modules.science.periodicTableElement() // 'Curium'
    * modules.science.periodicTableElement({ type: 'symbol' }) // 'Zn'
    * @returns string
    */
   periodicTableElement({ type = "name" }: PeriodicTableProps = {}): string {
-    const utils = new ChacaUtils();
-
     if (type === "name") {
-      return utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
+      return this.utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
     }
 
-    return utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
+    return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
   }
 
   /**
@@ -49,12 +50,10 @@ export class ScienceModule {
    * @returns string
    */
   unit({ type = "name" }: UnitProps = {}) {
-    const utils = new ChacaUtils();
-
     if (type === "symbol") {
-      return utils.oneOfArray(UNITS.map((el) => el.symbol));
+      return this.utils.oneOfArray(UNITS.map((el) => el.symbol));
     }
 
-    return utils.oneOfArray(UNITS.map((el) => el.unit));
+    return this.utils.oneOfArray(UNITS.map((el) => el.unit));
   }
 }

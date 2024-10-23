@@ -18,11 +18,16 @@ import { Location } from "./value-object/location";
 import { FileFormat } from "./value-object/format";
 import { Verbose } from "./value-object/verbose";
 import { ChacaUtils } from "../utils";
+import { DatatypeModule } from "../../modules/datatype";
 
 export class ExportResolver {
   private config: Required<FileConfig>;
 
-  constructor(private readonly utils: ChacaUtils, config: FileConfig) {
+  constructor(
+    private readonly utils: ChacaUtils,
+    private readonly datatypeModule: DatatypeModule,
+    config: FileConfig,
+  ) {
     this.config = {
       filename: new FileName(config.filename).value(),
       format: new FileFormat(config.format).value(),
@@ -40,7 +45,7 @@ export class ExportResolver {
 
   async relational(schemas: DatasetSchema[]): Promise<string[]> {
     const gen = this.filterGenerator();
-    const resolver = new DatasetResolver({
+    const resolver = new DatasetResolver(this.utils, this.datatypeModule, {
       schemas: schemas,
       verbose: this.config.verbose,
     });

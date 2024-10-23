@@ -28,7 +28,10 @@ export type SexProps = {
 };
 
 export class PersonModule {
-  private readonly utils = new ChacaUtils();
+  constructor(
+    private readonly utils: ChacaUtils,
+    private readonly datatypeModule: DatatypeModule,
+  ) {}
 
   readonly constants = {
     jobLevels: JOBS.JOB_LEVELS,
@@ -50,8 +53,7 @@ export class PersonModule {
    * @returns string
    */
   language(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.constants.languages);
+    return this.utils.oneOfArray(this.constants.languages);
   }
 
   /**
@@ -60,8 +62,7 @@ export class PersonModule {
    * @returns string
    */
   jobLevel(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(JOBS.JOB_LEVELS);
+    return this.utils.oneOfArray(JOBS.JOB_LEVELS);
   }
 
   /**
@@ -70,8 +71,7 @@ export class PersonModule {
    * @returns string
    */
   jobArea(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(JOBS.JOBS_AREAS);
+    return this.utils.oneOfArray(JOBS.JOBS_AREAS);
   }
 
   /**
@@ -80,8 +80,7 @@ export class PersonModule {
    * @returns string
    */
   gender(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.constants.genders);
+    return this.utils.oneOfArray(this.constants.genders);
   }
 
   /**
@@ -90,8 +89,7 @@ export class PersonModule {
    * @returns `Male` | `Female`
    */
   sex(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(["Male", "Female"]);
+    return this.utils.oneOfArray(["Male", "Female"]);
   }
 
   /**
@@ -102,9 +100,7 @@ export class PersonModule {
    * @returns string
    */
   firstName({ language, sex }: NameProps = {}): string {
-    const utils = new ChacaUtils();
-
-    return utils.oneOfArray(
+    return this.utils.oneOfArray(
       this.filterBySex(this.filterNameByLanguage(language), sex),
     );
   }
@@ -116,9 +112,7 @@ export class PersonModule {
    * @returns string
    */
   lastName({ language }: LangugeProps = {}): string {
-    const utils = new ChacaUtils();
-
-    return utils.oneOfArray(this.filterNameByLanguage(language).lastNames);
+    return this.utils.oneOfArray(this.filterNameByLanguage(language).lastNames);
   }
 
   /**
@@ -131,19 +125,18 @@ export class PersonModule {
    * @returns string
    */
   fullName({ language, sex: isex }: NameProps = {}) {
-    const utils = new ChacaUtils();
-    const datatypeModule = new DatatypeModule();
-
     const lan = this.filterNameByLanguage(language);
 
-    const sex = isex ? isex : (utils.oneOfArray(["male", "female"]) as Sex);
+    const sex = isex
+      ? isex
+      : (this.utils.oneOfArray(["male", "female"]) as Sex);
 
-    const firstName = utils.oneOfArray(this.filterBySex(lan, sex));
-    const middleName = datatypeModule.boolean()
-      ? utils.oneOfArray(this.filterBySex(lan, sex))
+    const firstName = this.utils.oneOfArray(this.filterBySex(lan, sex));
+    const middleName = this.datatypeModule.boolean()
+      ? this.utils.oneOfArray(this.filterBySex(lan, sex))
       : undefined;
-    const lastNameFirst = utils.oneOfArray(lan.lastNames);
-    const lastNameSecond = utils.oneOfArray(lan.lastNames);
+    const lastNameFirst = this.utils.oneOfArray(lan.lastNames);
+    const lastNameSecond = this.utils.oneOfArray(lan.lastNames);
 
     const fullName = [
       firstName,
@@ -172,8 +165,6 @@ export class PersonModule {
    * @returns string
    */
   prefix({ sex: isex }: SexProps = {}) {
-    const utils = new ChacaUtils();
-
     const sex = isex ? isex : undefined;
     const all = [
       ...this.constants.prefixes.male,
@@ -182,14 +173,14 @@ export class PersonModule {
 
     if (sex) {
       if (sex === "male") {
-        return utils.oneOfArray(this.constants.prefixes.male);
+        return this.utils.oneOfArray(this.constants.prefixes.male);
       } else if (sex === "female") {
-        return utils.oneOfArray(this.constants.prefixes.female);
+        return this.utils.oneOfArray(this.constants.prefixes.female);
       } else {
-        return utils.oneOfArray(all);
+        return this.utils.oneOfArray(all);
       }
     } else {
-      return utils.oneOfArray(all);
+      return this.utils.oneOfArray(all);
     }
   }
 

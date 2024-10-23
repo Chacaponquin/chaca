@@ -24,8 +24,11 @@ export type FilenameProps = {
 const CRON_DAY_OF_WEEK = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
 export class SystemModule {
-  private readonly datatypeModule = new DatatypeModule();
-  private readonly utils = new ChacaUtils();
+  constructor(
+    private readonly utils: ChacaUtils,
+    private readonly datatypeModule: DatatypeModule,
+    private readonly wordModule: WordModule,
+  ) {}
 
   readonly constants = {
     fileExtensions: FILE_EXTENSIONS,
@@ -41,19 +44,16 @@ export class SystemModule {
    * @returns string
    */
   filename({ ext: iext }: FilenameProps = {}): string {
-    const datatypeModule = new DatatypeModule();
-    const wordModule = new WordModule();
-
     const ext =
       typeof iext === "string" && iext.length > 0 ? iext : this.fileExt();
 
-    const length = datatypeModule.int({ min: 1, max: 5 });
+    const length = this.datatypeModule.int({ min: 1, max: 5 });
 
     const arrayNames: string[] = Array.from({
       length: length,
-    }).map(() => wordModule.noun({ language: "en" }));
+    }).map(() => this.wordModule.noun({ language: "en" }));
 
-    return `${arrayNames.join("")}.${ext}`;
+    return `${arrayNames.join("_")}.${ext}`;
   }
 
   /**
@@ -62,8 +62,7 @@ export class SystemModule {
    * @returns string
    */
   mimeType(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(MIME_TYPES);
+    return this.utils.oneOfArray(MIME_TYPES);
   }
 
   /**
@@ -72,13 +71,11 @@ export class SystemModule {
    * @returns string
    */
   fileExt(): string {
-    const utils = new ChacaUtils();
-
     const all = [] as string[];
 
     Object.values(FILE_EXTENSIONS).forEach((values) => all.push(...values));
 
-    return utils.oneOfArray(all);
+    return this.utils.oneOfArray(all);
   }
 
   /**
@@ -87,14 +84,11 @@ export class SystemModule {
    * @returns string
    */
   directoryPath(): string {
-    const datatypeModule = new DatatypeModule();
-    const wordModule = new WordModule();
-
-    const countFolder = datatypeModule.int({ min: 1, max: 5 });
+    const countFolder = this.datatypeModule.int({ min: 1, max: 5 });
     const array = Array.from({ length: countFolder });
 
     for (let i = 0; i < array.length; i++) {
-      array[i] = wordModule.noun();
+      array[i] = this.wordModule.noun();
     }
 
     return array.join("/");

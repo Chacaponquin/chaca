@@ -47,6 +47,11 @@ export type DateBetweenProps = {
 };
 
 export class DateModule {
+  constructor(
+    private readonly datatypeModule: DatatypeModule,
+    private readonly utils: ChacaUtils,
+  ) {}
+
   readonly constants = {
     weekDays: WEEKDAYS,
     months: MONTHS,
@@ -63,12 +68,10 @@ export class DateModule {
    * modules.date.soon({ days: 10 }) // '2022-02-11T05:14:39.138Z'
    */
   soon({ days: idays, refDate: irefDate }: DateSoonProps = {}): Date {
-    const datatypeModule = new DatatypeModule();
-
     const days =
       typeof idays === "number" && idays > 0
         ? idays
-        : datatypeModule.int({ min: 1, max: 200 });
+        : this.datatypeModule.int({ min: 1, max: 200 });
 
     const refDate = this.argToDate(irefDate);
 
@@ -78,7 +81,7 @@ export class DateModule {
     };
 
     let future = refDate.getTime();
-    future += datatypeModule.int(range);
+    future += this.datatypeModule.int(range);
     refDate.setTime(future);
 
     return refDate;
@@ -97,12 +100,10 @@ export class DateModule {
    * @returns Date
    * */
   past({ refDate: irefDate, years: iyears }: DatePastProps = {}) {
-    const datatypeModule = new DatatypeModule();
-
     const years =
       typeof iyears === "number" && iyears > 0
         ? iyears
-        : datatypeModule.int({ min: 1, max: 10 });
+        : this.datatypeModule.int({ min: 1, max: 10 });
 
     const refDate = this.argToDate(irefDate);
 
@@ -112,7 +113,7 @@ export class DateModule {
     };
 
     let past = refDate.getTime();
-    past -= datatypeModule.int(range); // some time from now to N years ago, in milliseconds
+    past -= this.datatypeModule.int(range); // some time from now to N years ago, in milliseconds
     refDate.setTime(past);
 
     return refDate;
@@ -131,8 +132,6 @@ export class DateModule {
    * @returns Date
    */
   future({ refDate: irefDate, years: iyears }: DateFutureProps = {}) {
-    const datatypeModule = new DatatypeModule();
-
     const years = typeof iyears === "number" && iyears > 0 ? iyears : undefined;
 
     const refDate = this.argToDate(irefDate);
@@ -143,7 +142,7 @@ export class DateModule {
     };
 
     let future = refDate.getTime();
-    future += datatypeModule.int(range);
+    future += this.datatypeModule.int(range);
 
     const newDate = new Date();
     newDate.setTime(future);
@@ -157,8 +156,7 @@ export class DateModule {
    * @returns string
    */
   month(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(MONTHS);
+    return this.utils.oneOfArray(MONTHS);
   }
 
   /**
@@ -167,8 +165,7 @@ export class DateModule {
    * @returns string
    */
   weekDay(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(WEEKDAYS);
+    return this.utils.oneOfArray(WEEKDAYS);
   }
 
   /**
@@ -198,8 +195,6 @@ export class DateModule {
     min: imin,
     mode: imode,
   }: BirthDateProps = {}) {
-    const datatypeModule = new DatatypeModule();
-
     const refDate = this.argToDate(irefDate);
 
     const mode = imode === "age" || imode === "year" ? imode : "age";
@@ -218,14 +213,13 @@ export class DateModule {
       max = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);
     }
 
-    return new Date(datatypeModule.int({ min, max }));
+    return new Date(this.datatypeModule.int({ min, max }));
   }
 
   private randomDate(): Date {
-    const datatypeModule = new DatatypeModule();
-    const year = datatypeModule.int({ min: 1900, max: 2300 });
-    const month = datatypeModule.int({ min: 0, max: 11 });
-    const day = datatypeModule.int({ min: 1, max: 30 });
+    const year = this.datatypeModule.int({ min: 1900, max: 2300 });
+    const month = this.datatypeModule.int({ min: 0, max: 11 });
+    const day = this.datatypeModule.int({ min: 1, max: 30 });
 
     return new Date(year, month, day);
   }
@@ -242,8 +236,6 @@ export class DateModule {
    * @returns Date
    */
   between({ from: ifrom, to: ito }: DateBetweenProps = {}) {
-    const datatypeModule = new DatatypeModule();
-
     let from: Date;
     let to: Date;
 
@@ -269,7 +261,7 @@ export class DateModule {
 
     const fromMs = from.getTime();
     const toMs = to.getTime();
-    const dateOffset = datatypeModule.int({
+    const dateOffset = this.datatypeModule.int({
       min: 0,
       max: toMs - fromMs,
     });
@@ -284,46 +276,44 @@ export class DateModule {
    * @returns string
    */
   timeAgo({ unit: iunit }: TimeAgoProps = {}) {
-    const utils = new ChacaUtils();
-    const datatypeModule = new DatatypeModule();
-
     const units = ["years", "seconds", "minutes", "days", "hours"];
 
-    const unit = typeof iunit === "string" ? iunit : utils.oneOfArray(units);
+    const unit =
+      typeof iunit === "string" ? iunit : this.utils.oneOfArray(units);
 
     switch (unit) {
       case "days":
-        return `${datatypeModule.int({
+        return `${this.datatypeModule.int({
           min: 1,
           max: 30,
         })} ${unit} ago`;
       case "hours":
-        return `${datatypeModule.int({
+        return `${this.datatypeModule.int({
           min: 1,
           max: 23,
         })} ${unit} ago`;
       case "minutes":
-        return `${datatypeModule.int({
+        return `${this.datatypeModule.int({
           min: 1,
           max: 59,
         })} ${unit} ago`;
       case "seconds":
-        return `${datatypeModule.int({
+        return `${this.datatypeModule.int({
           min: 1,
           max: 59,
         })} ${unit} ago`;
       case "years":
-        return `${datatypeModule.int({
+        return `${this.datatypeModule.int({
           min: 1,
           max: 40,
         })} ${unit} ago`;
       case "months":
-        return `${datatypeModule.int({
+        return `${this.datatypeModule.int({
           min: 1,
           max: 11,
         })} ${unit} ago`;
       default:
-        return `${datatypeModule.int({
+        return `${this.datatypeModule.int({
           min: 1,
           max: 60,
         })} ${unit} ago`;

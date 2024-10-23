@@ -30,7 +30,7 @@ export type ParagraphsProps = {
 };
 
 export class LoremModule {
-  private readonly datatypeModule = new DatatypeModule();
+  constructor(private readonly datatypeModule: DatatypeModule) {}
 
   /**
    * @param args.paragraphsCount Number of paragraphs. Default `3`

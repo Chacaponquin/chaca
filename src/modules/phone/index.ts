@@ -12,6 +12,11 @@ export type NumberProps = {
 };
 
 export class PhoneModule {
+  constructor(
+    private readonly utils: ChacaUtils,
+    private readonly datatypeModule: DatatypeModule,
+  ) {}
+
   readonly constants = {
     phonePrefixs: PHONE_PREFIX,
   };
@@ -24,11 +29,9 @@ export class PhoneModule {
    * @returns string
    */
   number({ format: iformat }: NumberProps = {}): string {
-    const utils = new ChacaUtils();
-
     const format: string = iformat ? iformat : `${this.prefix()} ### ### ##`;
 
-    const number: string = utils.replaceSymbols(format);
+    const number: string = this.utils.replaceSymbols(format);
     return number;
   }
 
@@ -38,8 +41,7 @@ export class PhoneModule {
    * @returns string
    */
   prefix(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(PHONE_PREFIX.map((el) => el.code));
+    return this.utils.oneOfArray(PHONE_PREFIX.map((el) => el.code));
   }
 
   /**
@@ -54,8 +56,6 @@ export class PhoneModule {
    * @returns string
    */
   callDuration({ max: imax, min: imin }: CallDurationProps = {}): string {
-    const datatypeModule = new DatatypeModule();
-
     const min: number =
       typeof imin === "number" && imin >= 0 && imin < 60 ? imin : 0;
     const max: number =
@@ -63,12 +63,12 @@ export class PhoneModule {
         ? imax
         : 59;
 
-    const minutes = datatypeModule.int({
+    const minutes = this.datatypeModule.int({
       min,
       max,
     });
 
-    const seconds = datatypeModule.int({ min: 0, max: 59 });
+    const seconds = this.datatypeModule.int({ min: 0, max: 59 });
 
     const stringMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
     const stringSeconds = seconds < 10 ? `0${seconds}` : `${seconds}`;

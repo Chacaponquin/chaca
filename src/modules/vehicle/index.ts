@@ -2,6 +2,8 @@ import { ChacaUtils } from "../../core/utils";
 import { BICYCLE, FUEL, MANUFACTURER, MODEL, TYPE } from "./constants";
 
 export class VehicleModule {
+  constructor(private readonly utils: ChacaUtils) {}
+
   readonly constants = {
     bicycles: BICYCLE,
     fuels: FUEL,
@@ -16,8 +18,7 @@ export class VehicleModule {
    * @returns string
    */
   bicycle(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(BICYCLE);
+    return this.utils.oneOfArray(BICYCLE);
   }
 
   /**
@@ -26,8 +27,7 @@ export class VehicleModule {
    * @returns string
    */
   manufacturer(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(MANUFACTURER);
+    return this.utils.oneOfArray(MANUFACTURER);
   }
 
   /**
@@ -36,8 +36,7 @@ export class VehicleModule {
    * @returns string
    */
   model(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(MODEL);
+    return this.utils.oneOfArray(MODEL);
   }
 
   /**
@@ -46,8 +45,7 @@ export class VehicleModule {
    * @returns string
    */
   type(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(TYPE);
+    return this.utils.oneOfArray(TYPE);
   }
 
   /**
@@ -65,7 +63,6 @@ export class VehicleModule {
    * @returns string
    */
   fuel(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(FUEL);
+    return this.utils.oneOfArray(FUEL);
   }
 }

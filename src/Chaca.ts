@@ -21,9 +21,12 @@ import {
 } from "./core/fields/core/probability";
 import { PickField, PickFieldProps } from "./core/fields/core/pick";
 import { Dataset } from "./core/dataset";
+import { DatatypeModule } from "./modules/datatype";
 
 export class Chaca {
-  utils = new ChacaUtils();
+  constructor(private readonly datatypeModule: DatatypeModule) {}
+
+  readonly utils = new ChacaUtils();
 
   /**
    * @param input The object with the keys and type of each field
@@ -35,7 +38,7 @@ export class Chaca {
    * }
    */
   schema<K = any>(input: SchemaInput): Schema<K> {
-    const newSchema = new Schema<K>(input, this.utils);
+    const newSchema = new Schema<K>(input, this.utils, this.datatypeModule);
     return newSchema;
   }
 
@@ -118,7 +121,11 @@ export class Chaca {
    * Promise<string>
    */
   async export(data: any, config: FileConfig): Promise<string[]> {
-    const resolver = new ExportResolver(this.utils, config);
+    const resolver = new ExportResolver(
+      this.utils,
+      this.datatypeModule,
+      config,
+    );
     const route = await resolver.data(data);
 
     return route;
@@ -129,7 +136,7 @@ export class Chaca {
    * @param schemas Array with the schemas config
    */
   dataset<K = any>(schemas: DatasetSchema[]): Dataset<K> {
-    const dataset = new Dataset<K>(schemas, this.utils);
+    const dataset = new Dataset<K>(schemas, this.utils, this.datatypeModule);
     return dataset;
   }
 

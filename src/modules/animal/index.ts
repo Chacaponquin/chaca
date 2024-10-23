@@ -18,6 +18,8 @@ import {
 } from "./constants";
 
 export class AnimalModule {
+  constructor(private readonly utils: ChacaUtils) {}
+
   readonly constants = {
     animalTypes: ANIMAL_TYPE,
     bears: BEAR,
@@ -42,8 +44,7 @@ export class AnimalModule {
    * @returns string
    */
   dog(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(DOG);
+    return this.utils.oneOfArray(DOG);
   }
 
   /**
@@ -52,8 +53,7 @@ export class AnimalModule {
    * @returns string
    */
   bear(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(BEAR);
+    return this.utils.oneOfArray(BEAR);
   }
 
   /**
@@ -62,8 +62,7 @@ export class AnimalModule {
    * @returns string
    */
   bird(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(BIRD);
+    return this.utils.oneOfArray(BIRD);
   }
 
   /**
@@ -72,8 +71,7 @@ export class AnimalModule {
    * @returns string
    */
   cat(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(CAT);
+    return this.utils.oneOfArray(CAT);
   }
 
   /**
@@ -82,8 +80,7 @@ export class AnimalModule {
    * @returns string
    */
   cetacean(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(CETACEAN);
+    return this.utils.oneOfArray(CETACEAN);
   }
 
   /**
@@ -92,8 +89,7 @@ export class AnimalModule {
    * @returns string
    */
   cow(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(COW);
+    return this.utils.oneOfArray(COW);
   }
 
   /**
@@ -102,8 +98,7 @@ export class AnimalModule {
    * @returns string
    */
   crocodilia(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(CROCODILIA);
+    return this.utils.oneOfArray(CROCODILIA);
   }
 
   /**
@@ -112,8 +107,7 @@ export class AnimalModule {
    * @returns string
    */
   fish(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(FISH);
+    return this.utils.oneOfArray(FISH);
   }
 
   /**
@@ -122,8 +116,7 @@ export class AnimalModule {
    * @returns string
    */
   horse(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(HORSE);
+    return this.utils.oneOfArray(HORSE);
   }
 
   /**
@@ -132,8 +125,7 @@ export class AnimalModule {
    * @returns string
    */
   insect(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(INSECT);
+    return this.utils.oneOfArray(INSECT);
   }
 
   /**
@@ -142,8 +134,7 @@ export class AnimalModule {
    * @returns string
    */
   lion(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(LION);
+    return this.utils.oneOfArray(LION);
   }
 
   /**
@@ -152,8 +143,7 @@ export class AnimalModule {
    * @returns string
    */
   rabbit(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(RABBIT);
+    return this.utils.oneOfArray(RABBIT);
   }
 
   /**
@@ -162,8 +152,7 @@ export class AnimalModule {
    * @returns string
    */
   rodent(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(RODENT);
+    return this.utils.oneOfArray(RODENT);
   }
 
   /**
@@ -172,8 +161,7 @@ export class AnimalModule {
    * @returns string
    */
   snake(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(SNAKE);
+    return this.utils.oneOfArray(SNAKE);
   }
 
   /**
@@ -182,7 +170,6 @@ export class AnimalModule {
    * @returns string
    */
   type(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(ANIMAL_TYPE);
+    return this.utils.oneOfArray(ANIMAL_TYPE);
   }
 }

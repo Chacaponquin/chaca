@@ -60,7 +60,12 @@ type UsernameArgs = {
 };
 
 export class InternetModule {
-  private readonly datatypeModule = new DatatypeModule();
+  constructor(
+    private readonly datatypeModule: DatatypeModule,
+    private readonly utils: ChacaUtils,
+    private readonly personModule: PersonModule,
+    private readonly wordModule: WordModule,
+  ) {}
 
   readonly constants = {
     emojis: EMOJIS,
@@ -83,8 +88,7 @@ export class InternetModule {
    * @returns string
    */
   browser(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.constants.browsers);
+    return this.utils.oneOfArray(this.constants.browsers);
   }
 
   /**
@@ -96,8 +100,7 @@ export class InternetModule {
    * @returns string
    */
   oauthProvider(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.constants.oauthProviders);
+    return this.utils.oneOfArray(this.constants.oauthProviders);
   }
 
   /**
@@ -109,8 +112,7 @@ export class InternetModule {
    * @returns string
    */
   locale(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.constants.locales);
+    return this.utils.oneOfArray(this.constants.locales);
   }
 
   /**
@@ -122,8 +124,7 @@ export class InternetModule {
    * @returns string
    */
   emailProvider(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.constants.emailProviders);
+    return this.utils.oneOfArray(this.constants.emailProviders);
   }
 
   /**
@@ -139,11 +140,9 @@ export class InternetModule {
    * @returns string
    */
   email({ firstName, lastName, provider: iprovider }: EmailArgs = {}): string {
-    const utils = new ChacaUtils();
-
     const provider = iprovider
       ? iprovider
-      : utils.oneOfArray(this.constants.emailProviders);
+      : this.utils.oneOfArray(this.constants.emailProviders);
 
     const username = this.username({
       firstName: firstName,
@@ -179,8 +178,6 @@ export class InternetModule {
     pattern: ipattern,
     prefix: iprefix,
   }: PasswordArgs = {}): string {
-    const datatypeModule = new DatatypeModule();
-
     const vowel = /[aeiouAEIOU]$/;
     const consonant = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]$/;
 
@@ -208,7 +205,7 @@ export class InternetModule {
         }
       }
 
-      const n = datatypeModule.int({ min: 0, max: 94 }) + 33;
+      const n = this.datatypeModule.int({ min: 0, max: 94 }) + 33;
       let char = String.fromCharCode(n);
 
       if (memorable) {
@@ -255,21 +252,17 @@ export class InternetModule {
     firstName: ifirstName,
     lastName: ilastName,
   }: UsernameArgs = {}): string {
-    const datatypeModule = new DatatypeModule();
-    const personModule = new PersonModule();
-    const utils = new ChacaUtils();
-
     const firstName = ifirstName
-      ? utils.camelCase(ifirstName)
-      : personModule.firstName({ language: "en" });
-    const lastName = ilastName ? utils.camelCase(ilastName) : "";
+      ? this.utils.camelCase(ifirstName)
+      : this.personModule.firstName({ language: "en" });
+    const lastName = ilastName ? this.utils.camelCase(ilastName) : "";
 
-    const ran = datatypeModule.int({ min: 0, max: 3 });
+    const ran = this.datatypeModule.int({ min: 0, max: 3 });
 
     const genNumbers = (): string => {
-      const countNumbers = datatypeModule.int({ min: 1, max: 5 });
+      const countNumbers = this.datatypeModule.int({ min: 1, max: 5 });
 
-      return utils.replaceSymbols(
+      return this.utils.replaceSymbols(
         Array.from({ length: countNumbers })
           .map(() => "#")
           .join(""),
@@ -277,12 +270,12 @@ export class InternetModule {
     };
 
     const genSymbol = (): string => {
-      return utils.oneOfArray([".", "-", "_"]);
+      return this.utils.oneOfArray([".", "-", "_"]);
     };
 
     let result: string;
     if (ran === 0) {
-      const numbers = utils.replaceSymbols(genNumbers());
+      const numbers = this.utils.replaceSymbols(genNumbers());
       result = `${firstName}${lastName}${numbers}`;
     } else if (ran === 1) {
       const symbol = genSymbol();
@@ -307,8 +300,7 @@ export class InternetModule {
    * @returns `GET` | `PATCH` | `DELETE` | `POST` | `PUT`
    */
   httpMethod(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(HTTP_METHODS);
+    return this.utils.oneOfArray(HTTP_METHODS);
   }
 
   /**
@@ -317,12 +309,10 @@ export class InternetModule {
    * @returns string
    */
   ipv6(): string {
-    const utils = new ChacaUtils();
-
     const randHash = () => {
       let result = "";
       for (let i = 0; i < 4; i++) {
-        result += utils.oneOfArray([
+        result += this.utils.oneOfArray([
           "0",
           "1",
           "2",
@@ -358,12 +348,10 @@ export class InternetModule {
    * @returns string
    */
   ipv4(): string {
-    const datatypeModule = new DatatypeModule();
-
     let retString = "";
 
     for (let i = 1; i <= 4; i++) {
-      const val = datatypeModule.int({ max: 255, min: 0 });
+      const val = this.datatypeModule.int({ max: 255, min: 0 });
 
       if (i === 4) {
         retString += `${val}`;
@@ -414,18 +402,15 @@ export class InternetModule {
    * @returns string
    */
   mac(): string {
-    const utils = new ChacaUtils();
-    const datatypeModule = new DatatypeModule();
-
     let retString = "";
 
-    const lowerCharacters = datatypeModule.constants.lowerCharacters;
+    const lowerCharacters = this.datatypeModule.constants.lowerCharacters;
     const numbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
     for (let i = 1; i <= 6; i++) {
       for (let j = 1; j <= 2; j++) {
         retString += `${String(
-          utils.oneOfArray([...numbers, ...lowerCharacters]),
+          this.utils.oneOfArray([...numbers, ...lowerCharacters]),
         )}`;
       }
 
@@ -442,8 +427,7 @@ export class InternetModule {
    * @returns string
    */
   port(): number {
-    const datatypeModule = new DatatypeModule();
-    return datatypeModule.int({ min: 0, max: 65535 });
+    return this.datatypeModule.int({ min: 0, max: 65535 });
   }
 
   /**
@@ -452,7 +436,7 @@ export class InternetModule {
    * @returns string
    */
   userAgent(): string {
-    return GenerateUserAgent();
+    return GenerateUserAgent(this.datatypeModule, this.utils);
   }
 
   /**
@@ -481,19 +465,15 @@ export class InternetModule {
    * @returns string
    */
   domainName(): string {
-    const utils = new ChacaUtils();
-    const wordModule = new WordModule();
-    const datatypeModule = new DatatypeModule();
-
-    const name: string = wordModule.noun({ language: "en" });
-    const tale = datatypeModule.boolean();
+    const name: string = this.wordModule.noun({ language: "en" });
+    const tale = this.datatypeModule.boolean();
 
     if (tale) {
-      const t = utils.oneOfArray([
+      const t = this.utils.oneOfArray([
         "info",
-        wordModule.adjective({ language: "en" }),
+        this.wordModule.adjective({ language: "en" }),
       ]);
-      const sep = utils.oneOfArray([".", "-"]);
+      const sep = this.utils.oneOfArray([".", "-"]);
 
       return `${name}${sep}${t}`;
     } else {
@@ -507,11 +487,11 @@ export class InternetModule {
    * @returns string
    */
   httpStatusCode(): number {
-    const utils = new ChacaUtils();
+    const sel = this.utils.oneOfArray(
+      Object.keys(HTTP_STATUS),
+    ) as keyof HttpStatus;
 
-    const sel = utils.oneOfArray(Object.keys(HTTP_STATUS)) as keyof HttpStatus;
-
-    return utils.oneOfArray(HTTP_STATUS[sel]);
+    return this.utils.oneOfArray(HTTP_STATUS[sel]);
   }
 
   /**

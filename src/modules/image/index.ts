@@ -13,8 +13,10 @@ interface CategoryProps {
 }
 
 export class ImageModule {
-  private readonly datatypeModule = new DatatypeModule();
-  private readonly wordModule = new WordModule();
+  constructor(
+    private readonly datatypeModule: DatatypeModule,
+    private readonly wordModule: WordModule,
+  ) {}
 
   private buildUrl(
     category: string = this.wordModule.noun({ language: "en" }),

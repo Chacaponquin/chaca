@@ -32,9 +32,6 @@ interface CreateSolutionNodeProps {
 }
 
 export class SchemaResolver<K = any> {
-  private readonly utils = new ChacaUtils();
-  private readonly datatypeModule = new DatatypeModule();
-
   private readonly subFieldsCreator: SubFieldsCreator;
 
   private inputTree: ChacaInputTree | null = null;
@@ -51,13 +48,17 @@ export class SchemaResolver<K = any> {
 
   private consoleVerbose = false;
 
-  constructor({
-    consoleVerbose,
-    countDoc,
-    schemaIndex,
-    name,
-    schemaObject,
-  }: SchemaResolverProps) {
+  constructor(
+    private readonly utils: ChacaUtils,
+    private readonly datatypeModule: DatatypeModule,
+    {
+      consoleVerbose,
+      countDoc,
+      schemaIndex,
+      name,
+      schemaObject,
+    }: SchemaResolverProps,
+  ) {
     this.name = new SchemaName(name).value();
     this.schemaObject = schemaObject;
     this.resultTree = new ChacaResultTree<K>(this.name);

@@ -1,6 +1,8 @@
 import { ChacaError } from "../../errors";
+import { DatatypeModule } from "../../modules/datatype";
 import { InputTreeNode, KeyValueNode, RefValueNode } from "../input-tree/core";
 import { SchemaResolver } from "../schema-resolver";
+import { ChacaUtils } from "../utils";
 import { DatasetSchema } from "./interfaces/resolver";
 
 interface Props {
@@ -12,7 +14,11 @@ export class DatasetResolver<K = any> {
   private resolvers: SchemaResolver[] = [];
   private readonly verbose: boolean;
 
-  constructor({ schemas, verbose }: Props) {
+  constructor(
+    private readonly utils: ChacaUtils,
+    private readonly datatypeModule: DatatypeModule,
+    { schemas, verbose }: Props,
+  ) {
     this.verbose = verbose;
     this.createSchemaResolvers(schemas);
     this.validateNotRepeatSchemaNames(schemas);
@@ -46,7 +52,7 @@ export class DatasetResolver<K = any> {
   private createSchemaResolvers(schemas: DatasetSchema[]): void {
     this.resolvers = schemas.map((schema, schemaIndex) => {
       if (typeof schema === "object" && schema !== null) {
-        return new SchemaResolver({
+        return new SchemaResolver(this.utils, this.datatypeModule, {
           name: schema.name,
           schemaObject: schema.schema.getSchemaObject(),
           countDoc: schema.documents,

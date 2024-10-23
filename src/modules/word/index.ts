@@ -8,6 +8,8 @@ export type WordProps = {
 };
 
 export class WordModule {
+  constructor(private readonly utils: ChacaUtils) {}
+
   readonly constants = { words: WORDS };
 
   /**
@@ -17,8 +19,7 @@ export class WordModule {
    * @returns string
    */
   adjective(args?: WordProps): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.filterWords(args?.language).adjectives);
+    return this.utils.oneOfArray(this.filterWords(args?.language).adjectives);
   }
 
   /**
@@ -28,8 +29,7 @@ export class WordModule {
    * @returns string
    */
   conjuction(args?: WordProps): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.filterWords(args?.language).conjuctions);
+    return this.utils.oneOfArray(this.filterWords(args?.language).conjuctions);
   }
 
   /**
@@ -39,8 +39,9 @@ export class WordModule {
    * @returns string
    */
   interjection(args?: WordProps): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.filterWords(args?.language).interjections);
+    return this.utils.oneOfArray(
+      this.filterWords(args?.language).interjections,
+    );
   }
 
   /**
@@ -50,8 +51,7 @@ export class WordModule {
    * @returns string
    */
   preposition(args?: WordProps): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.filterWords(args?.language).prepositions);
+    return this.utils.oneOfArray(this.filterWords(args?.language).prepositions);
   }
 
   /**
@@ -61,8 +61,7 @@ export class WordModule {
    * @returns string
    */
   adverb(args?: WordProps): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.filterWords(args?.language).adverbs);
+    return this.utils.oneOfArray(this.filterWords(args?.language).adverbs);
   }
 
   /**
@@ -72,8 +71,7 @@ export class WordModule {
    * @returns string
    */
   verb(args?: WordProps): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.filterWords(args?.language).verbs);
+    return this.utils.oneOfArray(this.filterWords(args?.language).verbs);
   }
 
   /**
@@ -83,8 +81,7 @@ export class WordModule {
    * @returns string
    */
   noun(args?: WordProps): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.filterWords(args?.language).nouns);
+    return this.utils.oneOfArray(this.filterWords(args?.language).nouns);
   }
 
   private filterWords(lan: Languages | undefined): ILanguageWord {

@@ -104,10 +104,10 @@ const LANGUAGES = [
   "ZH",
 ];
 
-export function GenerateUserAgent(): string {
-  const datatypeModule = new DatatypeModule();
-  const utils = new ChacaUtils();
-
+export function GenerateUserAgent(
+  datatypeModule: DatatypeModule,
+  utils: ChacaUtils,
+): string {
   const weightedKeyFromObject = <T extends Record<string, number>>(
     obj: T,
   ): keyof T => {
