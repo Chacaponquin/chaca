@@ -58,7 +58,7 @@ describe("datatype.float", () => {
       expect(
         allValues.every((v) => {
           const str = String(v);
-          const [_, float] = str.split(".");
+          const float = str.split(".")[1];
 
           return float.length >= 1;
         }),

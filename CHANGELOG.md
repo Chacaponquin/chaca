@@ -62,6 +62,7 @@
 - 🎉 Added `datatype.octal`
 - 🎉 Added `datatype.numeric`
 - 🎉 Added `datatype.bigInt`
+- 🎉 Added `datatype.character`
 - 🎉 Added `id.nanoid`
 - 🎉 Added `id.ulid`
 - 🎉 Added `id.cuid`

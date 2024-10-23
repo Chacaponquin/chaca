@@ -67,9 +67,13 @@ export type MatrixProps = {
   precision?: number;
 };
 
+export type CharacterProps = {
+  case?: Case;
+};
+
 export type CharactersProps = {
   length?: number;
-  case?: "lower" | "upper";
+  case?: Case;
 };
 
 export class DatatypeModule {
@@ -193,7 +197,7 @@ export class DatatypeModule {
     let range: number;
     if (typeof max === "number" && typeof min === "number") {
       if (min > max) {
-        throw new ChacaError(``);
+        throw new ChacaError(`Max ${max} should be greater than min ${min}.`);
       }
 
       range = max - min;
@@ -262,7 +266,9 @@ export class DatatypeModule {
     const characters = ["A", "B", "C", "D", "E", "F", "G"];
 
     const length =
-      ilength && ilength > 0 ? ilength : this.int({ min: 5, max: 10 });
+      typeof ilength === "number" && ilength >= 0
+        ? ilength
+        : this.int({ min: 5, max: 10 });
     const c = icase ? icase : "mixed";
 
     let ret = "";
@@ -328,9 +334,25 @@ export class DatatypeModule {
   }
 
   /**
+   * Returns a character
    *
-   * @param args.length Length of characters. Default `1`
-   * @param args.case Case of the characters (`lower` or `upper`)
+   * @param args.case Case of the characters (`lower`, `upper` or `mixed`)
+   *
+   * @example
+   * modules.datatype.character() // 'c'
+   * modules.datatype.character({ case: 'upper' }) // "H"
+   *
+   * @returns string
+   */
+  character({ case: icase = "mixed" }: CharacterProps = {}): string {
+    return this.characters({ length: 1, case: icase });
+  }
+
+  /**
+   * Returns a series of characters
+   *
+   * @param args.length Length of characters.
+   * @param args.case Case of the characters (`lower`, `upper` or `mixed`)
    *
    * @example
    * modules.datatype.characters() // 'v'
@@ -339,15 +361,13 @@ export class DatatypeModule {
    *
    * @returns string
    */
-  characters({
-    case: icase = "lower",
-    length = 10,
-  }: CharactersProps = {}): string {
-    const utils = new ChacaUtils();
+  characters({ case: icase = "mixed", length }: CharactersProps = {}): string {
+    const len =
+      typeof length === "number" && length >= 0
+        ? length
+        : this.int({ min: 5, max: 10 });
 
-    const len = length > 0 ? length : undefined;
-
-    let charactersToRet;
+    let charactersToRet: string[];
 
     if (icase) {
       if (icase === "lower") {
@@ -361,16 +381,12 @@ export class DatatypeModule {
       charactersToRet = this.constants.mixedCharacters;
     }
 
-    if (len) {
-      let ret = "";
-      for (let i = 1; i <= len; i++) {
-        ret = ret.concat(utils.oneOfArray(charactersToRet));
-      }
-
-      return ret;
-    } else {
-      return utils.oneOfArray(charactersToRet);
+    let ret = "";
+    for (let i = 1; i <= len; i++) {
+      ret = ret.concat(this.utils.oneOfArray(charactersToRet));
     }
+
+    return ret;
   }
 
   /**
@@ -387,7 +403,10 @@ export class DatatypeModule {
   }: BinaryCodeProps = {}): string {
     const utils = new ChacaUtils();
 
-    const length = ilength > 0 ? ilength : this.int({ min: 4, max: 8 });
+    const length =
+      typeof ilength === "number" && ilength >= 0
+        ? ilength
+        : this.int({ min: 4, max: 8 });
 
     let ret = prefix;
 
