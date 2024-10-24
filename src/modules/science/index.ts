@@ -1,8 +1,5 @@
 import { ChacaUtils } from "../../core/utils";
-import {
-  PERIODIC_TABLE_ELEMETNS,
-  PERIODIC_TABLE_SYMBOLS,
-} from "./constants/periodicTable";
+import { PERIODIC_TABLE_ELEMENTS } from "./constants/periodic-table";
 import { UNITS } from "./constants/units";
 
 export type PeriodicTableProps = {
@@ -18,8 +15,7 @@ export class ScienceModule {
 
   readonly constants = {
     units: UNITS,
-    periodicTableElements: PERIODIC_TABLE_ELEMETNS,
-    periodicTableSymbols: PERIODIC_TABLE_SYMBOLS,
+    periodicTableElements: PERIODIC_TABLE_ELEMENTS,
   };
 
   /**
@@ -33,10 +29,14 @@ export class ScienceModule {
    */
   periodicTableElement({ type = "name" }: PeriodicTableProps = {}): string {
     if (type === "name") {
-      return this.utils.oneOfArray(PERIODIC_TABLE_SYMBOLS);
+      return this.utils.oneOfArray(
+        this.constants.periodicTableElements.map((e) => e.name),
+      );
     }
 
-    return this.utils.oneOfArray(PERIODIC_TABLE_ELEMETNS);
+    return this.utils.oneOfArray(
+      this.constants.periodicTableElements.map((e) => e.symbol),
+    );
   }
 
   /**
