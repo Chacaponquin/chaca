@@ -1,47 +1,46 @@
 import { ChacaError, modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-const TEST_COUNT_VALUES = 1000;
+const VALUES_LIMIT = 1000;
 
-describe("# Date between test", () => {
+describe("date.between", () => {
   const initDate = new Date(2000, 1, 10);
   const finishDate = new Date(2020, 2, 30);
 
-  it("With two logical dates", () => {
-    const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.between({ from: initDate, to: finishDate }),
-    );
+  it("without arguments. should return a date", () => {
+    const value = modules.date.between();
 
-    expect(
-      allDates.every(
-        (d) =>
-          initDate.getTime() <= d.getTime() &&
-          d.getTime() <= finishDate.getTime(),
-      ),
-    ).toBe(true);
+    expect(value).instanceOf(Date);
   });
 
-  it("Init date greater than from date. Should throw an error", () => {
+  it("from = initDate & to = finishDate", () => {
+    for (let index = 0; index < VALUES_LIMIT; index++) {
+      const value = modules.date.between({ from: initDate, to: finishDate });
+
+      expect(value.getTime()).toBeGreaterThanOrEqual(initDate.getTime());
+      expect(value.getTime()).toBeLessThanOrEqual(finishDate.getTime());
+    }
+  });
+
+  it("from = finishDate & to = initDate. should throw an error", () => {
     expect(() => {
       modules.date.between({ from: finishDate, to: initDate });
     }).toThrow(ChacaError);
   });
 
-  it("Pass only from date", () => {
-    const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.between({ from: initDate }),
-    );
+  it("from = initDate. should return a Date greater than initDate", () => {
+    for (let index = 0; index < VALUES_LIMIT; index++) {
+      const value = modules.date.between({ from: initDate });
 
-    expect(allDates.every((d) => initDate.getTime() <= d.getTime())).toBe(true);
+      expect(initDate.getTime()).toBeLessThanOrEqual(value.getTime());
+    }
   });
 
-  it("Pass only to date", () => {
-    const allDates = Array.from({ length: TEST_COUNT_VALUES }).map((v) =>
-      modules.date.between({ to: initDate }),
-    );
+  it("to = finishDate. should return a Date less than finishDate", () => {
+    for (let index = 0; index < VALUES_LIMIT; index++) {
+      const value = modules.date.between({ to: finishDate });
 
-    expect(allDates.every((d) => d.getTime() <= finishDate.getTime())).toBe(
-      true,
-    );
+      expect(value.getTime()).toBeLessThanOrEqual(finishDate.getTime());
+    }
   });
 });

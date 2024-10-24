@@ -69,7 +69,7 @@ export class DateModule {
    */
   soon({ days: idays, refDate: irefDate }: DateSoonProps = {}): Date {
     const days =
-      typeof idays === "number" && idays > 0
+      typeof idays === "number" && idays >= 0
         ? idays
         : this.datatypeModule.int({ min: 1, max: 200 });
 
@@ -101,7 +101,7 @@ export class DateModule {
    * */
   past({ refDate: irefDate, years: iyears }: DatePastProps = {}) {
     const years =
-      typeof iyears === "number" && iyears > 0
+      typeof iyears === "number" && iyears >= 0
         ? iyears
         : this.datatypeModule.int({ min: 1, max: 10 });
 
@@ -132,7 +132,8 @@ export class DateModule {
    * @returns Date
    */
   future({ refDate: irefDate, years: iyears }: DateFutureProps = {}) {
-    const years = typeof iyears === "number" && iyears > 0 ? iyears : undefined;
+    const years =
+      typeof iyears === "number" && iyears >= 0 ? iyears : undefined;
 
     const refDate = this.argToDate(irefDate);
 
@@ -251,7 +252,7 @@ export class DateModule {
         from = this.argToDate(ifrom);
         to = this.future({ refDate: from });
       } else if (!(ifrom instanceof Date) && ito instanceof Date) {
-        to = ito as Date;
+        to = ito;
         from = this.past({ refDate: to });
       } else {
         from = this.randomDate();
