@@ -1,4 +1,4 @@
-import { ILanguageWord } from ".";
+import { ILanguageWord } from "./words";
 
 export const ENGLISH_WORDS: ILanguageWord = {
   verbs: [

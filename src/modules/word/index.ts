@@ -1,5 +1,5 @@
 import { ChacaUtils } from "../../core/utils";
-import { ILanguageWord, WORDS } from "./constants";
+import { ILanguageWord, WORDS } from "./core/words";
 
 export type Languages = "es" | "en";
 
