@@ -18,14 +18,18 @@ export class PhoneModule {
   ) {}
 
   readonly constants = {
-    phonePrefixs: PHONE_PREFIX,
+    phonePrefixs: PHONE_PREFIX.map((p) => p.code),
   };
 
   /**
    * Returns a phone number
+   *
    * @param args.format Format of the phone number
+   *
    * @example
-   * modules.phone.number({ format: '+53 #### ## ##' }) // '+53 5417 35 99'
+   * modules.phone.number({ format: '+53 #### ## ##' }) // '+53 5417 98 99'
+   * modules.phone.number() // '+1 234 498 37'
+   *
    * @returns string
    */
   number({ format: iformat }: NumberProps = {}): string {
@@ -41,7 +45,7 @@ export class PhoneModule {
    * @returns string
    */
   prefix(): string {
-    return this.utils.oneOfArray(PHONE_PREFIX.map((el) => el.code));
+    return this.utils.oneOfArray(this.constants.phonePrefixs);
   }
 
   /**

@@ -44,6 +44,7 @@ export class PersonModule {
     languages: LANGUAGES,
     prefixes: PREFIXES,
     zodiacSigns: ZODIAC_SIGN,
+    sexs: ["Male", "Female"],
   };
 
   /**
@@ -89,7 +90,7 @@ export class PersonModule {
    * @returns `Male` | `Female`
    */
   sex(): string {
-    return this.utils.oneOfArray(["Male", "Female"]);
+    return this.utils.oneOfArray(this.constants.sexs);
   }
 
   /**
