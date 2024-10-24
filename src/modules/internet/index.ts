@@ -3,7 +3,7 @@ import { EMOJIS } from "./constants/emojis";
 import { DOMAIN_SUFFIX } from "./constants/domainSuffix";
 import { HTTP_STATUS } from "./constants/httpStatus";
 import { HTTP_METHODS } from "./constants/http_method";
-import { GenerateUserAgent } from "./helpers/user-agent";
+import { GenerateUserAgent } from "./core/user-agent";
 import { PersonModule } from "../person";
 import { PROTOCOL } from "./constants/protocol";
 import { OAUTH_PROVIDER } from "./constants/oauth";
@@ -12,6 +12,7 @@ import { EMAIL_PROVIDER } from "./constants/email_provider";
 import { BROWSERS } from "./constants/browser";
 import { DatatypeModule } from "../datatype";
 import { WordModule } from "../word";
+import { Password } from "./core/password";
 
 export type HttpStatus = {
   informational: number[];
@@ -60,12 +61,19 @@ type UsernameArgs = {
 };
 
 export class InternetModule {
+  private readonly passwordCreator: Password;
+
   constructor(
     private readonly datatypeModule: DatatypeModule,
     private readonly utils: ChacaUtils,
     private readonly personModule: PersonModule,
     private readonly wordModule: WordModule,
-  ) {}
+  ) {
+    const vowel = /[aeiouAEIOU]$/;
+    const consonant = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]$/;
+
+    this.passwordCreator = new Password(this.datatypeModule, consonant, vowel);
+  }
 
   readonly constants = {
     emojis: EMOJIS,
@@ -178,55 +186,23 @@ export class InternetModule {
     pattern: ipattern,
     prefix: iprefix,
   }: PasswordArgs = {}): string {
-    const vowel = /[aeiouAEIOU]$/;
-    const consonant = /[bcdfghjklmnpqrstvwxyzBCDFGHJKLMNPQRSTVWXYZ]$/;
-
     const len = length && length > 0 ? length : 15;
     const memorable = imemorable ? imemorable : false;
-    const pattern = ipattern instanceof RegExp ? ipattern : consonant;
+    const pattern =
+      ipattern instanceof RegExp ? ipattern : this.passwordCreator.consonants;
     const prefix = iprefix ? iprefix : "";
 
-    const _password = (
-      length: number,
-      memorable: boolean,
-      i_pattern: RegExp,
-      prefix: string,
-    ): string => {
-      if (prefix.length >= length) {
-        return prefix;
-      }
-
-      let pattern: RegExp = i_pattern;
-      if (memorable) {
-        if (prefix.match(consonant)) {
-          pattern = vowel;
-        } else {
-          pattern = consonant;
-        }
-      }
-
-      const n = this.datatypeModule.int({ min: 0, max: 94 }) + 33;
-      let char = String.fromCharCode(n);
-
-      if (memorable) {
-        char = char.toLowerCase();
-      }
-
-      if (!char.match(pattern)) {
-        return _password(length, memorable, pattern, prefix);
-      }
-
-      return _password(length, memorable, pattern, prefix + char);
-    };
-
-    return _password(len, memorable, pattern, prefix);
+    return this.passwordCreator.execute(len, memorable, pattern, prefix);
   }
 
   /**
    * Returns a string with a web url
+   *
    * @example
    * modules.internet.url() // 'http://words.info.net'
-   * @param args.secure Boolean that indicates if the url has a secure protocol or not
+   *
+   * @param args.secure The url has a secure protocol or not
+   *
    * @returns
    */
   url({ secure }: UrlArgs = {}): string {
@@ -241,11 +217,14 @@ export class InternetModule {
 
   /**
    * Returns a profile user name
+   *
    * @param args.firstName owner first name
    * @param args.lastName owner last name
+   *
    * @example
    * modules.internet.username() // 'juan527134'
    * modules.internet.username({ firstName: 'pedro', lastName: 'Scott' }) // 'pedro_scott'
+   *
    * @returns string
    */
   username({
@@ -311,6 +290,7 @@ export class InternetModule {
   ipv6(): string {
     const randHash = () => {
       let result = "";
+
       for (let i = 0; i < 4; i++) {
         result += this.utils.oneOfArray([
           "0",
@@ -344,7 +324,9 @@ export class InternetModule {
 
   /**
    * Returns a IPv4 address.
+   *
    * @example modules.internet.ipv4() // '245.108.222.0'
+   *
    * @returns string
    */
   ipv4(): string {
@@ -445,8 +427,7 @@ export class InternetModule {
    * @returns string
    */
   protocol(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(this.constants.protocols);
+    return this.utils.oneOfArray(this.constants.protocols);
   }
 
   /**
@@ -455,8 +436,7 @@ export class InternetModule {
    * @returns string
    */
   domainSuffix(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(DOMAIN_SUFFIX);
+    return this.utils.oneOfArray(DOMAIN_SUFFIX);
   }
 
   /**

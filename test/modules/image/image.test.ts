@@ -1,98 +1,93 @@
 import { modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-describe("# Image module tests", () => {
-  it("Animal test", () => {
+describe("image modules", () => {
+  it("image.animal", () => {
     const value = modules.image.animal();
     expect(typeof value).toBe("string");
   });
 
-  it("3D test", () => {
+  it("image.threeDimension", () => {
     const value = modules.image.threeDimension();
     expect(typeof value).toBe("string");
   });
 
-  it("Animate avatar test", () => {
+  it("image.animatedAvatar", () => {
     const value = modules.image.animatedAvatar();
     expect(typeof value).toBe("string");
   });
 
-  it("Architecture test", () => {
+  it("image.architecture", () => {
     const value = modules.image.architecture();
     expect(typeof value).toBe("string");
   });
 
-  it("Art test", () => {
+  it("image.art", () => {
     const value = modules.image.art();
     expect(typeof value).toBe("string");
   });
 
-  it("Event test", () => {
+  it("image.event", () => {
     const value = modules.image.event();
     expect(typeof value).toBe("string");
   });
 
-  it("Fashion test", () => {
+  it("image.fashion", () => {
     const value = modules.image.fashion();
     expect(typeof value).toBe("string");
   });
 
-  it("Fashion test", () => {
-    const value = modules.image.fashion();
-    expect(typeof value).toBe("string");
-  });
-
-  it("Film test", () => {
+  it("image.film", () => {
     const value = modules.image.film();
     expect(typeof value).toBe("string");
   });
 
-  it("Food test", () => {
+  it("image.food", () => {
     const value = modules.image.food();
     expect(typeof value).toBe("string");
   });
 
-  it("Health test", () => {
+  it("image.health", () => {
     const value = modules.image.health();
     expect(typeof value).toBe("string");
   });
 
-  it("History test", () => {
+  it("image.history", () => {
     const value = modules.image.history();
     expect(typeof value).toBe("string");
   });
 
-  it("Nature test", () => {
+  it("image.nature", () => {
     const value = modules.image.nature();
     expect(typeof value).toBe("string");
   });
 
-  it("People test", () => {
+  it("image.people", () => {
     const value = modules.image.people();
     expect(typeof value).toBe("string");
   });
 
-  it("Spiritual test", () => {
+  it("image.spiritual", () => {
     const value = modules.image.spiritual();
     expect(typeof value).toBe("string");
   });
 
-  it("Sport test", () => {
+  it("image.sport", () => {
     const value = modules.image.sport();
     expect(typeof value).toBe("string");
   });
 
-  it("Street test", () => {
+  it("image.street", () => {
     const value = modules.image.street();
     expect(typeof value).toBe("string");
   });
 
-  it("Travel test", () => {
+  it("image.travel", () => {
     const value = modules.image.travel();
     expect(typeof value).toBe("string");
   });
 
-  it("Wallpaper test", () => {
+  it("image.wallpaper", () => {
     const value = modules.image.wallpaper();
     expect(typeof value).toBe("string");
   });
