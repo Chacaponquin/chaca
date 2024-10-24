@@ -11,7 +11,8 @@ import {
 } from "../../fields/core";
 import { CustomField } from "../../fields/core/custom";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
-import { FieldIsArray, FieldPossibleNull } from "../value-object";
+import { FieldIsArray } from "../value-object/array";
+import { FieldPossibleNull } from "../value-object/possible-null";
 
 export type FieldTypes<R = any> =
   | CustomField<any, R>

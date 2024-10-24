@@ -29,7 +29,7 @@ import {
 } from "../interfaces/schema";
 import { FieldIsArray } from "./array";
 import { FieldPossibleNull } from "./possible-null";
-import { InputKeyField } from "./key";
+import { InputKeyField } from "./input-key";
 
 interface Filter {
   config?: FieldTypes;
