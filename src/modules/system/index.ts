@@ -1,16 +1,8 @@
 import { ChacaUtils } from "../../core/utils";
-import { MIME_TYPES } from "./constants/mimeTypes";
-import { FILE_EXTENSIONS } from "./constants/fileExtensions";
+import { MIME_TYPES } from "./constants/mime-types";
+import { FILE_EXTENSIONS } from "./constants/file-extensions";
 import { WordModule } from "../word";
 import { DatatypeModule } from "../datatype";
-
-export type FileExtensions = {
-  audio: string[];
-  code: string[];
-  data: string[];
-  video: string[];
-  photo: string[];
-};
 
 export interface CronProps {
   includeYear?: boolean;
@@ -53,7 +45,7 @@ export class SystemModule {
       length: length,
     }).map(() => this.wordModule.noun({ language: "en" }));
 
-    return `${arrayNames.join("_")}.${ext}`;
+    return `${arrayNames.join("_")}${ext}`;
   }
 
   /**
@@ -71,16 +63,14 @@ export class SystemModule {
    * @returns string
    */
   fileExt(): string {
-    const all = [] as string[];
-
-    Object.values(FILE_EXTENSIONS).forEach((values) => all.push(...values));
-
-    return this.utils.oneOfArray(all);
+    return this.utils.oneOfArray(Object.values(FILE_EXTENSIONS).flat());
   }
 
   /**
    * Returns a directory path
+   *
    * @example modules.system.directoryPath() // 'user/files/videos'
+   *
    * @returns string
    */
   directoryPath(): string {
