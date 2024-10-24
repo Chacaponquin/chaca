@@ -19,11 +19,49 @@ describe("datatype.alphaNumeric", () => {
     expect(val.length).toBeLessThanOrEqual(10);
   });
 
+  describe("length and prefix arguments", () => {
+    it("length = 4 & prefix = 'foo'. should return a string with length 4", () => {
+      const value = modules.datatype.alphaNumeric({ length: 4, prefix: "foo" });
+
+      expect(value).toHaveLength(4);
+    });
+
+    it("length = 4 & prefix = 'foofoo'. Should return 'foof'", () => {
+      const value = modules.datatype.alphaNumeric({
+        length: 4,
+        prefix: "foofoo",
+      });
+
+      expect(value).toBe("foof");
+    });
+
+    it("length = 0 & prefix = 'foo'. should return an empty array", () => {
+      const value = modules.datatype.alphaNumeric({
+        length: 0,
+        prefix: "foo",
+      });
+
+      expect(value).toBe("");
+    });
+  });
+
   describe("length argument", () => {
     it("length = 10. should return alphanumeric with size 10", () => {
       const val = modules.datatype.alphaNumeric({ length: 10 });
 
       expect(val).toHaveLength(10);
+    });
+
+    it("length = -5. should return a string with length greater than 4", () => {
+      const val = modules.datatype.alphaNumeric({ length: -5 });
+
+      expect(val.length).toBeGreaterThanOrEqual(4);
+    });
+
+    it("length = 0. should return an empty string", () => {
+      const val = modules.datatype.alphaNumeric({ length: 0 });
+
+      expect(val).toHaveLength(0);
     });
 
     it("length = undefined. should return an string with length between 1 and 10", () => {

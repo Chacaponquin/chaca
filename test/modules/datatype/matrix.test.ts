@@ -1,100 +1,130 @@
-import { modules } from "../../../src";
+import { ChacaError, modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-const TEST_COUNT_VALUES = 1000;
+const VALUES_LIMIT = 1000;
 
-describe("# Matrix datatype test", () => {
-  it("Without arguments", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix();
-    });
+describe("datatype.matrix", () => {
+  it("no arguments", () => {
+    for (let index = 0; index < VALUES_LIMIT; index++) {
+      const value = modules.datatype.matrix();
 
-    expect(
-      allValues.every((m) => {
-        return m.every((row) => row.every((v) => typeof v === "number"));
-      }),
-    );
+      expect(
+        value.every((row) =>
+          row.forEach((v) => expect(typeof v).toBe("number")),
+        ),
+      );
+    }
   });
 
-  it("With precision 0. Should return matrix with integer numbers", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix({ precision: 0 });
-    });
+  describe("max argument", () => {
+    it("max = 5. should return a matrix with all values less than 5", () => {
+      for (let index = 0; index < VALUES_LIMIT; index++) {
+        const value = modules.datatype.matrix({ max: 5 });
 
-    expect(
-      allValues.every((m) => {
-        return m.every((row) => row.every((v) => Number.isInteger(v)));
-      }),
-    );
-  });
-
-  it("With max argument", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix({ max: 5 });
-    });
-
-    expect(
-      allValues.every((m) => {
-        return m.every((row) => row.every((v) => v <= 5));
-      }),
-    );
-  });
-
-  it("With min, max and precision = 0 argument", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix({ max: 5, min: -10, precision: 0 });
-    });
-
-    expect(
-      allValues.every((m) => {
-        return m.every((row) =>
-          row.every((v) => v <= 5 && v >= -10 && Number.isInteger(v)),
+        expect(
+          value.every((row) =>
+            row.forEach((v) => {
+              expect(typeof v).toBe("number");
+              expect(v).toBeLessThanOrEqual(5);
+            }),
+          ),
         );
-      }),
-    );
+      }
+    });
   });
 
-  it("Pass x_size=10 argument", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix({ x_size: 10 });
-    });
+  describe("precision argument", () => {
+    it("precision = 0. should return matrix with integer numbers", () => {
+      for (let index = 0; index < VALUES_LIMIT; index++) {
+        const value = modules.datatype.matrix({ precision: 0 });
 
-    expect(allValues.every((m) => m.length === 10)).toBe(true);
+        expect(
+          value.every((row) =>
+            row.forEach((v) => expect(Number.isInteger(v)).toBe(true)),
+          ),
+        );
+      }
+    });
   });
 
-  it("Pass y_size=10 argument", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix({ y_size: 10 });
+  describe("max and min argument", () => {
+    it("min = 5 & max = 0. should throw an error", () => {
+      expect(() => modules.datatype.int({ max: 0, min: 5 })).toThrow(
+        ChacaError,
+      );
     });
-
-    expect(allValues.every((m) => m.every((r) => r.length === 10))).toBe(true);
   });
 
-  it("Pass y_size=10 and x_size=10 argument", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix({ x_size: 10, y_size: 10 });
-    });
+  describe("max, min and precision argument", () => {
+    it("max = 5 & min = -10 & precision = 0. should return a matrix with all values between -10 and 5", () => {
+      for (let index = 0; index < VALUES_LIMIT; index++) {
+        const value = modules.datatype.matrix({
+          precision: 0,
+          max: 5,
+          min: -10,
+        });
 
-    expect(
-      allValues.every(
-        (m) => m.length === 10 && m.every((r) => r.length === 10),
-      ),
-    ).toBe(true);
+        expect(
+          value.every((row) =>
+            row.forEach((v) => {
+              expect(Number.isInteger(v)).toBe(true);
+              expect(v).toBeGreaterThanOrEqual(-10);
+              expect(v).toBeLessThanOrEqual(5);
+            }),
+          ),
+        );
+      }
+    });
   });
 
-  it("Pass x_size=0 and y_size=0. Should return an empty matrix", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix({ x_size: 0, y_size: 0 });
+  describe("x_size argument", () => {
+    it("x_size = 10. should return an matrix with 10 rows", () => {
+      const value = modules.datatype.matrix({
+        x_size: 10,
+      });
+
+      expect(value).toHaveLength(10);
     });
 
-    expect(allValues.every((m) => m.length === 0)).toBe(true);
+    it("x_size = -10. should return an matrix with at least 1 row", () => {
+      const value = modules.datatype.matrix({
+        x_size: -10,
+      });
+
+      expect(value.length).toBeGreaterThanOrEqual(1);
+    });
   });
 
-  it("Pass x_size=-10", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() => {
-      return modules.datatype.matrix({ x_size: -10 });
+  describe("y_size argument", () => {
+    it("y_size = 10. should return an matrix with each row with 10 columns", () => {
+      const value = modules.datatype.matrix({
+        y_size: 10,
+      });
+
+      expect(value.every((r) => r.length === 10)).toBe(true);
     });
 
-    expect(allValues.every((m) => m.length > 0)).toBe(true);
+    it("y_size = -10. should return an matrix with all rown with at least 1 column", () => {
+      const value = modules.datatype.matrix({
+        y_size: -10,
+      });
+
+      expect(value.every((r) => r.length >= 1)).toBe(true);
+    });
+  });
+
+  describe("x_size and y_size arguments", () => {
+    it("x_size = 0 & y_size = 0. should return an empty matrix", () => {
+      const value = modules.datatype.matrix({ x_size: 0, y_size: 0 });
+
+      expect(value.length).toBe(0);
+    });
+
+    it("y_size = 10 & x_size = 10", () => {
+      const value = modules.datatype.matrix({ x_size: 10, y_size: 10 });
+
+      expect(value).toHaveLength(10);
+      expect(value.every((r) => r.length === 10)).toBe(true);
+    });
   });
 });

@@ -88,6 +88,7 @@ export class DatatypeModule {
     lowerCharacters: LOWER_CHARACTERS,
     mixedCharacters: MIXED_CHARACTERS,
     specialCharacters: SPECIAL_CHARACTERS,
+    numbers: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"],
   };
 
   /**
@@ -105,7 +106,7 @@ export class DatatypeModule {
    * modules.datatype.bigInt({ max: 100n }) // 42n
    * modules.datatype.bigInt({ min: 10n, max: 100n }) // 36n
    */
-  bigInt({ max: imax, min: imin }: BigIntProps = {}): bigint {
+  bigint({ max: imax, min: imin }: BigIntProps = {}): bigint {
     const min = typeof imin === "bigint" ? imin : BigInt(0);
     const max = typeof imax === "bigint" ? imax : min + BigInt(999999999999999);
 
@@ -133,68 +134,41 @@ export class DatatypeModule {
 
   /**
    * Returns a keyboard special character
+   *
    * @example modules.datatype.specialCharacter() // '_'
+   *
    * @returns string
    */
   specialCharacter(): string {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray(SPECIAL_CHARACTERS);
+    return this.utils.oneOfArray(SPECIAL_CHARACTERS);
   }
 
   /**
    * Returns a boolean
+   *
    * @example modules.datatype.boolean() // true
+   *
    * @returns boolean
    */
   boolean(): boolean {
-    const utils = new ChacaUtils();
-    return utils.oneOfArray([true, false]);
+    return this.utils.oneOfArray([true, false]);
   }
 
   /**
    * Returns a integer number
+   *
    * @param args.min Minimun posible value
    * @param args.max Maximun posible value
+   *
    * @example
    * modules.datatype.int() // 462
    * modules.datatype.int() // 28
+   *
    * @returns number
    */
   int({ max, min }: IntProps = {}): number {
-    const minimun: number =
-      typeof min === "number" ? min : this.MIN_RANDOM_VALUE;
-    let maximun: number;
-
-    if (typeof max === "number") {
-      if (max >= minimun) {
-        maximun = max;
-      } else {
-        maximun = this.MAX_RANDOM_VALUE;
-      }
-    } else {
-      maximun = this.MAX_RANDOM_VALUE;
-    }
-
-    const val = Math.floor(Math.random() * (maximun - minimun) + minimun);
-
-    return val;
-  }
-
-  /**
-   * Returns a float number
-   * @param args.min Minimun posible value
-   * @param args.max Maximun posible value
-   * @param args.precision Precision of the float. Must be a value between `1` and `20`. Default `2`
-   * @example
-   * modules.datatype.float() // 462.12
-   * modules.datatype.float({ min: 10, max: 30 }) // 10.23
-   * modules.datatype.float({ precision: 4 }) // 90.5362
-   * @returns number
-   */
-  float({ max, min, precision }: FloatProps = {}): number {
-    const utils = new ChacaUtils();
-
     let range: number;
+
     if (typeof max === "number" && typeof min === "number") {
       if (min > max) {
         throw new ChacaError(`Max ${max} should be greater than min ${min}.`);
@@ -206,7 +180,49 @@ export class DatatypeModule {
     } else if (typeof max === "undefined" && typeof min === "number") {
       range = this.MAX_RANDOM_VALUE - min;
     } else {
-      range = utils.oneOfArray([this.MAX_RANDOM_VALUE, this.MIN_RANDOM_VALUE]);
+      range = this.utils.oneOfArray([
+        this.MAX_RANDOM_VALUE,
+        this.MIN_RANDOM_VALUE,
+      ]);
+    }
+
+    const val = Math.floor(Math.random() * range + (min || 0));
+
+    return val;
+  }
+
+  /**
+   * Returns a float number
+   *
+   * @param args.min Minimun posible value
+   * @param args.max Maximun posible value
+   * @param args.precision Precision of the float. Must be a value between `1` and `20`
+   *
+   * @example
+   * modules.datatype.float() // 462.12
+   * modules.datatype.float({ min: 10, max: 30 }) // 10.23
+   * modules.datatype.float({ precision: 4 }) // 90.5362
+   *
+   * @returns number
+   */
+  float({ max, min, precision }: FloatProps = {}): number {
+    let range: number;
+
+    if (typeof max === "number" && typeof min === "number") {
+      if (min > max) {
+        throw new ChacaError(`Max ${max} should be greater than min ${min}.`);
+      }
+
+      range = max - min;
+    } else if (typeof max === "number" && typeof min === "undefined") {
+      range = max;
+    } else if (typeof max === "undefined" && typeof min === "number") {
+      range = this.MAX_RANDOM_VALUE - min;
+    } else {
+      range = this.utils.oneOfArray([
+        this.MAX_RANDOM_VALUE,
+        this.MIN_RANDOM_VALUE,
+      ]);
     }
 
     const pres: number =
@@ -237,7 +253,12 @@ export class DatatypeModule {
   number({ max, min, precision }: NumberProps = {}): number {
     let val: number;
 
-    if (precision === 0) {
+    const pres =
+      typeof precision === "number" && precision >= 0
+        ? precision
+        : this.int({ min: 0, max: 10 });
+
+    if (pres) {
       val = this.int({ max, min });
     } else {
       val = this.float({ max, min, precision });
@@ -248,8 +269,10 @@ export class DatatypeModule {
 
   /**
    * Returns a string with a hexadecimal code
+   *
    * @param args.case Case of the values inside de hexadecimal code (`mixed` | `lower` | `upper`)
    * @param args.length Lenght of the hexadecimal code
+   *
    * @example
    * modules.datatype.hexadecimal() // '009df'
    * modules.datatype.hexadecimal({ length: 3 }) // '01D'
@@ -397,24 +420,13 @@ export class DatatypeModule {
    * modules.datatype.binaryCode({ length: 6 }) // '010100'
    * @returns string
    */
-  binaryCode({
-    length: ilength = this.int({ min: 4, max: 8 }),
-    prefix = "",
-  }: BinaryCodeProps = {}): string {
-    const utils = new ChacaUtils();
-
+  binaryCode({ length: ilength, prefix = "" }: BinaryCodeProps = {}): string {
     const length =
-      typeof ilength === "number" && ilength >= 0
-        ? ilength
-        : this.int({ min: 4, max: 8 });
+      typeof ilength === "number" && ilength >= 0 ? ilength : undefined;
 
-    let ret = prefix;
-
-    for (let i = 1; i <= length; i++) {
-      ret += ret.concat(String(utils.oneOfArray([0, 1])));
-    }
-
-    return ret;
+    return this.generateByLength(prefix, length, () =>
+      String(this.utils.oneOfArray([0, 1])),
+    );
   }
 
   /**
@@ -436,7 +448,7 @@ export class DatatypeModule {
     prefix = "",
   }: AlphaNumericProps = {}): string {
     const length =
-      ilength && ilength > 0 ? ilength : this.int({ min: 1, max: 10 });
+      typeof ilength === "number" && ilength >= 0 ? ilength : undefined;
 
     const banned: string[] = [];
 
@@ -452,10 +464,9 @@ export class DatatypeModule {
       }
     }
 
-    const selectNumbers = this.numbersArray().filter((el) => {
-      const is = banned.some((b) => b === el);
-      return !is;
-    });
+    const selectNumbers = this.constants.numbers.filter(
+      (el) => !banned.includes(el),
+    );
 
     const characters = this.filterCharacters(icase);
     const selectCharacters = characters.filter((el) => {
@@ -470,18 +481,14 @@ export class DatatypeModule {
 
     const selectValues = [...selectCharacters, ...selectNumbers];
 
-    let retString = prefix;
-    for (let i = 0; i < length; i++) {
-      retString = retString.concat(this.utils.oneOfArray(selectValues));
-    }
-
-    return retString;
+    return this.generateByLength(prefix, length, () =>
+      this.utils.oneOfArray(selectValues),
+    );
   }
 
   /**
    * Returns an [octal](https://en.wikipedia.org/wiki/Octal) string.
    *
-   * @param args The optional options object.
    * @param args.length The number or range of characters to generate after the prefix.
    * @param args.prefix Prefix for the generated number. Defaults to `'0o'`.
    *
@@ -492,26 +499,17 @@ export class DatatypeModule {
    * modules.datatype.octal({ length: 10, prefix: 'oct_' }) // 'oct_1542153414'
    */
   octal({ length: ilength, prefix = "0o" }: OctalProps = {}): string {
-    const utils = new ChacaUtils();
-
     const length =
-      typeof ilength === "number" && ilength > 0
-        ? ilength
-        : (ilength = this.int({ min: 1, max: 5 }));
+      typeof ilength === "number" && ilength >= 0 ? ilength : undefined;
 
-    let result = prefix;
-
-    for (let i = 0; i < length; i++) {
-      result += utils.oneOfArray(["0", "1", "2", "3", "4", "5", "6", "7"]);
-    }
-
-    return result;
+    return this.generateByLength(prefix, length, () => {
+      return this.utils.oneOfArray(["0", "1", "2", "3", "4", "5", "6", "7"]);
+    });
   }
 
   /**
    * Generates a given length string of digits.
    *
-   * @param args Either the number of characters or the options to use.
    * @param args.length The number or range of digits to generate.
    * @param args.allowLeadingZeros Whether leading zeros are allowed or not. Defaults to `true`.
    * @param args.banned An array of digits which should be excluded in the generated string. Defaults to `[]`.
@@ -529,18 +527,14 @@ export class DatatypeModule {
     prefix = "",
     banned = [],
   }: NumericProps = {}): string {
-    const utils = new ChacaUtils();
     const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
 
-    let result = prefix;
     const length =
-      typeof ilength === "number" && ilength > 0
-        ? ilength
-        : this.int({ min: 1, max: 10 });
+      typeof ilength === "number" && ilength >= 0 ? ilength : undefined;
 
     let firstNotZero = false;
-    for (let i = 0; i < length; i++) {
-      const value = utils.oneOfArray(
+    return this.generateByLength(prefix, length, () => {
+      const value = this.utils.oneOfArray(
         numbers
           .filter((n) => {
             if (!firstNotZero && !allowLeadingZeros) {
@@ -553,15 +547,15 @@ export class DatatypeModule {
       );
 
       if (value !== undefined) {
-        result += value;
-
         if (value !== "0") {
           firstNotZero = true;
         }
-      }
-    }
 
-    return result;
+        return value;
+      } else {
+        return "";
+      }
+    });
   }
 
   private filterCharacters(fCase?: Case): string[] {
@@ -574,7 +568,28 @@ export class DatatypeModule {
     }
   }
 
-  private numbersArray(): string[] {
-    return ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+  private generateByLength(
+    prefix: string,
+    length: number | undefined,
+    func: () => string,
+  ): string {
+    let str = prefix;
+
+    if (length !== undefined) {
+      for (let i = 0; i < length - prefix.length; i++) {
+        str += func();
+      }
+
+      return str.slice(0, length);
+    } else {
+      const min = prefix.length + 4;
+      const max = min + 6;
+
+      for (let i = 0; i < this.int({ min: min, max: max }); i++) {
+        str += func();
+      }
+    }
+
+    return str;
   }
 }
