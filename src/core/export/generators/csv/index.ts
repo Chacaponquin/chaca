@@ -56,30 +56,25 @@ export class CsvGenerator extends Generator {
   }
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
+    const allRoutes = [] as Route[];
+
+    for (const r of resolver.getResolvers()) {
+      const filename = new Filename(r.getSchemaName());
+      const route = this.generateRoute(filename);
+      const code = this.creator.execute(r.resolve());
+
+      await this.writeFile(route, code);
+
+      allRoutes.push(route);
+    }
+
     if (this.zip) {
-      const allRoutes = [] as Route[];
-
-      for (const r of resolver.getResolvers()) {
-        const filename = new Filename(r.getSchemaName());
-        const route = this.generateRoute(filename);
-        const code = this.creator.execute(r.resolve());
-
-        await this.writeFile(route, code);
-
-        allRoutes.push(route);
-      }
-
       const zip = this.createZip();
       zip.multiple(allRoutes);
 
       return [zip.route];
     } else {
-      const filename = new Filename(this.filename);
-      const code = this.creator.execute(resolver.resolve());
-      const route = this.generateRoute(filename);
-      await this.writeFile(route, code);
-
-      return [route.value()];
+      return allRoutes.map((r) => r.value());
     }
   }
 

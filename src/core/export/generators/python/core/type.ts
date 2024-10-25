@@ -205,6 +205,10 @@ export class PythonArray extends PythonDatatype {
   }
 
   string(index: SpaceIndex, imports: Imports): string {
+    if (this.values.length === 0) {
+      return `[]`;
+    }
+
     let code = `[\n`;
 
     index.push();

@@ -104,6 +104,10 @@ export class JavascriptArray extends JavascriptDatatype {
   }
 
   string(index: SpaceIndex): string {
+    if (this.values.length === 0) {
+      return `[]`;
+    }
+
     let code = `[\n`;
 
     index.push();

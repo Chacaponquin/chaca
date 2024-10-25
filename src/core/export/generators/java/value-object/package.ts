@@ -6,6 +6,6 @@ export class Package {
   }
 
   string() {
-    return `package ${this._value}\n\n`;
+    return `package ${this._value};\n\n`;
   }
 }

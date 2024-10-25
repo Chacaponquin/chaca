@@ -204,7 +204,7 @@ export class SQLFloat extends SQLNumber {
   }
 
   definition(): string {
-    return "DOUBLE PRECISION";
+    return "FLOAT";
   }
 
   string(): string {

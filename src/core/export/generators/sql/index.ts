@@ -40,7 +40,6 @@ export class SQLGenerator extends Generator {
 
   async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
     const filename = new Filename(this.filename);
-
     const route = this.generateRoute(filename);
 
     const fixer = new TablesFixer(this.utils, {
@@ -50,7 +49,6 @@ export class SQLGenerator extends Generator {
     });
     const allTables = new SQLTables(this.utils);
     const organizer = new TableOrganizer();
-
     const validator = new DataValidator();
     const postgres = new PostgreSQL(this.indent);
     const generator = new SQLDataGenerator(

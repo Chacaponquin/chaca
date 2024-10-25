@@ -112,7 +112,7 @@ export class JavascriptClasses {
     code += this.classes
       .reverse()
       .map((c) => {
-        return `${c.definition()}\n`;
+        return `${c.definition()}`;
       })
       .join("\n");
 

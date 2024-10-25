@@ -20,9 +20,11 @@ export class TableOrganizer {
     const refs = resolver.getRefNodes();
 
     for (const ref of refs) {
-      const resolver = ref.getSchemaRef() as SchemaResolver;
+      const r = ref.getSchemaRef() as SchemaResolver;
 
-      this.search(resolver);
+      if (resolver !== r) {
+        this.search(r);
+      }
     }
 
     this.add(resolver);

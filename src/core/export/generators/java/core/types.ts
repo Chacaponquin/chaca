@@ -366,6 +366,10 @@ export class JavaArray extends JavaDatatype {
       new Import(["java", "util", "Arrays"]),
     );
 
+    if (this.values.length === 0) {
+      return `Arrays.asList()`;
+    }
+
     let code = `Arrays.asList(\n`;
 
     index.push();

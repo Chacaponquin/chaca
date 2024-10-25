@@ -1,7 +1,7 @@
 export class SkipInvalid {
   private _value: boolean;
 
-  constructor(value?: boolean) {
+  constructor(value: boolean | undefined) {
     this._value = Boolean(value);
   }
 
