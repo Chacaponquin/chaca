@@ -37,7 +37,7 @@ export class PythonCodeCreator {
 
       if (imp !== "") code += `${imports.string()}\n`;
 
-      code += `${classesDef}\n`;
+      if (classesDef !== "") code += `${classesDef}\n`;
 
       code += `data: ${declaration} = ${content}\n`;
 

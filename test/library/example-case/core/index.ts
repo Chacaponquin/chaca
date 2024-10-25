@@ -1,4 +1,5 @@
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
+import fs from "fs";
 import { Dataset, ExtensionConfigs } from "../../../../src";
 
 export class ExampleCaseTest {
@@ -79,11 +80,16 @@ export class ExampleCaseTest {
   }
 
   private async export(props: ExtensionConfigs): Promise<void> {
-    await this.dataset.export({
+    const routes = await this.dataset.export({
       filename: this.filename,
       verbose: false,
       format: props,
       location: `./data/cases/${this.location}/${props.ext}`,
     });
+
+    for (const route of routes) {
+      const exists = fs.existsSync(route);
+      expect(exists).toBe(true);
+    }
   }
 }
