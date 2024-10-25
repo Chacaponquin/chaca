@@ -30,6 +30,7 @@
 - Added exception `WrongProbabilityFieldDefinitionError` for errors in the definition of `probability` fields
 - 🗑️ `chaca.multiGenerate` was removed
 - 🎉 The number of items to select in the `pick` field can be defined as a range of values ​​or a function that returns the number of values ​​to choose from.
+- The `ref` fields can reference the schema they are located in without causing a circular dependency.
 
   ```ts
   // range
