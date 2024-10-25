@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 
 export const BOOK_TOPIC_SCHEMA = chaca.schema({
   topic: () => modules.word.adjective(),

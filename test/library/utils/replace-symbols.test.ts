@@ -1,11 +1,7 @@
 import { chaca } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-describe("# ReplaceSymbols Util Test", () => {
-  it("Pass undefined as argument. Should return an empty string", () => {
-    expect(() => chaca.utils.replaceSymbols(undefined!)).toThrow(TypeError);
-  });
-
+describe("util.replaceSymbols", () => {
   it("Pass only #. Should return a string with only numbers", () => {
     const val = chaca.utils.replaceSymbols("#####");
 

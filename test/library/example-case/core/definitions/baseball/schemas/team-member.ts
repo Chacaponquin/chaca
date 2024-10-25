@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 import { TOTAL_COACHS, TOTAL_PLAYERS } from "../constants";
 
 const ARRAY_PLAYERS = new Array(TOTAL_PLAYERS).fill(0).map(() => "P");

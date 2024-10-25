@@ -1,3 +1,4 @@
+import { chaca } from "../../../../../../src";
 import {
   DOWN_REASONS,
   EVALUATIONS,
@@ -17,7 +18,7 @@ import {
   YEAR_SCHEMA,
 } from "./schemas";
 
-export const SCHOOL_SCHEMAS = [
+export const SCHOOL_DATASET = chaca.dataset([
   {
     name: "Municipality",
     documents: MUNICIPALITIES.length,
@@ -43,4 +44,4 @@ export const SCHOOL_SCHEMAS = [
     documents: 60,
     schema: DOWN_STUDENTS_SCHEMA,
   },
-];
+]);

@@ -38,7 +38,7 @@ describe("datatype.hexadecimal", () => {
     });
 
     it("case = 'upper'. should return a lower case hexadecimal value", () => {
-      const value = modules.datatype.hexadecimal({ case: "lower" });
+      const value = modules.datatype.hexadecimal({ case: "upper" });
 
       expect(value).toBe(value.toUpperCase());
     });

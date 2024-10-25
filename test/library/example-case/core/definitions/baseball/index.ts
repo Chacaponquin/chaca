@@ -1,3 +1,4 @@
+import { chaca } from "../../../../../../src";
 import {
   PHASE_NAMES,
   PLAYER_POSITIONS,
@@ -17,9 +18,9 @@ import {
   PITCHER_SCHEMA,
   PLAYER_SCHEMA,
   TEAM_MEMBER_SCHEMA,
-} from "./schemas/team_member";
+} from "./schemas/team-member";
 
-export const BASEBALL_SCHEMAS = [
+export const BASEBALL_DATASET = chaca.dataset([
   {
     name: "Position",
     schema: POSITION_SCHEMA,
@@ -39,4 +40,4 @@ export const BASEBALL_SCHEMAS = [
   { name: "Pitcher", documents: 20, schema: PITCHER_SCHEMA },
   { name: "Batter", documents: 800, schema: BATTER_SCHEMA },
   { name: "Game", documents: 300, schema: GAME_SCHEMA },
-];
+]);
