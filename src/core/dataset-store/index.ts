@@ -1,5 +1,5 @@
 import { SchemaStore } from "../schema-store/store";
-import { DocumentTree } from "../result-tree/classes/DocumentTree";
+import { DocumentTree } from "../result-tree/classes/document";
 import { GetStoreConfig } from "../schema-store/interfaces/store";
 import { FieldNode } from "../result-tree/classes";
 import { SchemaResolver } from "../schema-resolver";

@@ -44,7 +44,7 @@ export class EnumValueNode extends InputTreeNode {
 
   generate(): FieldNode {
     return new SingleResultNode({
-      name: this.getNodeName(),
+      name: this.getName(),
       value: this.value(),
     });
   }

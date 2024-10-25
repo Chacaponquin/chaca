@@ -50,7 +50,7 @@ export class CustomValueNode extends InputTreeNode {
 
   generate({ currentDocument, store }: GenerateProps): FieldNode {
     return new SingleResultNode({
-      name: this.getNodeName(),
+      name: this.getName(),
       value: this.value({
         datasetStore: store,
         fields: currentDocument.getDocumentObject(),

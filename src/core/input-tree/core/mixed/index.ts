@@ -64,7 +64,7 @@ export class MixedValueNode extends InputTreeNode {
       let found = false;
 
       for (let i = 0; i < this.nodes.length && !found; i++) {
-        if (this.nodes[i].getNodeName() === fieldTreeRoute[0]) {
+        if (this.nodes[i].getName() === fieldTreeRoute[0]) {
           const routeWithoutFirstElement = fieldTreeRoute.slice(1);
           found = this.nodes[i].checkIfFieldExists(routeWithoutFirstElement);
         }
@@ -75,6 +75,6 @@ export class MixedValueNode extends InputTreeNode {
   }
 
   generate(): FieldNode {
-    return new MixedFieldNode(this.getNodeName());
+    return new MixedFieldNode(this.getName());
   }
 }

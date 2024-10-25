@@ -1,6 +1,6 @@
 import { ChacaError } from "../../../../errors";
 import { NodeRoute } from "../../../input-tree/core/node/value-object/route";
-import { FieldNode } from "../FieldNode";
+import { FieldNode } from "../node";
 
 interface Props {
   name: string;

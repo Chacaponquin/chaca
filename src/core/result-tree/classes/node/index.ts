@@ -1,4 +1,4 @@
-import { SingleResultNode } from "../SingleResultNode";
+import { SingleResultNode } from "../single-result";
 
 export abstract class FieldNode {
   constructor(readonly name: string) {}

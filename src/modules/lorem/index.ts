@@ -130,12 +130,15 @@ export class LoremModule {
 
   /**
    *
-   * @param args.count Number or words. Default `5`
+   * @param args.count Number or words.
    * @example modules.lorem.words() // 'lorem ipsum in'
    * @returns string
    */
   words({ count: icount }: WordsProps = {}): string {
-    const count = typeof icount === "number" && icount > 0 ? icount : 5;
+    const count =
+      typeof icount === "number" && icount >= 0
+        ? icount
+        : this.datatypeModule.int({ min: 5, max: 10 });
 
     return loremIpsum({ format: "plain", units: "words", count: count });
   }

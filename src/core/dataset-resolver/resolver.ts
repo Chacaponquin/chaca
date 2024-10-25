@@ -61,6 +61,7 @@ export class DatasetResolver<K = any> {
         });
       } else {
         const message = `You must provide a object with the schema configuration. Example: { name: 'User', schema: UserSchema, documents: 50 }`;
+
         throw new ChacaError(message);
       }
     });

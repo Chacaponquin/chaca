@@ -1,5 +1,5 @@
-import { DocumentTree } from "../../../../result-tree/classes/DocumentTree";
-import { SingleResultNode } from "../../../../result-tree/classes/SingleResultNode";
+import { DocumentTree } from "../../../../result-tree/classes/document";
+import { SingleResultNode } from "../../../../result-tree/classes/single-result";
 
 export interface SearchedRefValue {
   document: DocumentTree<any>;

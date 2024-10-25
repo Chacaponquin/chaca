@@ -35,7 +35,7 @@ export class SequenceValueNode extends InputTreeNode {
 
   generate(): FieldNode {
     return new SingleResultNode({
-      name: this.getNodeName(),
+      name: this.getName(),
       value: this.value(),
     });
   }

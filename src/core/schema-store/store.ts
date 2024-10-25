@@ -22,7 +22,7 @@ export class SchemaStore {
     return route.split(".");
   }
 
-  getResolverByIndex(index: number) {
+  get(index: number) {
     return this.schemas[index];
   }
 

@@ -5,7 +5,7 @@ import { describe, beforeAll, expect, it } from "vitest";
 const EXPORT_ROUTE = "./data/cases/library";
 const FILE_NAME = "caseLibrary";
 
-describe("# Library case test", () => {
+describe("Library case test", () => {
   let CASE_DATA: any;
   let CASE: Dataset;
 

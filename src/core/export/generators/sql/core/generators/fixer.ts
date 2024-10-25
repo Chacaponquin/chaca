@@ -33,7 +33,7 @@ export class TablesFixer {
     const searcher = new Searcher(tables);
 
     for (const ref of this.refs) {
-      const name = ref.getNodeName();
+      const name = ref.getName();
 
       const refNode = ref.getRefFieldRoute();
       const refName = refNode.name();
@@ -107,7 +107,7 @@ export class TablesFixer {
 
   isKey(table: TableName, name: ColumnName): boolean {
     return this.keys.some((k) => {
-      const n = new ColumnName(this.utils, k.getNodeName(), 0);
+      const n = new ColumnName(this.utils, k.getName(), 0);
       const t = new TableName(
         this.utils,
         new Route(k.getFieldRoute().parent().array()),
@@ -119,7 +119,7 @@ export class TablesFixer {
 
   isNull(table: TableName, name: ColumnName): boolean {
     return this.nulls.some((k) => {
-      const n = new ColumnName(this.utils, k.getNodeName(), 0);
+      const n = new ColumnName(this.utils, k.getName(), 0);
       const t = new TableName(
         this.utils,
         new Route(k.getFieldRoute().parent().array()),

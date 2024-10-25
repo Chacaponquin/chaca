@@ -39,12 +39,12 @@ export class SchemaResolver<K = any> {
   private name: string;
   private countDoc: number;
   private schemaObject: SchemaToResolve;
-  private schemaIndex: number;
+  readonly index: number;
 
   private isBuilding = false;
   private finishBuilding = false;
 
-  private schemasStore = new SchemaStore([]);
+  private schemasStore: SchemaStore;
 
   private consoleVerbose = false;
 
@@ -63,14 +63,15 @@ export class SchemaResolver<K = any> {
     this.schemaObject = schemaObject;
     this.resultTree = new ChacaResultTree<K>(this.name);
     this.countDoc = new CountDoc(countDoc).value();
-    this.schemaIndex = schemaIndex;
+    this.index = schemaIndex;
     this.consoleVerbose = consoleVerbose;
     this.subFieldsCreator = new SubFieldsCreator(this);
+    this.schemasStore = new SchemaStore([]);
   }
 
   resolve(): K[] {
     this.buildInputTree();
-    this.buildTrees();
+    this.buildTrees(this);
     return this.getDocumentsArray();
   }
 
@@ -188,7 +189,7 @@ export class SchemaResolver<K = any> {
     }
   }
 
-  buildTrees(): void {
+  buildTrees(caller: SchemaResolver): void {
     if (!this.finishBuilding) {
       if (!this.isBuilding) {
         if (this.inputTree) {
@@ -240,7 +241,7 @@ export class SchemaResolver<K = any> {
         }
       } else {
         throw new CyclicAccessDataError(
-          `You are trying to access ${this.name} when this one is being created`,
+          `From ${caller.name}, you are trying to access ${this.name} when this one is being created`,
         );
       }
     }
@@ -283,7 +284,7 @@ export class SchemaResolver<K = any> {
       // en caso de ser un array
       if (limit !== undefined) {
         const arrayNode = new ArrayResultNode({
-          name: field.getNodeName(),
+          name: field.getName(),
           fieldNode: field,
         });
 
@@ -306,7 +307,7 @@ export class SchemaResolver<K = any> {
         const node = field.generate({
           currentDocument: currentDocument,
           indexDoc: indexDoc,
-          schemaIndex: this.schemaIndex,
+          schemaIndex: this.index,
           store: store,
         });
 
@@ -315,7 +316,7 @@ export class SchemaResolver<K = any> {
     } else {
       return new SingleResultNode({
         value: null,
-        name: field.getNodeName(),
+        name: field.getName(),
       });
     }
   }

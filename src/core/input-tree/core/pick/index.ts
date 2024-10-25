@@ -91,7 +91,7 @@ export class PickValueNode extends InputTreeNode {
 
   generate(props: GenerateProps): FieldNode {
     return new SingleResultNode({
-      name: this.getNodeName(),
+      name: this.getName(),
       value: this.getValues(props),
     });
   }

@@ -53,7 +53,7 @@ export class ProbabilityValueNode extends InputTreeNode {
 
   generate(props: GenerateProps): FieldNode {
     return new SingleResultNode({
-      name: this.getNodeName(),
+      name: this.getName(),
       value: this.value(props),
     });
   }

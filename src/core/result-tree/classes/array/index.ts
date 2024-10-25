@@ -1,7 +1,7 @@
 import { ChacaError } from "../../../../errors";
 import { InputTreeNode } from "../../../input-tree/core";
-import { FieldNode } from "../FieldNode";
-import { SingleResultNode } from "../SingleResultNode";
+import { FieldNode } from "../node";
+import { SingleResultNode } from "../single-result";
 
 interface Props {
   name: string;

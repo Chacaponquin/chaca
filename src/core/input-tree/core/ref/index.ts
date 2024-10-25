@@ -74,7 +74,7 @@ export class RefValueNode extends InputTreeNode {
     if (this.schemaRefIndex === null) {
       return null;
     } else {
-      return this.schemasStore.getResolverByIndex(this.schemaRefIndex);
+      return this.schemasStore.get(this.schemaRefIndex);
     }
   }
 
@@ -90,16 +90,17 @@ export class RefValueNode extends InputTreeNode {
     schemaRef: SchemaResolver,
     currentDocumentIndex: number,
     currentSchemaResolverIndex: number,
+    refItSelf: boolean,
   ): SingleResultNode[] {
     const allValues = this.allRefNodes
       ? this.allRefNodes
       : schemaRef.getAllRefValuesByNodeRoute(this.refFieldTreeRoute);
 
-    if (!this.allRefNodes) {
+    if (!this.allRefNodes && !refItSelf) {
       this.allRefNodes = allValues;
     }
 
-    const currentSchemaResolver = this.schemasStore.getResolverByIndex(
+    const currentSchemaResolver = this.schemasStore.get(
       currentSchemaResolverIndex,
     );
 
@@ -109,6 +110,7 @@ export class RefValueNode extends InputTreeNode {
       .getDocumentObject();
 
     const returnRefValues: SingleResultNode[] = [];
+
     for (const refNode of allValues) {
       if (this.refField.where) {
         const isAccepted = this.refField.where({
@@ -119,7 +121,7 @@ export class RefValueNode extends InputTreeNode {
             caller: this.getRouteString(),
           }),
           refFields: refNode.document.getDocumentObject(),
-          currentFields,
+          currentFields: currentFields,
         });
 
         if (isAccepted) {
@@ -135,47 +137,67 @@ export class RefValueNode extends InputTreeNode {
 
   private value(
     currentDocument: number,
-    currentSchemaResolver: number,
+    icurrentSchemaResolver: number,
   ): unknown | unknown[] {
     const schemaRef = this.getSchemaRef();
 
+    const currentResolver = this.schemasStore.get(icurrentSchemaResolver);
+
     if (schemaRef) {
-      if (!schemaRef.dangerCyclic()) {
-        // build schema ref trees
-        schemaRef.buildTrees();
+      const refItSelf = icurrentSchemaResolver === schemaRef.index;
+
+      if (!schemaRef.dangerCyclic() || refItSelf) {
+        if (!refItSelf) {
+          // build schema ref trees
+          schemaRef.buildTrees(currentResolver);
+        }
 
         // get all fields nodes to ref
         const allValues = this.filterRefNodesByConfig(
           schemaRef,
           currentDocument,
-          currentSchemaResolver,
+          icurrentSchemaResolver,
+          refItSelf,
         );
 
-        if (this.refField.unique) {
+        if (this.isUnique()) {
           const noTakenValues = allValues.filter(
             (n) => !n.isTaken(this.getFieldRoute()),
           );
 
-          if (noTakenValues.length === 0) {
+          if (noTakenValues.length === 0 && !refItSelf) {
             throw new NotEnoughValuesForRefError(
               this.getRouteString(),
               this.getRefFieldRoute().string(),
             );
-          } else {
-            const node = this.utils.oneOfArray(noTakenValues);
+          }
+
+          const node = this.utils.oneOfArray(noTakenValues);
+
+          if (node) {
             node.changeIsTaken(this.getFieldRoute());
-
-            return node.getRealValue();
           }
+
+          if (refItSelf) {
+            return node ? node.getRealValue() : null;
+          }
+
+          return node.getRealValue();
         } else {
-          if (allValues.length === 0) {
+          if (allValues.length === 0 && !refItSelf) {
             throw new NotEnoughValuesForRefError(
               this.getRouteString(),
               this.getRefFieldRoute().string(),
             );
           }
 
-          return this.utils.oneOfArray(allValues).getRealValue();
+          const node = this.utils.oneOfArray(allValues);
+
+          if (refItSelf) {
+            return node ? node.getRealValue() : null;
+          }
+
+          return node.getRealValue();
         }
       } else {
         throw new CyclicAccessDataError(
@@ -193,7 +215,7 @@ export class RefValueNode extends InputTreeNode {
     const refValue = this.value(indexDoc, schemaIndex);
 
     return new SingleResultNode({
-      name: this.getNodeName(),
+      name: this.getName(),
       value: refValue,
     });
   }

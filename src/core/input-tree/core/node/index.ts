@@ -32,7 +32,7 @@ export abstract class InputTreeNode {
     return this.route.string();
   }
 
-  getNodeName(): string {
+  getName(): string {
     return this.route.name();
   }
 
