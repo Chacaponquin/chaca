@@ -1,4 +1,5 @@
 import { ChacaError, CyclicAccessDataError } from "../../errors";
+import { NodeRoute } from "../input-tree/core/node/value-object/route";
 import { DocumentTree, FieldNode } from "../result-tree/classes";
 import { SchemaResolver } from "../schema-resolver";
 import { GetStoreValueConfig } from "./interfaces/store";
@@ -6,7 +7,7 @@ import { GetStoreValueConfig } from "./interfaces/store";
 interface ValueProps {
   route: string;
   config: GetStoreValueConfig;
-  caller: string;
+  caller: NodeRoute;
 }
 
 export class SchemaStore {
@@ -39,7 +40,7 @@ export class SchemaStore {
     config,
     route,
   }: ValueProps): Array<FieldNode | DocumentTree<D>> {
-    const routeArray = this.validateFieldToGet(route, caller);
+    const routeArray = this.validateFieldToGet(route, caller.string());
 
     let foundSchema = false;
     let values = [] as Array<FieldNode | DocumentTree<D>>;
@@ -50,17 +51,17 @@ export class SchemaStore {
       if (currentSchema.getSchemaName() === routeArray[0]) {
         if (currentSchema === config.omitResolver) {
           throw new ChacaError(
-            `From '${caller}'. You are trying to access the documents of the current schema, if you want this use the store.currentDocuments method`,
+            `From '${caller.string()}'. You are trying to access the documents of the current schema, if you want this use the store.currentDocuments method`,
           );
         }
 
         if (currentSchema.dangerCyclic()) {
           throw new CyclicAccessDataError(
-            `From '${caller}', you are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
+            `From '${caller.string()}', you are trying to access '${currentSchema.getSchemaName()}' when this one is being created`,
           );
         }
 
-        currentSchema.buildTrees();
+        currentSchema.buildTrees(caller);
 
         values = currentSchema.getAllValuesByRoute(routeArray.slice(1), config);
 

@@ -40,7 +40,7 @@ import { ResolverValidator } from "./core/validators/resolver";
 import { NodeRoute } from "./core/node/value-object/route";
 
 interface Props {
-  schemaName: string;
+  name: string;
   schemaToResolve: SchemaToResolve;
   schemasStore: SchemaStore;
   count: number;
@@ -60,7 +60,7 @@ interface CreateSubNodesProps {
 export class ChacaInputTree {
   private nodes: InputTreeNode[];
   private schemasStore: SchemaStore;
-  private schemaName: string;
+  private name: string;
   private count: number;
 
   // ref nodes
@@ -74,7 +74,7 @@ export class ChacaInputTree {
   constructor(
     private readonly utils: ChacaUtils,
     private readonly datatypeModule: DatatypeModule,
-    { schemaName, schemaToResolve, schemasStore, count }: Props,
+    { name, schemaToResolve, schemasStore, count }: Props,
   ) {
     this.nullMapper = new PossibleNullMapper(this.utils);
     this.arrayMapper = new IsArrayMapper(this.datatypeModule);
@@ -82,14 +82,14 @@ export class ChacaInputTree {
     this.resolverValidator = new ResolverValidator();
 
     this.schemasStore = schemasStore;
-    this.schemaName = schemaName;
+    this.name = name;
     this.count = count;
 
     this.refToResolve = [];
     this.nodes = [];
 
     for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
-      const route = new NodeRoute([this.schemaName, key]);
+      const route = new NodeRoute([this.name, key]);
 
       const newNode = this.createNodeByType({
         actualRoute: route,
@@ -302,7 +302,7 @@ export class ChacaInputTree {
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {
-    if (this.schemaName === fieldTreeRoute[0]) {
+    if (this.name === fieldTreeRoute[0]) {
       let exists = false;
 
       for (let i = 0; i < this.nodes.length && !exists; i++) {

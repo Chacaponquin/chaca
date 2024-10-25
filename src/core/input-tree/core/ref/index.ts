@@ -118,7 +118,7 @@ export class RefValueNode extends InputTreeNode {
             schemasStore: this.schemasStore,
             omitCurrentDocument: refNode.document,
             omitResolver: currentSchemaResolver,
-            caller: this.getRouteString(),
+            caller: this.getFieldRoute(),
           }),
           refFields: refNode.document.getDocumentObject(),
           currentFields: currentFields,
@@ -149,7 +149,7 @@ export class RefValueNode extends InputTreeNode {
       if (!schemaRef.dangerCyclic() || refItSelf) {
         if (!refItSelf) {
           // build schema ref trees
-          schemaRef.buildTrees(currentResolver);
+          schemaRef.buildTrees(currentResolver.route);
         }
 
         // get all fields nodes to ref

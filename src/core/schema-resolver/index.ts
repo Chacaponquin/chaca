@@ -17,6 +17,7 @@ import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
 import { CountDoc, SchemaName } from "./value-object";
 import { DatatypeModule } from "../../modules/datatype";
 import { SubFieldsCreator } from "./core/sub-fields-creator";
+import { NodeRoute } from "../input-tree/core/node/value-object/route";
 
 interface SchemaResolverProps {
   name: string;
@@ -40,6 +41,7 @@ export class SchemaResolver<K = any> {
   private countDoc: number;
   private schemaObject: SchemaToResolve;
   readonly index: number;
+  readonly route: NodeRoute;
 
   private isBuilding = false;
   private finishBuilding = false;
@@ -67,11 +69,12 @@ export class SchemaResolver<K = any> {
     this.consoleVerbose = consoleVerbose;
     this.subFieldsCreator = new SubFieldsCreator(this);
     this.schemasStore = new SchemaStore([]);
+    this.route = new NodeRoute([name]);
   }
 
   resolve(): K[] {
     this.buildInputTree();
-    this.buildTrees(this);
+    this.buildTrees(this.route);
     return this.getDocumentsArray();
   }
 
@@ -110,7 +113,7 @@ export class SchemaResolver<K = any> {
   buildInputTree(): void {
     if (this.inputTree === null) {
       this.inputTree = new ChacaInputTree(this.utils, this.datatypeModule, {
-        schemaName: this.name,
+        name: this.name,
         schemaToResolve: this.schemaObject,
         schemasStore: this.schemasStore,
         count: this.countDoc,
@@ -189,7 +192,7 @@ export class SchemaResolver<K = any> {
     }
   }
 
-  buildTrees(caller: SchemaResolver): void {
+  buildTrees(caller: NodeRoute): void {
     if (!this.finishBuilding) {
       if (!this.isBuilding) {
         if (this.inputTree) {
@@ -241,7 +244,9 @@ export class SchemaResolver<K = any> {
         }
       } else {
         throw new CyclicAccessDataError(
-          `From ${caller.name}, you are trying to access ${this.name} when this one is being created`,
+          `From ${caller.string()}, you are trying to access ${
+            this.name
+          } when this one is being created`,
         );
       }
     }
@@ -266,7 +271,7 @@ export class SchemaResolver<K = any> {
       schemasStore: this.schemasStore,
       omitCurrentDocument: currentDocument,
       omitResolver: this,
-      caller: field.getRouteString(),
+      caller: field.getFieldRoute(),
     });
 
     const isNull = field.isNull({
