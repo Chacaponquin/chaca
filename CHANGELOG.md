@@ -86,7 +86,13 @@
 - 🎉 Added `utils.multiple` To create an array of values ​​from a generator
 - 🎉 Added `banned` and `symbols` options on `utils.replaceSymbols`
 - 🗑️ Deleted `utils.capitalCamelCase`
+- 🗑️ Deleted `utils.capitalize`
+- 🗑️ Deleted `utils.capitalizeWord`
 - 🎉 Added `utils.snakeCase`
+- 🎉 Added `utils.dotCase`
+- 🎉 Added `utils.sentenceCase`
+- 🎉 Added `utils.capitalCase`
+- 🎉 Added `utils.pascalCase`
 
 ## 🪛 Fix
 

@@ -9,7 +9,7 @@ export class JavascriptClassName {
   }
 
   string() {
-    return this.utils.capitalize(this.utils.camelCase(this.route.string()));
+    return this.utils.pascalCase(this.route.string());
   }
 }
 

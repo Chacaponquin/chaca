@@ -48,6 +48,6 @@ export class JavaClassName {
   }
 
   string() {
-    return this.utils.capitalize(this.utils.camelCase(this.parent.string()));
+    return this.utils.pascalCase(this.parent.string());
   }
 }

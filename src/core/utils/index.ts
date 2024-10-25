@@ -5,7 +5,14 @@ import {
   MIXED_CHARACTERS,
   UPPER_CHARACTERS,
 } from "../../modules/datatype/constants/characters";
-import { camelCase, snakeCase } from "change-case";
+import {
+  camelCase,
+  capitalCase,
+  dotCase,
+  pascalCase,
+  sentenceCase,
+  snakeCase,
+} from "change-case";
 
 export type TimeUnits =
   | "years"
@@ -120,8 +127,9 @@ export class ChacaUtils {
   }
 
   /**
-   * Returns a camel case notation text from a string argument
-   * @param text string to capitalize
+   * Convert a string to camel case
+   *
+   * @param text string to transform
    *
    * @example
    * chaca.utils.camelCase('Hello World') // 'helloWorld'
@@ -133,53 +141,79 @@ export class ChacaUtils {
     return camelCase(text, {});
   }
 
+  /**
+   * Convert a string to snake case
+   *
+   * @param text string to transform
+   *
+   * @example
+   * chaca.utils.snakeCase('Hello World') // 'hello_world'
+   * chaca.utils.snakeCase('hiFriend') // 'hi_friend'
+   *
+   * @returns string
+   */
   snakeCase(text: string): string {
     return snakeCase(text, {});
   }
 
   /**
-   * @param word The string to capitalize
+   * Convert a string to dot case
+   *
+   * @param text string to transform
    *
    * @example
-   * chaca.utils.capitalizeWord('hello') // 'Hello'
-   * chaca.utils.capitalizeWord('hi there') // 'Hi there'
+   * chaca.utils.dotCase('Hello World') // 'hello.world'
+   * chaca.utils.dotCase('hiFriend') // 'hi.friend'
    *
    * @returns string
    */
-  capitalizeWord(word: string): string {
-    let newResult = "";
-
-    for (let i = 0; i < word.length; i++) {
-      newResult = newResult.concat(i === 0 ? word[i].toUpperCase() : word[i]);
-    }
-
-    return newResult;
+  dotCase(text: string): string {
+    return dotCase(text, {});
   }
 
   /**
-   * Returns a string with all the words capitalized
-   * @param text string with the texto to capitalize
+   * Convert a string to sentence case
+   *
+   * @param text string to transform
    *
    * @example
-   * chaca.utils.capitalize('hi there friend') // 'Hi There Friend'
-   * chaca.utils.capitalize(' helloWorld') // ' HelloWorld'
+   * chaca.utils.sentenceCase('Hello World') // 'Hello world'
+   * chaca.utils.sentenceCase('hiFriend') // 'Hi friend'
    *
    * @returns string
    */
-  capitalize(text: string): string {
-    let newResult = "";
+  sentenceCase(text: string): string {
+    return sentenceCase(text, {});
+  }
 
-    for (let i = 0; i < text.length; i++) {
-      if (i === 0 && text[i] !== " ") {
-        newResult = newResult.concat(text[i].toUpperCase());
-      } else if (text[i - 1] && text[i - 1] === " ") {
-        newResult = newResult.concat(text[i].toUpperCase());
-      } else {
-        newResult = newResult.concat(text[i]);
-      }
-    }
+  /**
+   * Convert a string to capital case
+   *
+   * @param text string to transform
+   *
+   * @example
+   * chaca.utils.capitalCase('Hello World') // 'Hello World'
+   * chaca.utils.capitalCase('hiFriend') // 'Hi Friend'
+   *
+   * @returns string
+   */
+  capitalCase(text: string): string {
+    return capitalCase(text, {});
+  }
 
-    return newResult;
+  /**
+   * Convert a string to pascal case
+   *
+   * @param text string to transform
+   *
+   * @example
+   * chaca.utils.pascalCase('Hello World') // 'HelloWorld'
+   * chaca.utils.pascalCase('hiFriend') // 'HiFriend'
+   *
+   * @returns string
+   */
+  pascalCase(text: string): string {
+    return pascalCase(text, {});
   }
 
   /**

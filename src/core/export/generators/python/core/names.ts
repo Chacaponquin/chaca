@@ -9,7 +9,7 @@ export class PythonClassName {
   }
 
   string() {
-    return this.utils.capitalize(this.utils.camelCase(this.route.string()));
+    return this.utils.pascalCase(this.route.string());
   }
 }
 
