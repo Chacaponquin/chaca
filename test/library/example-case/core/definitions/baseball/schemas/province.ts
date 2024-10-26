@@ -1,4 +1,4 @@
-import { chaca } from "../../../../../src";
+import { chaca } from "../../../../../../../src";
 import { PROVINCES } from "../constants";
 
 export const PROVINCE_SCHEMA = chaca.schema({

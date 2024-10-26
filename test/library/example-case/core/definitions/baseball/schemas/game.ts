@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 
 export const GAME_SCHEMA = chaca.schema({
   game_id: chaca.key(chaca.sequence()),

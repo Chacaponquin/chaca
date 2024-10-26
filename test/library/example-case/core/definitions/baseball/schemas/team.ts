@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 
 export const TEAM_SCHEMA = chaca.schema({
   team_id: chaca.key(chaca.sequence()),
@@ -7,7 +7,7 @@ export const TEAM_SCHEMA = chaca.schema({
   team_name: ({ currentFields: fields, store }) => {
     const provinces = store.get("Province");
 
-    let found = provinces.find((p) => p.province_id === fields.province_id);
+    const found = provinces.find((p) => p.province_id === fields.province_id);
 
     if (found) {
       return found.province_name + " Team";

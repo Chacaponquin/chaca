@@ -1,4 +1,4 @@
-import { chaca } from "../../../../../src";
+import { chaca } from "../../../../../../../src";
 import { PHASE_NAMES } from "../constants";
 
 interface PhaseDate {

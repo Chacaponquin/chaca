@@ -32,7 +32,7 @@ describe("phone.callDuration", () => {
       expect(validateTime(value, { min: 0, max: 59 })).toBe(true);
     });
 
-    describe("max = 30. should return a string with two numbers, the first one must be inferior than the argument", () => {
+    it("max = 30. should return a string with two numbers, the first one must be inferior than the argument", () => {
       const value = modules.phone.callDuration({ max: 30 });
       expect(value).toHaveLength(5);
       expect(validateTime(value, { min: 0, max: 30 })).toBe(true);
@@ -78,7 +78,7 @@ describe("phone.callDuration", () => {
       expect(validateTime(value, { min: 20, max: 20 })).toBe(true);
     });
 
-    describe("min = -20 & max = 80. should return a string with two numbers between 0 and 59", () => {
+    it("min = -20 & max = 80. should return a string with two numbers between 0 and 59", () => {
       const value = modules.phone.callDuration({ min: -20, max: 80 });
       expect(value).toHaveLength(5);
       expect(validateTime(value, { min: 0, max: 59 })).toBe(true);

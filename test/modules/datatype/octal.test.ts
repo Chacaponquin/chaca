@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { modules } from "../../../src";
 
 describe("datatype.octal", () => {
-  describe("no arguments. should return a string with length greater than 4", () => {
+  it("no arguments. should return a string with length greater than 4", () => {
     const value = modules.datatype.octal();
 
     expect(value.length).toBeGreaterThanOrEqual(4);

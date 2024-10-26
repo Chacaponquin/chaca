@@ -6,7 +6,7 @@ export class DataValidator {
 
     if (Array.isArray(data)) {
       for (const obj of data) {
-        if (!(typeof obj === "object" && obj !== null)) {
+        if (!(typeof obj === "object" && obj !== null && !Array.isArray(obj))) {
           valid = false;
         }
       }

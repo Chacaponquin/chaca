@@ -1,4 +1,4 @@
-import { chaca } from "../../../../src";
+import { chaca } from "../../../../../../src";
 import { CART } from "./schemas/cart";
 import { CAR_ITEM } from "./schemas/cart-item";
 import { CATEGORY } from "./schemas/category";

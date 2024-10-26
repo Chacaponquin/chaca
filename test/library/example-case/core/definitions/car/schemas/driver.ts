@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 
 const dni = () => {
   return chaca.utils.replaceSymbols("###########");

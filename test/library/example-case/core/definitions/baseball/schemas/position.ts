@@ -1,4 +1,4 @@
-import { chaca } from "../../../../../src";
+import { chaca } from "../../../../../../../src";
 import { PLAYER_POSITIONS } from "../constants";
 
 export const POSITION_SCHEMA = chaca.schema({

@@ -5,7 +5,7 @@ const tester = new ExtensionTester("java");
 
 describe("Java", () => {
   tester.execute({
-    arrays: { simple: true },
+    arrays: { simple: true, matrix: true },
     object: { simple: true },
     primitives: {
       bigint: true,

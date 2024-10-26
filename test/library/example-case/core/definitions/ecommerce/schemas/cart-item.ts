@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 
 export const CAR_ITEM = chaca.schema({
   cart_id: chaca.ref("Cart.id"),

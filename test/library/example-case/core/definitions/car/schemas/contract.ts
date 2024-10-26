@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 
 export const CONTRACT_SCHEMA = chaca.schema({
   plate: chaca.key(chaca.ref("Car.plate")),
@@ -13,41 +13,14 @@ export const CONTRACT_SCHEMA = chaca.schema({
   pay_method_id: chaca.ref("Pay_Method.id"),
   driver_dni: { type: chaca.ref("Driver.dni"), possibleNull: 0.5 },
   end_km: ({ currentFields: fields, store }) => {
-    const allCars = store.get("Car");
-    const restDocuments = store.currentDocuments();
-
-    let found = null;
-    for (let i = 0; i < restDocuments.length && !found; i++) {
-      const contract = restDocuments[i];
-
-      if (contract.car_plate === fields.car_plate) {
-        if (contract.end_date.getTime() > fields.end_date.getTime()) {
-          found = contract;
-        }
-      }
-    }
-
-    if (!found) {
-      const foundCar = allCars.find((c) => c.plate === fields.car_plate);
-
-      if (foundCar) {
-        return foundCar.cant_km;
-      } else {
-        return modules.datatype.int({ min: 0, max: 3000 });
-      }
-    } else {
-      return modules.datatype.int({ min: 0, max: 3000 });
-    }
-  },
-  start_km: ({ currentFields: fields, store }) => {
-    let founds = [] as Array<any>;
+    const founds = [] as any[];
     const restDocuments = store.currentDocuments();
 
     for (let i = 0; i < restDocuments.length; i++) {
       const contract = restDocuments[i];
 
       if (contract.car_plate === fields.car_plate) {
-        if (contract.delivery_date.getTime() < fields.start_date.getTime()) {
+        if (contract.delivery_date < fields.start_date) {
           founds.push(contract);
         }
       }
@@ -57,7 +30,43 @@ export const CONTRACT_SCHEMA = chaca.schema({
       let ref = founds[0];
 
       for (let i = 1; i < founds.length; i++) {
-        if (founds[i].delivery_date.getTime() > ref.delivery_date.getTime()) {
+        if (founds[i].delivery_date > ref.delivery_date) {
+          ref = founds[i];
+        }
+      }
+
+      return modules.datatype.int({ min: ref.end_km, max: ref.end_km + 40000 });
+    } else {
+      const foundCar = store
+        .get("Car")
+        .find((c) => c.plate === fields.car_plate);
+
+      if (foundCar) {
+        return foundCar.cant_km;
+      } else {
+        return modules.datatype.int({ min: 0, max: 3000 });
+      }
+    }
+  },
+  start_km: ({ currentFields: fields, store }) => {
+    const founds = [] as any[];
+    const restDocuments = store.currentDocuments();
+
+    for (let i = 0; i < restDocuments.length; i++) {
+      const contract = restDocuments[i];
+
+      if (contract.car_plate === fields.car_plate) {
+        if (contract.delivery_date < fields.start_date) {
+          founds.push(contract);
+        }
+      }
+    }
+
+    if (founds.length) {
+      let ref = founds[0];
+
+      for (let i = 1; i < founds.length; i++) {
+        if (founds[i].delivery_date > ref.delivery_date) {
           ref = founds[i];
         }
       }

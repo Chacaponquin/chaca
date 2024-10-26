@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 
 export const ORDER = chaca.schema({
   id: chaca.key(() => modules.id.uuid()),

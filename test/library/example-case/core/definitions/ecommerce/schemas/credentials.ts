@@ -1,4 +1,4 @@
-import { chaca, modules } from "../../../../../src";
+import { chaca, modules } from "../../../../../../../src";
 
 export const CREDENTIAL = chaca.schema({
   user_id: chaca.ref("User.id"),

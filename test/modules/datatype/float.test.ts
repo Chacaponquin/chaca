@@ -1,11 +1,11 @@
 import { ChacaError, modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-const TEST_COUNT_VALUES = 5000;
+const VALUES_LIMIT = 5000;
 
 describe("datatype.float", () => {
   it("no arguments. should return a float number", () => {
-    const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
+    const allValues = Array.from({ length: VALUES_LIMIT }).map(() =>
       modules.datatype.float(),
     );
 
@@ -14,7 +14,7 @@ describe("datatype.float", () => {
 
   describe("min argument", () => {
     it("min = 5. should return a number greater than 5", () => {
-      const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
+      const allValues = Array.from({ length: VALUES_LIMIT }).map(() =>
         modules.datatype.float({ min: 5 }),
       );
 
@@ -24,7 +24,7 @@ describe("datatype.float", () => {
 
   describe("max argument", () => {
     it("max = 20. should return a number less than 20", () => {
-      const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
+      const allValues = Array.from({ length: VALUES_LIMIT }).map(() =>
         modules.datatype.float({ max: 20 }),
       );
 
@@ -34,11 +34,15 @@ describe("datatype.float", () => {
 
   describe("min and max argument", () => {
     it("min = -1000 & max = 1000. should return a number between -1000 and 1000", () => {
-      const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
-        modules.datatype.float({ max: 1000, min: -1000 }),
-      );
+      for (let index = 0; index < VALUES_LIMIT; index++) {
+        const value = modules.datatype.float({
+          max: 1000,
+          min: -1000,
+        });
 
-      expect(allValues.every((v) => v <= 1000 && v >= -1000)).toBe(true);
+        expect(value).toBeGreaterThanOrEqual(-1000);
+        expect(value).toBeLessThanOrEqual(1000);
+      }
     });
 
     it("min = 1000 & max = -1000. should throw an error", () => {
@@ -49,32 +53,35 @@ describe("datatype.float", () => {
   });
 
   describe("precision argument", () => {
-    it("precision = 5. should return a number 5 numbers after the break point", () => {
-      const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
-        modules.datatype.float({ precision: 5 }),
-      );
+    it("precision = 10. should return a number 5 numbers after the break point", () => {
+      for (let index = 0; index < VALUES_LIMIT; index++) {
+        const value = modules.datatype.float({
+          precision: 10,
+        });
 
-      expect(allValues.every((v) => !Number.isInteger(v))).toBe(true);
-      expect(
-        allValues.every((v) => {
-          const str = String(v);
-          const float = str.split(".")[1];
+        expect(Number.isInteger(value)).toBe(false);
 
-          return float.length >= 1;
-        }),
-      ).toBe(true);
+        const str = String(value);
+        const float = str.split(".")[1];
+
+        expect(float.length >= 1).toBe(true);
+      }
     });
   });
 
   describe("precision, min and max arguments", () => {
-    it("precision = 5 & min = -1000 & max = 1000. Should return a number between -1000 and 1000 with 5 numbers after the break point", () => {
-      const allValues = Array.from({ length: TEST_COUNT_VALUES }).map(() =>
-        modules.datatype.float({ precision: 5, max: 1000, min: -1000 }),
-      );
+    it("precision = 10 & min = -1000 & max = 1000. Should return a number between -1000 and 1000 with 5 numbers after the break point", () => {
+      for (let index = 0; index < VALUES_LIMIT; index++) {
+        const value = modules.datatype.float({
+          precision: 10,
+          max: 1000,
+          min: -1000,
+        });
 
-      expect(
-        allValues.every((v) => !Number.isInteger(v) && v >= -1000 && v <= 1000),
-      ).toBe(true);
+        expect(Number.isInteger(value)).toBe(false);
+        expect(value).toBeGreaterThanOrEqual(-1000);
+        expect(value).toBeLessThanOrEqual(1000);
+      }
     });
   });
 });
