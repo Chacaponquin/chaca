@@ -145,6 +145,10 @@ export class PythonClass extends PythonDatatype {
   }
 
   string(index: SpaceIndex, imports: Imports): string {
+    if (this.fields.length === 0) {
+      return `${this.name()}()`;
+    }
+
     let code = `${this.name()}(\n`;
 
     index.push();

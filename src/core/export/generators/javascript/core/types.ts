@@ -24,6 +24,10 @@ export class JavascriptClass extends JavascriptDatatype {
   }
 
   string(index: SpaceIndex): string {
+    if (this.fields.length === 0) {
+      return `{}`;
+    }
+
     let code = `{\n`;
 
     index.push();
@@ -217,7 +221,7 @@ export class JavascriptBignInt extends JavascriptDatatype {
   }
 
   string(): string {
-    return this.value.toString();
+    return `${this.value}n`;
   }
 
   equal(other: JavascriptDatatype): boolean {

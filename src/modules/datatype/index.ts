@@ -258,7 +258,7 @@ export class DatatypeModule {
         ? precision
         : this.int({ min: 0, max: 10 });
 
-    if (pres) {
+    if (pres === 0) {
       val = this.int({ max, min });
     } else {
       val = this.float({ max, min, precision });
