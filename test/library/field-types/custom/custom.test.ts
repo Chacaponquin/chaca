@@ -1,7 +1,7 @@
 import { chaca, modules } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
-describe("# Custom field tests", () => {
+describe("Custom field", () => {
   it("Custom function return a string", () => {
     const schema = chaca.schema({
       id: { type: () => modules.id.uuid() },

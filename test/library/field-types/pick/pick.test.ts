@@ -7,7 +7,7 @@ function unique(array: number[]) {
   }
 }
 
-describe("# Pick Field Tests", () => {
+describe("Pick field", () => {
   it("Pass values=[] and count=0. Should return an empty array", () => {
     const schema = chaca.schema({
       pick: chaca.pick({ values: [], count: 0 }),

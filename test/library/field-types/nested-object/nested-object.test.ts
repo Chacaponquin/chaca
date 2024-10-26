@@ -1,7 +1,7 @@
 import { chaca, modules } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
-describe("# Nested Object field tests", () => {
+describe("Nested object field", () => {
   it("Should return an object with user field as an object", () => {
     const schema = chaca.schema({
       id: () => modules.id.uuid(),

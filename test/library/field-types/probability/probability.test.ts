@@ -12,7 +12,7 @@ function count(data: any[], value: number): number {
   return count;
 }
 
-describe("# Probability Field Tests", () => {
+describe("Probability field", () => {
   it("Probability field with not array value. Should throw an error", () => {
     const schema = chaca.schema({
       prob: chaca.probability(null as any),
@@ -92,12 +92,12 @@ describe("# Probability Field Tests", () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0.9, value: 10 },
-        { chance: 0.5, value: 5 },
+        { chance: 0.3, value: 5 },
         { chance: 0.05, value: 1 },
       ]),
     });
 
-    const data = schema.array(100);
+    const data = schema.array(1000);
     const result1 = count(data, 10);
     const result2 = count(data, 5);
     const result3 = count(data, 1);

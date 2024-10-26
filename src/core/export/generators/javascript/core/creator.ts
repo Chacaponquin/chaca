@@ -31,7 +31,7 @@ export class JavascriptCodeCreator {
       if (!this.types) {
         code += `const data = ${datatype.string(this.indent)}`;
       } else {
-        code += `${classes.string()}`;
+        code += `${classes.string()}\n`;
 
         code += `export const data: ${datatype.definition()} = ${datatype.string(
           this.indent,

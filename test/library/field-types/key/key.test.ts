@@ -1,7 +1,7 @@
 import { ChacaError, chaca } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
-describe("# Key fields tests", () => {
+describe("Key field", () => {
   it("Define an array key field. Should throw an error", () => {
     expect(() =>
       chaca

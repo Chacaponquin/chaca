@@ -1,7 +1,7 @@
 import { EmptyEnumValuesError, chaca } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
-describe("# Enum field tests", () => {
+describe("Enum field", () => {
   it("With empty array as argument. Should throw an error", () => {
     expect(() => {
       chaca.schema({ id: chaca.enum([]) }).array(5);
