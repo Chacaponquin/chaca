@@ -19,7 +19,7 @@ import { NodeRoute } from "../node/value-object/route";
 import { PossibleNull } from "../possible-null";
 
 export class RefValueNode extends InputTreeNode {
-  private refFieldTreeRoute: string[];
+  private refFieldTreeRoute: RefRoute;
   private schemaRefIndex: number | null = null;
   private allRefNodes: SearchedRefValue[] | null = null;
 
@@ -33,7 +33,14 @@ export class RefValueNode extends InputTreeNode {
   ) {
     super(route, isArray, possibleNull);
 
-    this.refFieldTreeRoute = new RefRoute(this.refField.refField).value();
+    this.refFieldTreeRoute = new RefRoute({
+      ref: this.refField.refField,
+      route: route,
+    });
+  }
+
+  nullWhenEmpty() {
+    return this.refField.nullOnEmpty;
   }
 
   isUnique() {
@@ -41,7 +48,7 @@ export class RefValueNode extends InputTreeNode {
   }
 
   getRefFieldRoute(): NodeRoute {
-    return new NodeRoute(this.refFieldTreeRoute);
+    return new NodeRoute(this.refFieldTreeRoute.value());
   }
 
   searchSchemaRef(): void {
@@ -52,7 +59,9 @@ export class RefValueNode extends InputTreeNode {
       const inputTree = schemas[i].getInputTree();
 
       if (inputTree) {
-        const found = inputTree.checkIfFieldExists(this.refFieldTreeRoute);
+        const found = inputTree.checkIfFieldExists(
+          this.refFieldTreeRoute.value(),
+        );
 
         if (found) {
           exists = i;
@@ -94,7 +103,7 @@ export class RefValueNode extends InputTreeNode {
   ): SingleResultNode[] {
     const allValues = this.allRefNodes
       ? this.allRefNodes
-      : schemaRef.getAllRefValuesByNodeRoute(this.refFieldTreeRoute);
+      : schemaRef.getAllRefValuesByNodeRoute(this.refFieldTreeRoute.value());
 
     if (!this.allRefNodes && !refItSelf) {
       this.allRefNodes = allValues;
@@ -165,7 +174,11 @@ export class RefValueNode extends InputTreeNode {
             (n) => !n.isTaken(this.getFieldRoute()),
           );
 
-          if (noTakenValues.length === 0 && !refItSelf) {
+          if (
+            noTakenValues.length === 0 &&
+            !refItSelf &&
+            !this.nullWhenEmpty()
+          ) {
             throw new NotEnoughValuesForRefError(
               this.getRouteString(),
               this.getRefFieldRoute().string(),
@@ -178,13 +191,13 @@ export class RefValueNode extends InputTreeNode {
             node.changeIsTaken(this.getFieldRoute());
           }
 
-          if (refItSelf) {
+          if (refItSelf || this.nullWhenEmpty()) {
             return node ? node.getRealValue() : null;
           }
 
           return node.getRealValue();
         } else {
-          if (allValues.length === 0 && !refItSelf) {
+          if (allValues.length === 0 && !refItSelf && !this.nullWhenEmpty()) {
             throw new NotEnoughValuesForRefError(
               this.getRouteString(),
               this.getRefFieldRoute().string(),
@@ -193,7 +206,7 @@ export class RefValueNode extends InputTreeNode {
 
           const node = this.utils.oneOfArray(allValues);
 
-          if (refItSelf) {
+          if (refItSelf || this.nullWhenEmpty()) {
             return node ? node.getRealValue() : null;
           }
 
