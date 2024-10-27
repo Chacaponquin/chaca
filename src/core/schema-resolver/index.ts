@@ -4,20 +4,17 @@ import { SchemaToResolve } from "../schema/interfaces/schema";
 import { ChacaInputTree } from "../input-tree";
 import { InputTreeNode, RefValueNode, KeyValueNode } from "../input-tree/core";
 import { ChacaResultTree } from "../result-tree";
-import {
-  DocumentTree,
-  FieldNode,
-  ArrayResultNode,
-  SingleResultNode,
-} from "../result-tree/classes";
+import { DocumentTree, FieldNode } from "../result-tree/classes";
 import { SchemaStore } from "../schema-store/store";
 import { GetStoreValueConfig } from "../schema-store/interfaces/store";
-import { DatasetStore } from "../dataset-store";
 import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
 import { CountDoc, SchemaName } from "./value-object";
 import { DatatypeModule } from "../../modules/datatype";
 import { SubFieldsCreator } from "./core/sub-fields-creator";
 import { NodeRoute } from "../input-tree/core/node/value-object/route";
+import { SolutionCreator } from "./core/solution-creator";
+import { ArrayCreator } from "./core/array-creator";
+import { FillSolution } from "./core/fill-solution";
 
 interface SchemaResolverProps {
   name: string;
@@ -27,13 +24,11 @@ interface SchemaResolverProps {
   consoleVerbose: boolean;
 }
 
-interface CreateSolutionNodeProps {
-  field: InputTreeNode;
-  indexDoc: number;
-}
-
 export class SchemaResolver<K = any> {
   private readonly subFieldsCreator: SubFieldsCreator;
+  private readonly solutionCreator: SolutionCreator;
+  private readonly arrayCreator: ArrayCreator;
+  private readonly fillSolution: FillSolution;
 
   private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
@@ -67,7 +62,26 @@ export class SchemaResolver<K = any> {
     this.countDoc = new CountDoc(countDoc).value();
     this.index = schemaIndex;
     this.consoleVerbose = consoleVerbose;
-    this.subFieldsCreator = new SubFieldsCreator(this);
+
+    this.fillSolution = new FillSolution();
+    this.solutionCreator = new SolutionCreator(
+      this.schemasStore,
+      this.resultTree,
+      this,
+    );
+    this.arrayCreator = new ArrayCreator(
+      this.solutionCreator,
+      this.fillSolution,
+    );
+    this.subFieldsCreator = new SubFieldsCreator(
+      this.solutionCreator,
+      this.fillSolution,
+    );
+
+    // set fill solution dependencies
+    this.fillSolution.arrayCreator = this.arrayCreator;
+    this.fillSolution.subFieldsCreator = this.subFieldsCreator;
+
     this.schemasStore = new SchemaStore([]);
     this.route = new NodeRoute([name]);
   }
@@ -212,22 +226,18 @@ export class SchemaResolver<K = any> {
 
             // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
             for (const datField of this.inputTree.getFields()) {
-              const solution = this.createSolutionNode({
+              const solution = this.solutionCreator.execute({
                 field: datField,
                 indexDoc: indexDoc,
               });
 
-              if (datField instanceof KeyValueNode) {
-                newDoc.insertKeyField(solution);
-              } else {
-                // insertar la solucion del field en el documento
-                newDoc.insertField(solution);
-              }
+              // insertar la solucion del field en el documento
+              newDoc.insertField(solution);
 
-              this.subFieldsCreator.execute({
-                field: datField,
+              this.fillSolution.execute({
+                solution: solution,
+                input: datField,
                 indexDoc: indexDoc,
-                node: solution,
               });
             }
           }
@@ -262,67 +272,5 @@ export class SchemaResolver<K = any> {
     }
 
     return result;
-  }
-
-  createSolutionNode({ field, indexDoc }: CreateSolutionNodeProps): FieldNode {
-    const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
-
-    const store = new DatasetStore({
-      schemasStore: this.schemasStore,
-      omitCurrentDocument: currentDocument,
-      omitResolver: this,
-      caller: field.getFieldRoute(),
-    });
-
-    const isNull = field.isNull({
-      store: store,
-      currentDocument: currentDocument,
-      index: indexDoc,
-    });
-
-    if (!isNull) {
-      const limit = field.getIsArray().execute({
-        currentDocument: currentDocument,
-        store: store,
-      });
-
-      // en caso de ser un array
-      if (limit !== undefined) {
-        const arrayNode = new ArrayResultNode({
-          name: field.getName(),
-          fieldNode: field,
-        });
-
-        for (let i = 0; i < limit; i++) {
-          // resolver el field y guardarlo en un nodo
-          const solution = this.createSolutionNode({
-            field: field.getNoArrayNode(),
-            indexDoc: indexDoc,
-          });
-
-          // insertar el field en el array de soluciones
-          arrayNode.insertNode(solution);
-        }
-
-        return arrayNode;
-      }
-
-      // no es un array
-      else {
-        const node = field.generate({
-          currentDocument: currentDocument,
-          indexDoc: indexDoc,
-          schemaIndex: this.index,
-          store: store,
-        });
-
-        return node;
-      }
-    } else {
-      return new SingleResultNode({
-        value: null,
-        name: field.getName(),
-      });
-    }
   }
 }

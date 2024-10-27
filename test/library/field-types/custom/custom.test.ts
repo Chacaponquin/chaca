@@ -11,22 +11,39 @@ describe("Custom field", () => {
     });
 
     const docs = schema.object();
-    expect(docs["custom"]).toBe("Foo");
+    expect(docs.custom).toBe("Foo");
   });
 
-  it("Custom function access to this property", () => {
-    const schema = chaca.schema({
-      id: { type: () => modules.id.uuid() },
-      custom: {
-        type({ currentFields: fields }) {
-          return fields.id;
+  describe("custom function access to object properties", () => {
+    it("custom function trying to access a parent object property", () => {
+      const schema = chaca.schema({
+        id: { type: () => modules.id.uuid() },
+        custom: {
+          type({ currentFields: fields }) {
+            return fields.id;
+          },
         },
-      },
+      });
+
+      const docs = schema.object();
+
+      expect(docs.custom).toBe(docs.id);
     });
 
-    const docs = schema.object();
+    it("custon function on a nested schema trying to access own object property", () => {
+      const schema = chaca.schema({
+        object: chaca.schema({
+          id: () => "foo",
+          custom: ({ currentFields }) => {
+            return currentFields.object.id;
+          },
+        }),
+      });
 
-    expect(docs.custom).toBe(docs.id);
+      const docs = schema.object();
+
+      expect(docs.object.custom).toBe("foo");
+    });
   });
 
   it("Custom function in a nested schema", () => {

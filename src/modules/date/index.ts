@@ -194,27 +194,29 @@ export class DateModule {
     refDate: irefDate,
     max: imax,
     min: imin,
-    mode: imode,
-  }: BirthDateProps = {}) {
+    mode: imode = "age",
+  }: BirthDateProps = {}): Date {
     const refDate = this.argToDate(irefDate);
 
     const mode = imode === "age" || imode === "year" ? imode : "age";
 
     const refYear = refDate.getUTCFullYear();
 
-    let min: number =
+    const min: number =
       typeof imin === "number" && imin > 0 ? imin : refYear - 18;
-    let max: number = typeof imax === "number" ? imax : refYear - 80;
+    const max: number = typeof imax === "number" ? imax : refYear - 80;
 
     if (mode === "age") {
-      min = new Date(refDate).setUTCFullYear(refYear - max - 1);
-      max = new Date(refDate).setUTCFullYear(refYear - min);
-    } else {
-      min = new Date(Date.UTC(0, 0, 2)).setUTCFullYear(min);
-      max = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);
-    }
+      const minimun = new Date(refDate).setUTCFullYear(refYear - max - 1);
+      const maximun = new Date(refDate).setUTCFullYear(refYear - min);
 
-    return new Date(this.datatypeModule.int({ min, max }));
+      return new Date(this.datatypeModule.int({ min: maximun, max: minimun }));
+    } else {
+      const minimun = new Date(Date.UTC(0, 0, 2)).setUTCFullYear(min);
+      const maximun = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);
+
+      return new Date(this.datatypeModule.int({ min: minimun, max: maximun }));
+    }
   }
 
   private randomDate(): Date {

@@ -1,21 +1,19 @@
 import { ChacaError } from "../../../../errors";
-import { InputTreeNode } from "../../../input-tree/core";
 import { FieldNode } from "../node";
 import { SingleResultNode } from "../single-result";
 
 interface Props {
   name: string;
-  fieldNode: InputTreeNode;
+  limit: number;
 }
 
 export class ArrayResultNode extends FieldNode {
   private arrayNodes: FieldNode[] = [];
-  private fieldNode: InputTreeNode;
+  readonly limit: number;
 
-  constructor({ name, fieldNode }: Props) {
+  constructor({ name, limit }: Props) {
     super(name);
-
-    this.fieldNode = fieldNode;
+    this.limit = limit;
   }
 
   value(): unknown[] {
@@ -46,9 +44,5 @@ export class ArrayResultNode extends FieldNode {
         `The field ${fieldTreeRoute.join(".")} do not exists`,
       );
     }
-  }
-
-  getFieldNode() {
-    return this.fieldNode;
   }
 }

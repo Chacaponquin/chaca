@@ -18,7 +18,14 @@ export class MixedValueNode extends InputTreeNode {
   }
 
   getNoArrayNode(): InputTreeNode {
-    return new MixedValueNode(this.route, new NotArray(), this.possibleNull);
+    const node = new MixedValueNode(
+      this.route,
+      new NotArray(),
+      this.possibleNull,
+    );
+    node.nodes = this.nodes;
+
+    return node;
   }
 
   getPossibleNullNodes(): InputTreeNode[] {
@@ -75,6 +82,7 @@ export class MixedValueNode extends InputTreeNode {
   }
 
   generate(): FieldNode {
-    return new MixedFieldNode(this.getName());
+    const result = new MixedFieldNode(this.getName());
+    return result;
   }
 }

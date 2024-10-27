@@ -162,7 +162,7 @@ export class DatatypeModule {
    *
    * @example
    * modules.datatype.int() // 462
-   * modules.datatype.int() // 28
+   * modules.datatype.int({ min: 10, max: 30 }) // 28
    *
    * @returns number
    */

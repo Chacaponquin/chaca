@@ -9,10 +9,6 @@ export class DocumentTree<D = any> {
     this.nodes.push(newField);
   }
 
-  insertKeyField(newKey: FieldNode) {
-    this.nodes = [newKey, ...this.nodes];
-  }
-
   getDocumentObject(): D {
     let returnObject = {} as D;
 

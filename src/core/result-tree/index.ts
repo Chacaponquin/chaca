@@ -2,7 +2,7 @@ import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
 import { GetStoreValueConfig } from "../schema-store/interfaces/store";
 import { DocumentTree, FieldNode } from "./classes";
 
-export class ChacaResultTree<D> {
+export class ChacaResultTree<D = any> {
   constructor(readonly name: string) {}
 
   private documents: DocumentTree<D>[] = [];
