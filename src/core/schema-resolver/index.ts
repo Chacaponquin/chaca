@@ -16,7 +16,12 @@ import { SolutionCreator } from "./core/solution-creator";
 import { ArrayCreator } from "./core/array-creator";
 import { FillSolution } from "./core/fill-solution";
 
-interface SchemaResolverProps {
+interface GetRefValueProps {
+  caller: NodeRoute;
+  search: NodeRoute;
+}
+
+interface Props {
   name: string;
   schemaObject: SchemaToResolve;
   countDoc: number;
@@ -48,20 +53,18 @@ export class SchemaResolver<K = any> {
   constructor(
     private readonly utils: ChacaUtils,
     private readonly datatypeModule: DatatypeModule,
-    {
-      consoleVerbose,
-      countDoc,
-      schemaIndex,
-      name,
-      schemaObject,
-    }: SchemaResolverProps,
+    { consoleVerbose, countDoc, schemaIndex, name, schemaObject }: Props,
   ) {
     this.name = new SchemaName(name).value();
     this.schemaObject = schemaObject;
-    this.resultTree = new ChacaResultTree<K>(this.name);
-    this.countDoc = new CountDoc(countDoc).value();
     this.index = schemaIndex;
     this.consoleVerbose = consoleVerbose;
+
+    this.schemasStore = new SchemaStore([]);
+    this.route = new NodeRoute([name]);
+
+    this.resultTree = new ChacaResultTree<K>(this.name);
+    this.countDoc = new CountDoc(countDoc).value();
 
     this.fillSolution = new FillSolution();
     this.solutionCreator = new SolutionCreator(
@@ -81,9 +84,6 @@ export class SchemaResolver<K = any> {
     // set fill solution dependencies
     this.fillSolution.arrayCreator = this.arrayCreator;
     this.fillSolution.subFieldsCreator = this.subFieldsCreator;
-
-    this.schemasStore = new SchemaStore([]);
-    this.route = new NodeRoute([name]);
   }
 
   resolve(): K[] {
@@ -188,8 +188,14 @@ export class SchemaResolver<K = any> {
     }
   }
 
-  getAllRefValuesByNodeRoute(fieldTreeRoute: string[]): SearchedRefValue[] {
-    return this.resultTree.getAllRefValuesByNodeRoute(fieldTreeRoute);
+  getAllRefValuesByNodeRoute({
+    caller,
+    search,
+  }: GetRefValueProps): SearchedRefValue[] {
+    return this.resultTree.getAllRefValuesByNodeRoute({
+      caller: caller,
+      search: search,
+    });
   }
 
   searchRefNodes() {

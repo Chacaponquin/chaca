@@ -35,7 +35,7 @@ import {
   TryRefANoKeyFieldError,
   NotEnoughValuesForRefError,
   CyclicAccessDataError,
-  NotExistFieldError,
+  NotExistRefFieldError,
   EmptyEnumValuesError,
   PickFieldDefinitionError,
 } from "./errors";
@@ -105,7 +105,7 @@ export {
   CyclicAccessDataError,
   ChacaError,
   NotEnoughValuesForRefError,
-  NotExistFieldError,
+  NotExistRefFieldError,
   EmptyEnumValuesError,
   PickFieldDefinitionError,
 };

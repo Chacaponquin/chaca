@@ -29,9 +29,11 @@ export const HOTEL_SCHEMA = chaca.schema({
   pets_ok: () => modules.datatype.boolean(),
   public_likes: {
     type: chaca.ref("User.id", {
-      unique: true,
-      where: ({ refFields }) => {
-        return refFields.role === "customer";
+      where: ({ refFields, currentFields }) => {
+        return (
+          refFields.role === "customer" &&
+          !currentFields.public_likes.includes(refFields.id)
+        );
       },
     }),
     isArray: { min: 0, max: 500 },

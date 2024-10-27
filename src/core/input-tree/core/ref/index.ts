@@ -2,14 +2,18 @@ import {
   ChacaError,
   CyclicAccessDataError,
   NotEnoughValuesForRefError,
-  NotExistFieldError,
+  NotExistRefFieldError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
 import { GenerateProps, InputTreeNode } from "../node";
 import { ChacaUtils } from "../../../utils";
 import { FieldToRefObject } from "../../../fields/core/ref";
 import { SchemaStore } from "../../../schema-store/store";
-import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
+import {
+  DocumentTree,
+  FieldNode,
+  SingleResultNode,
+} from "../../../result-tree/classes";
 import { DatasetStore } from "../../../dataset-store";
 import { SearchedRefValue } from "./interfaces/ref";
 import { RefRoute } from "./value-object/route";
@@ -48,7 +52,7 @@ export class RefValueNode extends InputTreeNode {
   }
 
   getRefFieldRoute(): NodeRoute {
-    return new NodeRoute(this.refFieldTreeRoute.value());
+    return this.refFieldTreeRoute.value();
   }
 
   searchSchemaRef(): void {
@@ -60,7 +64,7 @@ export class RefValueNode extends InputTreeNode {
 
       if (inputTree) {
         const found = inputTree.checkIfFieldExists(
-          this.refFieldTreeRoute.value(),
+          this.refFieldTreeRoute.value().array(),
         );
 
         if (found) {
@@ -70,7 +74,7 @@ export class RefValueNode extends InputTreeNode {
     }
 
     if (exists === -1) {
-      throw new NotExistFieldError(
+      throw new NotExistRefFieldError(
         this.getRouteString(),
         this.refField.refField,
       );
@@ -97,47 +101,47 @@ export class RefValueNode extends InputTreeNode {
 
   private filterRefNodesByConfig(
     schemaRef: SchemaResolver,
-    currentDocumentIndex: number,
+    currentDocument: DocumentTree,
     currentSchemaResolverIndex: number,
     refItSelf: boolean,
   ): SingleResultNode[] {
-    const allValues = this.allRefNodes
+    const allRefValues = this.allRefNodes
       ? this.allRefNodes
-      : schemaRef.getAllRefValuesByNodeRoute(this.refFieldTreeRoute.value());
+      : schemaRef.getAllRefValuesByNodeRoute({
+          search: this.refFieldTreeRoute.value(),
+          caller: this.route,
+        });
 
     if (!this.allRefNodes && !refItSelf) {
-      this.allRefNodes = allValues;
+      this.allRefNodes = allRefValues;
     }
 
     const currentSchemaResolver = this.schemasStore.get(
       currentSchemaResolverIndex,
     );
 
-    const currentFields = currentSchemaResolver
-      .getResultTree()
-      .getDocumentByIndex(currentDocumentIndex)
-      .getDocumentObject();
-
     const returnRefValues: SingleResultNode[] = [];
 
-    for (const refNode of allValues) {
-      if (this.refField.where) {
-        const isAccepted = this.refField.where({
-          store: new DatasetStore({
-            schemasStore: this.schemasStore,
-            omitCurrentDocument: refNode.document,
-            omitResolver: currentSchemaResolver,
-            caller: this.getFieldRoute(),
-          }),
-          refFields: refNode.document.getDocumentObject(),
-          currentFields: currentFields,
-        });
+    for (const refNode of allRefValues) {
+      if (currentDocument !== refNode.document) {
+        if (this.refField.where) {
+          const isAccepted = this.refField.where({
+            store: new DatasetStore({
+              schemasStore: this.schemasStore,
+              omitCurrentDocument: refNode.document,
+              omitResolver: currentSchemaResolver,
+              caller: this.getFieldRoute(),
+            }),
+            refFields: refNode.document.getDocumentObject(),
+            currentFields: currentDocument.getDocumentObject(),
+          });
 
-        if (isAccepted) {
+          if (isAccepted) {
+            returnRefValues.push(refNode.resultNode);
+          }
+        } else {
           returnRefValues.push(refNode.resultNode);
         }
-      } else {
-        returnRefValues.push(refNode.resultNode);
       }
     }
 
@@ -145,7 +149,7 @@ export class RefValueNode extends InputTreeNode {
   }
 
   private value(
-    currentDocument: number,
+    currentDocument: DocumentTree,
     icurrentSchemaResolver: number,
   ): unknown | unknown[] {
     const schemaRef = this.getSchemaRef();
@@ -224,8 +228,8 @@ export class RefValueNode extends InputTreeNode {
     }
   }
 
-  generate({ schemaIndex, indexDoc }: GenerateProps): FieldNode {
-    const refValue = this.value(indexDoc, schemaIndex);
+  generate({ schemaIndex, currentDocument }: GenerateProps): FieldNode {
+    const refValue = this.value(currentDocument, schemaIndex);
 
     return new SingleResultNode({
       name: this.getName(),

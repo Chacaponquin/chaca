@@ -1,17 +1,24 @@
+import { NodeRoute } from "../../../input-tree/core/node/value-object/route";
 import { SingleResultNode } from "../single-result";
+
+export interface GetRefValueProps {
+  search: NodeRoute;
+  caller: NodeRoute;
+  baseSearch: NodeRoute;
+}
 
 export abstract class FieldNode {
   constructor(readonly name: string) {}
 
   protected abstract value(): unknown | unknown[];
-  abstract getNodeByRoute(fieldTreeRoute: Array<string>): FieldNode;
+  abstract getNodeByRoute(fieldTreeRoute: string[]): FieldNode;
 
   protected abstract getRefValueByNodeRoute(
-    fieldTreeRoute: string[],
+    props: GetRefValueProps,
   ): SingleResultNode;
 
-  getRefValueByRoute(fieldTreeRoute: string[]): SingleResultNode {
-    const value = this.getRefValueByNodeRoute(fieldTreeRoute);
+  getRefValueByRoute(props: GetRefValueProps): SingleResultNode {
+    const value = this.getRefValueByNodeRoute(props);
     return value;
   }
 

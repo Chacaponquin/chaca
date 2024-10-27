@@ -72,10 +72,10 @@ export class CyclicAccessDataError extends ChacaError {
   }
 }
 
-export class NotExistFieldError extends ChacaError {
+export class NotExistRefFieldError extends ChacaError {
   constructor(readonly fieldRoute: string, readonly refFieldRoute: string) {
     super(`From '${fieldRoute}', The field '${refFieldRoute}' does not exists`);
-    this.name = "ChacaError.NotExistFieldError";
+    this.name = "ChacaError.NotExistRefFieldError";
   }
 }
 

@@ -1,5 +1,5 @@
-import { ChacaError } from "../../../../errors";
-import { FieldNode } from "../node";
+import { ChacaError, NotExistRefFieldError } from "../../../../errors";
+import { FieldNode, GetRefValueProps } from "../node";
 import { SingleResultNode } from "../single-result";
 
 interface Props {
@@ -8,7 +8,7 @@ interface Props {
 }
 
 export class ArrayResultNode extends FieldNode {
-  private arrayNodes: FieldNode[] = [];
+  private nodes: FieldNode[] = [];
   readonly limit: number;
 
   constructor({ name, limit }: Props) {
@@ -17,11 +17,11 @@ export class ArrayResultNode extends FieldNode {
   }
 
   value(): unknown[] {
-    return this.arrayNodes.map((n) => n.getRealValue());
+    return this.nodes.map((n) => n.getRealValue());
   }
 
   insertNode(n: FieldNode) {
-    this.arrayNodes.push(n);
+    this.nodes.push(n);
   }
 
   getNodeByRoute(fieldTreeRoute: string[]): FieldNode {
@@ -34,15 +34,10 @@ export class ArrayResultNode extends FieldNode {
     }
   }
 
-  getRefValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
-    if (fieldTreeRoute.length === 0) {
-      throw new ChacaError(
-        `The field ${fieldTreeRoute.join(".")} do not exists`,
-      );
-    } else {
-      throw new ChacaError(
-        `The field ${fieldTreeRoute.join(".")} do not exists`,
-      );
-    }
+  getRefValueByNodeRoute({
+    baseSearch,
+    caller,
+  }: GetRefValueProps): SingleResultNode {
+    throw new NotExistRefFieldError(caller.string(), baseSearch.string());
   }
 }

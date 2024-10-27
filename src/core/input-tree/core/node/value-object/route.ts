@@ -19,8 +19,16 @@ export class NodeRoute {
     return new NodeRoute(r);
   }
 
+  empty() {
+    return this._route.length === 0;
+  }
+
   name(): string {
     return this._route.at(-1) as string;
+  }
+
+  pop(): NodeRoute {
+    return new NodeRoute(this._route.slice(1));
   }
 
   string(): string {

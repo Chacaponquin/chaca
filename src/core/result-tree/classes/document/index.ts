@@ -1,6 +1,12 @@
-import { ChacaError } from "../../../../errors";
+import { ChacaError, NotExistRefFieldError } from "../../../../errors";
+import { NodeRoute } from "../../../input-tree/core/node/value-object/route";
 import { FieldNode } from "../node";
 import { SingleResultNode } from "../single-result";
+
+interface GetRefValueByRouteProps {
+  caller: NodeRoute;
+  search: NodeRoute;
+}
 
 export class DocumentTree<D = any> {
   private nodes: FieldNode[] = [];
@@ -40,21 +46,26 @@ export class DocumentTree<D = any> {
     }
   }
 
-  getRefValueByNodeRoute(fieldTreeRoute: Array<string>): SingleResultNode {
+  getRefValueByNodeRoute({
+    caller,
+    search,
+  }: GetRefValueByRouteProps): SingleResultNode {
     let returnValue = undefined;
 
     for (let i = 0; i < this.nodes.length && returnValue === undefined; i++) {
-      if (this.nodes[i].name === fieldTreeRoute[0]) {
-        returnValue = this.nodes[i].getRefValueByRoute(fieldTreeRoute.slice(1));
+      if (this.nodes[i].name === search.array()[0]) {
+        returnValue = this.nodes[i].getRefValueByRoute({
+          caller: caller,
+          search: search.pop(),
+          baseSearch: search,
+        });
       }
     }
 
     if (returnValue) {
       return returnValue;
     } else {
-      throw new ChacaError(
-        `The field ${fieldTreeRoute.join(".")} do not exists`,
-      );
+      throw new NotExistRefFieldError(caller.string(), search.string());
     }
   }
 }

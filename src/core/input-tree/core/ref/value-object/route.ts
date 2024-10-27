@@ -21,7 +21,7 @@ export class RefRoute {
     }
   }
 
-  value(): string[] {
-    return this._value;
+  value(): NodeRoute {
+    return new NodeRoute(this._value);
   }
 }

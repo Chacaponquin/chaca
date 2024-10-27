@@ -1,6 +1,6 @@
-import { ChacaError } from "../../../../errors";
+import { ChacaError, NotExistRefFieldError } from "../../../../errors";
 import { NodeRoute } from "../../../input-tree/core/node/value-object/route";
-import { FieldNode } from "../node";
+import { FieldNode, GetRefValueProps } from "../node";
 
 interface Props {
   name: string;
@@ -38,13 +38,15 @@ export class SingleResultNode extends FieldNode {
     }
   }
 
-  getRefValueByNodeRoute(fieldTreeRoute: string[]): SingleResultNode {
-    if (fieldTreeRoute.length === 0) {
+  getRefValueByNodeRoute({
+    caller,
+    search,
+    baseSearch,
+  }: GetRefValueProps): SingleResultNode {
+    if (search.empty()) {
       return this;
     } else {
-      throw new ChacaError(
-        `The field ${fieldTreeRoute.join(".")} do not exists`,
-      );
+      throw new NotExistRefFieldError(caller.string(), baseSearch.string());
     }
   }
 }

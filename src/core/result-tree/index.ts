@@ -1,6 +1,12 @@
+import { NodeRoute } from "../input-tree/core/node/value-object/route";
 import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
 import { GetStoreValueConfig } from "../schema-store/interfaces/store";
 import { DocumentTree, FieldNode } from "./classes";
+
+interface GetRefValuesProps {
+  caller: NodeRoute;
+  search: NodeRoute;
+}
 
 export class ChacaResultTree<D = any> {
   constructor(readonly name: string) {}
@@ -44,14 +50,20 @@ export class ChacaResultTree<D = any> {
     return allNodes;
   }
 
-  getAllRefValuesByNodeRoute(fieldTreeRoute: string[]): SearchedRefValue[] {
-    const allValues: Array<SearchedRefValue> = [];
+  getAllRefValuesByNodeRoute({
+    search,
+    caller,
+  }: GetRefValuesProps): SearchedRefValue[] {
+    const allValues: SearchedRefValue[] = [];
 
     this.documents.forEach((d) => {
       // quitar el primer elemento de la ruta pues pertenece al nombre del schema al que pertenece
-      const foundValue = d.getRefValueByNodeRoute(fieldTreeRoute.slice(1));
+      const found = d.getRefValueByNodeRoute({
+        search: search.pop(),
+        caller: caller,
+      });
 
-      allValues.push({ resultNode: foundValue, document: d });
+      allValues.push({ resultNode: found, document: d });
     });
 
     return allValues;
