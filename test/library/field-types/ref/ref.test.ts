@@ -2,6 +2,29 @@ import { chaca, modules, NotExistRefFieldError } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("Ref field", () => {
+
+
+  describe("ref a nested schema", () => {
+    it("from schema.ref reference schema2.object.id. all schema.ref values should reference one schema2.object.id value", () => {
+      const schema = chaca.schema({
+        object: chaca.schema({ id: chaca.key(chaca.sequence()) }),
+      });
+
+      const schema2 = chaca.schema({ ref: chaca.ref("schema.object.id") });
+
+      const data = chaca
+        .dataset([
+          { name: "schema", documents: 50, schema: schema },
+          { name: "schema2", documents: 50, schema: schema2 },
+        ])
+        .generate();
+
+      for (const v of data.schema2) {
+        expect(data.schema.map((s) => s.object.id)).include(v.ref);
+      }
+    });
+  });
+
   it("create a correct ref field", () => {
     const schema = chaca.schema({
       id: chaca.key(() => modules.id.uuid()),

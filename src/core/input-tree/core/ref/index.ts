@@ -251,7 +251,7 @@ export class RefValueNode extends InputTreeNode {
       this.schemasStore,
     );
 
-    if (this.schemaRefIndex) {
+    if (this.schemaRefIndex !== null) {
       newRefNode.setSchemaRef(this.schemaRefIndex);
     }
 
