@@ -80,6 +80,8 @@
 - 🎉 Added `lorem.paragraph`
 - 🎉 Added `person.zodiacSign`
 - 🎉 Added `system.cron`
+- 🎉 Added `address.longitude`
+- 🎉 Added `address.latitude`
 - The `prefix` argument was added to the `datatype.alphaNumeric` module
 
 ### Utils

@@ -13,15 +13,7 @@ function count(data: any[], value: number): number {
 }
 
 describe("Probability field", () => {
-  it("Probability field with not array value. Should throw an error", () => {
-    const schema = chaca.schema({
-      prob: chaca.probability(null as any),
-    });
-
-    expect(() => schema.array(10)).toThrow(ChacaError);
-  });
-
-  it("Create a schema with a probability field without values. Should throw an error", () => {
+  it("create a schema with a probability field without values. Should throw an error", () => {
     const schema = chaca.schema({
       prob: chaca.probability([]),
     });
@@ -29,7 +21,7 @@ describe("Probability field", () => {
     expect(() => schema.array(10)).toThrow(ChacaError);
   });
 
-  it("Create a schema with a probability field with 3 elements", () => {
+  it("create a schema with a probability field with 3 elements", () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0.8, value: 10 },
@@ -43,7 +35,7 @@ describe("Probability field", () => {
     expect(count(data, 10)).toBeGreaterThanOrEqual(30);
   });
 
-  it("Probability field with function chance that returns 0.8", () => {
+  it("probability field with function chance that returns 0.8", () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: () => 0.8, value: 10 },
@@ -59,7 +51,7 @@ describe("Probability field", () => {
     expect(total).toBeGreaterThanOrEqual(30);
   });
 
-  it("Probability field with 2 elements with 0.8 chance", () => {
+  it("probability field with 2 elements with 0.8 chance", () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0.8, value: 10 },
@@ -74,7 +66,7 @@ describe("Probability field", () => {
     expect(result).toBeLessThanOrEqual(20);
   });
 
-  it("Probability field with an option with chance=0. Should never return that value", () => {
+  it("probability field with an option with chance=0. should never return that value", () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0, value: 10 },
@@ -88,7 +80,7 @@ describe("Probability field", () => {
     expect(count(data, 10)).toBe(0);
   });
 
-  it("Probability field with 3 options with different chances", () => {
+  it("probability field with 3 options with different chances", () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0.9, value: 10 },

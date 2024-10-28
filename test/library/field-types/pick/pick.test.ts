@@ -8,7 +8,7 @@ function unique(array: number[]) {
 }
 
 describe("Pick field", () => {
-  it("Pass values=[] and count=0. Should return an empty array", () => {
+  it("values=[] & count=0. should return an empty array", () => {
     const schema = chaca.schema({
       pick: chaca.pick({ values: [], count: 0 }),
     });
@@ -18,7 +18,7 @@ describe("Pick field", () => {
     expect(data.pick).toHaveLength(0);
   });
 
-  it("Pass values=[1, 2, 3] and count=2. Should return a two elements array", () => {
+  it("values=[1, 2, 3] & count=2. should return a two elements array", () => {
     const schema = chaca.schema({
       pick: chaca.pick({ values: [1, 2, 3], count: 2 }),
     });
@@ -29,7 +29,7 @@ describe("Pick field", () => {
     unique(data.pick);
   });
 
-  it("Pass count=-1. Should throw an error", () => {
+  it("count=-1. should throw an error", () => {
     const schema = chaca.schema({
       pick: chaca.pick({ values: [1, 2, 3], count: -1 }),
     });
@@ -37,7 +37,7 @@ describe("Pick field", () => {
     expect(() => schema.object()).toThrow(PickFieldDefinitionError);
   });
 
-  it("Pass count=2 and values=[1]. Should throw an error", () => {
+  it("count=2 & values=[1]. should throw an error", () => {
     const schema = chaca.schema({
       pick: chaca.pick({ values: [1], count: 2 }),
     });
@@ -45,7 +45,7 @@ describe("Pick field", () => {
     expect(() => schema.object()).toThrow(PickFieldDefinitionError);
   });
 
-  it("Pass count=2 and values=[1, 2]. Should return [1, 2]", () => {
+  it("count=2 & values=[1, 2]. should return [1, 2]", () => {
     const schema = chaca.schema({
       pick: chaca.pick({ values: [1, 2], count: 2 }),
     });
@@ -57,7 +57,7 @@ describe("Pick field", () => {
     expect(data.pick[1]).toBe(2);
   });
 
-  it("Pass values=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] and count=5. Should return an 5 different elements array", () => {
+  it("values=[1, 2, 3, 4, 5, 6, 7, 8, 9, 10] & count=5. should return an 5 different elements array", () => {
     const array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
     const schema = chaca.schema({
