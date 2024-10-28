@@ -41,7 +41,6 @@
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "lint-fix": "eslint --fix src/**/*.ts",
     "lint": "eslint src/**/*.ts",
-    "rollup": "rollup -c",
     "fix": "npm run lint-fix && npm run prettier-format"
   },
   "repository": {
