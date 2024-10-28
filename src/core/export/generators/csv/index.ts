@@ -20,7 +20,7 @@ export class CsvGenerator extends Generator {
     location: string,
     {
       zip = false,
-      trim = { fields: false, header: false },
+      trim = { field: false, header: false },
       delimiter = {},
       excludeKeys = [],
       expandArrayObjects = false,
