@@ -1,4 +1,4 @@
-import { IsArrayConfig } from "../interfaces/schema";
+import { IsArrayConfig } from "../../schema/interfaces/schema";
 
 export class FieldIsArray {
   private readonly _value: IsArrayConfig;

@@ -19,34 +19,37 @@ import {
   SequentialFieldResolver,
 } from "../../resolvers/core";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
-import { Schema } from "..";
+import { Schema } from "../../schema";
 import {
   FieldObjectInput,
   FieldTypes,
   ResolverObject,
   SchemaInput,
-  SchemaToResolve,
-} from "../interfaces/schema";
+} from "../../schema/interfaces/schema";
 import { FieldIsArray } from "./array";
 import { FieldPossibleNull } from "./possible-null";
 import { InputKeyField } from "./input-key";
+import { NodeRoute } from "../../input-tree/core/node/value-object/route";
 
 interface Filter {
   config?: FieldTypes;
+  route: NodeRoute;
 }
 
-export class InputSchemaResolver {
-  private _schema: SchemaToResolve;
+export type ISchemaToResolve = Record<string, ResolverObject>;
 
-  constructor(obj: SchemaInput) {
-    this._schema = this.validate(obj);
+export class SchemaToResolve {
+  private _schema: ISchemaToResolve;
+
+  constructor(route: NodeRoute, obj: SchemaInput) {
+    this._schema = this.validate(route, obj);
   }
 
   value() {
     return this._schema;
   }
 
-  private filter({ config }: Filter): IResolver {
+  private filter({ config, route }: Filter): IResolver {
     let returnResolver: IResolver;
 
     if (config) {
@@ -67,7 +70,7 @@ export class InputSchemaResolver {
         } else if (config instanceof ProbabilityField) {
           returnResolver = new ProbabilityFieldResolver(config.values);
         } else if (config instanceof KeyField) {
-          returnResolver = new InputKeyField(config).resolver();
+          returnResolver = new InputKeyField(route, config).resolver();
         } else if (config instanceof SequenceField) {
           returnResolver = new SequenceFieldResolver(config.config);
         } else if (config instanceof EnumField) {
@@ -83,8 +86,8 @@ export class InputSchemaResolver {
     return returnResolver;
   }
 
-  private validate(obj: SchemaInput): SchemaToResolve {
-    const schemaToSave = {} as SchemaToResolve;
+  private validate(route: NodeRoute, obj: SchemaInput): ISchemaToResolve {
+    const schemaToSave = {} as ISchemaToResolve;
 
     for (const [key, field] of Object.entries(obj)) {
       const resolverObject = {
@@ -94,7 +97,7 @@ export class InputSchemaResolver {
 
       if ("type" in field) {
         const fieldObject = field as FieldObjectInput;
-        const type = this.filter({ config: fieldObject.type });
+        const type = this.filter({ config: fieldObject.type, route: route });
 
         resolverObject.type = type;
 
@@ -104,7 +107,7 @@ export class InputSchemaResolver {
         resolverObject.possibleNull = configNull;
         resolverObject.isArray = configArray;
       } else {
-        const type = this.filter({ config: field });
+        const type = this.filter({ config: field, route: route });
         resolverObject.type = type;
       }
 

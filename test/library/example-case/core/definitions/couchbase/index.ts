@@ -8,7 +8,7 @@ import { USER } from "./schemas/user";
 export const COUCHBASE_DATASET = chaca.dataset([
   { name: "Airline", documents: 80, schema: AIRLINE_SCHEMA },
   { name: "Airport", documents: 10, schema: AIRPORT_SCHEMA },
-  { name: "Hotel", documents: 60, schema: HOTEL_SCHEMA },
+  { name: "Hotel", documents: 10, schema: HOTEL_SCHEMA },
   { name: "Route", documents: 200, schema: ROUTE },
-  { name: "User", documents: 800, schema: USER },
+  { name: "User", documents: 300, schema: USER },
 ]);

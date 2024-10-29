@@ -1,5 +1,5 @@
 import { WrongPossibleNullDefinitionError } from "../../../../errors";
-import { FieldPossibleNull } from "../../../schema/value-object/possible-null";
+import { FieldPossibleNull } from "../../../schema-resolver/value-object/possible-null";
 import { ChacaUtils } from "../../../utils";
 import {
   AbsoluteNullCount,

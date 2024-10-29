@@ -1,7 +1,6 @@
 import { ExportResolver } from "../export/resolvers/export";
-import { SchemaInput, SchemaToResolve } from "./interfaces/schema";
+import { SchemaInput } from "./interfaces/schema";
 import { DumpConfig, FileConfig } from "../export/interfaces/export";
-import { InputSchemaResolver } from "./value-object/schema-resolver";
 import { SchemaResolver } from "../schema-resolver";
 import { ChacaUtils } from "../utils";
 import { DatatypeModule } from "../../modules/datatype";
@@ -10,19 +9,11 @@ import { DumpResolver } from "../export/resolvers/dump";
 import { DumpFile } from "../export/generators/generator";
 
 export class Schema<K = any> {
-  private schemaResolver: SchemaToResolve;
-
   constructor(
-    input: SchemaInput,
+    readonly input: SchemaInput,
     private readonly utils: ChacaUtils,
     private readonly datatypeModule: DatatypeModule,
-  ) {
-    this.schemaResolver = new InputSchemaResolver(input).value();
-  }
-
-  getSchemaObject() {
-    return this.schemaResolver;
-  }
+  ) {}
 
   /**
    * Generates and serializes schema data as a specific file format
@@ -86,7 +77,7 @@ export class Schema<K = any> {
       this.datatypeModule,
       {
         name: "Schema",
-        schemaObject: this.schemaResolver,
+        input: this.input,
         countDoc: countDocuments,
         schemaIndex: 0,
         consoleVerbose: false,

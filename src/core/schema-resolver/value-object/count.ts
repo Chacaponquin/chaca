@@ -7,27 +7,23 @@ export class CountDoc {
     this._value = this.validate(limit);
   }
 
-  public value(): number {
+  value(): number {
     return this._value;
   }
 
-  private validate(cantDocuments: number): number {
-    let numberCant = 10;
-
-    if (typeof cantDocuments === "number") {
-      if (cantDocuments >= 0) {
-        numberCant = cantDocuments;
-      } else if (cantDocuments < 0) {
-        throw new ChacaError(
-          `You can not generate a negative number of documents`,
-        );
+  private validate(count: number): number {
+    if (typeof count === "number") {
+      if (count >= 0) {
+        return count;
       }
+
+      throw new ChacaError(
+        `You can not generate a negative number of documents`,
+      );
     } else {
       throw new ChacaError(
         `You have to specify a number of documents to create`,
       );
     }
-
-    return numberCant;
   }
 }

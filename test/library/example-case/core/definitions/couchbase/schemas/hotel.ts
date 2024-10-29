@@ -36,8 +36,8 @@ export const HOTEL_SCHEMA = chaca.schema({
         );
       },
     }),
-    isArray: { min: 0, max: 300 },
+    isArray: { min: 0, max: 100 },
   },
-  reviews: { type: REVIEW_SCHEMA, isArray: { min: 0, max: 500 } },
+  reviews: { type: REVIEW_SCHEMA, isArray: { min: 0, max: 200 } },
   title: () => modules.lorem.words(),
 });

@@ -1,6 +1,6 @@
 import { WrongArrayDefinitionError } from "../../../../errors";
 import { DatatypeModule } from "../../../../modules/datatype";
-import { FieldIsArray } from "../../../schema/value-object/array";
+import { FieldIsArray } from "../../../schema-resolver/value-object/array";
 import {
   FunctionArray,
   IntegerArray,

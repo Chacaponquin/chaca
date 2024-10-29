@@ -54,7 +54,7 @@ export class DatasetResolver<K = any> {
       if (typeof schema === "object" && schema !== null) {
         return new SchemaResolver(this.utils, this.datatypeModule, {
           name: schema.name,
-          schemaObject: schema.schema.getSchemaObject(),
+          input: schema.schema.input,
           countDoc: schema.documents,
           schemaIndex: schemaIndex,
           consoleVerbose: this.verbose,

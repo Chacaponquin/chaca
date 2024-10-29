@@ -1,5 +1,5 @@
 import { ChacaError } from "../../errors";
-import { ResolverObject, SchemaToResolve } from "../schema/interfaces/schema";
+import { ResolverObject } from "../schema/interfaces/schema";
 import {
   CustomFieldResolver,
   EnumFieldResolver,
@@ -38,6 +38,7 @@ import { Step } from "./core/sequence/value-object/step";
 import { StartsWith } from "./core/sequence/value-object/starts-with";
 import { ResolverValidator } from "./core/validators/resolver";
 import { NodeRoute } from "./core/node/value-object/route";
+import { SchemaToResolve } from "../schema-resolver/value-object/schema-input";
 
 interface Props {
   name: string;
@@ -88,7 +89,9 @@ export class ChacaInputTree {
     this.refToResolve = [];
     this.nodes = [];
 
-    for (const [key, obj] of Object.entries<ResolverObject>(schemaToResolve)) {
+    for (const [key, obj] of Object.entries<ResolverObject>(
+      schemaToResolve.value(),
+    )) {
       const route = new NodeRoute([this.name, key]);
 
       const newNode = this.createNodeByType({
@@ -283,9 +286,9 @@ export class ChacaInputTree {
     parentNode,
     schema,
   }: CreateSubNodesProps) {
-    const object = schema.getSchemaObject();
+    const object = new SchemaToResolve(actualRoute, schema.input);
 
-    for (const [key, obj] of Object.entries<ResolverObject>(object)) {
+    for (const [key, obj] of Object.entries<ResolverObject>(object.value())) {
       const fieldRoute = actualRoute.create(key);
 
       const newNode = this.createNodeByType({

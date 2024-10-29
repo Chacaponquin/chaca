@@ -1,6 +1,6 @@
 import { ChacaError, CyclicAccessDataError } from "../../errors";
 import { ChacaUtils } from "../utils";
-import { SchemaToResolve } from "../schema/interfaces/schema";
+import { SchemaInput } from "../schema/interfaces/schema";
 import { ChacaInputTree } from "../input-tree";
 import { InputTreeNode, RefValueNode, KeyValueNode } from "../input-tree/core";
 import { ChacaResultTree } from "../result-tree";
@@ -15,6 +15,7 @@ import { NodeRoute } from "../input-tree/core/node/value-object/route";
 import { SolutionCreator } from "./core/solution-creator";
 import { ArrayCreator } from "./core/array-creator";
 import { FillSolution } from "./core/fill-solution";
+import { SchemaToResolve } from "./value-object/schema-input";
 
 interface GetRefValueProps {
   caller: NodeRoute;
@@ -23,7 +24,7 @@ interface GetRefValueProps {
 
 interface Props {
   name: string;
-  schemaObject: SchemaToResolve;
+  input: SchemaInput;
   countDoc: number;
   schemaIndex: number;
   consoleVerbose: boolean;
@@ -35,13 +36,14 @@ export class SchemaResolver<K = any> {
   private readonly arrayCreator: ArrayCreator;
   private readonly fillSolution: FillSolution;
 
+  readonly index: number;
+  readonly route: NodeRoute;
+
   private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
   private name: string;
   private countDoc: number;
-  private schemaObject: SchemaToResolve;
-  readonly index: number;
-  readonly route: NodeRoute;
+  private input: SchemaToResolve;
 
   private isBuilding = false;
   private finishBuilding = false;
@@ -53,15 +55,14 @@ export class SchemaResolver<K = any> {
   constructor(
     private readonly utils: ChacaUtils,
     private readonly datatypeModule: DatatypeModule,
-    { consoleVerbose, countDoc, schemaIndex, name, schemaObject }: Props,
+    { consoleVerbose, countDoc, schemaIndex, name, input }: Props,
   ) {
     this.name = new SchemaName(name).value();
-    this.schemaObject = schemaObject;
-    this.index = schemaIndex;
-    this.consoleVerbose = consoleVerbose;
-
     this.schemasStore = new SchemaStore([]);
     this.route = new NodeRoute([name]);
+    this.input = new SchemaToResolve(this.route, input);
+    this.index = schemaIndex;
+    this.consoleVerbose = consoleVerbose;
 
     this.resultTree = new ChacaResultTree<K>(this.name);
     this.countDoc = new CountDoc(countDoc).value();
@@ -121,14 +122,14 @@ export class SchemaResolver<K = any> {
   }
 
   getSchemaToResolve() {
-    return this.schemaObject;
+    return this.input;
   }
 
   buildInputTree(): void {
     if (this.inputTree === null) {
       this.inputTree = new ChacaInputTree(this.utils, this.datatypeModule, {
         name: this.name,
-        schemaToResolve: this.schemaObject,
+        schemaToResolve: this.input,
         schemasStore: this.schemasStore,
         count: this.countDoc,
       });

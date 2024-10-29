@@ -11,8 +11,8 @@ import {
 } from "../../fields/core";
 import { CustomField } from "../../fields/core/custom";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
-import { FieldIsArray } from "../value-object/array";
-import { FieldPossibleNull } from "../value-object/possible-null";
+import { FieldIsArray } from "../../schema-resolver/value-object/array";
+import { FieldPossibleNull } from "../../schema-resolver/value-object/possible-null";
 
 export type FieldTypes<R = any> =
   | CustomField<any, R>
@@ -48,8 +48,6 @@ export type SchemaFieldConfig<R = any> = FieldTypes<R> | FieldObjectInput<R>;
  * Input schema config
  */
 export type SchemaInput = Record<string, SchemaFieldConfig>;
-
-export type SchemaToResolve = Record<string, ResolverObject>;
 
 export type ResolverObject = {
   type: IResolver;

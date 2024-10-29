@@ -1,4 +1,4 @@
-import { PossibleNullConfig } from "../interfaces/schema";
+import { PossibleNullConfig } from "../../schema/interfaces/schema";
 
 export class FieldPossibleNull {
   private _value: PossibleNullConfig;
