@@ -72,7 +72,7 @@ import {
 } from "./core/fields/core/sequence/SequenceField";
 
 import { DatasetStore } from "./core/dataset-store";
-import { EnumField } from "./core/fields/core/enum/EnumField";
+import { EnumField } from "./core/fields/core/enum";
 import { Chaca } from "./Chaca";
 import { ChacaUtils } from "./core/utils";
 
@@ -95,6 +95,7 @@ import {
 
 import { ChacaModules } from "./modules";
 import { Dataset } from "./core/dataset";
+import { DumpConfig, DumpFile } from "./core/export/resolvers/dump";
 
 const utils = new ChacaUtils();
 
@@ -158,6 +159,8 @@ export type {
   PickCountFunctionProps,
   PickCountFunction,
   PickCountLimits,
+  DumpConfig,
+  DumpFile,
 };
 
 export type {

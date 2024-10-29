@@ -49,3 +49,5 @@ export class DumpResolver {
     });
   }
 }
+
+export type { DumpFile, DumpConfig };
