@@ -28,17 +28,17 @@ export type SumDateRangeProps = {
   range: TimeUnits;
 };
 
-interface PickProps<T> {
+export interface PickProps<T> {
   values: T[];
   count: number;
 }
 
-interface MultipleProps<T = any> {
+export interface MultipleProps<T = any> {
   count: number;
   generator(index: number): T;
 }
 
-interface ReplaceSymbolsProps {
+export interface ReplaceSymbolsProps {
   symbols?: Record<string, string[]>;
   banned?: string[];
 }
@@ -67,12 +67,14 @@ export class ChacaUtils {
    * - `*` will be replaced with either a digit or letter.
    *
    * @param text The template string to parse.
+   * @param props.banned values that cannot appear in the string
    *
    * @example
    * chaca.utils.replaceSymbols('#####') // '98441'
    * chaca.utils.replaceSymbols('?????') // 'ZYRQQ'
    * chaca.utils.replaceSymbols('***$$') // '4Z3pa'
    * chaca.utils.replaceSymbols('Your pin is: #?*#?*') // 'Your pin is: 0T85L1'
+   * chaca.utils.replaceSymbols('#####', { banned: ["3", "7", "8"] }) // '91220'
    *
    * @returns string
    */
