@@ -1,7 +1,7 @@
 import { ChacaError, chaca, modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-describe("# Schema generate tests", () => {
+describe("Schema generation", () => {
   const schema = chaca.schema({
     id: { type: () => modules.id.uuid() },
     image: { type: () => modules.image.film() },

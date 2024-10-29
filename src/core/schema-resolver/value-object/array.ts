@@ -34,7 +34,7 @@ export class FieldIsArray {
       const min = typeof isArray.min === "number" ? isArray.min : undefined;
       const max = typeof isArray.max === "number" ? isArray.max : undefined;
 
-      value = { min, max };
+      value = { min: min, max: max };
     } else if (typeof isArray === "undefined") {
       value = undefined;
     } else {
