@@ -2,21 +2,44 @@ import { ChacaError, chaca, modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("Schema generation", () => {
-  const schema = chaca.schema({
-    id: { type: () => modules.id.uuid() },
-    image: { type: () => modules.image.film() },
-    name: { type: () => modules.person.firstName({ language: "es" }) },
+  describe("generate object", () => {
+    it("define a schema with id, name fields. should return a define schema object with id and name fields", () => {
+      const schema = chaca.schema({
+        id: { type: () => modules.id.uuid() },
+        name: { type: () => modules.person.firstName({ language: "es" }) },
+      });
+
+      const doc = schema.object();
+
+      expect(doc).toHaveProperty("id");
+      expect(doc).toHaveProperty("name");
+    });
   });
 
-  const doc = schema.object();
+  describe("array generation", () => {
+    it("documents = 10. should return an array with length 10", () => {
+      const schema = chaca.schema({
+        id: { type: () => modules.id.uuid() },
+        name: { type: () => modules.person.firstName({ language: "es" }) },
+      });
 
-  it("Should return a define schema object with image, id and name fields", () => {
-    expect(doc).toHaveProperty("id");
-    expect(doc).toHaveProperty("image");
-    expect(doc).toHaveProperty("name");
-  });
+      const docs = schema.array(10);
 
-  it("Generate negative number documents. Should throw an error", () => {
-    expect(() => schema.array(-10)).toThrow(ChacaError);
+      expect(docs).toHaveLength(10);
+
+      for (const doc of docs) {
+        expect(doc).toHaveProperty("id");
+        expect(doc).toHaveProperty("name");
+      }
+    });
+
+    it("documents = -10. should throw an error", () => {
+      const schema = chaca.schema({
+        id: { type: () => modules.id.uuid() },
+        name: { type: () => modules.person.firstName({ language: "es" }) },
+      });
+
+      expect(() => schema.array(-10)).toThrow(ChacaError);
+    });
   });
 });
