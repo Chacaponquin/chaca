@@ -1,10 +1,13 @@
-import { ExportResolver } from "../export";
+import { ExportResolver } from "../export/resolvers/export";
 import { SchemaInput, SchemaToResolve } from "./interfaces/schema";
-import { FileConfig } from "../export/interfaces/export";
+import { DumpConfig, FileConfig } from "../export/interfaces/export";
 import { InputSchemaResolver } from "./value-object/schema-resolver";
 import { SchemaResolver } from "../schema-resolver";
 import { ChacaUtils } from "../utils";
 import { DatatypeModule } from "../../modules/datatype";
+import { GeneratorFilter } from "../export/resolvers/generator-filter";
+import { DumpResolver } from "../export/resolvers/dump";
+import { DumpFile } from "../export/generators/generator";
 
 export class Schema<K = any> {
   private schemaResolver: SchemaToResolve;
@@ -22,15 +25,39 @@ export class Schema<K = any> {
   }
 
   /**
+   * Generates and serializes schema data as a specific file format
+   *
+   * @param documents number of documents that you want to create
+   * @param props.filename name for the file
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   */
+  transform(documents: number, props: DumpConfig): DumpFile[] {
+    const filter = new GeneratorFilter(this.utils);
+    const resolver = new DumpResolver(
+      this.utils,
+      this.datatypeModule,
+      filter,
+      props,
+    );
+
+    return resolver.data(this.array(documents));
+  }
+
+  /**
    * Generate and export the schema documents
    * @param documents number of documents that you want to create
-   * @param config Configuration of the file you want to export (name, location, format)
-   * @returns Promise<string>
+   * @param config.filename file name
+   * @param config.location location of the file
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   *
+   * @returns Promise<string[]>
    */
   async export(documents: number, config: FileConfig): Promise<string[]> {
+    const filter = new GeneratorFilter(this.utils);
     const resolver = new ExportResolver(
       this.utils,
       this.datatypeModule,
+      filter,
       config,
     );
 

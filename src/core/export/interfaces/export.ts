@@ -25,7 +25,7 @@ export type ExportSQLFormat = "postgresql";
 /**
  * Export file configuration
  */
-export interface FileConfig {
+export type FileConfig = {
   /**
    * Name for the file
    */
@@ -39,14 +39,16 @@ export interface FileConfig {
   location: string;
 
   /**
-   * File extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * File extension configuration (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    * @example { format: 'csv' }
    */
   format: ExportFormat;
 
   /** Show log in console progretion */
   verbose?: boolean;
-}
+};
+
+export type DumpConfig = Omit<FileConfig, "location">;
 
 export type ExtensionConfigs =
   | JsonFormatConfig

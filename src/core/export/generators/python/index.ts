@@ -1,8 +1,12 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { Generator } from "../generator";
+import {
+  DumpFile,
+  DumpProps,
+  DumpRelationalProps,
+  Generator,
+} from "../generator";
 import { PythonCodeCreator } from "./core/creator";
-import { Filename } from "../generator/name";
-import { Route } from "../generator/route";
+import { Filename } from "../file-creator/filename";
 import { ChacaUtils } from "../../../utils";
 import {
   IndentConfig,
@@ -12,6 +16,8 @@ import {
 } from "../params";
 import { SkipInvalid } from "../../core/skip-invalid";
 import { SpaceIndex } from "../../core/space-index";
+import { FileCreator } from "../file-creator/file-creator";
+import { Route } from "../file-creator/route";
 
 export type PythonProps = ZipConfig &
   SeparateConfig &
@@ -24,17 +30,8 @@ export class PythonGenerator extends Generator {
 
   private readonly creator: PythonCodeCreator;
 
-  constructor(
-    utils: ChacaUtils,
-    filename: string,
-    location: string,
-    config: PythonProps,
-  ) {
-    super(utils, {
-      extension: "py",
-      filename: filename,
-      location: location,
-    });
+  constructor(utils: ChacaUtils, config: PythonProps) {
+    super("py");
 
     this.separate = Boolean(config.separate);
     this.zip = Boolean(config.zip);
@@ -46,19 +43,53 @@ export class PythonGenerator extends Generator {
     );
   }
 
-  async createFile(data: any): Promise<string[]> {
-    const filename = new Filename(this.filename);
-    const route = this.generateRoute(filename);
+  dump({ filename, data }: DumpProps): DumpFile[] {
+    const code = this.creator.execute({
+      data: data,
+      name: filename.value(),
+    });
+
+    return [{ filename: filename.value(), content: code }];
+  }
+
+  dumpRelational({ filename, resolver }: DumpRelationalProps): DumpFile[] {
+    if (this.separate) {
+      const result = [] as DumpFile[];
+
+      for (const r of resolver.getResolvers()) {
+        const code = this.creator.execute({
+          data: r.resolve(),
+          name: r.getSchemaName(),
+        });
+        const filename = new Filename(r.getSchemaName());
+
+        result.push({ content: code, filename: filename.value() });
+      }
+
+      return result;
+    } else {
+      const code = this.creator.execute({
+        data: resolver.resolve(),
+        name: filename.value(),
+      });
+
+      return [{ content: code, filename: filename.value() }];
+    }
+  }
+
+  async createFile(fileCreator: FileCreator, data: any): Promise<string[]> {
+    const filename = fileCreator.filename;
+    const route = fileCreator.generateRoute(filename);
 
     const code = this.creator.execute({
       data: data,
-      name: this.filename,
+      name: filename.value(),
     });
 
-    await this.writeFile(route, code);
+    await fileCreator.writeFile(route, code);
 
     if (this.zip) {
-      const zip = this.createZip();
+      const zip = fileCreator.createZip();
       zip.add(route);
 
       return [zip.route];
@@ -67,7 +98,10 @@ export class PythonGenerator extends Generator {
     }
   }
 
-  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
+  async createRelationalFile(
+    fileCreator: FileCreator,
+    resolver: DatasetResolver,
+  ): Promise<string[]> {
     if (this.separate) {
       const allRoutes = [] as Route[];
 
@@ -77,15 +111,15 @@ export class PythonGenerator extends Generator {
           name: r.getSchemaName(),
         });
         const filename = new Filename(r.getSchemaName());
-        const route = this.generateRoute(filename);
+        const route = fileCreator.generateRoute(filename);
 
-        await this.writeFile(route, code);
+        await fileCreator.writeFile(route, code);
 
         allRoutes.push(route);
       }
 
       if (this.zip) {
-        const zip = this.createZip();
+        const zip = fileCreator.createZip();
         zip.multiple(allRoutes);
 
         return [zip.route];
@@ -93,18 +127,18 @@ export class PythonGenerator extends Generator {
         return allRoutes.map((r) => r.value());
       }
     } else {
-      const filename = new Filename(this.filename);
-      const route = this.generateRoute(filename);
+      const filename = fileCreator.filename;
+      const route = fileCreator.generateRoute(filename);
 
       const code = this.creator.execute({
         data: resolver.resolve(),
-        name: this.filename,
+        name: filename.value(),
       });
 
-      await this.writeFile(route, code);
+      await fileCreator.writeFile(route, code);
 
       if (this.zip) {
-        const zip = this.createZip();
+        const zip = fileCreator.createZip();
         zip.add(route);
 
         return [zip.route];

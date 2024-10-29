@@ -1,5 +1,5 @@
 import path from "path";
-import { Filename } from "./name";
+import { Filename } from "./filename";
 
 export class Route {
   constructor(

@@ -1,11 +1,16 @@
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { Generator } from "../generator";
-import { Filename } from "../generator/name";
+import {
+  DumpFile,
+  DumpProps,
+  DumpRelationalProps,
+  Generator,
+} from "../generator";
+import { Filename } from "../file-creator/filename";
 import { YamlCodeCreator } from "./core/creator";
-import { Route } from "../generator/route";
-import { ChacaUtils } from "../../../utils";
 import { IndentConfig, SeparateConfig, ZipConfig } from "../params";
 import { SpaceIndex } from "../../core/space-index";
+import { FileCreator } from "../file-creator/file-creator";
+import { Route } from "../file-creator/route";
 
 export type YamlProps = {
   /**If `true`, sort keys when dumping YAML. If is a `function`, use the function to sort the keys. Default `false`*/
@@ -25,17 +30,8 @@ export class YamlGenerator extends Generator {
   private readonly separate: boolean;
   private readonly creator: YamlCodeCreator;
 
-  constructor(
-    utils: ChacaUtils,
-    filename: string,
-    location: string,
-    config: YamlProps,
-  ) {
-    super(utils, {
-      extension: "yaml",
-      filename: filename,
-      location: location,
-    });
+  constructor(config: YamlProps) {
+    super("yaml");
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
@@ -47,16 +43,22 @@ export class YamlGenerator extends Generator {
     });
   }
 
-  async createFile(data: any): Promise<string[]> {
-    const filename = new Filename(this.filename);
-    const route = this.generateRoute(filename);
+  dump({ data, filename }: DumpProps): DumpFile[] {
+    const code = this.creator.execute(data);
+
+    return [{ content: code, filename: filename.value() }];
+  }
+
+  async createFile(fileCreator: FileCreator, data: any): Promise<string[]> {
+    const filename = fileCreator.filename;
+    const route = fileCreator.generateRoute(filename);
 
     const code = this.creator.execute(data);
 
-    await this.writeFile(route, code);
+    await fileCreator.writeFile(route, code);
 
     if (this.zip) {
-      const zip = this.createZip();
+      const zip = fileCreator.createZip();
       zip.add(route);
 
       return [zip.route];
@@ -65,23 +67,43 @@ export class YamlGenerator extends Generator {
     }
   }
 
-  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
+  dumpRelational({ resolver, filename }: DumpRelationalProps): DumpFile[] {
+    if (this.separate) {
+      const result: DumpFile[] = [];
+
+      for (const r of resolver.getResolvers()) {
+        const filename = new Filename(r.getSchemaName());
+        const code = this.creator.execute(r.resolve());
+
+        result.push({ content: code, filename: filename.value() });
+      }
+
+      return result;
+    } else {
+      return this.dump({ data: resolver.resolve(), filename: filename });
+    }
+  }
+
+  async createRelationalFile(
+    fileCreator: FileCreator,
+    resolver: DatasetResolver,
+  ): Promise<string[]> {
     if (this.separate) {
       const routes: Route[] = [];
 
       for (const r of resolver.getResolvers()) {
         const filename = new Filename(r.getSchemaName());
-        const route = this.generateRoute(filename);
+        const route = fileCreator.generateRoute(filename);
 
         const code = this.creator.execute(r.resolve());
 
-        await this.writeFile(route, code);
+        await fileCreator.writeFile(route, code);
 
         routes.push(route);
       }
 
       if (this.zip) {
-        const zip = this.createZip();
+        const zip = fileCreator.createZip();
 
         zip.multiple(routes);
 
@@ -90,7 +112,7 @@ export class YamlGenerator extends Generator {
         return routes.map((r) => r.value());
       }
     } else {
-      return await this.createFile(resolver.resolve());
+      return await this.createFile(fileCreator, resolver.resolve());
     }
   }
 }

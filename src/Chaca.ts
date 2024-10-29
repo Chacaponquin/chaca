@@ -13,8 +13,8 @@ import {
 import { ChacaUtils } from "./core/utils";
 import { SchemaInput } from "./core/schema/interfaces/schema";
 import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
-import { ExportResolver } from "./core/export";
-import { FileConfig } from "./core/export/interfaces/export";
+import { ExportResolver } from "./core/export/resolvers/export";
+import { DumpConfig, FileConfig } from "./core/export/interfaces/export";
 import {
   ProbabilityOption,
   ProbabilityField,
@@ -22,11 +22,15 @@ import {
 import { PickField, PickFieldProps } from "./core/fields/core/pick";
 import { Dataset } from "./core/dataset";
 import { DatatypeModule } from "./modules/datatype";
+import { GeneratorFilter } from "./core/export/resolvers/generator-filter";
+import { DumpFile } from "./core/export/generators/generator";
+import { DumpResolver } from "./core/export/resolvers/dump";
 
 export class Chaca {
-  constructor(private readonly datatypeModule: DatatypeModule) {}
-
-  readonly utils = new ChacaUtils();
+  constructor(
+    private readonly datatypeModule: DatatypeModule,
+    readonly utils: ChacaUtils,
+  ) {}
 
   /**
    * @param input The object with the keys and type of each field
@@ -60,11 +64,11 @@ export class Chaca {
    * @param values Array of the secuential values
    * @param config.loop Boolean indicating whether the values should be generated cyclically. Default `false`
    * @example
-   * // the first generated object will have the favoriteNumber with value 1
-   * // the second generated object will have the favoriteNumber with value 2
-   * // the third generated object will have the favoriteNumber with value 3
+   * // the first generated object will have the number with value 1
+   * // the second generated object will have the number with value 2
+   * // the third generated object will have the number with value 3
    * {
-   *   favoriteNumber: chaca.sequential([1, 2, 3])
+   *   number: chaca.sequential([1, 2, 3])
    * }
    */
   sequential<K = any>(values: K[], config?: SequentialFieldConfig) {
@@ -103,7 +107,6 @@ export class Chaca {
   /**
    * Export the data to a selected code format
    * @param data Data you want to export
-   * @param config Configuration of the file you want to export (name, location, format, etc.)
    * @param config.filename file name
    * @param config.location location of the file
    * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
@@ -118,14 +121,17 @@ export class Chaca {
    * await schema.export(data, config)
    *
    * @returns
-   * Promise<string>
+   * Promise<string[]>
    */
   async export(data: any, config: FileConfig): Promise<string[]> {
+    const filter = new GeneratorFilter(this.utils);
     const resolver = new ExportResolver(
       this.utils,
       this.datatypeModule,
+      filter,
       config,
     );
+
     const route = await resolver.data(data);
 
     return route;
@@ -170,5 +176,24 @@ export class Chaca {
    */
   pick<V = any>(props: PickFieldProps<V>) {
     return new PickField<V>(props);
+  }
+
+  /**
+   * Serializes `data` as a specific file format
+   *
+   * @param data Data to transform
+   * @param props.filename name for the file
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   */
+  transform(data: any, props: DumpConfig): DumpFile[] {
+    const filter = new GeneratorFilter(this.utils);
+    const resolver = new DumpResolver(
+      this.utils,
+      this.datatypeModule,
+      filter,
+      props,
+    );
+
+    return resolver.data(data);
   }
 }

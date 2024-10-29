@@ -59,6 +59,7 @@
 
 - Added `nullOnEmpty` parameter to avoid `NotEnoughValuesForRefError` exception
 - The `ref` fields can reference the schema they are located in without causing a circular dependency.
+- 🎉 Added `Dataset.transform`, `Schema.transform` and `Chaca.transform` methods to serialize data to a specific file format without having to export it
 
 ### Modules
 

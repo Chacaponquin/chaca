@@ -1,12 +1,12 @@
 import AdmZip from "adm-zip";
 import { Route } from "./route";
-import { Generator } from ".";
+import { FileCreator } from "./file-creator";
 
 export class Zip {
   constructor(
     readonly route: string,
     private readonly instance: AdmZip,
-    private readonly generator: Generator,
+    private readonly generator: FileCreator,
   ) {}
 
   add(file: Route): void {

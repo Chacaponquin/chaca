@@ -1,7 +1,11 @@
-import { Generator } from "../generator";
+import {
+  DumpFile,
+  DumpProps,
+  DumpRelationalProps,
+  Generator,
+} from "../generator";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { Filename } from "../generator/name";
-import { Route } from "../generator/route";
+import { Filename } from "../file-creator/filename";
 import { JavascriptCodeCreator } from "./core/creator";
 import { ChacaUtils } from "../../../utils";
 import {
@@ -12,6 +16,8 @@ import {
 } from "../params";
 import { SpaceIndex } from "../../core/space-index";
 import { SkipInvalid } from "../../core/skip-invalid";
+import { FileCreator } from "../file-creator/file-creator";
+import { Route } from "../file-creator/route";
 
 export type JavascriptProps = ZipConfig &
   SeparateConfig &
@@ -24,30 +30,47 @@ export class JavascriptGenerator extends Generator {
 
   private readonly creator: JavascriptCodeCreator;
 
-  constructor(
-    utils: ChacaUtils,
-    filename: string,
-    location: string,
-    config: JavascriptProps,
-  ) {
-    super(utils, {
-      extension: "js",
-      filename: filename,
-      location: location,
-    });
+  constructor(utils: ChacaUtils, config: JavascriptProps) {
+    super("js");
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
 
     this.creator = new JavascriptCodeCreator(
-      this.utils,
+      utils,
       new SpaceIndex(config.indent),
       false,
       new SkipInvalid(config.skipInvalid),
     );
   }
 
-  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
+  dumpRelational({ filename, resolver }: DumpRelationalProps): DumpFile[] {
+    if (this.separate) {
+      const result = [] as DumpFile[];
+
+      for (const r of resolver.getResolvers()) {
+        const code = this.creator.execute({
+          data: r.resolve(),
+          name: r.getSchemaName(),
+        });
+        const filename = new Filename(r.getSchemaName());
+
+        result.push({ content: code, filename: filename.value() });
+      }
+
+      return result;
+    } else {
+      return this.dump({
+        data: resolver.resolve(),
+        filename: filename,
+      });
+    }
+  }
+
+  async createRelationalFile(
+    fileCreator: FileCreator,
+    resolver: DatasetResolver,
+  ): Promise<string[]> {
     if (this.separate) {
       const routes = [] as Route[];
 
@@ -57,15 +80,15 @@ export class JavascriptGenerator extends Generator {
           name: r.getSchemaName(),
         });
         const filename = new Filename(r.getSchemaName());
-        const route = this.generateRoute(filename);
+        const route = fileCreator.generateRoute(filename);
 
-        await this.writeFile(route, code);
+        await fileCreator.writeFile(route, code);
 
         routes.push(route);
       }
 
       if (this.zip) {
-        const zip = this.createZip();
+        const zip = fileCreator.createZip();
         zip.multiple(routes);
 
         return [zip.route];
@@ -73,23 +96,31 @@ export class JavascriptGenerator extends Generator {
         return routes.map((r) => r.value());
       }
     } else {
-      return await this.createFile(resolver.resolve());
+      return await this.createFile(fileCreator, resolver.resolve());
     }
   }
 
-  async createFile(data: any): Promise<string[]> {
-    const filename = new Filename(this.filename);
-    const route = this.generateRoute(filename);
+  dump({ filename, data }: DumpProps): DumpFile[] {
+    const code = this.creator.execute({
+      data: data,
+      name: filename.value(),
+    });
+
+    return [{ filename: filename.value(), content: code }];
+  }
+
+  async createFile(fileCreator: FileCreator, data: any): Promise<string[]> {
+    const route = fileCreator.generateRoute(fileCreator.filename);
 
     const code = this.creator.execute({
       data: data,
-      name: this.filename,
+      name: fileCreator.filename.value(),
     });
 
-    await this.writeFile(route, code);
+    await fileCreator.writeFile(route, code);
 
     if (this.zip) {
-      const zip = this.createZip();
+      const zip = fileCreator.createZip();
       zip.add(route);
 
       return [zip.route];

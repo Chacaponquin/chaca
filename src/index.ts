@@ -96,8 +96,10 @@ import {
 import { ChacaModules } from "./modules";
 import { Dataset } from "./core/dataset";
 
-export const modules = new ChacaModules();
-export const chaca = new Chaca(modules.datatype);
+const utils = new ChacaUtils();
+
+export const modules = new ChacaModules(utils);
+export const chaca = new Chaca(modules.datatype, utils);
 
 export {
   TryRefANoKeyFieldError,

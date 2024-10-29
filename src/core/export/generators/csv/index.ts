@@ -1,11 +1,16 @@
-import { Generator } from "../generator";
+import {
+  DumpFile,
+  DumpProps,
+  DumpRelationalProps,
+  Generator,
+} from "../generator";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
 import { DataValidator } from "./core/validator";
-import { Route } from "../generator/route";
-import { Filename } from "../generator/name";
-import { ChacaUtils } from "../../../utils";
+import { Filename } from "../file-creator/filename";
 import { ZipConfig } from "../params";
 import { CodeProps, CsvCodeCreator } from "./core/creator";
+import { FileCreator } from "../file-creator/file-creator";
+import { Route } from "../file-creator/route";
 
 export type CsvProps = ZipConfig & CodeProps;
 
@@ -14,28 +19,19 @@ export class CsvGenerator extends Generator {
 
   private readonly zip: boolean;
 
-  constructor(
-    utils: ChacaUtils,
-    filename: string,
-    location: string,
-    {
-      zip = false,
-      trim = { field: false, header: false },
-      delimiter = {},
-      excludeKeys = [],
-      expandArrayObjects = false,
-      expandNestedObjects = true,
-      keys,
-      parseValue,
-      sortHeader = false,
-      unwindArrays = false,
-    }: CsvProps,
-  ) {
-    super(utils, {
-      extension: "csv",
-      filename: filename,
-      location: location,
-    });
+  constructor({
+    zip = false,
+    trim = { field: false, header: false },
+    delimiter = {},
+    excludeKeys = [],
+    expandArrayObjects = false,
+    expandNestedObjects = true,
+    keys,
+    parseValue,
+    sortHeader = false,
+    unwindArrays = false,
+  }: CsvProps) {
+    super("csv");
 
     this.creator = new CsvCodeCreator(
       {
@@ -55,21 +51,24 @@ export class CsvGenerator extends Generator {
     this.zip = Boolean(zip);
   }
 
-  async createRelationalFile(resolver: DatasetResolver): Promise<string[]> {
+  async createRelationalFile(
+    fileCreator: FileCreator,
+    resolver: DatasetResolver,
+  ): Promise<string[]> {
     const allRoutes = [] as Route[];
 
     for (const r of resolver.getResolvers()) {
       const filename = new Filename(r.getSchemaName());
-      const route = this.generateRoute(filename);
+      const route = fileCreator.generateRoute(filename);
       const code = this.creator.execute(r.resolve());
 
-      await this.writeFile(route, code);
+      await fileCreator.writeFile(route, code);
 
       allRoutes.push(route);
     }
 
     if (this.zip) {
-      const zip = this.createZip();
+      const zip = fileCreator.createZip();
       zip.multiple(allRoutes);
 
       return [zip.route];
@@ -78,14 +77,32 @@ export class CsvGenerator extends Generator {
     }
   }
 
-  async createFile(data: any): Promise<string[]> {
-    const filename = new Filename(this.filename);
+  dump({ filename, data }: DumpProps): DumpFile[] {
     const code = this.creator.execute(data);
-    const route = this.generateRoute(filename);
-    await this.writeFile(route, code);
+
+    return [{ content: code, filename: filename.value() }];
+  }
+
+  dumpRelational({ resolver }: DumpRelationalProps): DumpFile[] {
+    const result = [] as DumpFile[];
+
+    for (const r of resolver.getResolvers()) {
+      const filename = new Filename(r.getSchemaName());
+      const code = this.creator.execute(r.resolve());
+
+      result.push({ filename: filename.value(), content: code });
+    }
+
+    return result;
+  }
+
+  async createFile(fileCreator: FileCreator, data: any): Promise<string[]> {
+    const code = this.creator.execute(data);
+    const route = fileCreator.generateRoute(fileCreator.filename);
+    await fileCreator.writeFile(route, code);
 
     if (this.zip) {
-      const zip = this.createZip();
+      const zip = fileCreator.createZip();
       zip.add(route);
 
       return [zip.route];

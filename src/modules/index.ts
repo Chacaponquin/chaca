@@ -34,11 +34,9 @@ export class ChacaModules {
   readonly science: ScienceModule;
   readonly color: ColorModule;
 
-  constructor() {
-    const utils = new ChacaUtils();
-
-    this.address = new AddressModule(utils);
+  constructor(utils: ChacaUtils) {
     this.datatype = new DatatypeModule(utils);
+    this.address = new AddressModule(utils, this.datatype);
     this.id = new IdModule(this.datatype);
     this.color = new ColorModule(utils, this.datatype);
     this.person = new PersonModule(utils, this.datatype);

@@ -1,61 +1,30 @@
-import path from "path";
-import fs from "fs";
 import { DatasetResolver } from "../../../dataset-resolver/resolver";
-import { ChacaUtils } from "../../../utils";
-import AdmZip from "adm-zip";
-import { Filename } from "./name";
-import { Route } from "./route";
-import { Zip } from "./zip";
+import { FileCreator } from "../file-creator/file-creator";
+import { Filename } from "../file-creator/filename";
 
-export interface Props {
-  extension: string;
+export interface DumpFile {
   filename: string;
-  location: string;
+  content: string;
+}
+
+export interface DumpProps {
+  filename: Filename;
+  data: any;
+}
+
+export interface DumpRelationalProps {
+  resolver: DatasetResolver;
+  filename: Filename;
 }
 
 export abstract class Generator {
-  protected filename: string;
-  protected location: string;
+  constructor(readonly ext: string) {}
 
-  protected ext: string;
-  private readonly baseLocation: string;
-
-  constructor(
-    protected readonly utils: ChacaUtils,
-    { filename, location, extension }: Props,
-  ) {
-    if (!fs.existsSync(location)) {
-      fs.mkdirSync(location, { recursive: true });
-    }
-
-    this.filename = filename;
-    this.location = location;
-
-    this.ext = extension;
-    this.baseLocation = path.join("./", location);
-  }
-
-  abstract createFile(data: any): Promise<string[]>;
-  abstract createRelationalFile(resolver: DatasetResolver): Promise<string[]>;
-
-  protected generateRoute(filename: Filename): Route {
-    return new Route(filename, this.baseLocation, this.ext);
-  }
-
-  protected createZip(): Zip {
-    const zip = new AdmZip();
-    const zipName = new Filename(`${this.filename}.zip`);
-
-    const zipPath = this.generateRoute(zipName).value();
-
-    return new Zip(zipPath, zip, this);
-  }
-
-  async deleteFile(route: Route): Promise<void> {
-    await fs.promises.unlink(route.value());
-  }
-
-  async writeFile(route: Route, code: string): Promise<void> {
-    await fs.promises.writeFile(route.value(), code, "utf-8");
-  }
+  abstract createFile(fileCreator: FileCreator, data: any): Promise<string[]>;
+  abstract createRelationalFile(
+    fileCreator: FileCreator,
+    resolver: DatasetResolver,
+  ): Promise<string[]>;
+  abstract dump(props: DumpProps): DumpFile[];
+  abstract dumpRelational(props: DumpRelationalProps): DumpFile[];
 }
