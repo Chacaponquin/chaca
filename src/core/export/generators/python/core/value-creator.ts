@@ -78,6 +78,7 @@ export class ValueCreator {
         const save = this.classes.search(classname);
 
         const object = new PythonClass(save);
+        const fields: PythonClassField[] = [];
 
         for (const [key, data] of Object.entries(value)) {
           const fieldname = new PythonClassFieldName(this.utils, key);
@@ -94,9 +95,11 @@ export class ValueCreator {
 
             const field = new PythonClassField(saveField, datatype);
 
-            object.setField(field);
+            fields.push(field);
           }
         }
+
+        object.setFields(fields);
 
         return object;
       },

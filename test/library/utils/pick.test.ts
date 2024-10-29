@@ -17,10 +17,10 @@ describe("utils.pick", () => {
       );
     });
 
-    it("count = -1. should throw an error", () => {
-      expect(() => chaca.utils.pick({ values: [1, 2, 3], count: -1 })).toThrow(
-        ChacaError,
-      );
+    it("count = -1. should return an empty array", () => {
+      const values = chaca.utils.pick({ values: [1, 2, 3], count: -1 });
+
+      expect(values).toEqual([]);
     });
 
     it("values = [] & count = 0. should return an empty array", () => {

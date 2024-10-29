@@ -3,6 +3,7 @@ import { chaca, ChacaError, Extensions } from "../../../../src";
 import { SIMPLE_OBJECT } from "./simple-object";
 import { SIMPLE_ARRAY } from "./simple-array";
 import { MATRIX } from "./matrix";
+import { ARRAY_OBJECTS } from "./array-objects";
 
 interface Props {
   primitives: {
@@ -22,6 +23,7 @@ interface Props {
   arrays: {
     simple?: boolean;
     matrix?: boolean;
+    objects?: boolean;
   };
 }
 
@@ -35,7 +37,7 @@ export class ExtensionTester {
   constructor(private readonly extension: Extensions) {}
 
   execute({
-    arrays: { matrix, simple: asimple },
+    arrays: { matrix, simple: asimple, objects },
     object: { simple: osimple },
     primitives: {
       boolean,
@@ -73,6 +75,14 @@ export class ExtensionTester {
           data: SIMPLE_ARRAY,
           error: asimple,
           filename: "simple-array",
+        });
+      });
+
+      it("array objects", async () => {
+        await this.export({
+          data: ARRAY_OBJECTS,
+          error: objects,
+          filename: "array-objects",
         });
       });
     });

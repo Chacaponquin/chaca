@@ -1,3 +1,4 @@
+import { SpaceIndex } from "../../../core/space-index";
 import { JavascriptClassFieldName, JavascriptClassName } from "./names";
 import {
   JavascriptClassField,
@@ -48,11 +49,23 @@ export class SaveJavascriptClass {
     this._name = name;
   }
 
-  setField(f: JavascriptClassField) {
-    const found = this.fields.find((sf) => sf === f.save);
+  setFields(fields: JavascriptClassField[]) {
+    const founds: SaveClassField[] = [];
 
-    if (found) {
-      found.setDatatype(f.datatype);
+    for (const f of fields) {
+      const found = this.fields.find((sf) => sf === f.save);
+
+      if (found) {
+        founds.push(found);
+
+        found.setDatatype(f.datatype);
+      }
+    }
+
+    for (const f of this.fields) {
+      if (!founds.includes(f)) {
+        f.setDatatype(new JavascriptUndefined());
+      }
     }
   }
 
@@ -75,12 +88,20 @@ export class SaveJavascriptClass {
     return this._name.equal(other._name);
   }
 
-  definition(): string {
+  definition(index: SpaceIndex): string {
     let code = `interface ${this.name()} {\n`;
 
+    index.push();
+
     this.fields.forEach((f) => {
-      code += `   ${f.name()}: ${f.datatypes.declaration()}\n`;
+      if (f.optional()) {
+        code += index.create(`${f.name()}?: ${f.datatypes.declaration()}\n`);
+      } else {
+        code += index.create(`${f.name()}: ${f.datatypes.declaration()}\n`);
+      }
     });
+
+    index.reverse();
 
     code += "}\n";
 
@@ -106,13 +127,13 @@ export class JavascriptClasses {
     }
   }
 
-  string(): string {
+  string(index: SpaceIndex): string {
     let code = ``;
 
     code += this.classes
       .reverse()
       .map((c) => {
-        return `${c.definition()}`;
+        return `${c.definition(index)}`;
       })
       .join("\n");
 

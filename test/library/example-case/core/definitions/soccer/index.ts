@@ -20,7 +20,7 @@ export const SOCCER_TOURNAMENTE_DATASET = chaca.dataset([
   },
   { name: "Match_Referee", documents: 40, schema: MATCH_REFEREE_SCHEMA },
   { documents: 40, name: "Match", schema: MATCH_SCHEMA },
-  { documents: 800, name: "Player", schema: PLAYER_SCHEMA },
+  { documents: 500, name: "Player", schema: PLAYER_SCHEMA },
   { documents: 25, name: "Referee", schema: REFEREE_SCHEMA },
   { documents: 40, name: "Sponsor", schema: SPONSOR_SCHEMA },
   { documents: 40, name: "Team_Sponsor", schema: TEAM_SPONSOR },

@@ -9,7 +9,7 @@ export abstract class JavascriptDatatype {
 }
 
 export class JavascriptClass extends JavascriptDatatype {
-  readonly fields: JavascriptClassField[];
+  fields: JavascriptClassField[];
   readonly save: SaveJavascriptClass;
 
   constructor(save: SaveJavascriptClass) {
@@ -57,9 +57,9 @@ export class JavascriptClass extends JavascriptDatatype {
     return this.name();
   }
 
-  setField(field: JavascriptClassField): void {
-    this.fields.push(field);
-    this.save.setField(field);
+  setFields(fields: JavascriptClassField[]): void {
+    this.fields = fields;
+    this.save.setFields(fields);
   }
 }
 

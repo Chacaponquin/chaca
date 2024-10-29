@@ -178,9 +178,12 @@ export class PythonClass extends PythonDatatype {
     return this.name();
   }
 
-  setField(field: PythonClassField): void {
-    this.fields.push(field);
-    this.save.setField(field);
+  setFields(fields: PythonClassField[]): void {
+    for (const field of fields) {
+      this.fields.push(field);
+    }
+
+    this.save.setFields(fields);
   }
 }
 

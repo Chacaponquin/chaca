@@ -104,6 +104,8 @@ export class ValueCreator {
         const save = this.classes.search(new SaveJavascriptClass(classname));
         const object = new JavascriptClass(save);
 
+        const fields: JavascriptClassField[] = [];
+
         for (const [key, data] of Object.entries(value)) {
           const fieldname = new JavascriptClassFieldName(this.utils, key);
 
@@ -119,9 +121,11 @@ export class ValueCreator {
 
             const field = new JavascriptClassField(saveField, datatype);
 
-            object.setField(field);
+            fields.push(field);
           }
         }
+
+        object.setFields(fields);
 
         return object;
       },
