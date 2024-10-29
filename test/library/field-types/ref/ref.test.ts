@@ -1,8 +1,26 @@
-import { chaca, modules, NotExistRefFieldError } from "../../../../src";
+import {
+  chaca,
+  modules,
+  NotExistRefFieldError,
+  TryRefANoKeyFieldError,
+} from "../../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("Ref field", () => {
+  it("try ref a no key field. should throw an error", () => {
+    const schema = chaca.schema({
+      name: () => modules.internet.username(),
+    });
 
+    const schema2 = chaca.schema({ ref: chaca.ref("schema.name") });
+
+    const dataset = chaca.dataset([
+      { name: "schema", schema: schema, documents: 10 },
+      { name: "schema2", documents: 10, schema: schema2 },
+    ]);
+
+    expect(() => dataset.generate()).toThrow(TryRefANoKeyFieldError);
+  });
 
   describe("ref a nested schema", () => {
     it("from schema.ref reference schema2.object.id. all schema.ref values should reference one schema2.object.id value", () => {
@@ -66,6 +84,19 @@ describe("Ref field", () => {
         ).include(v.ref);
       }
     });
+  });
+
+  it("try ref an empty string. should throw an error", () => {
+    const schema = chaca.schema({});
+
+    const schema2 = chaca.schema({ ref: chaca.ref("") });
+
+    const dataset = chaca.dataset([
+      { name: "schema", documents: 10, schema: schema },
+      { name: "schema2", documents: 10, schema: schema2 },
+    ]);
+
+    expect(() => dataset.generate()).toThrow(NotExistRefFieldError);
   });
 
   it("try ref a not existing field. should throw an error", () => {

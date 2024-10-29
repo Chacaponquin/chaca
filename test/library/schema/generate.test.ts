@@ -3,6 +3,12 @@ import { describe, expect, it } from "vitest";
 
 describe("Schema generation", () => {
   describe("generate object", () => {
+    it("generate an empty schema. should return an empty object", () => {
+      const schema = chaca.schema({});
+
+      expect(schema.object()).toEqual({});
+    });
+
     it("define a schema with id, name fields. should return a define schema object with id and name fields", () => {
       const schema = chaca.schema({
         id: { type: () => modules.id.uuid() },

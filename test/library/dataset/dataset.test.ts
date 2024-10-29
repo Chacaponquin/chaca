@@ -1,16 +1,30 @@
-import { ChacaError, TryRefANoKeyFieldError } from "../../../src";
-import { REF_REF_VALUE_DATA } from "./utils/ref-ref/schemas";
-import { REPEAT_NAMES_DATA } from "./utils/repeat-names/schemas";
+import { chaca, ChacaError } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-describe("# Multiple Generation Test", () => {
-  describe("Incorrect declaration of reference field", () => {
-    it("Repeat names in the declaration. Should throw an error", () => {
-      expect(REPEAT_NAMES_DATA).toThrow(ChacaError);
-    });
+describe("Dataset", () => {
+  it("trying generate a dataset with two schemas named 'schema'. should throw an error", () => {
+    const schema = chaca.schema({});
 
-    it("Trying reference a reference field. Should throw an error", () => {
-      expect(REF_REF_VALUE_DATA).toThrow(TryRefANoKeyFieldError);
-    });
+    const schema2 = chaca.schema({});
+
+    const dataset = chaca.dataset([
+      { name: "schema", documents: 10, schema: schema },
+      { name: "schema", documents: 10, schema: schema2 },
+    ]);
+
+    expect(() => dataset.generate()).toThrow(ChacaError);
+  });
+
+  it("trying generate a schema data with documents = -10. should throw an error", () => {
+    const schema = chaca.schema({});
+
+    const schema2 = chaca.schema({});
+
+    const dataset = chaca.dataset([
+      { name: "schema", documents: 10, schema: schema },
+      { name: "schema2", documents: -10, schema: schema2 },
+    ]);
+
+    expect(() => dataset.generate()).toThrow(ChacaError);
   });
 });

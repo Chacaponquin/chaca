@@ -22,6 +22,7 @@ export class DatasetResolver<K = any> {
     this.verbose = verbose;
     this.createSchemaResolvers(schemas);
     this.validateNotRepeatSchemaNames(schemas);
+    this.validateSchemaDocuments(schemas);
     this.injectSchemas();
     this.buildInputTrees();
     this.buildRefFields();
@@ -29,6 +30,16 @@ export class DatasetResolver<K = any> {
 
   getResolvers() {
     return this.resolvers;
+  }
+
+  private validateSchemaDocuments(schemas: DatasetSchema[]): void {
+    for (const schema of schemas) {
+      if (schema.documents < 0) {
+        throw new ChacaError(
+          `The number of documents to generate for schema ${schema.name} cannot be a negative value (${schema.documents})`,
+        );
+      }
+    }
   }
 
   private validateNotRepeatSchemaNames(schemas: DatasetSchema[]): void {
@@ -39,7 +50,7 @@ export class DatasetResolver<K = any> {
 
       if (!notRepeat) {
         throw new ChacaError(
-          `The name ${schemas[i].name} is repeat. Your schemas must have different names`,
+          `The name '${schemas[i].name}' is repeat. Your schemas must have different names`,
         );
       }
     }
