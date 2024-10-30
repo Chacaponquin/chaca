@@ -16,7 +16,7 @@ export class TableName {
   }
 
   value() {
-    return this.utils.snakeCase(this.route.string());
+    return this.utils.pascalCase(this.route.string());
   }
 }
 

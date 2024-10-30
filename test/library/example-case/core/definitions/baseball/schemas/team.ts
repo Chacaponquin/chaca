@@ -4,6 +4,7 @@ export const TEAM_SCHEMA = chaca.schema({
   team_id: chaca.key(chaca.sequence()),
   played_championships: () => modules.datatype.int({ min: 1, max: 70 }),
   color: () => "#000000",
+  province_id: chaca.ref("Province.province_id", { unique: true }),
   team_name: ({ currentFields: fields, store }) => {
     const provinces = store.get("Province");
 
@@ -15,7 +16,6 @@ export const TEAM_SCHEMA = chaca.schema({
 
     return fields.province_id + " Team";
   },
-  province_id: chaca.ref("Province.province_id", { unique: true }),
   pet: () => modules.animal.type(),
   won_championships: ({ currentFields: fields }) => {
     return modules.datatype.int({ min: 0, max: fields.played_championships });
