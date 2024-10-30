@@ -13,17 +13,27 @@ import { DataValidator } from "./core/generators/validator";
 import { TableOrganizer } from "./core/generators/organizer";
 import { TablesFixer } from "./core/generators/fixer";
 import { ChacaUtils } from "../../../utils";
-import { IndentConfig, SkipInvalidConfig, ZipConfig } from "../params";
+import {
+  DeclarationOnlyConfig,
+  IndentConfig,
+  SkipInvalidConfig,
+  ZipConfig,
+} from "../params";
 import { SpaceIndex } from "../../core/space-index";
 import { SkipInvalid } from "../../core/skip-invalid";
 import { FileCreator } from "../file-creator/file-creator";
+import { DeclarationOnly } from "../../core/declaration-only";
 
-export type SQLProps = ZipConfig & IndentConfig & SkipInvalidConfig;
+export type SQLProps = ZipConfig &
+  IndentConfig &
+  SkipInvalidConfig &
+  DeclarationOnlyConfig;
 
 export class SQLGenerator extends Generator {
   private readonly zip: boolean;
   private readonly indent: SpaceIndex;
   private readonly skipInvalid: SkipInvalid;
+  private readonly declarationOnly: DeclarationOnly;
 
   constructor(
     private readonly utils: ChacaUtils,
@@ -35,6 +45,7 @@ export class SQLGenerator extends Generator {
     this.zip = Boolean(config.zip);
     this.indent = new SpaceIndex(config.indent);
     this.skipInvalid = new SkipInvalid(config.skipInvalid);
+    this.declarationOnly = new DeclarationOnly(config.declarationOnly);
   }
 
   async createRelationalFile(
@@ -59,6 +70,7 @@ export class SQLGenerator extends Generator {
       validator,
       fixer,
       this.skipInvalid,
+      this.declarationOnly,
     );
 
     const resolvers = organizer.execute({ resolver: resolver });
@@ -106,6 +118,7 @@ export class SQLGenerator extends Generator {
       validator,
       fixer,
       this.skipInvalid,
+      this.declarationOnly,
     );
 
     const resolvers = organizer.execute({ resolver: resolver });
@@ -144,6 +157,7 @@ export class SQLGenerator extends Generator {
       validator,
       fixer,
       this.skipInvalid,
+      this.declarationOnly,
     );
 
     generator.build({
@@ -177,6 +191,7 @@ export class SQLGenerator extends Generator {
       validator,
       fixer,
       this.skipInvalid,
+      this.declarationOnly,
     );
 
     generator.build({

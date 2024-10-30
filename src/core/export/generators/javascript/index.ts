@@ -18,6 +18,7 @@ import { SpaceIndex } from "../../core/space-index";
 import { SkipInvalid } from "../../core/skip-invalid";
 import { FileCreator } from "../file-creator/file-creator";
 import { Route } from "../file-creator/route";
+import { DeclarationOnly } from "../../core/declaration-only";
 
 export type JavascriptProps = ZipConfig &
   SeparateConfig &
@@ -41,6 +42,7 @@ export class JavascriptGenerator extends Generator {
       new SpaceIndex(config.indent),
       false,
       new SkipInvalid(config.skipInvalid),
+      new DeclarationOnly(false),
     );
   }
 

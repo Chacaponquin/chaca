@@ -4,6 +4,7 @@ import { SpaceIndex } from "../../../core/space-index";
 import { ValueCreator } from "./value-creator";
 import { Route } from "./route";
 import { SkipInvalid } from "../../../core/skip-invalid";
+import { DeclarationOnly } from "../../../core/declaration-only";
 
 interface Props {
   name: string;
@@ -16,6 +17,7 @@ export class JavascriptCodeCreator {
     private readonly indent: SpaceIndex,
     private readonly types: boolean,
     private readonly skipInvalid: SkipInvalid,
+    private readonly declarationOnly: DeclarationOnly,
   ) {}
 
   execute({ data, name }: Props): string {
@@ -33,9 +35,11 @@ export class JavascriptCodeCreator {
       } else {
         code += `${classes.string(this.indent)}\n`;
 
-        code += `export const data: ${datatype.definition()} = ${datatype.string(
-          this.indent,
-        )}`;
+        if (!this.declarationOnly.value()) {
+          code += `export const data: ${datatype.definition()} = ${datatype.string(
+            this.indent,
+          )}`;
+        }
       }
     }
 

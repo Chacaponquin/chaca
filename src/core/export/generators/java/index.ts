@@ -12,16 +12,23 @@ import { JavaClasses } from "./core/classes";
 import { DataValidator } from "./core/validator";
 import { JavaCodeCreator } from "./core/code-creator";
 import { SpaceIndex } from "../../core/space-index";
-import { IndentConfig, SkipInvalidConfig, ZipConfig } from "../params";
+import {
+  DeclarationOnlyConfig,
+  IndentConfig,
+  SkipInvalidConfig,
+  ZipConfig,
+} from "../params";
 import { ChacaUtils } from "../../../utils";
 import { SkipInvalid } from "../../core/skip-invalid";
 import { Package } from "./value-object/package";
 import { FileCreator } from "../file-creator/file-creator";
 import { Route } from "../file-creator/route";
+import { DeclarationOnly } from "../../core/declaration-only";
 
 export type JavaProps = ZipConfig &
   IndentConfig &
-  SkipInvalidConfig & {
+  SkipInvalidConfig &
+  DeclarationOnlyConfig & {
     /** Name of the package in which the classes will be found. Default `chaca.data` */
     package?: string;
   };
@@ -39,6 +46,7 @@ export class JavaGenerator extends Generator {
     this.creator = new JavaCodeCreator({
       indent: new SpaceIndex(config.indent),
       package: new Package(config.package),
+      declarationOnly: new DeclarationOnly(config.declarationOnly),
     });
 
     this.skipInvalid = new SkipInvalid(config.skipInvalid);

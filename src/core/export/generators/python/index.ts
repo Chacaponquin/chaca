@@ -9,6 +9,7 @@ import { PythonCodeCreator } from "./core/creator";
 import { Filename } from "../file-creator/filename";
 import { ChacaUtils } from "../../../utils";
 import {
+  DeclarationOnlyConfig,
   IndentConfig,
   SeparateConfig,
   SkipInvalidConfig,
@@ -18,11 +19,13 @@ import { SkipInvalid } from "../../core/skip-invalid";
 import { SpaceIndex } from "../../core/space-index";
 import { FileCreator } from "../file-creator/file-creator";
 import { Route } from "../file-creator/route";
+import { DeclarationOnly } from "../../core/declaration-only";
 
 export type PythonProps = ZipConfig &
   SeparateConfig &
   IndentConfig &
-  SkipInvalidConfig;
+  SkipInvalidConfig &
+  DeclarationOnlyConfig;
 
 export class PythonGenerator extends Generator {
   private readonly zip: boolean;
@@ -40,6 +43,7 @@ export class PythonGenerator extends Generator {
       utils,
       new SkipInvalid(config.skipInvalid),
       new SpaceIndex(config.indent),
+      new DeclarationOnly(config.declarationOnly),
     );
   }
 

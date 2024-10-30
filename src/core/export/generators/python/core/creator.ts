@@ -1,4 +1,5 @@
 import { ChacaUtils } from "../../../../utils";
+import { DeclarationOnly } from "../../../core/declaration-only";
 import { SkipInvalid } from "../../../core/skip-invalid";
 import { SpaceIndex } from "../../../core/space-index";
 import { PythonClasses } from "./classes";
@@ -16,6 +17,7 @@ export class PythonCodeCreator {
     private readonly utils: ChacaUtils,
     private readonly skipInvalid: SkipInvalid,
     private readonly indent: SpaceIndex,
+    private readonly declarationOnly: DeclarationOnly,
   ) {}
 
   execute({ data, name }: Props): string {
@@ -39,7 +41,9 @@ export class PythonCodeCreator {
 
       if (classesDef !== "") code += `${classesDef}\n`;
 
-      code += `data: ${declaration} = ${content}\n`;
+      if (!this.declarationOnly.value()) {
+        code += `data: ${declaration} = ${content}\n`;
+      }
 
       return code;
     } else {

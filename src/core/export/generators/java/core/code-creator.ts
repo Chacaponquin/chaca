@@ -1,3 +1,4 @@
+import { DeclarationOnly } from "../../../core/declaration-only";
 import { SpaceIndex } from "../../../core/space-index";
 import { Package } from "../value-object/package";
 import { JavaClasses } from "./classes";
@@ -6,6 +7,7 @@ import { Import, Imports } from "./import";
 interface Props {
   indent: SpaceIndex;
   package: Package;
+  declarationOnly: DeclarationOnly;
 }
 
 export interface CodeResult {
@@ -36,7 +38,9 @@ export class JavaCodeCreator {
       codes.push({ content: content, filename: c.name() });
     }
 
-    codes.push({ content: this.main(classes), filename: "Main" });
+    if (!this.config.declarationOnly.value()) {
+      codes.push({ content: this.main(classes), filename: "Main" });
+    }
 
     return codes;
   }

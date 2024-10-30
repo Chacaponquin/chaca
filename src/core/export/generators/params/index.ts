@@ -14,5 +14,15 @@ export interface SeparateConfig {
 }
 
 export interface SkipInvalidConfig {
+  /**
+   *
+   */
   skipInvalid?: boolean;
+}
+
+export interface DeclarationOnlyConfig {
+  /**
+   *
+   */
+  declarationOnly?: boolean;
 }
