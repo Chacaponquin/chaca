@@ -1,24 +1,25 @@
-import {
-  InputTreeNode,
-  KeyValueNode,
-  RefValueNode,
-} from "../../../../../input-tree/core";
 import { ChacaUtils } from "../../../../../utils";
 import { SQLTables } from "../table/tables";
 import { ColumnName, TableName } from "./names";
 import { Route } from "./route";
 import { Searcher } from "./searcher";
 
+export interface RefColumnParser {
+  column: string;
+  ref: string;
+}
+
 interface Props {
-  refs: RefValueNode[];
-  nulls: InputTreeNode[];
-  keys: KeyValueNode[];
+  refs: RefColumnParser[];
+  nulls: string[];
+  keys: string[];
+  uniques: string[];
 }
 
 export class TablesFixer {
-  private readonly refs: RefValueNode[];
-  private readonly nulls: InputTreeNode[];
-  private readonly keys: KeyValueNode[];
+  private readonly refs: RefColumnParser[];
+  private readonly nulls: string[];
+  private readonly keys: string[];
 
   constructor(
     private readonly utils: ChacaUtils,
@@ -33,30 +34,18 @@ export class TablesFixer {
     const searcher = new Searcher(tables);
 
     for (const ref of this.refs) {
-      const name = ref.getName();
+      const refRoute = Route.from(ref.ref);
+      const route = Route.from(ref.column);
 
-      const refNode = ref.getRefFieldRoute();
-      const refName = refNode.name();
-
-      const tableName = new TableName(
-        this.utils,
-        new Route(ref.getFieldRoute().parent().array()),
-      );
-      const refTableName = new TableName(
-        this.utils,
-        new Route(refNode.parent().array()),
-      );
+      const tableName = new TableName(this.utils, route.parent());
+      const refTableName = new TableName(this.utils, refRoute.parent());
 
       searcher.column({
-        search: { table: refTableName, column: refName },
+        search: { table: refTableName, column: refRoute.name() },
         action(refColumn, refTable) {
           searcher.column({
-            search: { column: name, table: tableName },
+            search: { column: route.name(), table: tableName },
             action(column) {
-              if (ref.isUnique()) {
-                column.setUnique(true);
-              }
-
               column.setRef({ column: refColumn, table: refTable });
             },
           });
@@ -107,11 +96,10 @@ export class TablesFixer {
 
   isKey(table: TableName, name: ColumnName): boolean {
     return this.keys.some((k) => {
-      const n = new ColumnName(this.utils, k.getName(), 0);
-      const t = new TableName(
-        this.utils,
-        new Route(k.getFieldRoute().parent().array()),
-      );
+      const route = Route.from(k);
+
+      const n = new ColumnName(this.utils, route.name(), 0);
+      const t = new TableName(this.utils, route.parent());
 
       return n.equal(name) && t.equal(table);
     });
@@ -119,11 +107,10 @@ export class TablesFixer {
 
   isNull(table: TableName, name: ColumnName): boolean {
     return this.nulls.some((k) => {
-      const n = new ColumnName(this.utils, k.getName(), 0);
-      const t = new TableName(
-        this.utils,
-        new Route(k.getFieldRoute().parent().array()),
-      );
+      const route = Route.from(k);
+
+      const n = new ColumnName(this.utils, route.name(), 0);
+      const t = new TableName(this.utils, route.parent());
 
       return n.equal(name) && t.equal(table);
     });

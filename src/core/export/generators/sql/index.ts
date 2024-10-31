@@ -11,7 +11,7 @@ import { SQLDataGenerator } from "./core/generators/base";
 import { SQLTables } from "./core/table/tables";
 import { DataValidator } from "./core/generators/validator";
 import { TableOrganizer } from "./core/generators/organizer";
-import { TablesFixer } from "./core/generators/fixer";
+import { RefColumnParser, TablesFixer } from "./core/generators/fixer";
 import { ChacaUtils } from "../../../utils";
 import {
   DeclarationOnlyConfig,
@@ -27,13 +27,26 @@ import { DeclarationOnly } from "../../core/declaration-only";
 export type SQLProps = ZipConfig &
   IndentConfig &
   SkipInvalidConfig &
-  DeclarationOnlyConfig;
+  DeclarationOnlyConfig & {
+    /** columns that will be converted to `PRIMARY KEYS` */
+    keys?: string[];
+    /** columns that will be converted to `UNIQUE` */
+    uniques?: string[];
+    /** columns that can accept null values */
+    nulls?: string[];
+    /** columns that will be converted to `FOREIGN KEYS` */
+    refs?: RefColumnParser[];
+  };
 
 export class SQLGenerator extends Generator {
   private readonly zip: boolean;
   private readonly indent: SpaceIndex;
   private readonly skipInvalid: SkipInvalid;
   private readonly declarationOnly: DeclarationOnly;
+  private readonly keys: string[];
+  private readonly uniques: string[];
+  private readonly nulls: string[];
+  private readonly refs: RefColumnParser[];
 
   constructor(
     private readonly utils: ChacaUtils,
@@ -46,6 +59,10 @@ export class SQLGenerator extends Generator {
     this.indent = new SpaceIndex(config.indent);
     this.skipInvalid = new SkipInvalid(config.skipInvalid);
     this.declarationOnly = new DeclarationOnly(config.declarationOnly);
+    this.keys = config.keys ? config.keys : [];
+    this.nulls = config.nulls ? config.nulls : [];
+    this.refs = config.refs ? config.refs : [];
+    this.uniques = config.uniques ? config.uniques : [];
   }
 
   async createRelationalFile(
@@ -56,9 +73,28 @@ export class SQLGenerator extends Generator {
     const route = fileCreator.generateRoute(filename);
 
     const fixer = new TablesFixer(this.utils, {
-      keys: resolver.getKeyNodes(),
-      nulls: resolver.getPossibleNullNodes(),
-      refs: resolver.getRefsNodes(),
+      keys: [
+        ...resolver.getKeyNodes().map((n) => {
+          return n.getFieldRoute().string();
+        }),
+        ...this.keys,
+      ],
+      nulls: [
+        ...resolver.getPossibleNullNodes().map((n) => {
+          return n.getFieldRoute().string();
+        }),
+        ...this.nulls,
+      ],
+      refs: [
+        ...resolver.getRefsNodes().map((n) => {
+          return {
+            column: n.getFieldRoute().string(),
+            ref: n.getRefFieldRoute().string(),
+          };
+        }),
+        ...this.refs,
+      ],
+      uniques: this.uniques,
     });
     const allTables = new SQLTables(this.utils);
     const organizer = new TableOrganizer();
@@ -104,9 +140,28 @@ export class SQLGenerator extends Generator {
 
   dumpRelational({ resolver, filename }: DumpRelationalProps): DumpFile[] {
     const fixer = new TablesFixer(this.utils, {
-      keys: resolver.getKeyNodes(),
-      nulls: resolver.getPossibleNullNodes(),
-      refs: resolver.getRefsNodes(),
+      keys: [
+        ...resolver.getKeyNodes().map((n) => {
+          return n.getFieldRoute().string();
+        }),
+        ...this.keys,
+      ],
+      nulls: [
+        ...resolver.getPossibleNullNodes().map((n) => {
+          return n.getFieldRoute().string();
+        }),
+        ...this.nulls,
+      ],
+      refs: [
+        ...resolver.getRefsNodes().map((n) => {
+          return {
+            column: n.getFieldRoute().string(),
+            ref: n.getRefFieldRoute().string(),
+          };
+        }),
+        ...this.refs,
+      ],
+      uniques: this.uniques,
     });
     const allTables = new SQLTables(this.utils);
     const organizer = new TableOrganizer();
@@ -143,9 +198,10 @@ export class SQLGenerator extends Generator {
 
   dump({ data, filename }: DumpProps): DumpFile[] {
     const fixer = new TablesFixer(this.utils, {
-      keys: [],
-      nulls: [],
-      refs: [],
+      keys: this.keys,
+      nulls: this.nulls,
+      refs: this.refs,
+      uniques: this.uniques,
     });
 
     const tables = new SQLTables(this.utils);
@@ -177,9 +233,10 @@ export class SQLGenerator extends Generator {
     const route = fileCreator.generateRoute(filename);
 
     const fixer = new TablesFixer(this.utils, {
-      keys: [],
-      nulls: [],
-      refs: [],
+      keys: this.keys,
+      nulls: this.nulls,
+      refs: this.refs,
+      uniques: this.uniques,
     });
 
     const tables = new SQLTables(this.utils);
