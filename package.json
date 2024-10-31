@@ -2,21 +2,13 @@
   "name": "chaca",
   "version": "1.9.1",
   "description": "Create and export mock data with your rules",
-  "main": "./lib/cjs/index.js",
-  "module": "./lib/esm/index.mjs",
-  "types": "./lib/types/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "engines": {
     "node": ">=16.0.0"
   },
   "bin": {
     "chaca": "./bin/bin.js"
-  },
-  "exports": {
-    ".": {
-      "import": "./lib/esm/index.mjs",
-      "require": "./lib/cjs/index.js",
-      "types": "./lib/types/index.d.ts"
-    }
   },
   "files": [
     "lib/**/*",
