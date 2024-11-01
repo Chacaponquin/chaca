@@ -23,6 +23,12 @@ import { SpaceIndex } from "../../core/space-index";
 import { SkipInvalid } from "../../core/skip-invalid";
 import { FileCreator } from "../file-creator/file-creator";
 import { DeclarationOnly } from "../../core/declaration-only";
+import { SchemaRouteBuilder } from "./value-object/schema-route";
+import { Keys } from "./value-object/keys";
+import { Nulls } from "./value-object/nulls";
+import { Refs } from "./value-object/refs";
+import { Uniques } from "./value-object/uniques";
+import { DEFAULT_SCHEMA_NAME } from "../../../schema/core/default-name";
 
 export type SQLProps = ZipConfig &
   IndentConfig &
@@ -71,19 +77,20 @@ export class SQLGenerator extends Generator {
   ): Promise<string[]> {
     const filename = fileCreator.filename;
     const route = fileCreator.generateRoute(filename);
+    const routeBuilder = new SchemaRouteBuilder({ include: false });
 
     const fixer = new TablesFixer(this.utils, {
       keys: [
         ...resolver.getKeyNodes().map((n) => {
           return n.getFieldRoute().string();
         }),
-        ...this.keys,
+        ...new Keys(routeBuilder, this.keys).value(),
       ],
       nulls: [
         ...resolver.getPossibleNullNodes().map((n) => {
           return n.getFieldRoute().string();
         }),
-        ...this.nulls,
+        ...new Nulls(routeBuilder, this.nulls).value(),
       ],
       refs: [
         ...resolver.getRefsNodes().map((n) => {
@@ -92,9 +99,9 @@ export class SQLGenerator extends Generator {
             ref: n.getRefFieldRoute().string(),
           };
         }),
-        ...this.refs,
+        ...new Refs(routeBuilder, this.refs).value(),
       ],
-      uniques: this.uniques,
+      uniques: new Uniques(routeBuilder, this.uniques).value(),
     });
     const allTables = new SQLTables(this.utils);
     const organizer = new TableOrganizer();
@@ -139,18 +146,19 @@ export class SQLGenerator extends Generator {
   }
 
   dumpRelational({ resolver, filename }: DumpRelationalProps): DumpFile[] {
+    const routeBuilder = new SchemaRouteBuilder({ include: false });
     const fixer = new TablesFixer(this.utils, {
       keys: [
         ...resolver.getKeyNodes().map((n) => {
           return n.getFieldRoute().string();
         }),
-        ...this.keys,
+        ...new Keys(routeBuilder, this.keys).value(),
       ],
       nulls: [
         ...resolver.getPossibleNullNodes().map((n) => {
           return n.getFieldRoute().string();
         }),
-        ...this.nulls,
+        ...new Nulls(routeBuilder, this.nulls).value(),
       ],
       refs: [
         ...resolver.getRefsNodes().map((n) => {
@@ -159,9 +167,9 @@ export class SQLGenerator extends Generator {
             ref: n.getRefFieldRoute().string(),
           };
         }),
-        ...this.refs,
+        ...new Refs(routeBuilder, this.refs).value(),
       ],
-      uniques: this.uniques,
+      uniques: new Uniques(routeBuilder, this.uniques).value(),
     });
     const allTables = new SQLTables(this.utils);
     const organizer = new TableOrganizer();
@@ -197,11 +205,12 @@ export class SQLGenerator extends Generator {
   }
 
   dump({ data, filename }: DumpProps): DumpFile[] {
+    const routeBuilder = new SchemaRouteBuilder({ include: true });
     const fixer = new TablesFixer(this.utils, {
-      keys: this.keys,
-      nulls: this.nulls,
-      refs: this.refs,
-      uniques: this.uniques,
+      keys: new Keys(routeBuilder, this.keys).value(),
+      nulls: new Nulls(routeBuilder, this.nulls).value(),
+      refs: new Refs(routeBuilder, this.refs).value(),
+      uniques: new Uniques(routeBuilder, this.uniques).value(),
     });
 
     const tables = new SQLTables(this.utils);
@@ -217,10 +226,10 @@ export class SQLGenerator extends Generator {
     );
 
     generator.build({
-      name: filename.value(),
+      name: DEFAULT_SCHEMA_NAME,
       data: data,
       tables: tables,
-      generateIds: true,
+      generateIds: false,
     });
 
     const code = generator.code(tables);
@@ -232,13 +241,13 @@ export class SQLGenerator extends Generator {
     const filename = fileCreator.filename;
     const route = fileCreator.generateRoute(filename);
 
+    const routeBuilder = new SchemaRouteBuilder({ include: true });
     const fixer = new TablesFixer(this.utils, {
-      keys: this.keys,
-      nulls: this.nulls,
-      refs: this.refs,
-      uniques: this.uniques,
+      keys: new Keys(routeBuilder, this.keys).value(),
+      nulls: new Nulls(routeBuilder, this.nulls).value(),
+      refs: new Refs(routeBuilder, this.refs).value(),
+      uniques: new Uniques(routeBuilder, this.uniques).value(),
     });
-
     const tables = new SQLTables(this.utils);
     const validator = new DataValidator();
     const postgres = new PostgreSQL(this.indent);
@@ -252,10 +261,10 @@ export class SQLGenerator extends Generator {
     );
 
     generator.build({
-      name: filename.value(),
+      name: DEFAULT_SCHEMA_NAME,
       data: data,
       tables: tables,
-      generateIds: true,
+      generateIds: false,
     });
 
     const code = generator.code(tables);

@@ -20,14 +20,16 @@ export class TablesFixer {
   private readonly refs: RefColumnParser[];
   private readonly nulls: string[];
   private readonly keys: string[];
+  private readonly uniques: string[];
 
   constructor(
     private readonly utils: ChacaUtils,
-    { keys, nulls, refs }: Props,
+    { keys, nulls, refs, uniques }: Props,
   ) {
     this.keys = keys;
     this.refs = refs;
     this.nulls = nulls;
+    this.uniques = uniques;
   }
 
   fixRefFields(tables: SQLTables): void {
@@ -96,6 +98,17 @@ export class TablesFixer {
 
   isKey(table: TableName, name: ColumnName): boolean {
     return this.keys.some((k) => {
+      const route = Route.from(k);
+
+      const n = new ColumnName(this.utils, route.name(), 0);
+      const t = new TableName(this.utils, route.parent());
+
+      return n.equal(name) && t.equal(table);
+    });
+  }
+
+  isUnique(table: TableName, name: ColumnName): boolean {
+    return this.uniques.some((k) => {
       const route = Route.from(k);
 
       const n = new ColumnName(this.utils, route.name(), 0);

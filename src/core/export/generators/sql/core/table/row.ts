@@ -21,6 +21,10 @@ export class SQLRow {
     return this._columns;
   }
 
+  hasKey(): boolean {
+    return this._columns.some((c) => c.column().isKey());
+  }
+
   deleteColumn(column: SQLColumn) {
     this._columns = this._columns.filter((c) => c.column() === column);
   }

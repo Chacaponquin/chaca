@@ -7,6 +7,7 @@ import { DatatypeModule } from "../../modules/datatype";
 import { GeneratorFilter } from "../export/resolvers/generator-filter";
 import { DumpResolver } from "../export/resolvers/dump";
 import { DumpFile } from "../export/generators/generator";
+import { DEFAULT_SCHEMA_NAME } from "./core/default-name";
 
 export class Schema<K = any> {
   constructor(
@@ -76,7 +77,7 @@ export class Schema<K = any> {
       this.utils,
       this.datatypeModule,
       {
-        name: "Schema",
+        name: DEFAULT_SCHEMA_NAME,
         input: this.input,
         countDoc: countDocuments,
         schemaIndex: 0,
