@@ -1,6 +1,6 @@
 {
   "name": "chaca",
-  "version": "1.9.1",
+  "version": "2.0.0",
   "description": "Create and export mock data with your rules",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
