@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { ExtensionTester } from "./core/tester";
-import { chaca, ChacaError, modules } from "../../../src";
+import { chaca, modules } from "../../../src";
 
 const tester = new ExtensionTester("postgresql");
 
@@ -60,17 +60,19 @@ describe("Postgresql", () => {
         expect(result[0].content).include("id INTEGER PRIMARY KEY");
       });
 
-      it("keys: []. should throw an error", () => {
-        expect(() => {
-          chaca.transform(schema.array(10), {
-            format: {
-              ext: "postgresql",
-              keys: [],
-              declarationOnly: true,
-            },
-            filename: "schema",
-          });
-        }).toThrow(ChacaError);
+      it("keys: []. should define an serial id for the table", () => {
+        const result = chaca.transform(schema.array(10), {
+          format: {
+            ext: "postgresql",
+            keys: [],
+            declarationOnly: true,
+          },
+          filename: "schema",
+        });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].filename).toBe("schema");
+        expect(result[0].content).include("id SERIAL PRIMARY KEY");
       });
     });
 
@@ -111,29 +113,31 @@ describe("Postgresql", () => {
     });
 
     describe("refs config", () => {
-      const schema = chaca.schema({
-        id: chaca.sequence(),
-        object: chaca.schema({
-          object_id: chaca.sequence(),
-          ref: chaca.sequence(),
-        }),
-      });
+      it("create reference from object.ref to id", () => {
+        const schema = chaca.schema({
+          id: chaca.sequence(),
+          object: chaca.schema({
+            object_id: chaca.sequence(),
+            ref: chaca.sequence(),
+          }),
+        });
 
-      const result = chaca.transform(schema.array(10), {
-        format: {
-          ext: "postgresql",
-          keys: ["id", "object.object_id"],
-          refs: [{ column: "object.object_id", ref: "id" }],
-          declarationOnly: true,
-        },
-        filename: "schema",
-      });
+        const result = chaca.transform(schema.array(10), {
+          format: {
+            ext: "postgresql",
+            keys: ["id", "object.object_id"],
+            refs: [{ column: "object.object_id", ref: "id" }],
+            declarationOnly: true,
+          },
+          filename: "schema",
+        });
 
-      expect(result).toHaveLength(1);
-      expect(result[0].filename).toBe("schema");
-      expect(result[0].content).include(
-        "object_id INTEGER PRIMARY KEY REFERENCES Schema(id)",
-      );
+        expect(result).toHaveLength(1);
+        expect(result[0].filename).toBe("schema");
+        expect(result[0].content).include(
+          "object_id INTEGER PRIMARY KEY REFERENCES Schema(id)",
+        );
+      });
     });
   });
 });

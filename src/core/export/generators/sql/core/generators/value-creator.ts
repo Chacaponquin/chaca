@@ -2,6 +2,7 @@ import { ChacaError } from "../../../../../../errors";
 import { ChacaUtils } from "../../../../../utils";
 import { Datatype } from "../../../../core/datatype";
 import { SkipInvalid } from "../../../../core/skip-invalid";
+import { GenerateIds } from "../../value-object/generate-ids";
 import {
   SQLDatatype,
   SQLFloat,
@@ -35,7 +36,7 @@ export class ValueCreator {
     private readonly fixer: TablesFixer,
     private readonly tables: SQLTables,
     private readonly skipInvalid: SkipInvalid,
-    private readonly generateIds: boolean,
+    private readonly generateIds: GenerateIds,
   ) {}
 
   execute({ route, parent, table, value }: Props): SQLDatatype[] {
@@ -93,7 +94,7 @@ export class ValueCreator {
         const objectTable = table ? table : this.tables.search(tableName);
 
         const row = new SQLRow();
-        objectTable.addRow(row, this.generateIds);
+        objectTable.addRow(row);
 
         for (const [key, data] of Object.entries(value)) {
           const datatypes = this.execute({
@@ -127,6 +128,8 @@ export class ValueCreator {
           }
         }
 
+        objectTable.addSerial(row, this.generateIds.value(), row.hasKey());
+
         if (!row.hasKey()) {
           throw new ChacaError(
             `The table ${objectTable.name()} must have at least 1 PRIMARY KEY`,
@@ -143,7 +146,7 @@ export class ValueCreator {
 
         for (const v of value) {
           const row = new SQLRow();
-          arrayTable.addRow(row, true);
+          arrayTable.addRow(row);
 
           const datatypes = this.execute({
             route: route.create("array"),
@@ -203,6 +206,8 @@ export class ValueCreator {
 
             row.add(rowValue);
           }
+
+          arrayTable.addSerial(row, true, false);
         }
 
         return [];

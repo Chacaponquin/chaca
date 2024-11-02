@@ -62,8 +62,10 @@ export const MATCH_SCHEMA = chaca.schema({
   date: () => modules.date.past(),
   tournament_id: chaca.ref("Tournament.id"),
   home_team_id: chaca.ref("Team.id"),
-  away_home_team_id: chaca.ref("Team.id", ({ refFields, currentFields }) => {
-    return currentFields.home_team_id !== refFields.id;
+  away_home_team_id: chaca.ref("Team.id", {
+    where: ({ refFields, currentFields }) => {
+      return currentFields.home_team_id !== refFields.id;
+    },
   }),
   attendance: () => modules.datatype.int({ min: 5000, max: 100000 }),
   team_statistics: { isArray: 2, type: TEAM_STATISTICS_SCHEMA },

@@ -1,6 +1,7 @@
 import { ChacaUtils } from "../../../../../utils";
 import { DeclarationOnly } from "../../../../core/declaration-only";
 import { SkipInvalid } from "../../../../core/skip-invalid";
+import { GenerateIds } from "../../value-object/generate-ids";
 import { SQLTable } from "../table/table";
 import { SQLTables } from "../table/tables";
 import { TablesFixer } from "./fixer";
@@ -29,9 +30,10 @@ export class SQLDataGenerator {
     private readonly fixer: TablesFixer,
     private readonly skipInvalid: SkipInvalid,
     private readonly declarationOnly: DeclarationOnly,
+    private readonly generateIds: GenerateIds,
   ) {}
 
-  build({ name: iname, data, tables, generateIds }: BuildProps) {
+  build({ name: iname, data, tables }: BuildProps) {
     this.validator.execute(data);
 
     const route = new Route([iname]);
@@ -41,7 +43,7 @@ export class SQLDataGenerator {
       this.fixer,
       tables,
       this.skipInvalid,
-      generateIds,
+      this.generateIds,
     );
 
     const table = new SQLTable(this.utils, name, false);

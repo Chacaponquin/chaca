@@ -90,7 +90,7 @@ export class Chaca {
    *
    * @example
    * chaca.key(chaca.sequence())
-   * chaca.key(schemas.id.uuid())
+   * chaca.key(() => modules.id.uuid())
    */
   key(field: KeyFieldProps) {
     return new KeyField(field);

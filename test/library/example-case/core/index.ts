@@ -12,7 +12,11 @@ export class ExampleCaseTest {
   execute() {
     describe("postgresql", () => {
       it("no arguments", async () => {
-        await this.export({ ext: "postgresql", location: "no-arguments" });
+        await this.export({
+          ext: "postgresql",
+          location: "no-arguments",
+          generateIds: true,
+        });
       });
 
       it("declaration = true", async () => {
@@ -20,6 +24,7 @@ export class ExampleCaseTest {
           ext: "postgresql",
           declarationOnly: true,
           location: "declaration",
+          generateIds: true,
         });
       });
     });

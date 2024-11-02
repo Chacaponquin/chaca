@@ -29,6 +29,7 @@ import { Nulls } from "./value-object/nulls";
 import { Refs } from "./value-object/refs";
 import { Uniques } from "./value-object/uniques";
 import { DEFAULT_SCHEMA_NAME } from "../../../schema/core/default-name";
+import { GenerateIds } from "./value-object/generate-ids";
 
 export type SQLProps = ZipConfig &
   IndentConfig &
@@ -42,6 +43,8 @@ export type SQLProps = ZipConfig &
     nulls?: string[];
     /** columns that will be converted to `FOREIGN KEYS` */
     refs?: RefColumnParser[];
+    /** Generates a sequential id for tables that are created and for which no PRIMARY KEY is defined */
+    generateIds?: boolean;
   };
 
 export class SQLGenerator extends Generator {
@@ -53,6 +56,7 @@ export class SQLGenerator extends Generator {
   private readonly uniques: string[];
   private readonly nulls: string[];
   private readonly refs: RefColumnParser[];
+  private readonly generateIds: GenerateIds;
 
   constructor(
     private readonly utils: ChacaUtils,
@@ -69,6 +73,7 @@ export class SQLGenerator extends Generator {
     this.nulls = config.nulls ? config.nulls : [];
     this.refs = config.refs ? config.refs : [];
     this.uniques = config.uniques ? config.uniques : [];
+    this.generateIds = new GenerateIds(config.generateIds);
   }
 
   async createRelationalFile(
@@ -114,6 +119,7 @@ export class SQLGenerator extends Generator {
       fixer,
       this.skipInvalid,
       this.declarationOnly,
+      this.generateIds,
     );
 
     const resolvers = organizer.execute({ resolver: resolver });
@@ -182,6 +188,7 @@ export class SQLGenerator extends Generator {
       fixer,
       this.skipInvalid,
       this.declarationOnly,
+      this.generateIds,
     );
 
     const resolvers = organizer.execute({ resolver: resolver });
@@ -223,6 +230,7 @@ export class SQLGenerator extends Generator {
       fixer,
       this.skipInvalid,
       this.declarationOnly,
+      this.generateIds,
     );
 
     generator.build({
@@ -258,6 +266,7 @@ export class SQLGenerator extends Generator {
       fixer,
       this.skipInvalid,
       this.declarationOnly,
+      this.generateIds,
     );
 
     generator.build({

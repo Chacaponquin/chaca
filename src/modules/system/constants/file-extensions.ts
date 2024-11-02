@@ -20,12 +20,12 @@ export const FILE_EXTENSIONS = {
     ".vb",
     ".cs",
     ".sql",
-    "css",
-    "html",
-    "vue",
-    "sass",
-    "scss",
-    "less",
+    ".css",
+    ".html",
+    ".vue",
+    ".sass",
+    ".scss",
+    ".less",
   ],
 
   config: [".ini", ".conf", ".yaml", ".yml", ".xml", ".properties", ".env"],
@@ -54,7 +54,7 @@ export const FILE_EXTENSIONS = {
 
   executable: [".exe", ".msi", ".apk", ".ipa", ".deb", ".rpm"],
 
-  database: [".db", ".sqlite", ".mdb", ".accdb", ".sqlitedb", "sql"],
+  database: [".db", ".sqlite", ".mdb", ".accdb", ".sqlitedb", ".sql"],
 
   office: [
     ".doc",
