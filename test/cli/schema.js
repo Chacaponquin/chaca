@@ -1,4 +1,4 @@
-const { chaca, modules } = require("../../lib/cjs/index");
+const { chaca, modules } = require("../../lib/index.js");
 
 module.exports = chaca.schema({
   id: () => modules.id.uuid(),

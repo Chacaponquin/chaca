@@ -1,6 +1,7 @@
 {
   "name": "chaca",
   "version": "2.0.0",
+  "type": "module",
   "description": "Create and export mock data with your rules",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -30,6 +31,7 @@
     "test:library": "vitest test/library",
     "test:export": "vitest test/library/extensions",
     "test:utils": "vitest test/library/utils",
+    "test:cli": "node ./lib/bin/index.js json --count 50 --filename data --output data/cli --config test/cli/dataset",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "lint-fix": "eslint --fix src/**/*.ts",
     "lint": "eslint src/**/*.ts",

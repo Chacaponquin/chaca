@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import yargs from "yargs";
 import { json } from "./json";
 import { csv } from "./csv";
