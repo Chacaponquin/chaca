@@ -64,6 +64,7 @@ export class JavaCodeCreator {
     this.config.indent.push();
 
     content += classes.classes
+      .filter((c) => c.print)
       .map((c) => {
         imports.add(
           new Import(["java", "util", "List"]),

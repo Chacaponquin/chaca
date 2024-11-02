@@ -19,7 +19,7 @@ export class ClassesCreator {
     const parent = new Parent([iname]);
 
     for (const value of data) {
-      this.creator.execute({ parent: parent, value: value });
+      this.creator.execute({ parent: parent, value: value, print: true });
     }
   }
 }

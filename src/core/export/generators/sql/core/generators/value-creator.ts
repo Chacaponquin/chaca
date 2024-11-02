@@ -207,7 +207,13 @@ export class ValueCreator {
             row.add(rowValue);
           }
 
-          arrayTable.addSerial(row, true, false);
+          arrayTable.addSerial(row, true, row.hasKey());
+
+          if (!row.hasKey()) {
+            throw new ChacaError(
+              `The table ${arrayTable.name()} must have at least 1 PRIMARY KEY`,
+            );
+          }
         }
 
         return [];

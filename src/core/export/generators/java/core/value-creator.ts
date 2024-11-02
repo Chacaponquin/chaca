@@ -2,7 +2,7 @@ import { ChacaError } from "../../../../../errors";
 import { ChacaUtils } from "../../../../utils";
 import { Datatype } from "../../../core/datatype";
 import { SkipInvalid } from "../../../core/skip-invalid";
-import { JavaClasses } from "./classes";
+import { JavaClasses, SaveJavaClass } from "./classes";
 import { JavaClassFieldName, JavaClassName } from "./names";
 import { Parent } from "./parent";
 import {
@@ -23,6 +23,7 @@ import {
 interface CreateProps {
   value: any;
   parent: Parent;
+  print: boolean;
 }
 
 export class ValueCreator {
@@ -32,7 +33,7 @@ export class ValueCreator {
     private readonly skipInvalid: SkipInvalid,
   ) {}
 
-  execute({ value, parent }: CreateProps): JavaDatatype | null {
+  execute({ value, parent, print }: CreateProps): JavaDatatype | null {
     const type = Datatype.filter<JavaDatatype | null>(value, {
       bigint(value) {
         return new JavaBigint(value);
@@ -64,9 +65,7 @@ export class ValueCreator {
           return null;
         }
 
-        throw new ChacaError(
-          `You can not export a Symbol into a javascript file.`,
-        );
+        throw new ChacaError(`You can not export a Symbol into a java file.`);
       },
       float(value) {
         return new JavaFloat(value);
@@ -81,8 +80,9 @@ export class ValueCreator {
         return new JavaNull();
       },
       object: (value) => {
-        const classname = new JavaClassName(this.utils, parent);
-        const saveClass = this.classes.find(classname);
+        const saveClass = this.classes.find(
+          new SaveJavaClass(new JavaClassName(this.utils, parent), [], print),
+        );
 
         const object = new JavaClass(saveClass, parent);
 
@@ -94,6 +94,7 @@ export class ValueCreator {
           const datatype = this.execute({
             value: data,
             parent: newParent,
+            print: false,
           });
 
           if (datatype) {
@@ -113,7 +114,11 @@ export class ValueCreator {
         const array = new JavaArray();
 
         for (const v of value) {
-          const datatype = this.execute({ parent: parent, value: v });
+          const datatype = this.execute({
+            parent: parent,
+            value: v,
+            print: false,
+          });
 
           if (datatype) {
             array.add(datatype);

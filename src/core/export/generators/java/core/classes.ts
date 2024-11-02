@@ -34,15 +34,25 @@ export class SaveJavaClass {
   readonly _name: JavaClassName;
   readonly fields: SaveJavaClassField[];
   readonly values: JavaClass[];
+  readonly print: boolean;
 
-  constructor(name: JavaClassName, fields: SaveJavaClassField[]) {
+  constructor(
+    name: JavaClassName,
+    fields: SaveJavaClassField[],
+    print: boolean,
+  ) {
     this.fields = fields;
     this._name = name;
     this.values = [];
+    this.print = print;
   }
 
   variable(): string {
     return this._name.variable();
+  }
+
+  equal(other: SaveJavaClass): boolean {
+    return this._name.equal(other._name);
   }
 
   find(name: JavaClassFieldName, datatype: JavaDatatype): SaveJavaClassField {
@@ -168,16 +178,15 @@ export class JavaClasses {
     this.classes = [];
   }
 
-  find(name: JavaClassName): SaveJavaClass {
-    const found = this.classes.find((c) => c._name.equal(name));
+  find(add: SaveJavaClass): SaveJavaClass {
+    const found = this.classes.find((c) => c.equal(add));
 
     if (found) {
       return found;
     } else {
-      const create = new SaveJavaClass(name, []);
-      this.classes.push(create);
+      this.classes.push(add);
 
-      return create;
+      return add;
     }
   }
 }
