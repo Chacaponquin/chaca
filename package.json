@@ -1,13 +1,13 @@
 {
   "name": "chaca",
   "version": "2.0.0",
-  "type": "module",
   "description": "Create and export mock data with your rules",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "engines": {
-    "node": ">=16.0.0"
+    "node": ">=18"
   },
+  "exports": "./lib/index.js",
   "bin": {
     "chaca": "./lib/bin/index.js"
   },
@@ -22,7 +22,7 @@
     "prepare": "husky install",
     "clean": "rm -rf ./lib",
     "build": "npm run fix && npm run build:lib",
-    "build:lib": "npm run clean && tsc -p tsconfig.json",
+    "build:lib": "npm run clean && tsc --build --verbose",
     "test": "vitest test",
     "test:coverage": "vitest run --coverage",
     "test:field-types": "vitest test/library/field-types",
@@ -31,7 +31,7 @@
     "test:library": "vitest test/library",
     "test:export": "vitest test/library/extensions",
     "test:utils": "vitest test/library/utils",
-    "test:cli": "node ./lib/bin/index.js json --count 50 --filename data --output data/cli --config test/cli/dataset",
+    "test:cli": "node ./lib/bin/index.js json --count 50 --filename data --output data/cli --config test/cli/dataset.js",
     "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
     "lint-fix": "eslint --fix src/**/*.ts",
     "lint": "eslint src/**/*.ts",
@@ -81,11 +81,11 @@
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "adm-zip": "^0.5.9",
-    "change-case": "^5.4.4",
+    "change-case-all": "^2.1.0",
     "js-yaml": "^4.1.0",
     "json-2-csv": "^5.5.6",
     "lorem-ipsum": "^2.0.8",
-    "nanoid": "^5.0.7",
+    "nanoid-cjs": "^0.0.7",
     "ulid": "^2.3.0",
     "uuid": "^10.0.0",
     "yargs": "^17.7.2"

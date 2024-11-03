@@ -1,4 +1,4 @@
-import AdmZip from "adm-zip";
+import * as AdmZip from "adm-zip";
 import { Route } from "./route";
 import { FileCreator } from "./file-creator";
 

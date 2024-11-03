@@ -51,9 +51,9 @@ export class Chaca {
    * @param field configuration of the reference field. the field location must be separated points
    *
    * @example
-   * {
-   *    field: chaca.ref('schema.field')
-   * }
+   * chaca.schema({
+   *    ref: chaca.ref('schema.field')
+   * })
    */
   ref(field: FieldToRef, config?: RefFieldConfig): RefField {
     return new RefField(field, config);
@@ -61,15 +61,17 @@ export class Chaca {
 
   /**
    * Sequential field
+   *
    * @param values Array of the secuential values
    * @param config.loop Boolean indicating whether the values should be generated cyclically. Default `false`
    * @example
    * // the first generated object will have the number with value 1
    * // the second generated object will have the number with value 2
    * // the third generated object will have the number with value 3
-   * {
+   *
+   * chaca.schema({
    *   number: chaca.sequential([1, 2, 3])
-   * }
+   * })
    */
   sequential<K = any>(values: K[], config?: SequentialFieldConfig) {
     return new SequentialField(values, config);
@@ -118,7 +120,7 @@ export class Chaca {
    * ]
    * const config = { filename: 'users', format: 'json', location: '../../data' }
    *
-   * await schema.export(data, config)
+   * await chaca.export(data, config)
    *
    * @returns
    * Promise<string[]>
@@ -172,6 +174,7 @@ export class Chaca {
    *    values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
    *    count: 3
    * })
+   *
    * // [2, 6, 10] or [4, 5, 1] or [1, 9, 8] or ...
    */
   pick<V = any>(props: PickFieldProps<V>) {

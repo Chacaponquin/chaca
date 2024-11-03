@@ -5,14 +5,7 @@ import {
   MIXED_CHARACTERS,
   UPPER_CHARACTERS,
 } from "../../modules/datatype/constants/characters";
-import {
-  camelCase,
-  capitalCase,
-  dotCase,
-  pascalCase,
-  sentenceCase,
-  snakeCase,
-} from "change-case";
+import { Case } from "change-case-all";
 
 export type TimeUnits =
   | "years"
@@ -140,7 +133,7 @@ export class ChacaUtils {
    * @returns string
    */
   camelCase(text: string): string {
-    return camelCase(text, {});
+    return Case.camel(text);
   }
 
   /**
@@ -155,7 +148,7 @@ export class ChacaUtils {
    * @returns string
    */
   snakeCase(text: string): string {
-    return snakeCase(text, {});
+    return Case.snake(text);
   }
 
   /**
@@ -170,7 +163,7 @@ export class ChacaUtils {
    * @returns string
    */
   dotCase(text: string): string {
-    return dotCase(text, {});
+    return Case.dot(text);
   }
 
   /**
@@ -185,7 +178,7 @@ export class ChacaUtils {
    * @returns string
    */
   sentenceCase(text: string): string {
-    return sentenceCase(text, {});
+    return Case.sentence(text);
   }
 
   /**
@@ -200,7 +193,7 @@ export class ChacaUtils {
    * @returns string
    */
   capitalCase(text: string): string {
-    return capitalCase(text, {});
+    return Case.capital(text);
   }
 
   /**
@@ -215,7 +208,7 @@ export class ChacaUtils {
    * @returns string
    */
   pascalCase(text: string): string {
-    return pascalCase(text, {});
+    return Case.pascal(text);
   }
 
   /**
