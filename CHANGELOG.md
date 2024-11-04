@@ -60,6 +60,15 @@
 - Added `nullOnEmpty` parameter to avoid `NotEnoughValuesForRefError` exception
 - The `ref` fields can reference the schema they are located in without causing a circular dependency.
 - 🎉 Added `Dataset.transform`, `Schema.transform` and `Chaca.transform` methods to serialize data to a specific file format without having to export it
+- 🎉 Added new CLI commands
+  - `json`
+  - `python`
+  - `java`
+  - `js`
+  - `json`
+  - `postgresql`
+  - `ts`
+  - `yaml`
 
 ### Modules
 
@@ -111,19 +120,19 @@
   // get a value
   modules.id.uuid();
 
-  // use on a schema
+  // use on schemas
   const schema = chaca.schema({
     id: () => modules.id.uuid(),
   });
   ```
 
 - Probability values ​​for the `possibleNull` param must be in the range 0 to 1 now
-
 - 🔄 `Schema.generate` -> `Schema.array`
 - 🔄 `Schema.generateObject` -> `Schema.object`
 - 🔄 `FileConfig.fileName` -> `FileConfig.filename`
 - 🔄 `DatasetStore.getSchemaDocuments` -> `DatasetStore.currentDocuments`
 - 🔄 `NotExistFieldError` -> `NotExistRefFieldError`
+- 🗑️ Removed `export` CLI command
 
 ### Modules
 
