@@ -61,7 +61,7 @@ export class ExampleCaseTest {
       it("separate = false", async () => {
         await this.export({
           ext: "python",
-          separate: true,
+          separate: false,
           location: "not-separated",
         });
       });

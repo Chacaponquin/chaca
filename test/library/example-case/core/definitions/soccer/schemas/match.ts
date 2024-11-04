@@ -1,7 +1,6 @@
 import { chaca, modules } from "../../../../../../../src";
 
 const TEAM_STATISTICS_SCHEMA = chaca.schema({
-  id: chaca.key(chaca.sequence()),
   team_id: ({ currentFields }) => {
     if (currentFields.team_statistics.length === 0) {
       return currentFields.home_team_id;
@@ -28,7 +27,6 @@ const TEAM_STATISTICS_SCHEMA = chaca.schema({
 
 const PLAYER_STATISTICS_SCHEMA = (team: "home" | "visitant") => {
   return chaca.schema({
-    id: chaca.key(chaca.sequence()),
     player_id: chaca.ref("Player.id", {
       where: ({ currentFields, refFields, store }) => {
         const injured = store

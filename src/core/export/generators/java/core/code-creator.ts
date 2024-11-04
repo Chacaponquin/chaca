@@ -84,7 +84,9 @@ export class JavaCodeCreator {
 
             this.config.indent.push();
 
-            code += v.string(this.config.indent, imports);
+            code += this.config.indent.create(
+              v.string(this.config.indent, imports),
+            );
 
             this.config.indent.reverse();
 

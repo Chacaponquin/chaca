@@ -121,7 +121,7 @@ export class ValueCreator {
           });
 
           if (datatype) {
-            array.add(datatype);
+            array.add(datatype, parent);
           }
         }
 

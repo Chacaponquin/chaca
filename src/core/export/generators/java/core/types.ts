@@ -8,6 +8,7 @@ export abstract class JavaDatatype {
   abstract equal(other: JavaDatatype): boolean;
   abstract definition(imports: Imports): string;
   abstract string(index: SpaceIndex, imports: Imports): string;
+  abstract primitive(): string;
   protected abstract similar(other: JavaDatatype): boolean;
   protected abstract greaterThan(other: JavaDatatype): boolean;
 
@@ -28,6 +29,10 @@ export abstract class JavaDatatype {
 export class JavaString extends JavaDatatype {
   constructor(private readonly value: string) {
     super();
+  }
+
+  primitive(): string {
+    return "string";
   }
 
   protected similar(): boolean {
@@ -54,6 +59,10 @@ export class JavaString extends JavaDatatype {
 abstract class JavaNumber extends JavaDatatype {
   protected similar(other: JavaDatatype): boolean {
     return other instanceof JavaNumber;
+  }
+
+  primitive(): string {
+    return "number";
   }
 }
 
@@ -114,6 +123,10 @@ export class JavaBoolean extends JavaDatatype {
     super();
   }
 
+  primitive(): string {
+    return "boolean";
+  }
+
   protected similar(): boolean {
     return false;
   }
@@ -127,7 +140,7 @@ export class JavaBoolean extends JavaDatatype {
   }
 
   definition(): string {
-    return "boolean";
+    return "Boolean";
   }
 
   string(): string {
@@ -138,6 +151,10 @@ export class JavaBoolean extends JavaDatatype {
 export class JavaBigint extends JavaDatatype {
   constructor(private readonly value: bigint) {
     super();
+  }
+
+  primitive(): string {
+    return "bigint";
   }
 
   protected similar(): boolean {
@@ -164,6 +181,10 @@ export class JavaBigint extends JavaDatatype {
 export class JavaDate extends JavaDatatype {
   constructor(private readonly value: Date) {
     super();
+  }
+
+  primitive(): string {
+    return "Date";
   }
 
   protected similar(): boolean {
@@ -196,6 +217,10 @@ export class JavaRegexp extends JavaDatatype {
     super();
   }
 
+  primitive(): string {
+    return "RegExp";
+  }
+
   greaterThan(): boolean {
     return false;
   }
@@ -223,6 +248,10 @@ export class JavaRegexp extends JavaDatatype {
 
 export class JavaNull extends JavaDatatype {
   string(): string {
+    return "null";
+  }
+
+  primitive(): string {
     return "null";
   }
 
@@ -256,6 +285,10 @@ export class JavaClass extends JavaDatatype {
     this.parent = parent;
   }
 
+  primitive(): string {
+    return this.save.name();
+  }
+
   greaterThan(): boolean {
     return false;
   }
@@ -269,7 +302,7 @@ export class JavaClass extends JavaDatatype {
   }
 
   string(index: SpaceIndex, imports: Imports): string {
-    let code = index.create(`new ${this.name()}(\n`);
+    let code = `new ${this.name()}(\n`;
 
     index.push();
 
@@ -287,7 +320,7 @@ export class JavaClass extends JavaDatatype {
 
     index.reverse();
 
-    code += "\n" + index.create(")\n");
+    code += "\n" + index.create(")");
 
     return code;
   }
@@ -342,6 +375,10 @@ export class JavaArray extends JavaDatatype {
     this.datatype = null;
   }
 
+  primitive(): string {
+    return `Array`;
+  }
+
   protected similar(): boolean {
     return false;
   }
@@ -391,12 +428,18 @@ export class JavaArray extends JavaDatatype {
     return other instanceof JavaArray;
   }
 
-  add(value: JavaDatatype): void {
+  add(value: JavaDatatype, parent: Parent): void {
     if (this.datatype) {
       if (this.datatype.isSimilar(value)) {
         this.datatype = this.datatype.greater(value);
       } else {
-        throw new ChacaError(``);
+        const route = parent.string();
+        const type1 = this.datatype.primitive();
+        const type2 = value.primitive();
+
+        throw new ChacaError(
+          `On field '${route}' exist values of type ${type1} and ${type2}. The data must be uniform`,
+        );
       }
     } else {
       this.datatype = value;
