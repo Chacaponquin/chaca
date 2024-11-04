@@ -24,12 +24,14 @@ export async function run({ route, count, filename, output, format }: Props) {
         filename: filename,
         format: format,
         location: output,
+        verbose: true,
       });
     } else if (config instanceof Dataset) {
       await config.export({
         filename: filename,
         format: format,
         location: output,
+        verbose: true,
       });
     } else {
       throw new Error(`You must export a schema or a dataset`);

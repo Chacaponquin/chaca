@@ -57,11 +57,11 @@ export class SchemaResolver<K = any> {
     private readonly datatypeModule: DatatypeModule,
     { consoleVerbose, countDoc, schemaIndex, name, input }: Props,
   ) {
-    this.name = new SchemaName(name).value();
+    this.index = schemaIndex;
+    this.name = new SchemaName(name, this.index).value();
     this.schemasStore = new SchemaStore([]);
     this.route = new NodeRoute([name]);
     this.input = new SchemaToResolve(this.route, input);
-    this.index = schemaIndex;
     this.consoleVerbose = consoleVerbose;
 
     this.resultTree = new ChacaResultTree<K>(this.name);

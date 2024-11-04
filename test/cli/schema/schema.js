@@ -1,4 +1,4 @@
-const { chaca, modules } = require("../../lib/index.js");
+const { chaca, modules } = require("../../../lib");
 
 module.exports = chaca.schema({
   id: chaca.key(chaca.sequence()),

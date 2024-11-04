@@ -1,4 +1,4 @@
-const { chaca, modules } = require("../../lib/index.js");
+const { chaca, modules } = require("../../../lib/index.js");
 
 const USER_SCHEMA = chaca.schema({
   id: chaca.key(() => modules.id.uuid()),

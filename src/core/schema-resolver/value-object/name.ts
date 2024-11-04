@@ -3,7 +3,7 @@ import { ChacaError } from "../../../errors";
 export class SchemaName {
   private _value: string;
 
-  constructor(name: string) {
+  constructor(name: string, private readonly index: number) {
     this._value = this.validate(name);
   }
 
@@ -15,7 +15,9 @@ export class SchemaName {
     if (typeof name === "string" && name.trim() !== "") {
       return name;
     } else {
-      throw new ChacaError("You must provide a name for the schema");
+      throw new ChacaError(
+        `You must provide a name for the schema on index ${this.index}`,
+      );
     }
   }
 }
