@@ -9,7 +9,7 @@
   },
   "exports": "./lib/index.js",
   "bin": {
-    "chaca": "./lib/bin/index.js"
+    "chaca": "./lib/bin/chaca.js"
   },
   "files": [
     "lib/**/*",

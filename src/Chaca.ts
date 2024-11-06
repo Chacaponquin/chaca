@@ -35,11 +35,11 @@ export class Chaca {
   /**
    * @param input The object with the keys and type of each field
    * @example
-   * {
+   * chaca.schema({
    *    id: () => modules.id.uuid(),
    *    image: () => modules.image.film(),
    *    name: () => modules.person.firstName()
-   * }
+   * })
    */
   schema<K = any>(input: SchemaInput): Schema<K> {
     const newSchema = new Schema<K>(input, this.utils, this.datatypeModule);
@@ -65,13 +65,16 @@ export class Chaca {
    * @param values Array of the secuential values
    * @param config.loop Boolean indicating whether the values should be generated cyclically. Default `false`
    * @example
-   * // the first generated object will have the number with value 1
-   * // the second generated object will have the number with value 2
-   * // the third generated object will have the number with value 3
-   *
    * chaca.schema({
    *   number: chaca.sequential([1, 2, 3])
    * })
+   *
+   * // array result
+   * [
+   *    { number: 1 },
+   *    { number: 2 },
+   *    { number: 3 }
+   * ]
    */
   sequential<K = any>(values: K[], config?: SequentialFieldConfig) {
     return new SequentialField(values, config);
@@ -101,6 +104,9 @@ export class Chaca {
   /**
    * Enum field
    * @param values Array of posible values
+   *
+   * @example
+   * chaca.enum(["category1", "category2", "category3"])
    */
   enum<R = any>(values: ReadonlyArray<R>) {
     return new EnumField<R>(values);
