@@ -13,12 +13,6 @@ export class NodeRoute {
     return new NodeRoute([...this._route, name]);
   }
 
-  parent(): NodeRoute {
-    const r = this._route.filter((_, i) => i !== this._route.length - 1);
-
-    return new NodeRoute(r);
-  }
-
   empty() {
     return this._route.length === 0;
   }

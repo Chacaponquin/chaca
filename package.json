@@ -24,7 +24,7 @@
     "build": "npm run fix && npm run build:lib",
     "build:lib": "npm run clean && tsc --build --verbose",
     "test": "vitest test",
-    "test:coverage": "vitest run --coverage",
+    "test:coverage": "rm -rf ./data && vitest run --coverage",
     "test:field-types": "vitest test/library/field-types",
     "test:cases": "vitest test/library/example-cases",
     "test:modules": "vitest test/modules",
