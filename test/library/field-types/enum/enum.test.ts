@@ -2,20 +2,37 @@ import { EmptyEnumValuesError, chaca } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("Enum field", () => {
-  it("With empty array as argument. Should throw an error", () => {
+  it("values = []. should throw an error", () => {
     expect(() => {
-      chaca.schema({ id: chaca.enum([]) }).array(5);
+      chaca.schema({ enum: chaca.enum([]) }).array(5);
     }).toThrow(EmptyEnumValuesError);
   });
 
-  it("With an array [1, 2, 3, 4, 5]. Should return one of this elements", () => {
+  it("values = [1, 2, 3, 4, 5]. should return one of this elements", () => {
     const array = [1, 2, 3, 4, 5];
     const schema = chaca.schema({
-      id: chaca.enum(array),
+      enum: chaca.enum(array),
     });
 
-    const docs = schema.object();
+    const doc = schema.object();
 
-    expect(array.some((el) => el === docs.id)).toBe(true);
+    expect(array).include(doc.enum);
+  });
+
+  describe("array enum", () => {
+    it("values = [1, 2, 3, 4, 5] & isArray = 5. should return an array with 5 values", () => {
+      const array = [1, 2, 3, 4, 5];
+      const schema = chaca.schema({
+        enum: { type: chaca.enum(array), isArray: 5 },
+      });
+
+      const doc = schema.object();
+
+      expect(doc.enum).toHaveLength(5);
+
+      for (const value of doc.enum) {
+        expect(array).include(value);
+      }
+    });
   });
 });
