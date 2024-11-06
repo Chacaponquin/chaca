@@ -14,7 +14,7 @@ export class FileCreator {
     location: string,
     private readonly ext: string,
   ) {
-    if (!fs.existsSync(location)) {
+    if (location && !fs.existsSync(location)) {
       fs.mkdirSync(location, { recursive: true });
     }
 
