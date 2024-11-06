@@ -115,4 +115,47 @@ describe("Ref field", () => {
       dataset.generate();
     }).toThrow(NotExistRefFieldError);
   });
+
+  describe("ref a nested schema key field", () => {
+    it("from schema.ref reference schema2.object.id", () => {
+      const schema = chaca.schema({
+        object: chaca.schema({
+          id: chaca.key(() => modules.id.ulid()),
+        }),
+      });
+
+      const schema2 = chaca.schema({ ref: chaca.ref("schema.object.id") });
+
+      const dataset = chaca.dataset([
+        { name: "schema", documents: 10, schema: schema },
+        { name: "schema2", documents: 10, schema: schema2 },
+      ]);
+
+      const result = dataset.generate();
+
+      for (const v of result.schema2.map((s) => s.ref)) {
+        expect(result.schema.map((s) => s.object.id)).include(v);
+      }
+    });
+
+    it("try ref an nested schema array field. should throw an error", () => {
+      const schema = chaca.schema({
+        array: {
+          type: chaca.schema({
+            id: chaca.key(() => modules.id.ulid()),
+          }),
+          isArray: 20,
+        },
+      });
+
+      const schema2 = chaca.schema({ ref: chaca.ref("schema.array.id") });
+
+      const dataset = chaca.dataset([
+        { name: "schema", documents: 10, schema: schema },
+        { name: "schema2", documents: 10, schema: schema2 },
+      ]);
+
+      expect(() => dataset.generate()).toThrow(NotExistRefFieldError);
+    });
+  });
 });
