@@ -60,11 +60,7 @@ import {
   SequentialFieldConfig,
 } from "./core/fields/core/sequential/SequentialField";
 
-import {
-  KeyField,
-  KeyFieldProps,
-  KeyAllowDataTypes,
-} from "./core/fields/core/key";
+import { KeyField, KeyFieldProps } from "./core/fields/core/key";
 
 import {
   SequenceField,
@@ -133,7 +129,6 @@ export type {
   DatasetSchema,
   FieldToRef,
   RefFieldWhere,
-  KeyAllowDataTypes,
   GetStoreConfig,
   ExportSQLFormat,
   SequenceFieldProps,

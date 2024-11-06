@@ -26,9 +26,11 @@ export class KeyValueNode extends InputTreeNode {
   generate(props: GenerateProps): FieldNode {
     const node = this.fieldNode.generate(props);
 
-    if (node.getRealValue() === null) {
+    const value = node.getRealValue();
+
+    if (value === null || value === undefined) {
       throw new ChacaError(
-        `The key value ${this.getRouteString()} can not be null`,
+        `The key value ${this.getRouteString()} can not be null or undefined`,
       );
     }
 
