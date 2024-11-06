@@ -1,11 +1,11 @@
 import { DatatypeModule } from "../../modules/datatype";
 import { DatasetSchema } from "../dataset-resolver/interfaces/resolver";
 import { DatasetResolver } from "../dataset-resolver/resolver";
-import { ExportResolver } from "../export/resolvers/export";
+import { ExportResolver } from "../export/resolvers/export/export";
 import { DumpConfig, FileConfig } from "../export/interfaces/export";
 import { ChacaUtils } from "../utils";
-import { GeneratorFilter } from "../export/resolvers/generator-filter";
-import { DumpResolver } from "../export/resolvers/dump";
+import { GeneratorFilter } from "../export/resolvers/generator-filter/generator-filter";
+import { DumpResolver } from "../export/resolvers/dump/dump";
 import { DumpFile } from "../export/generators/generator";
 
 export class Dataset<K = any> {

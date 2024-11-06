@@ -5,7 +5,7 @@ export class FileName {
 
   constructor(name?: string) {
     if (typeof name !== "string" || name.trim() === "") {
-      throw new ChacaError("A file name is necesary to export the data");
+      throw new ChacaError("A file name is necesary to export your data");
     }
 
     this._value = name;

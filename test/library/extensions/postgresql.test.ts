@@ -37,12 +37,13 @@ describe("Postgresql", () => {
           }),
         });
 
-        expect(() => {
-          chaca.transform(schema.array(10), {
-            filename: "schema",
-            format: { ext: "postgresql", declarationOnly: true, keys: ["id"] },
-          });
+        const result = chaca.transform(schema.array(10), {
+          filename: "schema",
+          format: { ext: "postgresql", declarationOnly: true, keys: ["id"] },
         });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].filename).toBe("schema.sql");
       });
 
       it("keys = ['id']", () => {
@@ -56,7 +57,7 @@ describe("Postgresql", () => {
         });
 
         expect(result).toHaveLength(1);
-        expect(result[0].filename).toBe("schema");
+        expect(result[0].filename).toBe("schema.sql");
         expect(result[0].content).include("id INTEGER PRIMARY KEY");
       });
 
@@ -71,7 +72,7 @@ describe("Postgresql", () => {
         });
 
         expect(result).toHaveLength(1);
-        expect(result[0].filename).toBe("schema");
+        expect(result[0].filename).toBe("schema.sql");
         expect(result[0].content).include("id SERIAL PRIMARY KEY");
       });
     });
@@ -89,7 +90,7 @@ describe("Postgresql", () => {
         });
 
         expect(result).toHaveLength(1);
-        expect(result[0].filename).toBe("schema");
+        expect(result[0].filename).toBe("schema.sql");
         expect(result[0].content).not.include("username VARCHAR(255) NOT NULL");
       });
     });
@@ -107,7 +108,7 @@ describe("Postgresql", () => {
         });
 
         expect(result).toHaveLength(1);
-        expect(result[0].filename).toBe("schema");
+        expect(result[0].filename).toBe("schema.sql");
         expect(result[0].content).include("username VARCHAR(255) UNIQUE");
       });
     });
@@ -133,7 +134,7 @@ describe("Postgresql", () => {
         });
 
         expect(result).toHaveLength(1);
-        expect(result[0].filename).toBe("schema");
+        expect(result[0].filename).toBe("schema.sql");
         expect(result[0].content).include(
           "object_id INTEGER PRIMARY KEY REFERENCES Schema(id)",
         );

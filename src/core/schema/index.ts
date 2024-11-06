@@ -1,11 +1,11 @@
-import { ExportResolver } from "../export/resolvers/export";
+import { ExportResolver } from "../export/resolvers/export/export";
 import { SchemaInput } from "./interfaces/schema";
 import { DumpConfig, FileConfig } from "../export/interfaces/export";
 import { SchemaResolver } from "../schema-resolver";
 import { ChacaUtils } from "../utils";
 import { DatatypeModule } from "../../modules/datatype";
-import { GeneratorFilter } from "../export/resolvers/generator-filter";
-import { DumpResolver } from "../export/resolvers/dump";
+import { GeneratorFilter } from "../export/resolvers/generator-filter/generator-filter";
+import { DumpResolver } from "../export/resolvers/dump/dump";
 import { DumpFile } from "../export/generators/generator";
 import { DEFAULT_SCHEMA_NAME } from "./core/default-name";
 

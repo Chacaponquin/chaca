@@ -95,7 +95,7 @@ import {
 
 import { ChacaModules } from "./modules";
 import { Dataset } from "./core/dataset";
-import { DumpConfig, DumpFile } from "./core/export/resolvers/dump";
+import { DumpConfig, DumpFile } from "./core/export/resolvers/dump/dump";
 
 const utils = new ChacaUtils();
 

@@ -13,7 +13,7 @@ import {
 import { ChacaUtils } from "./core/utils";
 import { SchemaInput } from "./core/schema/interfaces/schema";
 import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
-import { ExportResolver } from "./core/export/resolvers/export";
+import { ExportResolver } from "./core/export/resolvers/export/export";
 import { DumpConfig, FileConfig } from "./core/export/interfaces/export";
 import {
   ProbabilityOption,
@@ -22,9 +22,9 @@ import {
 import { PickField, PickFieldProps } from "./core/fields/core/pick";
 import { Dataset } from "./core/dataset";
 import { DatatypeModule } from "./modules/datatype";
-import { GeneratorFilter } from "./core/export/resolvers/generator-filter";
+import { GeneratorFilter } from "./core/export/resolvers/generator-filter/generator-filter";
 import { DumpFile } from "./core/export/generators/generator";
-import { DumpResolver } from "./core/export/resolvers/dump";
+import { DumpResolver } from "./core/export/resolvers/dump/dump";
 
 export class Chaca {
   constructor(

@@ -1,5 +1,5 @@
-import { ChacaError } from "../../../errors";
-import { ChacaUtils } from "../../utils";
+import { ChacaError } from "../../../../errors";
+import { ChacaUtils } from "../../../utils";
 import {
   CsvGenerator,
   Generator,
@@ -10,8 +10,8 @@ import {
   SQLGenerator,
   TypescriptGenerator,
   YamlGenerator,
-} from "../generators";
-import { ExportFormat } from "../interfaces/export";
+} from "../../generators";
+import { ExportFormat } from "../../interfaces/export";
 
 export class GeneratorFilter {
   constructor(private readonly utils: ChacaUtils) {}
