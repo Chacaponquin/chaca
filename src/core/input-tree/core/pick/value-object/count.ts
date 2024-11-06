@@ -157,7 +157,7 @@ export class LimitCount extends Count {
     super();
 
     const min = value.min === undefined ? 0 : value.min;
-    const max = value.max === undefined ? min + 9 : value.max;
+    const max = value.max === undefined ? options.length() : value.max;
 
     if (min < 0) {
       throw new PickFieldDefinitionError(

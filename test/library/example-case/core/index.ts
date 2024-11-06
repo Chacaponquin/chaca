@@ -19,6 +19,14 @@ export class ExampleCaseTest {
         });
       });
 
+      it("zip = true", async () => {
+        await this.export({
+          ext: "postgresql",
+          zip: true,
+          location: "zip",
+        });
+      });
+
       it("declaration = true", async () => {
         await this.export({
           ext: "postgresql",
@@ -33,6 +41,14 @@ export class ExampleCaseTest {
       it("no arguments", async () => {
         await this.export({ ext: "csv", location: "no-arguments" });
       });
+
+      it("zip = true", async () => {
+        await this.export({
+          ext: "csv",
+          zip: true,
+          location: "zip",
+        });
+      });
     });
 
     describe("java", () => {
@@ -45,6 +61,14 @@ export class ExampleCaseTest {
           ext: "java",
           declarationOnly: true,
           location: "declaration",
+        });
+      });
+
+      it("zip = true", async () => {
+        await this.export({
+          ext: "java",
+          zip: true,
+          location: "zip",
         });
       });
     });
@@ -73,6 +97,14 @@ export class ExampleCaseTest {
           location: "declaration",
         });
       });
+
+      it("zip = true", async () => {
+        await this.export({
+          ext: "python",
+          zip: true,
+          location: "zip",
+        });
+      });
     });
 
     describe("javascript", () => {
@@ -89,6 +121,14 @@ export class ExampleCaseTest {
           ext: "javascript",
           separate: false,
           location: "not-separated",
+        });
+      });
+
+      it("zip = true", async () => {
+        await this.export({
+          ext: "javascript",
+          zip: true,
+          location: "zip",
         });
       });
     });
@@ -109,6 +149,14 @@ export class ExampleCaseTest {
           location: "not-separated",
         });
       });
+
+      it("zip = true", async () => {
+        await this.export({
+          ext: "typescript",
+          zip: true,
+          location: "zip",
+        });
+      });
     });
 
     describe("yaml", () => {
@@ -127,6 +175,14 @@ export class ExampleCaseTest {
           location: "not-separated",
         });
       });
+
+      it("zip = true", async () => {
+        await this.export({
+          ext: "yaml",
+          zip: true,
+          location: "zip",
+        });
+      });
     });
 
     describe("json", () => {
@@ -135,6 +191,14 @@ export class ExampleCaseTest {
           ext: "json",
           separate: true,
           location: "separate",
+        });
+      });
+
+      it("zip = true", async () => {
+        await this.export({
+          ext: "json",
+          zip: true,
+          location: "zip",
         });
       });
 

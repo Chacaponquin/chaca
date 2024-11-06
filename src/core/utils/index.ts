@@ -46,6 +46,7 @@ export class ChacaUtils {
    * @example
    * chaca.utils.oneOfArray([1, 2, 3, 5, 4]) // 3
    * chaca.utils.oneOfArray(['Hi!!!', 'Chaca the best!!!', 10]) // 'Chaca the best!!!'
+   * chaca.utils.oneOfArray([]) // undefined
    */
   oneOfArray<T>(list: ReadonlyArray<T>) {
     return list[Math.floor(Math.random() * list.length)];
@@ -61,6 +62,7 @@ export class ChacaUtils {
    *
    * @param text The template string to parse.
    * @param props.banned values that cannot appear in the string
+   * @param props.symbols object with your own symbol definitions
    *
    * @example
    * chaca.utils.replaceSymbols('#####') // '98441'
@@ -214,9 +216,9 @@ export class ChacaUtils {
   /**
    * Sum a range value to a date
    *
-   * @param param.date date to modify
-   * @param param.range time unit (`"years"` | `"seconds"` | `"minutes"` | `"days"`| `"hours"` | `"months"`)
-   * @param param.value amount of time unit
+   * @param param.date Date to modify
+   * @param param.range Time unit (`"years"` | `"seconds"` | `"minutes"` | `"days"`| `"hours"` | `"months"`)
+   * @param param.value Amount of time unit
    *
    * @returns string
    */

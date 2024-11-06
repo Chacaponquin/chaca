@@ -31,7 +31,7 @@ export class EmptySequentialValuesError extends ChacaError {
 
 export class WrongProbabilityFieldDefinitionError extends ChacaError {
   constructor(readonly fieldRoute: string, message: string) {
-    super(`On '${fieldRoute}' ${message}`);
+    super(`On '${fieldRoute}'. ${message}`);
 
     this.name = "ChacaError.WrongProbabilityFieldDefinitionError";
   }
