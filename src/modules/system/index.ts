@@ -86,7 +86,8 @@ export class SystemModule {
 
   /**
    * Returns a string with a system file path
-   * @example modules.system.filePath() // 'user/files/videos/academy.mp4'
+   * @example
+   * modules.system.filePath() // 'user/files/videos/academy.mp4'
    * @returns string
    */
   filePath(): string {

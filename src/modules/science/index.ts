@@ -25,6 +25,7 @@ export class ScienceModule {
    * @example
    * modules.science.periodicTableElement() // 'Curium'
    * modules.science.periodicTableElement({ type: 'symbol' }) // 'Zn'
+   *
    * @returns string
    */
   periodicTableElement({ type = "name" }: PeriodicTableProps = {}): string {
