@@ -23,6 +23,35 @@ describe("Dataset store", () => {
   });
 
   describe("store.get", () => {
+    describe("where config", () => {
+      it("get schema.id greater than 5", () => {
+        const schema = chaca.schema({
+          id: chaca.sequence(),
+        });
+
+        const schema2 = chaca.schema({
+          store: ({ store }) => {
+            return store.get("schema.id", {
+              where: (fields) => {
+                return fields.id > 5;
+              },
+            });
+          },
+        });
+
+        const dataset = chaca.dataset([
+          { name: "schema", documents: 10, schema: schema },
+          { name: "schema2", documents: 10, schema: schema2 },
+        ]);
+
+        const result = dataset.generate();
+
+        for (const v of result.schema2) {
+          expect(v.store).toEqual([6, 7, 8, 9, 10]);
+        }
+      });
+    });
+
     it("get not existing field values (schema.object.id). should throw an error", () => {
       const schema = chaca.schema({
         id: () => modules.id.uuid(),
