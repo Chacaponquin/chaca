@@ -32,6 +32,21 @@ export class DatasetStore {
     this.caller = caller;
   }
 
+  /**
+   * Allows you to access values from a schema from anywhere in the dataset
+   *
+   * @param route Value route to access
+   * @param config.where Function to filter schema documents
+   *
+   * @example
+   * store.get("User") // user schema documents
+   * store.get("User.id") // user ids
+   * store.get("User.id", {
+   *   where: (fields) => {
+   *      return fields.age : 40
+   *   }
+   * })
+   */
   get<R = any>(route: string, iconfig?: GetStoreConfig): R[] {
     const config = new GetConfig({
       omitCurrentDocument: this.omitCurrentDocument,
@@ -58,6 +73,9 @@ export class DatasetStore {
     return values;
   }
 
+  /**
+   * Returns the documents of the schema that uses this method
+   */
   currentDocuments<R = any>(): R[] {
     return this.omitResolver.getDocumentsArray(this.omitCurrentDocument);
   }
