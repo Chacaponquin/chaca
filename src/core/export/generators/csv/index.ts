@@ -69,7 +69,7 @@ export class CsvGenerator extends Generator {
 
     if (this.zip) {
       const zip = fileCreator.createZip();
-      zip.multiple(allRoutes);
+      await zip.multiple(allRoutes);
 
       return [zip.route];
     } else {

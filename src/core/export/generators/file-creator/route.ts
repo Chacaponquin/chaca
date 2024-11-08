@@ -1,4 +1,4 @@
-import * as path from "path";
+import path from "path";
 import { Filename } from "./filename";
 
 export class Route {

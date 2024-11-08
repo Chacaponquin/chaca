@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-import * as yargs from "yargs";
+import yargs from "yargs";
 import { json } from "./json";
 import { csv } from "./csv";
 import { yaml } from "./yaml";

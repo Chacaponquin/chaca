@@ -91,7 +91,7 @@ export class JavascriptGenerator extends Generator {
 
       if (this.zip) {
         const zip = fileCreator.createZip();
-        zip.multiple(routes);
+        await zip.multiple(routes);
 
         return [zip.route];
       } else {

@@ -1,9 +1,9 @@
-import * as AdmZip from "adm-zip";
 import { Route } from "./route";
 import { Filename } from "./filename";
 import { Zip } from "./zip";
-import * as fs from "fs";
-import * as path from "path";
+import fs from "fs";
+import path from "path";
+import AdmZip from "adm-zip";
 
 export class FileCreator {
   private readonly baseLocation: string;

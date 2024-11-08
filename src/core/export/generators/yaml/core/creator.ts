@@ -1,4 +1,4 @@
-import * as yaml from "js-yaml";
+import yaml from "js-yaml";
 import { SpaceIndex } from "../../../core/space-index";
 
 interface Props {
