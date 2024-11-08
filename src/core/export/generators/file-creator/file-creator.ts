@@ -28,11 +28,14 @@ export class FileCreator {
 
   createZip(): Zip {
     const zip = new AdmZip();
-    const zipName = new Filename(`${this.filename}.zip`);
 
-    const zipPath = this.generateRoute(zipName).value();
+    const zipPath = new Route(
+      new Filename(this.filename.value()),
+      this.baseLocation,
+      "zip",
+    );
 
-    return new Zip(zipPath, zip, this);
+    return new Zip(zipPath.value(), zip, this);
   }
 
   async deleteFile(route: Route): Promise<void> {
