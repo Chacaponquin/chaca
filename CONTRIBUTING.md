@@ -17,12 +17,7 @@ To get up and running, install the dependencies and run the tests:
 
 ```shell
 npm run test
-npm run test:cases  # test examples schema cases
-npm run test:export # test code export cases
-npm run test:schemas # test defined schema fields
-npm run test:library # test library functions, utils, schemas
-npm run test:utils # test library utils
-
+npm run test:coverage
 ```
 
 ## Code Style
