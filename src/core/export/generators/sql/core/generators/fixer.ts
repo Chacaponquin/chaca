@@ -67,7 +67,7 @@ export class TablesFixer {
             .find((c) => c !== column && c.equal(column._name));
 
           if (found) {
-            const name = new ColumnName(this.utils, `${column.name()}_1`, 0);
+            const name = new ColumnName(this.utils, `${column.name()}_1`);
             column.setName(name);
           } else {
             stop = true;
@@ -100,7 +100,7 @@ export class TablesFixer {
     return this.keys.some((k) => {
       const route = Route.from(k);
 
-      const n = new ColumnName(this.utils, route.name(), 0);
+      const n = new ColumnName(this.utils, route.name());
       const t = new TableName(this.utils, route.parent());
 
       return n.equal(name) && t.equal(table);
@@ -111,7 +111,7 @@ export class TablesFixer {
     return this.uniques.some((k) => {
       const route = Route.from(k);
 
-      const n = new ColumnName(this.utils, route.name(), 0);
+      const n = new ColumnName(this.utils, route.name());
       const t = new TableName(this.utils, route.parent());
 
       return n.equal(name) && t.equal(table);
@@ -122,7 +122,7 @@ export class TablesFixer {
     return this.nulls.some((k) => {
       const route = Route.from(k);
 
-      const n = new ColumnName(this.utils, route.name(), 0);
+      const n = new ColumnName(this.utils, route.name());
       const t = new TableName(this.utils, route.parent());
 
       return n.equal(name) && t.equal(table);

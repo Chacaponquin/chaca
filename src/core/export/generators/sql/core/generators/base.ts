@@ -37,7 +37,6 @@ export class SQLDataGenerator {
     this.validator.execute(data);
 
     const route = new Route([iname]);
-    const name = new TableName(this.utils, route);
     const creator = new ValueCreator(
       this.utils,
       this.fixer,
@@ -46,7 +45,11 @@ export class SQLDataGenerator {
       this.generateIds,
     );
 
-    const table = new SQLTable(this.utils, name, false);
+    const table = new SQLTable(
+      this.utils,
+      new TableName(this.utils, route),
+      false,
+    );
     tables.add(table);
 
     // create data
@@ -54,8 +57,8 @@ export class SQLDataGenerator {
       creator.execute({
         route: route,
         parent: table,
-        table: table,
         value: value,
+        current: null,
       });
     }
   }

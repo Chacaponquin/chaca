@@ -3,7 +3,7 @@ import { chaca, modules } from "../../../../../../../src";
 export const CONTRACT_SCHEMA = chaca.schema({
   plate: chaca.key(chaca.ref("Car.plate")),
   passport: chaca.ref("Tourist.passport"),
-  start_date: chaca.key(() => modules.date.past()),
+  start_date: () => modules.date.past(),
   end_date: ({ currentFields: fields }) => {
     return modules.date.between({ from: fields.start_date, to: new Date() });
   },

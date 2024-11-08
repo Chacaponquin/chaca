@@ -23,8 +23,8 @@ export class TableName {
 export class ColumnName {
   private readonly name: string;
 
-  constructor(private readonly utils: ChacaUtils, name: string, index: number) {
-    this.name = index === 0 ? name : `${name}_${index}`;
+  constructor(private readonly utils: ChacaUtils, name: string) {
+    this.name = `${name}`;
   }
 
   equal(c: ColumnName) {

@@ -14,12 +14,20 @@ export abstract class SQLDatatype {
     return other.similar(this);
   }
 
-  isGreaterThan(other: SQLDatatype): boolean {
+  greater(other: SQLDatatype): SQLDatatype {
     if (other instanceof SQLNull) {
-      return true;
+      return this;
     }
 
-    return this.greaterThan(other);
+    if (this instanceof SQLNull) {
+      return other;
+    }
+
+    if (this.greaterThan(other)) {
+      return this;
+    } else {
+      return other;
+    }
   }
 }
 
