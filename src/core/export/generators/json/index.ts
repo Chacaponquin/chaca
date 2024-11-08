@@ -39,7 +39,7 @@ export class JsonGenerator extends Generator {
 
     if (this.config.zip) {
       const zip = fileCreator.createZip();
-      zip.add(route);
+      await zip.multiple([route]);
 
       return [zip.route];
     } else {

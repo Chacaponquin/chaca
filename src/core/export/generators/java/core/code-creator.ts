@@ -90,7 +90,7 @@ export class JavaCodeCreator {
 
             this.config.indent.reverse();
 
-            code += this.config.indent.create(")");
+            code += "\n" + this.config.indent.create(")");
 
             return code;
           })

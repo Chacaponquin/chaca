@@ -32,7 +32,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
         this.index.reverse();
       });
 
-      code += `${values.join(",\n")}\n\n`;
+      code += `${values.join(",\n")};\n\n`;
     }
 
     return code;
@@ -81,7 +81,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
 
       code += `${columns}` + "\n";
 
-      code += `)\n\n`;
+      code += `);\n\n`;
     }
 
     return code;

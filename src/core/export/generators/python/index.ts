@@ -94,7 +94,7 @@ export class PythonGenerator extends Generator {
 
     if (this.zip) {
       const zip = fileCreator.createZip();
-      zip.add(route);
+      zip.multiple([route]);
 
       return [zip.route];
     } else {
@@ -143,7 +143,7 @@ export class PythonGenerator extends Generator {
 
       if (this.zip) {
         const zip = fileCreator.createZip();
-        zip.add(route);
+        await zip.multiple([route]);
 
         return [zip.route];
       } else {
