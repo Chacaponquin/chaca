@@ -1,3 +1,21 @@
 {
-  "extends": "./tsconfig.base.json"
+  "compilerOptions": {
+    "outDir": "lib",
+    "module": "CommonJS",
+
+    "removeComments": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "strictPropertyInitialization": false,
+    "noUnusedLocals": true,
+    "noUnusedParameters": false,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "downlevelIteration": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "esModuleInterop": true
+  },
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "lib", "data"]
 }

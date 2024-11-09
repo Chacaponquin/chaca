@@ -4,9 +4,7 @@
 
 ## 😀 Intro
 
-Welcome to Chaca a powerful TypeScript library that revolutionizes mock data generation for testing and development processes. With Chaca, you can effortlessly generate realistic and diverse fake data to simulate different scenarios. Whether you're building a web application, a mobile app, or an API, Chaca's extensive support ensures seamless integration into your projects.
-
-What's more, Chaca allows you to export the generated data to various formats, making it easy to share and analyze. Boost your development workflow and eliminate tedious manual data creation with Chaca.
+Welcome to Chaca, a powerful Nodejs library that revolutionizes mock data generation for testing and development processes. With Chaca, you can effortlessly generate realistic and diverse fake data to simulate different scenarios for your application.
 
 ## 📦 Installation
 
@@ -21,16 +19,16 @@ Visit our website to read the documentation. [Chaca Docs](https://chaca-doc.verc
 ## 😎 Usage
 
 ```ts
-import { chaca, schemas } from "chaca";
+import { chaca, modules } from "chaca";
 
 const movieSchema = chaca.schema({
-  id: schemas.id.uuid(),
+  id: chaca.key(() => modules.id.uuid()),
   authors: {
-    type: schemas.person.fullName({ language: "es" }),
+    type: () => modules.person.fullName({ language: "es" }),
     isArray: { min: 1, max: 3 },
   },
-  image: schemas.image.film(),
-  likes: schemas.dataType.int({ min: 0, max: 500000 }),
+  image: () => modules.image.film(),
+  likes: () => modules.datatype.int({ min: 0, max: 500000 }),
   category: chaca.enum(["Horror", "War", "History", "Comedy"]),
   adultMovie: ({ currentFields: docFields }) => {
     return (
@@ -42,15 +40,14 @@ const movieSchema = chaca.schema({
 });
 
 // Generate 20 objects with the defined schema
-const docs = postSchema.generate(20);
+const docs = movieSchema.array(20);
 
 /*
 [
   {
     id: "4136cd0b-d90b-4af7-b485-5d1ded8db252",
     authors: ["Olivia Gonzalez Gomez", "Santiago Torres Gil"],
-    image:
-      "https://images.unsplash.com/photo-1534684686641-05569203ecca?crop=entropy&cs=tinysrgb&fm=jpg&ixid=MnwzNTM2NjZ8MHwxfHNlYXJjaHw1fHxmaWxtfGVufDB8fHx8MTY2Njk3MDgyMQ&ixlib=rb-4.0.3&q=80",
+    image: "https://loremflickr.com/480/480/film",
     likes: 21456,
     category: "Horror",
     adultMovie: true,
@@ -60,8 +57,8 @@ const docs = postSchema.generate(20);
 */
 
 // Generate 20 objects and export them in a json file
-await movieSchema.generateAndExport(20, {
-  fileName: "movies",
+await movieSchema.export(20, {
+  filename: "movies",
   format: "json",
   location: "./folder",
 });

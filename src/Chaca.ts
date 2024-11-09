@@ -1,98 +1,96 @@
-import { ChacaSchema } from "./core/ChacaSchema/ChacaSchema";
-import { EnumField } from "./core/Fields/core/EnumField/EnumField";
-import { KeyField, KeyFieldProps } from "./core/Fields/core/KeyField/KeyField";
-import {
-  FieldRefInputConfig,
-  FieldToRef,
-  RefField,
-} from "./core/Fields/core/RefField/RefField";
+import { Schema } from "./core/schema";
+import { EnumField } from "./core/fields/core/enum";
+import { KeyField, KeyFieldProps } from "./core/fields/core/key";
+import { RefFieldConfig, FieldToRef, RefField } from "./core/fields/core/ref";
 import {
   SequenceField,
   SequenceFieldProps,
-} from "./core/Fields/core/SequenceField/SequenceField";
+} from "./core/fields/core/sequence/SequenceField";
 import {
   SequentialField,
   SequentialFieldConfig,
-} from "./core/Fields/core/SequentialField/SequentialField";
-import { ChacaUtils } from "./core/ChacaUtils/ChacaUtils";
-import { SchemaInput } from "./core/ChacaSchema/interfaces/schema";
-import { SchemaField } from "./schemas/SchemaField";
-import {
-  GenerateConfig,
-  MultiGenerateSchema,
-} from "./core/MultiGenerate/interfaces/multi-generate";
-import { ExportResolver } from "./core/Export/ExportResolver";
-import { FileConfig } from "./core/Export/interfaces/export";
-import { MultiGenerateResolver } from "./core/MultiGenerate/MultiGenerateResolver";
+} from "./core/fields/core/sequential/SequentialField";
+import { ChacaUtils } from "./core/utils";
+import { SchemaInput } from "./core/schema/interfaces/schema";
+import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
+import { ExportResolver } from "./core/export/resolvers/export/export";
+import { DumpConfig, FileConfig } from "./core/export/interfaces/export";
 import {
   ProbabilityOption,
   ProbabilityField,
-} from "./core/Fields/core/ProbabilityField/ProbabilityField";
-import {
-  PickField,
-  PickFieldProps,
-} from "./core/Fields/core/PickField/PickField";
+} from "./core/fields/core/probability";
+import { PickField, PickFieldProps } from "./core/fields/core/pick";
+import { Dataset } from "./core/dataset";
+import { DatatypeModule } from "./modules/datatype";
+import { GeneratorFilter } from "./core/export/resolvers/generator-filter/generator-filter";
+import { DumpFile } from "./core/export/generators/generator";
+import { DumpResolver } from "./core/export/resolvers/dump/dump";
 
 export class Chaca {
-  utils = new ChacaUtils();
+  constructor(
+    private readonly datatypeModule: DatatypeModule,
+    readonly utils: ChacaUtils,
+  ) {}
 
   /**
-   * @param inputObj The object with the keys and type of each field
+   * @param input The object with the keys and type of each field
+   *
    * @example
-   * {
-   *    id: schemas.id.uuid(),
-   *    image: schemas.image.film(),
-   *    name: schemas.person.firstName()
-   * }
+   * chaca.schema({
+   *    id: chaca.key(() => modules.id.uuid()),
+   *    image: () => modules.image.film(),
+   *    name: () => modules.person.firstName()
+   * })
    */
-  schema<K = any>(input: SchemaInput): ChacaSchema<K> {
-    const newSchema = new ChacaSchema<K>(input);
+  schema<K = any>(input: SchemaInput): Schema<K> {
+    const newSchema = new Schema<K>(input, this.utils, this.datatypeModule);
     return newSchema;
   }
 
   /**
-   * Define your ouwn type schema for create your data
-   * @param valueFunction function that returns a value
-   */
-  schemaField<K = any, T = any>(
-    func: (args: T) => K,
-  ): (args?: T) => SchemaField<K, T> {
-    return (args) => new SchemaField<K, T>(func, args);
-  }
-
-  /**
    * Create a reference field for a selected schema
-   * @param fieldToRef configuration of the reference field. the field location must be separated points
+   * @param field Configuration of the reference field. the field location must be separated points
+   * @param config.unique The value to be referenced will only be taken once by this schema. Default `false`
+   * @param config.where Function that filters the fields to reference
+   * @param config.nullOnEmpty When there are no more documents to reference, the generated value will be null. Default `false`
    *
    * @example
-   * {
-   *    field: chaca.ref('Schema.fieldToRef')
-   * }
+   * chaca.ref('schema.field')
    */
-  ref(fieldToRef: FieldToRef, config?: FieldRefInputConfig) {
-    return new RefField(fieldToRef, config);
+  ref(field: FieldToRef, config?: RefFieldConfig): RefField {
+    return new RefField(field, config);
   }
 
   /**
    * Sequential field
-   * @param valuesArray array of the secuential values
+   *
+   * @param values Array of the secuential values
    * @param config.loop Boolean indicating whether the values should be generated cyclically. Default `false`
    * @example
-   * // the first generated object will have the favoriteNumber with value 1
-   * // the second generated object will have the favoriteNumber with value 2
-   * // the third generated object will have the favoriteNumber with value 3
-   * {
-   *   favoriteNumber: chaca.sequential([1, 2, 3])
-   * }
+   * chaca.schema({
+   *   number: chaca.sequential([1, 2, 3])
+   * })
+   *
+   * // array result
+   * [
+   *    { number: 1 },
+   *    { number: 2 },
+   *    { number: 3 }
+   * ]
    */
-  sequential<K = any>(valuesArray: Array<K>, config?: SequentialFieldConfig) {
-    return new SequentialField(valuesArray, config);
+  sequential<K = any>(values: K[], config?: SequentialFieldConfig) {
+    return new SequentialField(values, config);
   }
 
   /**
    * Sequence field
    * @param config.starsWith Init value for the field. Default `1`
    * @param config.step Step between field values in schema documents. Default `1`
+   *
+   * @example
+   * chaca.sequence()
+   * chaca.sequence({ startsWith: 10 })
+   * chaca.sequence({ step: 0.5 })
    */
   sequence(config?: SequenceFieldProps) {
     return new SequenceField(config);
@@ -100,73 +98,67 @@ export class Chaca {
 
   /**
    * Key field
-   * @param fieldType field that will return the value. Could be (`SchemaField` | `RefField` | `SequenceField` | `CustomField` )
+   * @param field field that will return the value. Could be (`RefField` | `SequenceField` | `CustomField` )
    *
    * @example
    * chaca.key(chaca.sequence())
-   * chaca.key(schemas.id.uuid())
+   * chaca.key(() => modules.id.uuid())
    */
-  key<A = any, C = any>(fieldType: KeyFieldProps<A, C>) {
-    return new KeyField<A>(fieldType);
+  key(field: KeyFieldProps) {
+    return new KeyField(field);
   }
 
   /**
    * Enum field
-   * @param array Array of posible values
+   * @param values Array of posible values
+   *
+   * @example
+   * chaca.enum(["category1", "category2", "category3"])
    */
-  enum<R = any>(array: Array<R>) {
-    return new EnumField<R>(array);
-  }
-
-  /**
-   * Generate and export data from relational schemas
-   * @param schemas Array with the schemas config
-   * @param fileConfig.fileName file name
-   * @param fileConfig.location location of the file
-   * @param fileConfig.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
-   * @param genConfig.verbose Show log in console progretion
-   */
-  async exportFromSchemas(
-    schemas: Array<MultiGenerateSchema>,
-    fileConfig: FileConfig,
-    genConfig?: GenerateConfig,
-  ) {
-    const exportResolver = new ExportResolver(fileConfig);
-    return await exportResolver.exportRelationalSchemas(schemas, genConfig);
+  enum<R = any>(values: ReadonlyArray<R>) {
+    return new EnumField<R>(values);
   }
 
   /**
    * Export the data to a selected code format
    * @param data Data you want to export
-   * @param config Configuration of the file you want to export (name, location, format, etc.)
-   * @param config.fileName file name
+   * @param config.filename file name
    * @param config.location location of the file
    * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    *
    * @example
-   * const data = [{id: '1664755445878', name: 'Alberto', age: 20}, {id: '1664755445812', name: 'Carolina', age: 28}]
-   * const config = { fileName: 'users', format: 'json', location: '../../data' }
-   * await schema.export(data, config)
+   * const data = [
+   *  { id: 1, name: 'Alberto', age: 20 },
+   *  { id: 2, name: 'Carolina', age: 28 }
+   * ]
+   * const config = { filename: 'users', format: 'json', location: '../../data' }
+   *
+   * await chaca.export(data, config)
    *
    * @returns
-   * Promise<string>
+   * Promise<string[]>
    */
-  async export(data: any, config: FileConfig) {
-    const exportResolver = new ExportResolver(config);
-    return await exportResolver.exportData(data);
+  async export(data: any, config: FileConfig): Promise<string[]> {
+    const filter = new GeneratorFilter(this.utils);
+    const resolver = new ExportResolver(
+      this.utils,
+      this.datatypeModule,
+      filter,
+      config,
+    );
+
+    const route = await resolver.data(data);
+
+    return route;
   }
 
   /**
    * Generate data from realtional schemas
    * @param schemas Array with the schemas config
-   * @param config.verbose Show log in console progretion
    */
-  multiGenerate<K = any>(
-    schemas: Array<MultiGenerateSchema>,
-    config?: GenerateConfig,
-  ) {
-    const resolver = new MultiGenerateResolver<K>(schemas, config);
-    return resolver.resolve();
+  dataset<K = any>(schemas: DatasetSchema[]): Dataset<K> {
+    const dataset = new Dataset<K>(schemas, this.utils, this.datatypeModule);
+    return dataset;
   }
 
   /**
@@ -180,8 +172,8 @@ export class Chaca {
    *   { chance: 0.1, value: 1 },
    * ])
    */
-  probability(options: Array<ProbabilityOption>) {
-    return new ProbabilityField(options);
+  probability<T = any>(options: ProbabilityOption<T>[]): ProbabilityField<T> {
+    return new ProbabilityField<T>(options);
   }
 
   /**
@@ -195,9 +187,29 @@ export class Chaca {
    *    values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
    *    count: 3
    * })
+   *
    * // [2, 6, 10] or [4, 5, 1] or [1, 9, 8] or ...
    */
   pick<V = any>(props: PickFieldProps<V>) {
-    return new PickField(props);
+    return new PickField<V>(props);
+  }
+
+  /**
+   * Serializes `data` as a specific file format
+   *
+   * @param data Data to transform
+   * @param props.filename name for the file
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   */
+  transform(data: any, props: DumpConfig): DumpFile[] {
+    const filter = new GeneratorFilter(this.utils);
+    const resolver = new DumpResolver(
+      this.utils,
+      this.datatypeModule,
+      filter,
+      props,
+    );
+
+    return resolver.data(data);
   }
 }

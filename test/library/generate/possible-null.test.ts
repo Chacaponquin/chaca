@@ -1,6 +1,8 @@
-import { chaca, schemas } from "../../../src";
+import { chaca, modules } from "../../../src";
+import { describe, expect, it } from "vitest";
+import { WrongPossibleNullDefinitionError } from "../../../src/errors";
 
-function countNulls(array: Array<any>): number {
+function countNulls(array: any[]): number {
   let count = 0;
 
   for (const dat of array) {
@@ -12,157 +14,147 @@ function countNulls(array: Array<any>): number {
   return count;
 }
 
-describe("# Possible null fields Tests", () => {
-  describe("Boolean value", () => {
-    it("Pass possibleNull=true. Returns at least one null value", () => {
+describe("Null fields", () => {
+  describe("boolean definition", () => {
+    it("true. always return null", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: true },
+        null: { type: () => modules.color.cmyk(), possibleNull: true },
       });
 
-      const data = schema.generate(50);
+      const data = schema.array(50);
 
-      expect(countNulls(data)).toBeGreaterThan(0);
+      expect(countNulls(data)).toBe(50);
     });
 
-    it("Pass possibleNull=false. Returns always a null value", () => {
+    it("false. never return false", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: false },
+        null: { type: () => modules.color.cmyk(), possibleNull: false },
       });
 
-      const data = schema.generate(50);
+      const data = schema.array(50);
 
       expect(countNulls(data)).toBe(0);
     });
   });
 
-  describe("Number value", () => {
-    it("Pass possibleNull=0. Always return a non-null value", () => {
+  describe("float definition", () => {
+    it("possibleNull = 1.5. should throw an error", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: 0 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 1.5 },
       });
 
-      const data = schema.generate(50);
-
-      expect(countNulls(data)).toBe(0);
+      expect(() => schema.array(50)).toThrow(WrongPossibleNullDefinitionError);
     });
 
-    it("Pass possibleNull=100. Always return a null value", () => {
+    it("possibleNull = 0.6. should return at least one null value", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: 100 },
+        null: { type: () => modules.color.cmyk(), possibleNull: 0.6 },
       });
 
-      const data = schema.generate(50);
-
-      expect(countNulls(data)).toBe(50);
-    });
-
-    it("Pass possibleNull=number-greater-than-100. Always return a null value", () => {
-      const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: 150 },
-      });
-
-      const data = schema.generate(50);
-
-      expect(countNulls(data)).toBe(50);
-    });
-
-    it("Pass a number between 0 and 100. Should return at least one null value", () => {
-      const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: 60 },
-      });
-
-      const data = schema.generate(50);
+      const data = schema.array(50);
 
       expect(countNulls(data)).toBeGreaterThan(0);
     });
 
-    it("Pass possibleNull=negative-number. Always return a non-null value", () => {
+    it("possibleNull = -0.6. Should throw an error", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: -60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: -0.6 },
       });
 
-      const data = schema.generate(50);
-
-      expect(countNulls(data)).toBe(0);
+      expect(() => schema.array(50)).toThrow(WrongPossibleNullDefinitionError);
     });
   });
+});
 
-  describe("Function value", () => {
-    it("Pass a function that return a 0. Should return an non-null values", () => {
+describe("integer definition", () => {
+  it("possibleNull = 0. always return a non-null value", () => {
+    const schema = chaca.schema({
+      null: { type: () => modules.color.cmyk(), possibleNull: 0 },
+    });
+
+    const data = schema.array(50);
+
+    expect(countNulls(data)).toBe(0);
+  });
+
+  it("possibleNull = 1. return 1 document with 1 value", () => {
+    const schema = chaca.schema({
+      null: { type: () => modules.color.cmyk(), possibleNull: 1 },
+    });
+
+    const data = schema.array(50);
+
+    expect(countNulls(data)).toBe(1);
+  });
+
+  describe("function definition", () => {
+    it("function that return a 0. should return an non-null values", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: () => 0 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 0 },
       });
 
-      const data = schema.generate(50);
+      const data = schema.array(50);
 
       expect(countNulls(data)).toBe(0);
     });
 
-    it("Pass a function that return 100. Always return a null value", () => {
+    it("function that return 1. always return a null value", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: () => 100 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 1 },
       });
 
-      const data = schema.generate(50);
+      const data = schema.array(50);
 
       expect(countNulls(data)).toBe(50);
     });
 
-    it("Pass a function that return a number-greater-than-100. Always return a null value", () => {
+    it("function that return a number-greater-than-1. should throw an error", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: () => 150 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 1.5 },
       });
 
-      const data = schema.generate(50);
-
-      expect(countNulls(data)).toBe(50);
+      expect(() => schema.array(50)).toThrow(WrongPossibleNullDefinitionError);
     });
 
-    it("Pass a function that return a number between 0 and 100. Should return at least one null value", () => {
+    it("function that return a number between 0 and 1. should return at least one null value", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: () => 60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => 0.6 },
       });
 
-      const data = schema.generate(50);
+      const data = schema.array(50);
 
       expect(countNulls(data)).toBeGreaterThan(0);
     });
 
-    it("Pass a function that return a negative number. Always return a non-null value", () => {
+    it("function that return a negative number. should throw an error", () => {
       const schema = chaca.schema({
-        null: { type: schemas.color.cmyk(), possibleNull: () => -60 },
+        null: { type: () => modules.color.cmyk(), possibleNull: () => -60 },
       });
 
-      const data = schema.generate(50);
-
-      expect(countNulls(data)).toBe(0);
+      expect(() => schema.array(50)).toThrow(WrongPossibleNullDefinitionError);
     });
 
-    it("Pass a function that uses currentFields", () => {
+    it("function that return true. always return null", () => {
       const schema = chaca.schema({
-        age: schemas.dataType.int({ max: 90, min: 18 }),
+        null: { type: () => modules.color.cmyk(), possibleNull: () => true },
+      });
+
+      const data = schema.array(50);
+
+      expect(countNulls(data)).toBe(50);
+    });
+
+    it("function that returns undefined. should never return null", () => {
+      const schema = chaca.schema({
         null: {
-          type: schemas.color.cmyk(),
-          possibleNull: ({ currentFields }) => {
-            if (currentFields.age > 40) {
-              return 100;
-            } else {
-              return 0;
-            }
-          },
+          type: () => modules.color.cmyk(),
+          possibleNull: () => undefined,
         },
       });
 
-      const data = schema.generate(50);
+      const data = schema.array(50);
 
-      let count = 0;
-      data.forEach((d) => {
-        if (d.age > 40) {
-          count++;
-        }
-      });
-
-      expect(countNulls(data)).toBe(count);
+      expect(countNulls(data)).toBe(0);
     });
   });
 });

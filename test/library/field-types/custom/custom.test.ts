@@ -1,50 +1,56 @@
-import { chaca, schemas } from "../../../../src";
+import { chaca, modules } from "../../../../src";
+import { describe, expect, it } from "vitest";
 
-describe("# Custom field tests", () => {
+describe("Custom field", () => {
   it("Custom function return a string", () => {
     const schema = chaca.schema({
-      id: { type: schemas.id.mongodbID() },
+      id: { type: () => modules.id.uuid() },
       custom: {
         type: () => "Foo",
       },
     });
 
-    const docs = schema.generateObject();
-    expect(docs["custom"]).toBe("Foo");
+    const docs = schema.object();
+    expect(docs.custom).toBe("Foo");
   });
 
-  it("Custom function return undefined. Should return null as value", () => {
-    const schema = chaca.schema({
-      id: { type: schemas.id.mongodbID() },
-      custom: {
-        type: () => undefined,
-      },
-    });
-
-    const docs = schema.generateObject();
-    expect(docs["custom"]).toBe(null);
-  });
-
-  it("Custom function access to this property", () => {
-    const schema = chaca.schema({
-      id: { type: schemas.id.mongodbID() },
-      custom: {
-        type({ currentFields: fields }) {
-          return fields.id;
+  describe("custom function access to object properties", () => {
+    it("custom function trying to access a parent object property", () => {
+      const schema = chaca.schema({
+        id: { type: () => modules.id.uuid() },
+        custom: {
+          type({ currentFields: fields }) {
+            return fields.id;
+          },
         },
-      },
+      });
+
+      const docs = schema.object();
+
+      expect(docs.custom).toBe(docs.id);
     });
 
-    const docs = schema.generateObject();
+    it("custon function on a nested schema trying to access own object property", () => {
+      const schema = chaca.schema({
+        object: chaca.schema({
+          id: () => "foo",
+          custom: ({ currentFields }) => {
+            return currentFields.object.id;
+          },
+        }),
+      });
 
-    expect(docs["custom"]).toBe(docs["id"]);
+      const docs = schema.object();
+
+      expect(docs.object.custom).toBe("foo");
+    });
   });
 
   it("Custom function in a nested schema", () => {
     const schema = chaca.schema({
-      id: schemas.id.mongodbID(),
+      id: () => modules.id.uuid(),
       user: chaca.schema({
-        image: schemas.science.unit(),
+        image: () => modules.image.people(),
         followersInf: {
           type: ({ currentFields: a }) => {
             return a.id;
@@ -54,28 +60,26 @@ describe("# Custom field tests", () => {
       }),
     });
 
-    const doc = schema.generateObject();
+    const doc = schema.object();
 
-    expect(doc["user"]["followersInf"][0]).toBe(doc["id"]);
+    expect(doc.user.followersInf[0]).toBe(doc.id);
   });
 
   it("Custom function in a nested schema inside an other nested schema", () => {
     const schema = chaca.schema({
-      id: schemas.id.mongodbID(),
       user: chaca.schema({
-        image: schemas.science.unit(),
-        custom: ({ currentFields: h }) => h.id,
+        image: () => modules.image.people(),
         followerInf: chaca.schema({
-          name: schemas.person.firstName(),
-          hola: ({ currentFields }) => {
+          name: () => modules.person.firstName(),
+          foo: ({ currentFields }) => {
             return currentFields.user.image;
           },
         }),
       }),
     });
 
-    const doc = schema.generateObject();
+    const doc = schema.object();
 
-    expect(doc["user"]["followerInf"]["hola"]).toBe(doc["user"]["image"]);
+    expect(doc.user.followerInf.foo).toBe(doc.user.image);
   });
 });

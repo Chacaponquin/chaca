@@ -1,15 +1,15 @@
 import {
   SchemaInput,
   FieldObjectInput,
-  CustomField,
-  InputIsArrayConfig,
-  InputPossibleNull,
-  CustomFieldProps,
+  IsArrayConfig,
+  PossibleNullConfig,
   FieldTypes,
-  FieldSchemaConfig,
+  SchemaFieldConfig,
   PossibleNullFunction,
   PossibleNullFunctionProps,
-} from "./core/ChacaSchema/interfaces/schema";
+} from "./core/schema/interfaces/schema";
+
+import { CustomField, CustomFieldProps } from "./core/fields/core/custom";
 
 import {
   ExportFormat,
@@ -25,12 +25,9 @@ import {
   PythonFormatConfig,
   TypescriptFormatConfig,
   YamlFormatConfig,
-} from "./core/Export/interfaces/export";
+} from "./core/export/interfaces/export";
 
-import { Schemas } from "./schemas";
-import { SchemaField } from "./schemas/SchemaField";
-
-import { ChacaSchema } from "./core/ChacaSchema/ChacaSchema";
+import { Schema } from "./core/schema";
 
 import {
   ChacaError,
@@ -38,46 +35,42 @@ import {
   TryRefANoKeyFieldError,
   NotEnoughValuesForRefError,
   CyclicAccessDataError,
-  NotExistFieldError,
+  NotExistRefFieldError,
   EmptyEnumValuesError,
   PickFieldDefinitionError,
 } from "./errors";
 
-import { GetStoreValueInput } from "./core/SchemasStore/interfaces/store";
+import {
+  GetStoreConfig,
+  GetStoreWhere,
+} from "./core/schema-store/interfaces/store";
+
+import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
 
 import {
-  MultiGenerateSchema,
-  GenerateConfig,
-} from "./core/MultiGenerate/interfaces/multi-generate";
-
-import {
-  FieldRefInputConfig,
+  RefFieldConfig,
   FieldToRef,
   RefField,
   RefFieldWhereProps,
   RefFieldWhere,
-} from "./core/Fields/core/RefField/RefField";
+} from "./core/fields/core/ref";
 
 import {
   SequentialField,
   SequentialFieldConfig,
-} from "./core/Fields/core/SequentialField/SequentialField";
+} from "./core/fields/core/sequential/SequentialField";
 
-import {
-  KeyField,
-  KeyFieldProps,
-  KeyAllowDataTypes,
-} from "./core/Fields/core/KeyField/KeyField";
+import { KeyField, KeyFieldProps } from "./core/fields/core/key";
 
 import {
   SequenceField,
   SequenceFieldProps,
-} from "./core/Fields/core/SequenceField/SequenceField";
+} from "./core/fields/core/sequence/SequenceField";
 
-import { DatasetStore } from "./core/DatasetStore/DatasetStore";
-import { EnumField } from "./core/Fields/core/EnumField/EnumField";
+import { DatasetStore } from "./core/dataset-store";
+import { EnumField } from "./core/fields/core/enum";
 import { Chaca } from "./Chaca";
-import { ChacaUtils } from "./core/ChacaUtils/ChacaUtils";
+import { ChacaUtils } from "./core/utils";
 
 import {
   ProbabilityField,
@@ -85,15 +78,25 @@ import {
   ProbabilityOption,
   ChanceFunction,
   ChanceFunctionProps,
-} from "./core/Fields/core/ProbabilityField/ProbabilityField";
+} from "./core/fields/core/probability";
 
 import {
   PickField,
   PickFieldProps,
-} from "./core/Fields/core/PickField/PickField";
+  PickCount,
+  PickCountFunction,
+  PickCountFunctionProps,
+  PickCountLimits,
+} from "./core/fields/core/pick";
 
-export const chaca = new Chaca();
-export const schemas = new Schemas();
+import { ChacaModules } from "./modules";
+import { Dataset } from "./core/dataset";
+import { DumpConfig, DumpFile } from "./core/export/resolvers/dump/dump";
+
+const utils = new ChacaUtils();
+
+export const modules = new ChacaModules(utils);
+export const chaca = new Chaca(modules.datatype, utils);
 
 export {
   TryRefANoKeyFieldError,
@@ -101,7 +104,7 @@ export {
   CyclicAccessDataError,
   ChacaError,
   NotEnoughValuesForRefError,
-  NotExistFieldError,
+  NotExistRefFieldError,
   EmptyEnumValuesError,
   PickFieldDefinitionError,
 };
@@ -109,7 +112,6 @@ export {
 export {
   KeyField,
   RefField,
-  SchemaField,
   EnumField,
   SequenceField,
   SequentialField,
@@ -117,31 +119,29 @@ export {
   PickField,
 };
 
-export { ChacaSchema, DatasetStore, Chaca, ChacaUtils, Schemas };
+export { Schema, DatasetStore, Chaca, ChacaUtils, ChacaModules };
 
 export type {
   CustomField,
   SchemaInput,
   ExportFormat,
   FileConfig,
-  MultiGenerateSchema,
+  DatasetSchema,
   FieldToRef,
   RefFieldWhere,
-  KeyAllowDataTypes,
-  GetStoreValueInput,
+  GetStoreConfig,
   ExportSQLFormat,
   SequenceFieldProps,
   KeyFieldProps,
-  FieldRefInputConfig,
+  RefFieldConfig,
   FieldObjectInput,
-  GenerateConfig,
-  InputIsArrayConfig,
-  InputPossibleNull,
+  IsArrayConfig,
+  PossibleNullConfig,
   CustomFieldProps,
   SequentialFieldConfig,
   RefFieldWhereProps,
   FieldTypes,
-  FieldSchemaConfig,
+  SchemaFieldConfig,
   PossibleNullFunction,
   PossibleNullFunctionProps,
   Chance,
@@ -149,6 +149,13 @@ export type {
   ChanceFunction,
   ChanceFunctionProps,
   PickFieldProps,
+  GetStoreWhere,
+  PickCount,
+  PickCountFunctionProps,
+  PickCountFunction,
+  PickCountLimits,
+  DumpConfig,
+  DumpFile,
 };
 
 export type {
@@ -163,3 +170,5 @@ export type {
   TypescriptFormatConfig,
   YamlFormatConfig,
 };
+
+export { Dataset };

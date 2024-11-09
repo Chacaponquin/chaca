@@ -5,26 +5,48 @@ export class ChacaError extends Error {
   }
 }
 
+export class WrongArrayDefinitionError extends ChacaError {
+  constructor(readonly fieldRoute: string, message: string) {
+    super(`On '${fieldRoute}'. ${message}`);
+
+    this.name = "ChacaError.WrongArrayDefinitionError";
+  }
+}
+
+export class WrongPossibleNullDefinitionError extends ChacaError {
+  constructor(readonly fieldRoute: string, message: string) {
+    super(`On '${fieldRoute}'. ${message}`);
+
+    this.name = `ChacaError.WrongPossibleNullDefinitionError`;
+  }
+}
+
 export class EmptySequentialValuesError extends ChacaError {
-  constructor(public readonly fieldRoute: string) {
+  constructor(readonly fieldRoute: string) {
     super(`There are no more sequential values for the field '${fieldRoute}'`);
 
     this.name = "ChacaError.EmptySequentialValuesError";
   }
 }
 
+export class WrongProbabilityFieldDefinitionError extends ChacaError {
+  constructor(readonly fieldRoute: string, message: string) {
+    super(`On '${fieldRoute}'. ${message}`);
+
+    this.name = "ChacaError.WrongProbabilityFieldDefinitionError";
+  }
+}
+
 export class PickFieldDefinitionError extends ChacaError {
-  constructor(public readonly fieldRoute: string) {
-    super(
-      `On field '${fieldRoute}'. A pick field should must have a number of options to choose from greater than or equal to the 'count' property`,
-    );
+  constructor(readonly fieldRoute: string, message: string) {
+    super(`On field '${fieldRoute}'. ${message}`);
 
     this.name = "ChacaError.PickFieldDefinitionError";
   }
 }
 
 export class TryRefANoKeyFieldError extends ChacaError {
-  constructor(public readonly fieldRoute: string) {
+  constructor(readonly fieldRoute: string) {
     super(
       `The field '${fieldRoute}' is not a key field, so you can't reference this one`,
     );
@@ -34,10 +56,7 @@ export class TryRefANoKeyFieldError extends ChacaError {
 }
 
 export class NotEnoughValuesForRefError extends ChacaError {
-  constructor(
-    public readonly refFieldRoute: string,
-    public readonly keyFieldRoute: string,
-  ) {
+  constructor(readonly refFieldRoute: string, readonly keyFieldRoute: string) {
     super(
       `Not enough values of '${keyFieldRoute}' for the ref field '${refFieldRoute}'`,
     );
@@ -53,18 +72,15 @@ export class CyclicAccessDataError extends ChacaError {
   }
 }
 
-export class NotExistFieldError extends ChacaError {
-  constructor(
-    public readonly fieldRoute: string,
-    public readonly refFieldRoute: string,
-  ) {
+export class NotExistRefFieldError extends ChacaError {
+  constructor(readonly fieldRoute: string, readonly refFieldRoute: string) {
     super(`From '${fieldRoute}', The field '${refFieldRoute}' does not exists`);
-    this.name = "ChacaError.NotExistFieldError";
+    this.name = "ChacaError.NotExistRefFieldError";
   }
 }
 
 export class EmptyEnumValuesError extends ChacaError {
-  constructor(public readonly fieldRoute: string) {
+  constructor(readonly fieldRoute: string) {
     super(`There are no values for the enum field '${fieldRoute}'`);
     this.name = "ChacaError.EmptyEnumValuesError";
   }
