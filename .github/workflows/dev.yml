@@ -2,6 +2,8 @@ name: 🖥️ Workflow Dev
 on:
   push:
     branches: [chaca-dev]
+  pull_request:
+    branches: [chaca-dev, main]
 jobs:
   release:
     name: 🖥️ Dev
