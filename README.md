@@ -4,7 +4,7 @@
 
 ## 😀 Intro
 
-Welcome to Chaca a powerful TypeScript library that revolutionizes mock data generation for testing and development processes. With Chaca, you can effortlessly generate realistic and diverse fake data to simulate different scenarios for your application.
+Welcome to Chaca, a powerful Nodejs library that revolutionizes mock data generation for testing and development processes. With Chaca, you can effortlessly generate realistic and diverse fake data to simulate different scenarios for your application.
 
 ## 📦 Installation
 
