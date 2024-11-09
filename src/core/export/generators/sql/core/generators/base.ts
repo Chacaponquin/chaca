@@ -4,6 +4,7 @@ import { SkipInvalid } from "../../../../core/skip-invalid";
 import { GenerateIds } from "../../value-object/generate-ids";
 import { SQLTable } from "../table/table";
 import { SQLTables } from "../table/tables";
+import { FillParentKeys } from "./fill-parent-keys";
 import { TablesFixer } from "./fixer";
 import { TableName } from "./names";
 import { Route } from "./route";
@@ -37,12 +38,14 @@ export class SQLDataGenerator {
     this.validator.execute(data);
 
     const route = new Route([iname]);
+    const fillParentKeys = new FillParentKeys(this.utils);
     const creator = new ValueCreator(
       this.utils,
       this.fixer,
       tables,
       this.skipInvalid,
       this.generateIds,
+      fillParentKeys,
     );
 
     const table = new SQLTable(
@@ -59,6 +62,7 @@ export class SQLDataGenerator {
         parent: table,
         value: value,
         current: null,
+        nested: false,
       });
     }
   }

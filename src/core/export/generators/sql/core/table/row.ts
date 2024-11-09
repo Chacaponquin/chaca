@@ -21,8 +21,10 @@ export class SQLRow {
     return this._columns;
   }
 
-  hasKey(): boolean {
-    return this._columns.some((c) => c.column().isKey());
+  hasKey(...banned: SQLColumn[]): boolean {
+    return this._columns
+      .filter((c) => !c.column().disabled() && !banned.includes(c.column()))
+      .some((c) => c.column().isKey());
   }
 
   deleteColumn(column: SQLColumn) {

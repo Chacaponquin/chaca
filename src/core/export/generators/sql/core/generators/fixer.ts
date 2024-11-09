@@ -58,12 +58,13 @@ export class TablesFixer {
 
   fixColumnNames(tables: SQLTables): void {
     for (const table of tables.tables) {
-      for (const column of table.columns()) {
+      for (const column of table.columns().filter((c) => !c.disabled())) {
         let stop = false;
 
         while (!stop) {
           const found = table
             .columns()
+            .filter((c) => !c.disabled())
             .find((c) => c !== column && c.equal(column._name));
 
           if (found) {

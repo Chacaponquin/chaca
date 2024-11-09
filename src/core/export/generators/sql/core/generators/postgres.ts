@@ -13,6 +13,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
     for (const table of tables.tables) {
       const columns = table
         .columns()
+        .filter((c) => !c.disabled())
         .map((c) => c.name())
         .join(", ");
 
@@ -46,6 +47,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
 
       const columns = table
         .columns()
+        .filter((c) => !c.disabled())
         .map((column) => {
           let code = ``;
 

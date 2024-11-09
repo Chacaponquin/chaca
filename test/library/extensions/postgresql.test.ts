@@ -44,6 +44,9 @@ describe("Postgresql", () => {
 
         expect(result).toHaveLength(1);
         expect(result[0].filename).toBe("schema.sql");
+        expect(result[0].content).include(
+          "schema_id INTEGER NOT NULL REFERENCES Schema(id)",
+        );
       });
 
       it("keys = ['id']", () => {
@@ -73,7 +76,7 @@ describe("Postgresql", () => {
 
         expect(result).toHaveLength(1);
         expect(result[0].filename).toBe("schema.sql");
-        expect(result[0].content).include("id SERIAL PRIMARY KEY");
+        expect(result[0].content).include("id_1 SERIAL PRIMARY KEY");
       });
     });
 
