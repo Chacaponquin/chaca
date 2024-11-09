@@ -34,9 +34,10 @@ export class Chaca {
 
   /**
    * @param input The object with the keys and type of each field
+   *
    * @example
    * chaca.schema({
-   *    id: () => modules.id.uuid(),
+   *    id: chaca.key(() => modules.id.uuid()),
    *    image: () => modules.image.film(),
    *    name: () => modules.person.firstName()
    * })
@@ -48,12 +49,13 @@ export class Chaca {
 
   /**
    * Create a reference field for a selected schema
-   * @param field configuration of the reference field. the field location must be separated points
+   * @param field Configuration of the reference field. the field location must be separated points
+   * @param config.unique The value to be referenced will only be taken once by this schema. Default `false`
+   * @param config.where Function that filters the fields to reference
+   * @param config.nullOnEmpty When there are no more documents to reference, the generated value will be null. Default `false`
    *
    * @example
-   * chaca.schema({
-   *    ref: chaca.ref('schema.field')
-   * })
+   * chaca.ref('schema.field')
    */
   ref(field: FieldToRef, config?: RefFieldConfig): RefField {
     return new RefField(field, config);
@@ -84,6 +86,11 @@ export class Chaca {
    * Sequence field
    * @param config.starsWith Init value for the field. Default `1`
    * @param config.step Step between field values in schema documents. Default `1`
+   *
+   * @example
+   * chaca.sequence()
+   * chaca.sequence({ startsWith: 10 })
+   * chaca.sequence({ step: 0.5 })
    */
   sequence(config?: SequenceFieldProps) {
     return new SequenceField(config);
