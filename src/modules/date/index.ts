@@ -329,7 +329,7 @@ export class DateModule {
    * @param args.refDate The date to use as reference point for the newly generated date. Defaults to `new Date()`.
    *
    * @example
-   * faker.date.anytime() // '2022-07-31T01:33:29.567Z'
+   * modules.date.anytime() // '2022-07-31T01:33:29.567Z'
    */
   anytime({ refDate }: AnytimeProps = {}): Date {
     const time = this.argToDate(refDate).getTime();

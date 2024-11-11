@@ -111,8 +111,8 @@ export class SystemModule {
   /**
    * Returns a random cron expression.
    *
-   * @param args.includeYear Whether to include a year in the generated expression. Defaults to `false`.
-   * @param args.includeNonStandard Whether to include a `@yearly`, `@monthly`, `@daily`, etc text labels in the generated expression. Defaults to `false`.
+   * @param args.includeYear Whether to include a year in the generated expression. Default `false`.
+   * @param args.includeNonStandard Whether to include a `@yearly`, `@monthly`, `@daily`, etc text labels in the generated expression. Default`false`.
    *
    * @example
    * modules.system.cron() // '45 23 * * 6'

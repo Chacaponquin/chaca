@@ -271,8 +271,6 @@ export class FinanceModule {
    *
    * @example
    * modules.finance.litecoinAddress() // 'MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW'
-   *
-   * @since 5.0.0
    */
   litecoinAddress(): string {
     const addressLength = this.datatypeModule.int({ min: 26, max: 33 });
