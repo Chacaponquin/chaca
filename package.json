@@ -52,7 +52,7 @@
     "relational data",
     "generator"
   ],
-  "author": "chacaponquin <hectorangel2001@gmail.com>",
+  "author": "Chacaponquin <hectorangel2001@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/adm-zip": "^0.5.0",
@@ -95,5 +95,5 @@
   "bugs": {
     "url": "https://github.com/Chacaponquin/chaca/issues"
   },
-  "homepage": "https://chaca-doc.vercel.app"
+  "homepage": "https://chaca.app"
 }
