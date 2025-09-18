@@ -2,12 +2,13 @@ import {
   EmptySequentialValuesError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
-import { SequentialFieldConfig } from "../../../fields/core/sequential/SequentialField";
-import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
-import { NotArray } from "../is-array";
-import { InputTreeNode } from "../node";
+import { SequentialFieldConfig } from "../../../fields/core/sequential/sequential-field";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
+import { SingleResultNode } from "../../../result-tree/classes/single-result";
+import { NotArray } from "../is-array/is-array";
+import { InputTreeNode } from "../node/input-tree-node";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null";
+import { PossibleNull } from "../possible-null/possible-null";
 
 export class SequentialValueNode extends InputTreeNode {
   private index = 0;
@@ -74,10 +75,12 @@ export class SequentialValueNode extends InputTreeNode {
     }
   }
 
-  generate(): FieldNode {
-    return new SingleResultNode({
+  generate(): Promise<FieldNode> {
+    const result = new SingleResultNode({
       name: this.getName(),
       value: this.value(),
     });
+
+    return new Promise((resolve) => resolve(result));
   }
 }

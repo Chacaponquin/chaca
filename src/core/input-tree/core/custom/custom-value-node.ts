@@ -1,11 +1,12 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
-import { DatasetStore } from "../../../dataset-store";
-import { GenerateProps, InputTreeNode } from "../node";
-import { CustomField } from "../../../fields/core/custom";
-import { IsArray, NotArray } from "../is-array";
-import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
+import { GenerateProps, InputTreeNode } from "../node/input-tree-node";
+import { CustomField } from "../../../fields/core/custom/custom-field";
+import { IsArray, NotArray } from "../is-array/is-array";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null";
+import { PossibleNull } from "../possible-null/possible-null";
+import { SingleResultNode } from "../../../result-tree/classes/single-result";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
 
 interface Props {
   fields: any;
@@ -31,8 +32,8 @@ export class CustomValueNode extends InputTreeNode {
     );
   }
 
-  private value({ fields, datasetStore }: Props) {
-    const value = this.func({
+  private async value({ fields, datasetStore }: Props) {
+    const value = await this.func({
       store: datasetStore,
       currentFields: fields,
     });
@@ -48,10 +49,13 @@ export class CustomValueNode extends InputTreeNode {
     }
   }
 
-  generate({ currentDocument, store }: GenerateProps): FieldNode {
+  async generate({
+    currentDocument,
+    store,
+  }: GenerateProps): Promise<FieldNode> {
     return new SingleResultNode({
       name: this.getName(),
-      value: this.value({
+      value: await this.value({
         datasetStore: store,
         fields: currentDocument.getDocumentObject(),
       }),

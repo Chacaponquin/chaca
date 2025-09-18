@@ -1,8 +1,9 @@
-import { DocumentTree, FieldNode } from "../../../result-tree/classes";
-import { DatasetStore } from "../../../dataset-store";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
 import { NodeRoute } from "./value-object/route";
-import { IsArray } from "../is-array";
-import { PossibleNull } from "../possible-null";
+import { IsArray } from "../is-array/is-array";
+import { PossibleNull } from "../possible-null/possible-null";
+import { DocumentTree } from "../../../result-tree/classes/document/document-tree";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
 
 export interface IsNullProps<K> {
   store: DatasetStore;
@@ -26,7 +27,7 @@ export abstract class InputTreeNode {
 
   abstract getNoArrayNode(): InputTreeNode;
   abstract checkIfFieldExists(fieldTreeRoute: string[]): boolean;
-  abstract generate(props: GenerateProps): FieldNode;
+  abstract generate(props: GenerateProps): Promise<FieldNode>;
 
   getRouteString(): string {
     return this.route.string();
@@ -52,13 +53,19 @@ export abstract class InputTreeNode {
     return this.getPossibleNull().can();
   }
 
-  isNull<K>({ currentDocument, store, index }: IsNullProps<K>): boolean {
+  async isNull<K>({
+    currentDocument,
+    store,
+    index,
+  }: IsNullProps<K>): Promise<boolean> {
     const value = this.getPossibleNull();
 
-    return value.is({
+    const result = await value.is({
       index: index,
       currentDocument: currentDocument,
       store: store,
     });
+
+    return result;
   }
 }

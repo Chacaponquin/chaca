@@ -1,7 +1,7 @@
 import { ChacaError } from "../../errors";
 import { DatatypeModule } from "../../modules/datatype";
 import { InputTreeNode, KeyValueNode, RefValueNode } from "../input-tree/core";
-import { SchemaResolver } from "../schema-resolver";
+import { SchemaResolver } from "../schema-resolver/schema-resolver";
 import { ChacaUtils } from "../utils";
 import { DatasetSchema } from "./interfaces/resolver";
 
@@ -26,6 +26,12 @@ export class DatasetResolver<K = any> {
     this.injectSchemas();
     this.buildInputTrees();
     this.buildRefFields();
+  }
+
+  findResolver(name: string): SchemaResolver | null {
+    const found = this.resolvers.find((r) => r.getSchemaName() === name);
+
+    return found ? found : null;
   }
 
   getResolvers() {
@@ -92,9 +98,9 @@ export class DatasetResolver<K = any> {
   resolve(): K {
     let data = {} as K;
 
-    this.resolvers.forEach((r) => {
+    for (const r of this.resolvers) {
       data = { ...data, [r.getSchemaName()]: r.resolve() };
-    });
+    }
 
     return data;
   }

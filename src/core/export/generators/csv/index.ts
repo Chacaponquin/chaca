@@ -4,7 +4,7 @@ import {
   DumpRelationalProps,
   Generator,
 } from "../generator";
-import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { DataValidator } from "./core/validator";
 import { Filename } from "../file-creator/filename";
 import { ZipConfig } from "../params";

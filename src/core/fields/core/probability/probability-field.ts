@@ -1,4 +1,4 @@
-import { DatasetStore } from "../../../dataset-store";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
 
 export type Chance = number | ChanceFunction;
 

@@ -1,10 +1,11 @@
-import { InputTreeNode } from "../node";
+import { InputTreeNode } from "../node/input-tree-node";
 import { TryRefANoKeyFieldError } from "../../../../errors";
-import { KeyValueNode } from "../key";
-import { IsArray, NotArray } from "../is-array";
-import { FieldNode, MixedFieldNode } from "../../../result-tree/classes";
+import { KeyValueNode } from "../key/key-value-node";
+import { IsArray, NotArray } from "../is-array/is-array";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null";
+import { PossibleNull } from "../possible-null/possible-null";
+import { MixedFieldNode } from "../../../result-tree/classes/mixed";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
 
 export class MixedValueNode extends InputTreeNode {
   private nodes: InputTreeNode[] = [];
@@ -73,6 +74,7 @@ export class MixedValueNode extends InputTreeNode {
       for (let i = 0; i < this.nodes.length && !found; i++) {
         if (this.nodes[i].getName() === fieldTreeRoute[0]) {
           const routeWithoutFirstElement = fieldTreeRoute.slice(1);
+
           found = this.nodes[i].checkIfFieldExists(routeWithoutFirstElement);
         }
       }
@@ -81,8 +83,9 @@ export class MixedValueNode extends InputTreeNode {
     }
   }
 
-  generate(): FieldNode {
+  generate(): Promise<FieldNode> {
     const result = new MixedFieldNode(this.getName());
-    return result;
+
+    return new Promise((resolve) => resolve(result));
   }
 }

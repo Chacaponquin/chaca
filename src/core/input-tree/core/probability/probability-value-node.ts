@@ -1,15 +1,13 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
-import {
-  DocumentTree,
-  FieldNode,
-  SingleResultNode,
-} from "../../../result-tree/classes";
-import { DatasetStore } from "../../../dataset-store";
-import { GenerateProps, InputTreeNode } from "../node";
-import { IsArray, NotArray } from "../is-array";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
+import { GenerateProps, InputTreeNode } from "../node/input-tree-node";
+import { IsArray, NotArray } from "../is-array/is-array";
 import { ChancesArray } from "./value-object/chances-array";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null";
+import { PossibleNull } from "../possible-null/possible-null";
+import { DocumentTree } from "../../../result-tree/classes/document/document-tree";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
+import { SingleResultNode } from "../../../result-tree/classes/single-result";
 
 interface Props {
   store: DatasetStore;
@@ -51,10 +49,12 @@ export class ProbabilityValueNode extends InputTreeNode {
     return this.options.value(props);
   }
 
-  generate(props: GenerateProps): FieldNode {
-    return new SingleResultNode({
+  generate(props: GenerateProps): Promise<FieldNode> {
+    const result = new SingleResultNode({
       name: this.getName(),
       value: this.value(props),
     });
+
+    return new Promise((resolve) => resolve(result));
   }
 }

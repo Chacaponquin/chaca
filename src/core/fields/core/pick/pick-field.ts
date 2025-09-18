@@ -1,4 +1,4 @@
-import { DatasetStore } from "../../../dataset-store";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
 
 export interface PickFieldProps<V = any> {
   values: V[];
@@ -11,12 +11,12 @@ export type PickCountLimits = { min?: number; max?: number };
 
 export type PickCountFunction = (
   props: PickCountFunctionProps,
-) => number | PickCountLimits;
+) => number | PickCountLimits | Promise<number | PickCountLimits>;
 
 export type PickCountFunctionProps<C = any> = {
   /** Current schema document fields */
   currentFields: C;
-  /** Store to interact with all datasets */
+  /** Store to interact with all dataset schemas */
   store: DatasetStore;
 };
 

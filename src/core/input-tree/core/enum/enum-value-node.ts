@@ -2,12 +2,13 @@ import {
   EmptyEnumValuesError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
-import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
+import { SingleResultNode } from "../../../result-tree/classes/single-result";
 import { ChacaUtils } from "../../../utils";
-import { IsArray, NotArray } from "../is-array";
-import { InputTreeNode } from "../node";
+import { IsArray, NotArray } from "../is-array/is-array";
+import { InputTreeNode } from "../node/input-tree-node";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null";
+import { PossibleNull } from "../possible-null/possible-null";
 
 export class EnumValueNode extends InputTreeNode {
   constructor(
@@ -42,11 +43,13 @@ export class EnumValueNode extends InputTreeNode {
     );
   }
 
-  generate(): FieldNode {
-    return new SingleResultNode({
+  generate(): Promise<FieldNode> {
+    const result = new SingleResultNode({
       name: this.getName(),
       value: this.value(),
     });
+
+    return new Promise((resolve) => resolve(result));
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {

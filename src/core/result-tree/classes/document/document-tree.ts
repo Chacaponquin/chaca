@@ -1,6 +1,6 @@
 import { ChacaError, NotExistRefFieldError } from "../../../../errors";
 import { NodeRoute } from "../../../input-tree/core/node/value-object/route";
-import { FieldNode } from "../node";
+import { FieldNode } from "../node/field-node";
 import { SingleResultNode } from "../single-result";
 
 interface GetRefValueByRouteProps {
@@ -28,7 +28,7 @@ export class DocumentTree<D = any> {
     return returnObject;
   }
 
-  getNodeByNodeRoute(fieldTreeRoute: Array<string>): FieldNode {
+  getNodeByNodeRoute(fieldTreeRoute: string[]): FieldNode {
     let returnValue = undefined;
 
     for (let i = 0; i < this.nodes.length && returnValue === undefined; i++) {
@@ -37,7 +37,7 @@ export class DocumentTree<D = any> {
       }
     }
 
-    if (returnValue) {
+    if (returnValue !== undefined) {
       return returnValue;
     } else {
       throw new ChacaError(

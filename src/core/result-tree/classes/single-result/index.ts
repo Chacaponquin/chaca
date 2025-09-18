@@ -1,6 +1,6 @@
 import { ChacaError, NotExistRefFieldError } from "../../../../errors";
 import { NodeRoute } from "../../../input-tree/core/node/value-object/route";
-import { FieldNode, GetRefValueProps } from "../node";
+import { FieldNode, GetRefValueProps } from "../node/field-node";
 
 interface Props {
   name: string;

@@ -1,10 +1,10 @@
-import { SchemaStore } from "../schema-store/store";
-import { DocumentTree } from "../result-tree/classes/document";
-import { GetStoreConfig } from "../schema-store/interfaces/store";
-import { FieldNode } from "../result-tree/classes";
-import { SchemaResolver } from "../schema-resolver";
+import { SchemaStore } from "../schema-store/schema-store";
+import { DocumentTree } from "../result-tree/classes/document/document-tree";
+import { GetStoreConfig } from "../schema-store/interfaces/schema-store";
+import { SchemaResolver } from "../schema-resolver/schema-resolver";
 import { GetConfig } from "./value-object";
 import { NodeRoute } from "../input-tree/core/node/value-object/route";
+import { FieldNode } from "../result-tree/classes/node/field-node";
 
 interface Props {
   schemasStore: SchemaStore;
@@ -47,14 +47,14 @@ export class DatasetStore {
    *   }
    * })
    */
-  get<R = any>(route: string, iconfig?: GetStoreConfig): R[] {
+  async get<R = any>(route: string, iconfig?: GetStoreConfig): Promise<R[]> {
     const config = new GetConfig({
       omitCurrentDocument: this.omitCurrentDocument,
       omitResolver: this.omitResolver,
       config: iconfig,
     });
 
-    const foundNodes = this.schemasStore.value({
+    const foundNodes = await this.schemasStore.value({
       route: route,
       config: config.value(),
       caller: this.caller,

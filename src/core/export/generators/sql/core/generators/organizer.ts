@@ -1,5 +1,5 @@
-import { DatasetResolver } from "../../../../../dataset-resolver/resolver";
-import { SchemaResolver } from "../../../../../schema-resolver";
+import { DatasetResolver } from "../../../../../dataset-resolver/dataset-resolver";
+import { SchemaResolver } from "../../../../../schema-resolver/schema-resolver";
 
 interface Props {
   resolver: DatasetResolver;

@@ -1,12 +1,12 @@
 import { ChacaError } from "../../../../errors";
-import { GenerateProps, InputTreeNode } from "../node";
-import { CustomValueNode } from "../custom";
-import { RefValueNode } from "../ref";
-import { SequenceValueNode } from "../sequence";
-import { NotNull } from "../possible-null";
-import { NotArray } from "../is-array";
-import { FieldNode } from "../../../result-tree/classes";
+import { GenerateProps, InputTreeNode } from "../node/input-tree-node";
+import { CustomValueNode } from "../custom/custom-value-node";
+import { RefValueNode } from "../ref/ref-value-node";
+import { SequenceValueNode } from "../sequence/sequence-value-node";
+import { NotNull } from "../possible-null/possible-null";
+import { NotArray } from "../is-array/is-array";
 import { NodeRoute } from "../node/value-object/route";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
 
 export type KeyFieldProps = RefValueNode | SequenceValueNode | CustomValueNode;
 
@@ -23,8 +23,8 @@ export class KeyValueNode extends InputTreeNode {
     return fieldTreeRoute.length === 0;
   }
 
-  generate(props: GenerateProps): FieldNode {
-    const node = this.fieldNode.generate(props);
+  async generate(props: GenerateProps): Promise<FieldNode> {
+    const node = await this.fieldNode.generate(props);
 
     const value = node.getRealValue();
 

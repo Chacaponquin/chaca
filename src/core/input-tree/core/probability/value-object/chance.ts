@@ -1,10 +1,10 @@
 import { WrongProbabilityFieldDefinitionError } from "../../../../../errors";
-import { DatasetStore } from "../../../../dataset-store";
+import { DatasetStore } from "../../../../dataset-store/dataset-store";
 import {
   ChanceFunction,
   Chance as IChance,
-} from "../../../../fields/core/probability";
-import { DocumentTree } from "../../../../result-tree/classes";
+} from "../../../../fields/core/probability/probability-field";
+import { DocumentTree } from "../../../../result-tree/classes/document/document-tree";
 
 interface Props {
   value: IChance;

@@ -1,13 +1,11 @@
-import { SchemaResolver } from "..";
-import { DatasetStore } from "../../dataset-store";
+import { SchemaResolver } from "../schema-resolver";
+import { DatasetStore } from "../../dataset-store/dataset-store";
 import { InputTreeNode } from "../../input-tree/core";
-import { ChacaResultTree } from "../../result-tree";
-import {
-  ArrayResultNode,
-  FieldNode,
-  SingleResultNode,
-} from "../../result-tree/classes";
-import { SchemaStore } from "../../schema-store/store";
+import { ChacaResultTree } from "../../result-tree/chaca-result-tree";
+import { SchemaStore } from "../../schema-store/schema-store";
+import { FieldNode } from "../../result-tree/classes/node/field-node";
+import { ArrayResultNode } from "../../result-tree/classes/array";
+import { SingleResultNode } from "../../result-tree/classes/single-result";
 
 interface Props {
   field: InputTreeNode;
@@ -21,7 +19,7 @@ export class SolutionCreator {
     private readonly resolver: SchemaResolver,
   ) {}
 
-  execute({ field, indexDoc }: Props): FieldNode {
+  async execute({ field, indexDoc }: Props): Promise<FieldNode> {
     const currentDocument = this.resultTree.getDocumentByIndex(indexDoc);
 
     const store = new DatasetStore({
@@ -38,7 +36,7 @@ export class SolutionCreator {
     });
 
     if (!isNull) {
-      const limit = field.getIsArray().execute({
+      const limit = await field.getIsArray().execute({
         currentDocument: currentDocument,
         store: store,
       });
@@ -53,9 +51,9 @@ export class SolutionCreator {
         return arrayNode;
       }
 
-      // no es un array
+      // ifs not an array
       else {
-        const node = field.generate({
+        const node = await field.generate({
           currentDocument: currentDocument,
           indexDoc: indexDoc,
           schemaIndex: this.resolver.index,

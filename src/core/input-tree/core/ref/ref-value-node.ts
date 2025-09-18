@@ -5,22 +5,20 @@ import {
   NotExistRefFieldError,
   TryRefANoKeyFieldError,
 } from "../../../../errors";
-import { GenerateProps, InputTreeNode } from "../node";
+import { GenerateProps, InputTreeNode } from "../node/input-tree-node";
 import { ChacaUtils } from "../../../utils";
-import { FieldToRefObject } from "../../../fields/core/ref";
-import { SchemaStore } from "../../../schema-store/store";
-import {
-  DocumentTree,
-  FieldNode,
-  SingleResultNode,
-} from "../../../result-tree/classes";
-import { DatasetStore } from "../../../dataset-store";
+import { FieldToRefObject } from "../../../fields/core/ref/ref-field";
+import { SchemaStore } from "../../../schema-store/schema-store";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
 import { SearchedRefValue } from "./interfaces/ref";
 import { RefRoute } from "./value-object/route";
-import { IsArray, NotArray } from "../is-array";
-import { SchemaResolver } from "../../../schema-resolver";
+import { IsArray, NotArray } from "../is-array/is-array";
+import { SchemaResolver } from "../../../schema-resolver/schema-resolver";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null";
+import { PossibleNull } from "../possible-null/possible-null";
+import { DocumentTree } from "../../../result-tree/classes/document/document-tree";
+import { SingleResultNode } from "../../../result-tree/classes/single-result";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
 
 export class RefValueNode extends InputTreeNode {
   private refFieldTreeRoute: RefRoute;
@@ -148,10 +146,10 @@ export class RefValueNode extends InputTreeNode {
     return returnRefValues;
   }
 
-  private value(
+  private async value(
     currentDocument: DocumentTree,
     icurrentSchemaResolver: number,
-  ): unknown | unknown[] {
+  ): Promise<unknown | unknown[]> {
     const schemaRef = this.getSchemaRef();
 
     const currentResolver = this.schemasStore.get(icurrentSchemaResolver);
@@ -162,7 +160,7 @@ export class RefValueNode extends InputTreeNode {
       if (!schemaRef.dangerCyclic() || refItSelf) {
         if (!refItSelf) {
           // build schema ref trees
-          schemaRef.buildTrees(currentResolver.route);
+          await schemaRef.buildTrees(currentResolver.route);
         }
 
         // get all fields nodes to ref
@@ -228,13 +226,18 @@ export class RefValueNode extends InputTreeNode {
     }
   }
 
-  generate({ schemaIndex, currentDocument }: GenerateProps): FieldNode {
-    const refValue = this.value(currentDocument, schemaIndex);
+  async generate({
+    schemaIndex,
+    currentDocument,
+  }: GenerateProps): Promise<FieldNode> {
+    const refValue = await this.value(currentDocument, schemaIndex);
 
-    return new SingleResultNode({
+    const result = new SingleResultNode({
       name: this.getName(),
       value: refValue,
     });
+
+    return result;
   }
 
   setSchemaRef(resolverIndex: number): void {

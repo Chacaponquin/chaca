@@ -4,7 +4,7 @@ import {
   DumpRelationalProps,
   Generator,
 } from "../generator";
-import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { ClassesCreator } from "./core/classes-creator";
 import { Filename } from "../file-creator/filename";
 import { ValueCreator } from "./core/value-creator";

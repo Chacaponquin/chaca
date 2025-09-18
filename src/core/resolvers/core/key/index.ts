@@ -1,5 +1,5 @@
 import { IResolver } from "../../interfaces/resolvers";
-import { CustomFieldResolver } from "../custom";
+import { CustomFieldResolver } from "../custom/custom-resolver";
 import { RefFieldResolver } from "../ref";
 import { SequenceFieldResolver } from "../sequence";
 

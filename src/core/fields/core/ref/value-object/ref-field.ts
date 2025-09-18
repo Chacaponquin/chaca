@@ -1,4 +1,4 @@
-import { FieldToRef } from "..";
+import { FieldToRef } from "../ref-field";
 
 export class InputRefField {
   private _value: string;

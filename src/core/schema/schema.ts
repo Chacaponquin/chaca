@@ -1,7 +1,7 @@
 import { ExportResolver } from "../export/resolvers/export/export";
 import { SchemaInput } from "./interfaces/schema";
 import { DumpConfig, FileConfig } from "../export/interfaces/export";
-import { SchemaResolver } from "../schema-resolver";
+import { SchemaResolver } from "../schema-resolver/schema-resolver";
 import { ChacaUtils } from "../utils";
 import { DatatypeModule } from "../../modules/datatype";
 import { GeneratorFilter } from "../export/resolvers/generator-filter/generator-filter";
@@ -63,8 +63,9 @@ export class Schema<K = any> {
   /**
    * Generate a schema document
    */
-  object(): K {
-    const result = this.array(1);
+  async object(): Promise<K> {
+    const result = await this.array(1);
+
     return result[0];
   }
 
@@ -72,7 +73,7 @@ export class Schema<K = any> {
    * Generate an array of schema documents
    * @param countDocuments number of documents that you want to create
    */
-  array(countDocuments: number): K[] {
+  array(countDocuments: number): Promise<K[]> {
     const schemaToResolve = new SchemaResolver<K>(
       this.utils,
       this.datatypeModule,

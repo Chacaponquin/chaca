@@ -1,14 +1,12 @@
 import { ChacaError, CyclicAccessDataError } from "../../errors";
 import { ChacaUtils } from "../utils";
 import { SchemaInput } from "../schema/interfaces/schema";
-import { ChacaInputTree } from "../input-tree";
+import { ChacaInputTree } from "../input-tree/chaca-input-tree";
 import { InputTreeNode, RefValueNode, KeyValueNode } from "../input-tree/core";
-import { ChacaResultTree } from "../result-tree";
-import { DocumentTree, FieldNode } from "../result-tree/classes";
-import { SchemaStore } from "../schema-store/store";
-import { GetStoreValueConfig } from "../schema-store/interfaces/store";
+import { ChacaResultTree } from "../result-tree/chaca-result-tree";
+import { SchemaStore } from "../schema-store/schema-store";
+import { GetStoreValueConfig } from "../schema-store/interfaces/schema-store";
 import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
-import { CountDoc, SchemaName } from "./value-object";
 import { DatatypeModule } from "../../modules/datatype";
 import { SubFieldsCreator } from "./core/sub-fields-creator";
 import { NodeRoute } from "../input-tree/core/node/value-object/route";
@@ -16,6 +14,10 @@ import { SolutionCreator } from "./core/solution-creator";
 import { ArrayCreator } from "./core/array-creator";
 import { FillSolution } from "./core/fill-solution";
 import { SchemaToResolve } from "./value-object/schema-input";
+import { DocumentTree } from "../result-tree/classes/document/document-tree";
+import { FieldNode } from "../result-tree/classes/node/field-node";
+import { CountDoc } from "./value-object/count";
+import { SchemaName } from "./value-object/schema-name";
 
 interface GetRefValueProps {
   caller: NodeRoute;
@@ -87,9 +89,10 @@ export class SchemaResolver<K = any> {
     this.fillSolution.subFieldsCreator = this.subFieldsCreator;
   }
 
-  resolve(): K[] {
+  async resolve(): Promise<K[]> {
     this.buildInputTree();
-    this.buildTrees(this.route);
+    await this.buildTrees(this.route);
+
     return this.getDocumentsArray();
   }
 
@@ -213,7 +216,7 @@ export class SchemaResolver<K = any> {
     }
   }
 
-  buildTrees(caller: NodeRoute): void {
+  async buildTrees(caller: NodeRoute): Promise<void> {
     if (!this.finishBuilding) {
       if (!this.isBuilding) {
         if (this.inputTree) {
@@ -233,7 +236,7 @@ export class SchemaResolver<K = any> {
 
             // recorrer los fields del dataset actual para crear cada uno en el documento que le pertenece
             for (const datField of this.inputTree.getFields()) {
-              const solution = this.solutionCreator.execute({
+              const solution = await this.solutionCreator.execute({
                 field: datField,
                 indexDoc: indexDoc,
               });
@@ -241,7 +244,7 @@ export class SchemaResolver<K = any> {
               // insertar la solucion del field en el documento
               newDoc.insertField(solution);
 
-              this.fillSolution.execute({
+              await this.fillSolution.execute({
                 solution: solution,
                 input: datField,
                 indexDoc: indexDoc,

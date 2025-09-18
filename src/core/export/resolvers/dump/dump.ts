@@ -1,6 +1,6 @@
 import { DatatypeModule } from "../../../../modules/datatype";
 import { DatasetSchema } from "../../../dataset-resolver/interfaces/resolver";
-import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { ChacaUtils } from "../../../utils";
 import { Filename } from "../../generators/file-creator/filename";
 import { DumpFile } from "../../generators/generator";

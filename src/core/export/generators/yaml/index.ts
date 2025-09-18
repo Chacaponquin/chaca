@@ -1,4 +1,4 @@
-import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import {
   DumpFile,
   DumpProps,

@@ -1,7 +1,7 @@
 import { WrongArrayDefinitionError } from "../../../../errors";
 import { DatatypeModule } from "../../../../modules/datatype";
-import { DatasetStore } from "../../../dataset-store";
-import { DocumentTree } from "../../../result-tree/classes";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
+import { DocumentTree } from "../../../result-tree/classes/document/document-tree";
 import {
   ArrayLimitObject,
   IsArrayFunction,
@@ -28,7 +28,7 @@ interface LimitsProps {
 }
 
 export abstract class IsArray {
-  abstract execute(props: ValueProps): number | undefined;
+  abstract execute(props: ValueProps): Promise<number | undefined>;
 }
 
 export class LimitsArray extends IsArray {
@@ -72,10 +72,10 @@ export class LimitsArray extends IsArray {
     this.max = max;
   }
 
-  execute(): number {
+  execute(): Promise<number> {
     const limit = this.datatypeModule.int({ min: this.min, max: this.max });
 
-    return limit;
+    return new Promise((resolve) => resolve(limit));
   }
 }
 
@@ -93,8 +93,11 @@ export class FunctionArray extends IsArray {
     this.func = func;
   }
 
-  execute({ currentDocument, store }: ValueProps): number | undefined {
-    const result = this.func({
+  async execute({
+    currentDocument,
+    store,
+  }: ValueProps): Promise<number | undefined> {
+    const result = await this.func({
       currentFields: currentDocument.getDocumentObject(),
       store: store,
     });
@@ -139,8 +142,8 @@ export class IntegerArray extends IsArray {
     this.limit = value;
   }
 
-  execute(): number {
-    return this.limit;
+  execute(): Promise<number> {
+    return new Promise((resolve) => resolve(this.limit));
   }
 }
 
@@ -149,7 +152,7 @@ export class NotArray extends IsArray {
     super();
   }
 
-  execute(): undefined {
-    return undefined;
+  execute(): Promise<undefined> {
+    return new Promise((resolve) => resolve(undefined));
   }
 }

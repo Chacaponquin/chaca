@@ -1,5 +1,5 @@
 import { IResolver } from "../../interfaces/resolvers";
-import { Schema } from "../../../schema";
+import { Schema } from "../../../schema/schema";
 
 export class MixedFieldResolver extends IResolver {
   constructor(readonly schema: Schema) {

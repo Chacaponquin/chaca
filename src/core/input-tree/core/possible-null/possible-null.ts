@@ -1,6 +1,6 @@
 import { WrongPossibleNullDefinitionError } from "../../../../errors";
-import { DatasetStore } from "../../../dataset-store";
-import { DocumentTree } from "../../../result-tree/classes";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
+import { DocumentTree } from "../../../result-tree/classes/document/document-tree";
 import { PossibleNullFunction } from "../../../schema/interfaces/schema";
 import { ChacaUtils } from "../../../utils";
 
@@ -32,7 +32,7 @@ export interface IsProps {
 }
 
 export abstract class PossibleNull {
-  abstract is(props: IsProps): boolean;
+  abstract is(props: IsProps): Promise<boolean>;
   abstract can(): boolean;
 }
 
@@ -45,12 +45,8 @@ export class BooleanNull extends PossibleNull {
     this.value = value;
   }
 
-  is(): boolean {
-    if (this.value) {
-      return true;
-    } else {
-      return false;
-    }
+  is(): Promise<boolean> {
+    return new Promise((resolve) => resolve(this.value));
   }
 
   can(): boolean {
@@ -73,8 +69,8 @@ export class FunctionNull extends PossibleNull {
     return true;
   }
 
-  is({ currentDocument, store, index }: IsProps): boolean {
-    const result = this.func({
+  async is({ currentDocument, store, index }: IsProps): Promise<boolean> {
+    const result = await this.func({
       currentFields: currentDocument.getDocumentObject(),
       store: store,
     });
@@ -106,8 +102,8 @@ export class NotNull extends PossibleNull {
     super();
   }
 
-  is(): boolean {
-    return false;
+  is(): Promise<boolean> {
+    return new Promise((resolve) => resolve(false));
   }
 
   can(): boolean {
@@ -131,8 +127,8 @@ export class ProbabilityNull extends PossibleNull {
     }
   }
 
-  is(): boolean {
-    return Math.random() <= this.value;
+  is(): Promise<boolean> {
+    return new Promise((resolve) => resolve(Math.random() <= this.value));
   }
 
   can(): boolean {
@@ -172,8 +168,8 @@ export class AbsoluteNullCount extends PossibleNull {
     this.indexes = utils.pick({ values: all, count: value });
   }
 
-  is({ index }: IsProps): boolean {
-    return this.indexes.includes(index);
+  is({ index }: IsProps): Promise<boolean> {
+    return new Promise((resolve) => resolve(this.indexes.includes(index)));
   }
 
   can(): boolean {

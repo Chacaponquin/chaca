@@ -1,7 +1,8 @@
 import { NodeRoute } from "../input-tree/core/node/value-object/route";
 import { SearchedRefValue } from "../input-tree/core/ref/interfaces/ref";
-import { GetStoreValueConfig } from "../schema-store/interfaces/store";
-import { DocumentTree, FieldNode } from "./classes";
+import { GetStoreValueConfig } from "../schema-store/interfaces/schema-store";
+import { DocumentTree } from "./classes/document/document-tree";
+import { FieldNode } from "./classes/node/field-node";
 
 interface GetRefValuesProps {
   caller: NodeRoute;

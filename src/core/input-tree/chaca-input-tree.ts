@@ -9,7 +9,7 @@ import {
   RefFieldResolver,
   SequenceFieldResolver,
 } from "../resolvers/core";
-import { Schema } from "../schema";
+import { Schema } from "../schema/schema";
 import {
   InputTreeNode,
   CustomValueNode,
@@ -23,14 +23,14 @@ import {
   SequentialValueNode,
 } from "./core";
 import { SequentialFieldResolver } from "../resolvers/core/sequential";
-import { SchemaStore } from "../schema-store/store";
+import { SchemaStore } from "../schema-store/schema-store";
 import { PickFieldResolver } from "../resolvers/core/pick";
 import { ChacaUtils } from "../utils";
 import { PossibleNullMapper } from "./core/map/possible-null";
-import { NotNull } from "./core/possible-null";
+import { NotNull } from "./core/possible-null/possible-null";
 import { IsArrayMapper } from "./core/map/is-array";
 import { DatatypeModule } from "../../modules/datatype";
-import { NotArray } from "./core/is-array";
+import { NotArray } from "./core/is-array/is-array";
 import { Count } from "./core/pick/value-object/count";
 import { Values } from "./core/pick/value-object/values";
 import { ChancesArray } from "./core/probability/value-object/chances-array";

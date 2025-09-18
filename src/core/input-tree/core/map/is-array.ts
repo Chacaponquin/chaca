@@ -7,7 +7,7 @@ import {
   IsArray,
   LimitsArray,
   NotArray,
-} from "../is-array";
+} from "../is-array/is-array";
 
 interface Props {
   route: string;

@@ -4,7 +4,7 @@ import {
   DumpRelationalProps,
   Generator,
 } from "../generator";
-import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { Filename } from "../file-creator/filename";
 import { JavascriptCodeCreator } from "./core/creator";
 import { ChacaUtils } from "../../../utils";

@@ -1,4 +1,4 @@
-import { SequentialFieldConfig } from "../../../fields/core/sequential/SequentialField";
+import { SequentialFieldConfig } from "../../../fields/core/sequential/sequential-field";
 import { IResolver } from "../../interfaces/resolvers";
 
 export class SequentialFieldResolver<K = any> extends IResolver {

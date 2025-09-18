@@ -6,7 +6,7 @@ import {
   Generator,
 } from "../generator";
 import { PostgreSQL } from "./core/generators/postgres";
-import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { SQLDataGenerator } from "./core/generators/base";
 import { SQLTables } from "./core/table/tables";
 import { DataValidator } from "./core/generators/validator";

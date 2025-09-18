@@ -1,12 +1,12 @@
-import { DocumentTree } from "../../result-tree/classes";
-import { SchemaResolver } from "../../schema-resolver";
+import { DocumentTree } from "../../result-tree/classes/document/document-tree";
+import { SchemaResolver } from "../../schema-resolver/schema-resolver";
 import {
   GetStoreConfig,
   GetStoreValueConfig,
-} from "../../schema-store/interfaces/store";
+} from "../../schema-store/interfaces/schema-store";
 
 interface Props {
-  omitCurrentDocument: DocumentTree<any>;
+  omitCurrentDocument: DocumentTree;
   omitResolver: SchemaResolver;
   config?: GetStoreConfig;
 }

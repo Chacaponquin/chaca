@@ -1,7 +1,7 @@
 import { WrongProbabilityFieldDefinitionError } from "../../../../../errors";
-import { DatasetStore } from "../../../../dataset-store";
-import { ProbabilityOption } from "../../../../fields/core/probability";
-import { DocumentTree } from "../../../../result-tree/classes";
+import { DatasetStore } from "../../../../dataset-store/dataset-store";
+import { ProbabilityOption } from "../../../../fields/core/probability/probability-field";
+import { DocumentTree } from "../../../../result-tree/classes/document/document-tree";
 import { ChacaUtils } from "../../../../utils";
 import { Chance } from "./chance";
 import { ChanceValue } from "./chance-value";

@@ -1,11 +1,12 @@
 import { TryRefANoKeyFieldError } from "../../../../errors";
-import { InputTreeNode } from "../node";
-import { PossibleNull } from "../possible-null";
-import { NotArray } from "../is-array";
+import { InputTreeNode } from "../node/input-tree-node";
+import { PossibleNull } from "../possible-null/possible-null";
+import { NotArray } from "../is-array/is-array";
 import { Step } from "./value-object/step";
 import { StartsWith } from "./value-object/starts-with";
-import { FieldNode, SingleResultNode } from "../../../result-tree/classes";
 import { NodeRoute } from "../node/value-object/route";
+import { SingleResultNode } from "../../../result-tree/classes/single-result";
+import { FieldNode } from "../../../result-tree/classes/node/field-node";
 
 export class SequenceValueNode extends InputTreeNode {
   private actualValue: number;
@@ -33,11 +34,13 @@ export class SequenceValueNode extends InputTreeNode {
     return returnValue;
   }
 
-  generate(): FieldNode {
-    return new SingleResultNode({
+  generate(): Promise<FieldNode> {
+    const result = new SingleResultNode({
       name: this.getName(),
       value: this.value(),
     });
+
+    return new Promise((resolve) => resolve(result));
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {

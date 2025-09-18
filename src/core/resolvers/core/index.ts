@@ -1,4 +1,4 @@
-import { CustomFieldResolver } from "./custom";
+import { CustomFieldResolver } from "./custom/custom-resolver";
 import { EnumFieldResolver } from "./enum";
 import { MixedFieldResolver } from "./mixed";
 import { RefFieldResolver } from "./ref";

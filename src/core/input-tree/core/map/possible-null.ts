@@ -8,7 +8,7 @@ import {
   NotNull,
   PossibleNull,
   ProbabilityNull,
-} from "../possible-null";
+} from "../possible-null/possible-null";
 
 interface Props {
   value: FieldPossibleNull;

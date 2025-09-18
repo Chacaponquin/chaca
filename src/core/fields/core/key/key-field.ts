@@ -1,6 +1,6 @@
-import { CustomField } from "../custom";
-import { RefField } from "../ref";
-import { SequenceField } from "../sequence/SequenceField";
+import { CustomField } from "../custom/custom-field";
+import { RefField } from "../ref/ref-field";
+import { SequenceField } from "../sequence/sequence-field";
 
 /**
  * Possible types for key schema field

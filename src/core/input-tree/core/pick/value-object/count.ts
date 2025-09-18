@@ -1,12 +1,12 @@
 import { PickFieldDefinitionError } from "../../../../../errors";
 import { DatatypeModule } from "../../../../../modules/datatype";
-import { DatasetStore } from "../../../../dataset-store";
+import { DatasetStore } from "../../../../dataset-store/dataset-store";
 import {
   PickCount,
   PickCountFunction,
   PickCountLimits,
-} from "../../../../fields/core/pick";
-import { DocumentTree } from "../../../../result-tree/classes";
+} from "../../../../fields/core/pick/pick-field";
+import { DocumentTree } from "../../../../result-tree/classes/document/document-tree";
 import { Values } from "./values";
 
 interface Props {
@@ -69,7 +69,7 @@ export abstract class Count {
     return type;
   }
 
-  abstract limit(props: LimitProps): number;
+  abstract limit(props: LimitProps): Promise<number> | number;
 }
 
 export class IntegerCount extends Count {
@@ -116,8 +116,8 @@ export class FunctionCount extends Count {
     this.options = options;
   }
 
-  limit({ currentDocument, store }: LimitProps): number {
-    const result = this.func({
+  async limit({ currentDocument, store }: LimitProps): Promise<number> {
+    const result = await this.func({
       currentFields: currentDocument.getDocumentObject(),
       store: store,
     });
@@ -142,7 +142,12 @@ export class FunctionCount extends Count {
       );
     }
 
-    return type.limit({ currentDocument: currentDocument, store: store });
+    const value = await type.limit({
+      currentDocument: currentDocument,
+      store: store,
+    });
+
+    return value;
   }
 }
 

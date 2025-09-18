@@ -1,8 +1,9 @@
 import { ChacaError, CyclicAccessDataError } from "../../errors";
 import { NodeRoute } from "../input-tree/core/node/value-object/route";
-import { DocumentTree, FieldNode } from "../result-tree/classes";
-import { SchemaResolver } from "../schema-resolver";
-import { GetStoreValueConfig } from "./interfaces/store";
+import { DocumentTree } from "../result-tree/classes/document/document-tree";
+import { FieldNode } from "../result-tree/classes/node/field-node";
+import { SchemaResolver } from "../schema-resolver/schema-resolver";
+import { GetStoreValueConfig } from "./interfaces/schema-store";
 
 interface ValueProps {
   route: string;
@@ -35,11 +36,11 @@ export class SchemaStore {
     return this.schemas;
   }
 
-  value<D = any>({
+  async value<D = any>({
     caller,
     config,
     route,
-  }: ValueProps): Array<FieldNode | DocumentTree<D>> {
+  }: ValueProps): Promise<Array<FieldNode | DocumentTree<D>>> {
     const routeArray = this.validateFieldToGet(route, caller.string());
 
     let foundSchema = false;
@@ -61,7 +62,7 @@ export class SchemaStore {
           );
         }
 
-        currentSchema.buildTrees(caller);
+        await currentSchema.buildTrees(caller);
 
         values = currentSchema.getAllValuesByRoute(routeArray.slice(1), config);
 

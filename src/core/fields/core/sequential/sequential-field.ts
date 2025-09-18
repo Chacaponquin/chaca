@@ -1,4 +1,4 @@
-import { Config } from "./value-object";
+import { Config } from "./value-object/Config";
 
 export interface SequentialFieldConfig {
   /**

@@ -1,4 +1,4 @@
-import { CustomField } from "../../../fields/core/custom";
+import { CustomField } from "../../../fields/core/custom/custom-field";
 import { IResolver } from "../../interfaces/resolvers";
 
 export class CustomFieldResolver<C, R> extends IResolver {

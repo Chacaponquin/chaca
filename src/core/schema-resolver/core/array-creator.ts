@@ -1,11 +1,11 @@
 import { InputTreeNode } from "../../input-tree/core";
-import { ArrayResultNode, FieldNode } from "../../result-tree/classes";
+import { ArrayResultNode } from "../../result-tree/classes/array";
+import { FieldNode } from "../../result-tree/classes/node/field-node";
 import { FillSolution } from "./fill-solution";
 import { SolutionCreator } from "./solution-creator";
 
 interface Props {
   solution: FieldNode;
-
   input: InputTreeNode;
   indexDoc: number;
 }
@@ -16,11 +16,11 @@ export class ArrayCreator {
     private readonly fillSolution: FillSolution,
   ) {}
 
-  execute({ indexDoc, input, solution }: Props): void {
+  async execute({ indexDoc, input, solution }: Props): Promise<void> {
     if (solution instanceof ArrayResultNode) {
       for (let i = 0; i < solution.limit; i++) {
         // resolver el field y guardarlo en un nodo
-        const s = this.creator.execute({
+        const s = await this.creator.execute({
           field: input.getNoArrayNode(),
           indexDoc: indexDoc,
         });

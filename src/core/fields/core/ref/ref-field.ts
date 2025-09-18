@@ -1,4 +1,4 @@
-import { DatasetStore } from "../../../dataset-store";
+import { DatasetStore } from "../../../dataset-store/dataset-store";
 import { NullOnEmpty } from "./value-object/null-empty";
 import { InputRefField } from "./value-object/ref-field";
 import { Unique } from "./value-object/unique";
@@ -21,7 +21,7 @@ export type RefFieldWhereProps<C = any, R = any> = {
   currentFields: C;
   /** Reference schema document fields */
   refFields: R;
-  /** Store to interact with all datasets */
+  /** Store to interact with all schemas */
   store: DatasetStore;
 };
 
