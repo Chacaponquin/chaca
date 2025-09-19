@@ -17,7 +17,7 @@ describe("ref.nullWhenEmpty", () => {
     expect(() => dataset.generate()).toThrow(NotEnoughValuesForRefError);
   });
 
-  it("nullWhenEmpty = false. should throw an error", () => {
+  it("nullWhenEmpty = false. should throw an error", async () => {
     const schema = chaca.schema({ id: chaca.key(chaca.sequence()) });
 
     const schema2 = chaca.schema({
@@ -29,12 +29,12 @@ describe("ref.nullWhenEmpty", () => {
       { name: "schema2", documents: 30, schema: schema2 },
     ]);
 
-    const data = dataset.generate();
+    const data = await dataset.generate();
 
     for (let i = 0; i < data.schema2.length; i++) {
       const s2 = data.schema2[i].ref;
 
-      const s1 = data.schema.map((s) => s.id);
+      const s1 = data.schema.map((s: { id: string }) => s.id);
 
       if (i >= 10) {
         expect(s2).toBeNull();

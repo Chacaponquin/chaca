@@ -21,7 +21,7 @@ describe("Probability field", () => {
     expect(() => schema.array(10)).toThrow(ChacaError);
   });
 
-  it("create a schema with a probability field with 3 elements", () => {
+  it("create a schema with a probability field with 3 elements", async () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0.8, value: 10 },
@@ -30,12 +30,12 @@ describe("Probability field", () => {
       ]),
     });
 
-    const data = schema.array(50);
+    const data = await schema.array(50);
 
     expect(count(data, 10)).toBeGreaterThanOrEqual(30);
   });
 
-  it("probability field with function chance that returns 0.8", () => {
+  it("probability field with function chance that returns 0.8", async () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: () => 0.8, value: 10 },
@@ -44,14 +44,14 @@ describe("Probability field", () => {
       ]),
     });
 
-    const data = schema.array(50);
+    const data = await schema.array(50);
 
     const total = count(data, 10);
 
     expect(total).toBeGreaterThanOrEqual(30);
   });
 
-  it("probability field with 2 elements with 0.8 chance", () => {
+  it("probability field with 2 elements with 0.8 chance", async () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0.8, value: 10 },
@@ -60,13 +60,13 @@ describe("Probability field", () => {
       ]),
     });
 
-    const data = schema.array(100);
+    const data = await schema.array(100);
     const result = Math.abs(count(data, 10) - count(data, 5));
 
     expect(result).toBeLessThanOrEqual(20);
   });
 
-  it("probability field with an option with chance=0. should never return that value", () => {
+  it("probability field with an option with chance=0. should never return that value", async () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0, value: 10 },
@@ -75,12 +75,12 @@ describe("Probability field", () => {
       ]),
     });
 
-    const data = schema.array(100);
+    const data = await schema.array(100);
 
     expect(count(data, 10)).toBe(0);
   });
 
-  it("probability field with 3 options with different chances", () => {
+  it("probability field with 3 options with different chances", async () => {
     const schema = chaca.schema({
       prob: chaca.probability([
         { chance: 0.9, value: 10 },
@@ -89,7 +89,7 @@ describe("Probability field", () => {
       ]),
     });
 
-    const data = schema.array(1000);
+    const data = await schema.array(1000);
     const result1 = count(data, 10);
     const result2 = count(data, 5);
     const result3 = count(data, 1);

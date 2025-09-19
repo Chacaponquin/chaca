@@ -2,7 +2,7 @@ import { chaca, modules } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("Nested object field", () => {
-  it("define a user nested schema. should return an object with user field as an object", () => {
+  it("define a user nested schema. should return an object with user field as an object", async () => {
     const schema = chaca.schema({
       id: () => modules.id.uuid(),
       user: chaca.schema({
@@ -11,13 +11,13 @@ describe("Nested object field", () => {
       }),
     });
 
-    const doc = schema.object();
+    const doc = await schema.object();
 
     expect(doc.user).toHaveProperty("username");
     expect(doc.user).toHaveProperty("image");
   });
 
-  it("should return an object with a user field with the image field as array of string", () => {
+  it("should return an object with a user field with the image field as array of string", async () => {
     const schema = chaca.schema({
       user: chaca.schema({
         username: () => modules.internet.username(),
@@ -25,12 +25,12 @@ describe("Nested object field", () => {
       }),
     });
 
-    const doc = schema.object();
+    const doc = await schema.object();
 
     expect(doc.user.images.length).toBe(10);
   });
 
-  it("define user schema, isArray = 10. should return an object with a user field as an array of objects with image and username property", () => {
+  it("define user schema, isArray = 10. should return an object with a user field as an array of objects with image and username property", async () => {
     const schema = chaca.schema({
       user: {
         type: chaca.schema({
@@ -41,7 +41,7 @@ describe("Nested object field", () => {
       },
     });
 
-    const doc = schema.object();
+    const doc = await schema.object();
 
     expect(doc.user.length).toBe(20);
 

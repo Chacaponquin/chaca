@@ -3,7 +3,7 @@ import {
   DumpProps,
   DumpRelationalProps,
   Generator,
-} from "../generator";
+} from "../generator/generator";
 import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { ClassesCreator } from "./core/classes-creator";
 import { Filename } from "../file-creator/filename";
@@ -39,7 +39,7 @@ export class JavaGenerator extends Generator {
   private readonly skipInvalid: SkipInvalid;
 
   constructor(private readonly utils: ChacaUtils, config: JavaProps) {
-    super("java");
+    super({ ext: "java" });
 
     this.zip = Boolean(config.zip);
 
@@ -52,7 +52,7 @@ export class JavaGenerator extends Generator {
     this.skipInvalid = new SkipInvalid(config.skipInvalid);
   }
 
-  dumpRelational({ resolver }: DumpRelationalProps): DumpFile[] {
+  async dumpRelational({ resolver }: DumpRelationalProps): Promise<DumpFile[]> {
     const classes = new JavaClasses();
     const valueCreator = new ValueCreator(
       this.utils,
@@ -65,7 +65,7 @@ export class JavaGenerator extends Generator {
     for (const r of resolver.getResolvers()) {
       creator.execute({
         name: r.getSchemaName(),
-        data: r.resolve(),
+        data: await r.resolve(),
       });
     }
 
@@ -97,7 +97,7 @@ export class JavaGenerator extends Generator {
     for (const r of resolver.getResolvers()) {
       creator.execute({
         name: r.getSchemaName(),
-        data: r.resolve(),
+        data: await r.resolve(),
       });
     }
 

@@ -4,7 +4,7 @@ import {
   DumpProps,
   DumpRelationalProps,
   Generator,
-} from "../generator";
+} from "../generator/generator";
 import { PythonCodeCreator } from "./core/creator";
 import { Filename } from "../file-creator/filename";
 import { ChacaUtils } from "../../../utils";
@@ -34,7 +34,7 @@ export class PythonGenerator extends Generator {
   private readonly creator: PythonCodeCreator;
 
   constructor(utils: ChacaUtils, config: PythonProps) {
-    super("py");
+    super({ ext: "py" });
 
     this.separate = Boolean(config.separate);
     this.zip = Boolean(config.zip);
@@ -56,13 +56,16 @@ export class PythonGenerator extends Generator {
     return [{ filename: filename.value(), content: code }];
   }
 
-  dumpRelational({ filename, resolver }: DumpRelationalProps): DumpFile[] {
+  async dumpRelational({
+    filename,
+    resolver,
+  }: DumpRelationalProps): Promise<DumpFile[]> {
     if (this.separate) {
       const result = [] as DumpFile[];
 
       for (const r of resolver.getResolvers()) {
         const code = this.creator.execute({
-          data: r.resolve(),
+          data: await r.resolve(),
           name: r.getSchemaName(),
         });
         const filename = new Filename(r.getSchemaName());
@@ -73,7 +76,7 @@ export class PythonGenerator extends Generator {
       return result;
     } else {
       const code = this.creator.execute({
-        data: resolver.resolve(),
+        data: await resolver.resolve(),
         name: filename.value(),
       });
 
@@ -111,7 +114,7 @@ export class PythonGenerator extends Generator {
 
       for (const r of resolver.getResolvers()) {
         const code = this.creator.execute({
-          data: r.resolve(),
+          data: await r.resolve(),
           name: r.getSchemaName(),
         });
         const filename = new Filename(r.getSchemaName());
@@ -135,7 +138,7 @@ export class PythonGenerator extends Generator {
       const route = fileCreator.generateRoute(filename);
 
       const code = this.creator.execute({
-        data: resolver.resolve(),
+        data: await resolver.resolve(),
         name: filename.value(),
       });
 

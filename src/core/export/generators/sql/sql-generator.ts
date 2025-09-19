@@ -4,7 +4,7 @@ import {
   DumpProps,
   DumpRelationalProps,
   Generator,
-} from "../generator";
+} from "../generator/generator";
 import { PostgreSQL } from "./core/generators/postgres";
 import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { SQLDataGenerator } from "./core/generators/base";
@@ -63,7 +63,7 @@ export class SQLGenerator extends Generator {
     format: ExportSQLFormat,
     config: SQLProps,
   ) {
-    super("sql");
+    super({ ext: "sql" });
 
     this.zip = Boolean(config.zip);
     this.indent = new SpaceIndex(config.indent);
@@ -124,18 +124,18 @@ export class SQLGenerator extends Generator {
 
     const resolvers = organizer.execute({ resolver: resolver });
 
-    resolvers.forEach((r) => {
+    for (const r of resolvers) {
       const tables = new SQLTables(this.utils);
 
       generator.build({
         name: r.getSchemaName(),
-        data: r.resolve(),
+        data: await r.resolve(),
         tables: tables,
         generateIds: false,
       });
 
       tables.tables.forEach((t) => allTables.add(t));
-    });
+    }
 
     const code = generator.code(allTables);
 
@@ -151,7 +151,10 @@ export class SQLGenerator extends Generator {
     }
   }
 
-  dumpRelational({ resolver, filename }: DumpRelationalProps): DumpFile[] {
+  async dumpRelational({
+    resolver,
+    filename,
+  }: DumpRelationalProps): Promise<DumpFile[]> {
     const routeBuilder = new SchemaRouteBuilder({ include: false });
     const fixer = new TablesFixer(this.utils, {
       keys: [
@@ -193,18 +196,18 @@ export class SQLGenerator extends Generator {
 
     const resolvers = organizer.execute({ resolver: resolver });
 
-    resolvers.forEach((r) => {
+    for (const r of resolvers) {
       const tables = new SQLTables(this.utils);
 
       generator.build({
         name: r.getSchemaName(),
-        data: r.resolve(),
+        data: await r.resolve(),
         tables: tables,
         generateIds: false,
       });
 
       tables.tables.forEach((t) => allTables.add(t));
-    });
+    }
 
     const code = generator.code(allTables);
 

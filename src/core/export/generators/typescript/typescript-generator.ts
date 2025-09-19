@@ -3,7 +3,7 @@ import {
   DumpProps,
   DumpRelationalProps,
   Generator,
-} from "../generator";
+} from "../generator/generator";
 import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { JavascriptCodeCreator } from "../javascript/core/creator";
 import { Filename } from "../file-creator/filename";
@@ -34,7 +34,7 @@ export class TypescriptGenerator extends Generator {
   private readonly creator: JavascriptCodeCreator;
 
   constructor(utils: ChacaUtils, config: TypescriptProps) {
-    super("ts");
+    super({ ext: "ts" });
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
@@ -78,7 +78,10 @@ export class TypescriptGenerator extends Generator {
     }
   }
 
-  dumpRelational({ filename, resolver }: DumpRelationalProps): DumpFile[] {
+  async dumpRelational({
+    filename,
+    resolver,
+  }: DumpRelationalProps): Promise<DumpFile[]> {
     if (this.separate) {
       const result: DumpFile[] = [];
 
@@ -86,7 +89,7 @@ export class TypescriptGenerator extends Generator {
         const filename = new Filename(r.getSchemaName());
 
         const code = this.creator.execute({
-          data: r.resolve(),
+          data: await r.resolve(),
           name: r.getSchemaName(),
         });
 
@@ -95,7 +98,7 @@ export class TypescriptGenerator extends Generator {
 
       return result;
     } else {
-      return this.dump({ data: resolver.resolve(), filename: filename });
+      return this.dump({ data: await resolver.resolve(), filename: filename });
     }
   }
 
@@ -129,7 +132,7 @@ export class TypescriptGenerator extends Generator {
         return routes.map((r) => r.value());
       }
     } else {
-      return this.createFile(fileCreator, resolver.resolve());
+      return this.createFile(fileCreator, await resolver.resolve());
     }
   }
 }

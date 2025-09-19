@@ -5,7 +5,7 @@ import {
   DumpProps,
   DumpRelationalProps,
   Generator,
-} from "../generator";
+} from "../generator/generator";
 import { Filename } from "../file-creator/filename";
 import { IndentConfig, SeparateConfig, ZipConfig } from "../params";
 import { JsonCodeCreator } from "./core/creator";
@@ -19,7 +19,7 @@ export class JsonGenerator extends Generator {
   private readonly creator: JsonCodeCreator;
 
   constructor(props: JsonProps) {
-    super("json");
+    super({ ext: "json" });
 
     this.config = props;
     this.creator = new JsonCodeCreator(new SpaceIndex(props.indent));
@@ -51,7 +51,7 @@ export class JsonGenerator extends Generator {
     fileCreator: FileCreator,
     resolver: DatasetResolver,
   ): Promise<string[]> {
-    const objectData = resolver.resolve();
+    const objectData = await resolver.resolve();
 
     if (this.config.separate) {
       const allRoutes: Route[] = [];
@@ -79,8 +79,11 @@ export class JsonGenerator extends Generator {
     }
   }
 
-  dumpRelational({ filename, resolver }: DumpRelationalProps): DumpFile[] {
-    const objectData = resolver.resolve();
+  async dumpRelational({
+    filename,
+    resolver,
+  }: DumpRelationalProps): Promise<DumpFile[]> {
+    const objectData = await resolver.resolve();
 
     if (this.config.separate) {
       const result: DumpFile[] = [];

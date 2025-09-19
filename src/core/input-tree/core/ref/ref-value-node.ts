@@ -97,12 +97,12 @@ export class RefValueNode extends InputTreeNode {
     }
   }
 
-  private filterRefNodesByConfig(
+  private async filterRefNodesByConfig(
     schemaRef: SchemaResolver,
     currentDocument: DocumentTree,
     currentSchemaResolverIndex: number,
     refItSelf: boolean,
-  ): SingleResultNode[] {
+  ): Promise<SingleResultNode[]> {
     const allRefValues = this.allRefNodes
       ? this.allRefNodes
       : schemaRef.getAllRefValuesByNodeRoute({
@@ -123,7 +123,7 @@ export class RefValueNode extends InputTreeNode {
     for (const refNode of allRefValues) {
       if (currentDocument !== refNode.document) {
         if (this.refField.where) {
-          const isAccepted = this.refField.where({
+          const isAccepted = await this.refField.where({
             store: new DatasetStore({
               schemasStore: this.schemasStore,
               omitCurrentDocument: refNode.document,
@@ -164,7 +164,7 @@ export class RefValueNode extends InputTreeNode {
         }
 
         // get all fields nodes to ref
-        const allValues = this.filterRefNodesByConfig(
+        const allValues = await this.filterRefNodesByConfig(
           schemaRef,
           currentDocument,
           icurrentSchemaResolver,

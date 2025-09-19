@@ -95,11 +95,11 @@ export class DatasetResolver<K = any> {
     this.resolvers.forEach((r) => r.buildInputTree());
   }
 
-  resolve(): K {
+  async resolve(): Promise<K> {
     let data = {} as K;
 
     for (const r of this.resolvers) {
-      data = { ...data, [r.getSchemaName()]: r.resolve() };
+      data = { ...data, [r.getSchemaName()]: await r.resolve() };
     }
 
     return data;

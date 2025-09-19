@@ -6,7 +6,7 @@ import { DumpConfig, FileConfig } from "../export/interfaces/export";
 import { ChacaUtils } from "../utils";
 import { GeneratorFilter } from "../export/resolvers/generator-filter/generator-filter";
 import { DumpResolver } from "../export/resolvers/dump/dump";
-import { DumpFile } from "../export/generators/generator";
+import { DumpFile } from "../export/generators/generator/generator";
 
 export class Dataset<K = any> {
   constructor(
@@ -22,7 +22,7 @@ export class Dataset<K = any> {
    * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    * @param config.verbose show log in console progretion
    */
-  transform(props: DumpConfig): DumpFile[] {
+  transform(props: DumpConfig): Promise<DumpFile[]> {
     const filter = new GeneratorFilter(this.utils);
     const resolver = new DumpResolver(
       this.utils,
@@ -58,7 +58,7 @@ export class Dataset<K = any> {
   /**
    * Generates the dataset data through the defined schemas
    */
-  generate(): K {
+  generate(): Promise<K> {
     const resolver = new DatasetResolver<K>(this.utils, this.datatypeModule, {
       schemas: this.schemas,
       verbose: false,

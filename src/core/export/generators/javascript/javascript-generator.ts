@@ -3,7 +3,7 @@ import {
   DumpProps,
   DumpRelationalProps,
   Generator,
-} from "../generator";
+} from "../generator/generator";
 import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { Filename } from "../file-creator/filename";
 import { JavascriptCodeCreator } from "./core/creator";
@@ -32,7 +32,7 @@ export class JavascriptGenerator extends Generator {
   private readonly creator: JavascriptCodeCreator;
 
   constructor(utils: ChacaUtils, config: JavascriptProps) {
-    super("js");
+    super({ ext: "js" });
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
@@ -46,13 +46,16 @@ export class JavascriptGenerator extends Generator {
     );
   }
 
-  dumpRelational({ filename, resolver }: DumpRelationalProps): DumpFile[] {
+  async dumpRelational({
+    filename,
+    resolver,
+  }: DumpRelationalProps): Promise<DumpFile[]> {
     if (this.separate) {
       const result = [] as DumpFile[];
 
       for (const r of resolver.getResolvers()) {
         const code = this.creator.execute({
-          data: r.resolve(),
+          data: await r.resolve(),
           name: r.getSchemaName(),
         });
         const filename = new Filename(r.getSchemaName());
@@ -63,7 +66,7 @@ export class JavascriptGenerator extends Generator {
       return result;
     } else {
       return this.dump({
-        data: resolver.resolve(),
+        data: await resolver.resolve(),
         filename: filename,
       });
     }
@@ -78,7 +81,7 @@ export class JavascriptGenerator extends Generator {
 
       for (const r of resolver.getResolvers()) {
         const code = this.creator.execute({
-          data: r.resolve(),
+          data: await r.resolve(),
           name: r.getSchemaName(),
         });
         const filename = new Filename(r.getSchemaName());
@@ -98,7 +101,7 @@ export class JavascriptGenerator extends Generator {
         return routes.map((r) => r.value());
       }
     } else {
-      return await this.createFile(fileCreator, resolver.resolve());
+      return await this.createFile(fileCreator, await resolver.resolve());
     }
   }
 

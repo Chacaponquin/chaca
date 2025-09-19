@@ -3,7 +3,7 @@ import {
   DumpProps,
   DumpRelationalProps,
   Generator,
-} from "../generator";
+} from "../generator/generator";
 import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { DataValidator } from "./core/validator";
 import { Filename } from "../file-creator/filename";
@@ -16,7 +16,6 @@ export type CsvProps = ZipConfig & CodeProps;
 
 export class CsvGenerator extends Generator {
   private readonly creator: CsvCodeCreator;
-
   private readonly zip: boolean;
 
   constructor({
@@ -31,7 +30,7 @@ export class CsvGenerator extends Generator {
     sortHeader = false,
     unwindArrays = false,
   }: CsvProps) {
-    super("csv");
+    super({ ext: "csv" });
 
     this.creator = new CsvCodeCreator(
       {
@@ -60,7 +59,7 @@ export class CsvGenerator extends Generator {
     for (const r of resolver.getResolvers()) {
       const filename = new Filename(r.getSchemaName());
       const route = fileCreator.generateRoute(filename);
-      const code = this.creator.execute(r.resolve());
+      const code = this.creator.execute(await r.resolve());
 
       await fileCreator.writeFile(route, code);
 
@@ -83,12 +82,12 @@ export class CsvGenerator extends Generator {
     return [{ content: code, filename: filename.value() }];
   }
 
-  dumpRelational({ resolver }: DumpRelationalProps): DumpFile[] {
+  async dumpRelational({ resolver }: DumpRelationalProps): Promise<DumpFile[]> {
     const result = [] as DumpFile[];
 
     for (const r of resolver.getResolvers()) {
       const filename = new Filename(r.getSchemaName());
-      const code = this.creator.execute(r.resolve());
+      const code = this.creator.execute(await r.resolve());
 
       result.push({ filename: filename.value(), content: code });
     }

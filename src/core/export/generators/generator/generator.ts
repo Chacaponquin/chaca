@@ -17,8 +17,16 @@ export interface DumpRelationalProps {
   filename: Filename;
 }
 
+interface Props {
+  ext: string;
+}
+
 export abstract class Generator {
-  constructor(readonly ext: string) {}
+  readonly ext: string;
+
+  constructor({ ext }: Props) {
+    this.ext = ext;
+  }
 
   abstract createFile(fileCreator: FileCreator, data: any): Promise<string[]>;
   abstract createRelationalFile(
@@ -26,5 +34,5 @@ export abstract class Generator {
     resolver: DatasetResolver,
   ): Promise<string[]>;
   abstract dump(props: DumpProps): DumpFile[];
-  abstract dumpRelational(props: DumpRelationalProps): DumpFile[];
+  abstract dumpRelational(props: DumpRelationalProps): Promise<DumpFile[]>;
 }

@@ -6,7 +6,7 @@ import { ChacaUtils } from "../utils";
 import { DatatypeModule } from "../../modules/datatype";
 import { GeneratorFilter } from "../export/resolvers/generator-filter/generator-filter";
 import { DumpResolver } from "../export/resolvers/dump/dump";
-import { DumpFile } from "../export/generators/generator";
+import { DumpFile } from "../export/generators/generator/generator";
 import { DEFAULT_SCHEMA_NAME } from "./core/default-name";
 
 export class Schema<K = any> {

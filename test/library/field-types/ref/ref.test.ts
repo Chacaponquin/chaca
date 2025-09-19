@@ -23,14 +23,14 @@ describe("Ref field", () => {
   });
 
   describe("ref a nested schema", () => {
-    it("from schema.ref reference schema2.object.id. all schema.ref values should reference one schema2.object.id value", () => {
+    it("from schema.ref reference schema2.object.id. all schema.ref values should reference one schema2.object.id value", async () => {
       const schema = chaca.schema({
         object: chaca.schema({ id: chaca.key(chaca.sequence()) }),
       });
 
       const schema2 = chaca.schema({ ref: chaca.ref("schema.object.id") });
 
-      const data = chaca
+      const data = await chaca
         .dataset([
           { name: "schema", documents: 50, schema: schema },
           { name: "schema2", documents: 50, schema: schema2 },
@@ -38,19 +38,21 @@ describe("Ref field", () => {
         .generate();
 
       for (const v of data.schema2) {
-        expect(data.schema.map((s) => s.object.id)).include(v.ref);
+        expect(
+          data.schema.map((s: { object: { id: string } }) => s.object.id),
+        ).include(v.ref);
       }
     });
   });
 
-  it("create a correct ref field", () => {
+  it("create a correct ref field", async () => {
     const schema = chaca.schema({
       id: chaca.key(() => modules.id.uuid()),
     });
 
     const schema2 = chaca.schema({ ref: chaca.ref("schema.id") });
 
-    const data = chaca
+    const data = await chaca
       .dataset([
         { name: "schema", documents: 30, schema: schema },
         { name: "schema2", documents: 30, schema: schema2 },
@@ -58,20 +60,20 @@ describe("Ref field", () => {
       .generate();
 
     for (const s2 of data.schema2) {
-      const values = data.schema.map((s) => s.id);
+      const values = data.schema.map((s: { id: string }) => s.id);
 
       expect(values).include(s2.ref);
     }
   });
 
   describe("ref own schema", () => {
-    it("ref own schema inside a dataset. should return first ref with null value, and rest correct", () => {
+    it("ref own schema inside a dataset. should return first ref with null value, and rest correct", async () => {
       const schema = chaca.schema({
         id: chaca.key(chaca.sequence()),
         ref: chaca.ref("schema.id"),
       });
 
-      const data = chaca
+      const data = await chaca
         .dataset([{ name: "schema", documents: 50, schema: schema }])
         .generate();
 
@@ -80,7 +82,9 @@ describe("Ref field", () => {
 
       for (const v of data.schema.slice(2)) {
         expect(
-          data.schema.filter((s) => s.id !== v.id).map((s) => s.id),
+          data.schema
+            .filter((s: { id: string }) => s.id !== v.id)
+            .map((s: { id: string }) => s.id),
         ).include(v.ref);
       }
     });
@@ -117,7 +121,7 @@ describe("Ref field", () => {
   });
 
   describe("ref a nested schema key field", () => {
-    it("from schema.ref reference schema2.object.id", () => {
+    it("from schema.ref reference schema2.object.id", async () => {
       const schema = chaca.schema({
         object: chaca.schema({
           id: chaca.key(() => modules.id.ulid()),
@@ -131,10 +135,12 @@ describe("Ref field", () => {
         { name: "schema2", documents: 10, schema: schema2 },
       ]);
 
-      const result = dataset.generate();
+      const result = await dataset.generate();
 
-      for (const v of result.schema2.map((s) => s.ref)) {
-        expect(result.schema.map((s) => s.object.id)).include(v);
+      for (const v of result.schema2.map((s: { ref: string }) => s.ref)) {
+        expect(
+          result.schema.map((s: { object: { id: string } }) => s.object.id),
+        ).include(v);
       }
     });
 

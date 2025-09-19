@@ -4,7 +4,7 @@ import {
   DumpProps,
   DumpRelationalProps,
   Generator,
-} from "../generator";
+} from "../generator/generator";
 import { Filename } from "../file-creator/filename";
 import { YamlCodeCreator } from "./core/creator";
 import { IndentConfig, SeparateConfig, ZipConfig } from "../params";
@@ -31,7 +31,7 @@ export class YamlGenerator extends Generator {
   private readonly creator: YamlCodeCreator;
 
   constructor(config: YamlProps) {
-    super("yaml");
+    super({ ext: "yaml" });
 
     this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
@@ -67,20 +67,23 @@ export class YamlGenerator extends Generator {
     }
   }
 
-  dumpRelational({ resolver, filename }: DumpRelationalProps): DumpFile[] {
+  async dumpRelational({
+    resolver,
+    filename,
+  }: DumpRelationalProps): Promise<DumpFile[]> {
     if (this.separate) {
       const result: DumpFile[] = [];
 
       for (const r of resolver.getResolvers()) {
         const filename = new Filename(r.getSchemaName());
-        const code = this.creator.execute(r.resolve());
+        const code = this.creator.execute(await r.resolve());
 
         result.push({ content: code, filename: filename.value() });
       }
 
       return result;
     } else {
-      return this.dump({ data: resolver.resolve(), filename: filename });
+      return this.dump({ data: await resolver.resolve(), filename: filename });
     }
   }
 
@@ -95,7 +98,7 @@ export class YamlGenerator extends Generator {
         const filename = new Filename(r.getSchemaName());
         const route = fileCreator.generateRoute(filename);
 
-        const code = this.creator.execute(r.resolve());
+        const code = this.creator.execute(await r.resolve());
 
         await fileCreator.writeFile(route, code);
 
@@ -112,7 +115,7 @@ export class YamlGenerator extends Generator {
         return routes.map((r) => r.value());
       }
     } else {
-      return await this.createFile(fileCreator, resolver.resolve());
+      return await this.createFile(fileCreator, await resolver.resolve());
     }
   }
 }

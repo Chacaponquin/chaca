@@ -14,7 +14,7 @@ export type FieldToRef = string;
  */
 export type RefFieldWhere<C = any, R = any> = (
   args: RefFieldWhereProps<C, R>,
-) => boolean;
+) => boolean | Promise<boolean>;
 
 export type RefFieldWhereProps<C = any, R = any> = {
   /** Current schema document fields */

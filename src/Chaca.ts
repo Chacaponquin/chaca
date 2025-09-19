@@ -7,7 +7,7 @@ import { DumpConfig, FileConfig } from "./core/export/interfaces/export";
 import { PickField, PickFieldProps } from "./core/fields/core/pick/pick-field";
 import { DatatypeModule } from "./modules/datatype";
 import { GeneratorFilter } from "./core/export/resolvers/generator-filter/generator-filter";
-import { DumpFile } from "./core/export/generators/generator";
+import { DumpFile } from "./core/export/generators/generator/generator";
 import { DumpResolver } from "./core/export/resolvers/dump/dump";
 import {
   EnumField,

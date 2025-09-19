@@ -1,6 +1,6 @@
 import { IResolver } from "../../interfaces/resolvers";
 import { CustomFieldResolver } from "../custom/custom-resolver";
-import { RefFieldResolver } from "../ref";
+import { RefFieldResolver } from "../ref/ref-field-resolver";
 import { SequenceFieldResolver } from "../sequence";
 
 export type KeyFieldResolverProps =
