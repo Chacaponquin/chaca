@@ -43,7 +43,7 @@ export class DatasetStore {
    * store.get("User.id") // user ids
    * store.get("User.id", {
    *   where: (fields) => {
-   *      return fields.age : 40
+   *      return fields.age > 40
    *   }
    * })
    */

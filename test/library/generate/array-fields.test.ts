@@ -4,21 +4,22 @@ import { describe, expect, it } from "vitest";
 describe("Array fields defintion", () => {
   describe("function definition", () => {
     describe("number definition", () => {
-      it("isArray = () => 20. should return an array of documents with the id property with 20 values", () => {
+      it("isArray = () => 20. should return an array of documents with the id property with 20 values", async () => {
         const schema = chaca.schema({
           id: { type: () => modules.id.uuid(), isArray: () => 20 },
         });
 
-        const doc = schema.object();
+        const doc = await schema.object();
+
         expect(doc.id).toHaveLength(20);
       });
 
-      it("isArray = 0. should return an array with 0 elements", () => {
+      it("isArray = 0. should return an array with 0 elements", async () => {
         const schema = chaca.schema({
           id: { type: () => modules.id.uuid(), isArray: () => 0 },
         });
 
-        const doc = schema.object();
+        const doc = await schema.object();
         expect(doc.id).toHaveLength(0);
       });
 
@@ -27,44 +28,44 @@ describe("Array fields defintion", () => {
           id: { type: () => modules.id.uuid(), isArray: () => -5 },
         });
 
-        expect(() => schema.object()).toThrow(ChacaError);
+        expect(() => schema.object()).rejects.toThrow(ChacaError);
       });
     });
 
     describe("object definition", () => {
       describe("min and max argument", () => {
-        it("isArray = () => {}. should return an array with length between 0 and 10", () => {
+        it("isArray = () => {}. should return an array with length between 0 and 10", async () => {
           const schema = chaca.schema({
             id: { type: () => modules.id.mongodbId(), isArray: () => ({}) },
           });
-          const docs = schema.object();
+          const docs = await schema.object();
           const id = docs.id;
 
           expect(id.length).toBeGreaterThanOrEqual(0);
           expect(id.length).toBeLessThanOrEqual(10);
         });
 
-        it("function that returns min = 3 & max = 10. should return an array with length betwwen min and max parameters", () => {
+        it("function that returns min = 3 & max = 10. should return an array with length betwwen min and max parameters", async () => {
           const schema = chaca.schema({
             id: {
               type: () => modules.id.uuid(),
               isArray: () => ({ min: 3, max: 10 }),
             },
           });
-          const docs = schema.object();
+          const docs = await schema.object();
           const id = docs.id;
 
           expect(id.length >= 3 && id.length <= 10).toBe(true);
         });
 
-        it("function that returns min = 0 & max = 0. should return an empty array", () => {
+        it("function that returns min = 0 & max = 0. should return an empty array", async () => {
           const schema = chaca.schema({
             id: {
               type: () => modules.id.uuid(),
               isArray: () => ({ min: 0, max: 0 }),
             },
           });
-          const docs = schema.object();
+          const docs = await schema.object();
           const id = docs.id;
 
           expect(id).toHaveLength(0);
@@ -78,7 +79,7 @@ describe("Array fields defintion", () => {
             },
           });
 
-          expect(() => schema.object()).toThrow(ChacaError);
+          expect(() => schema.object()).rejects.toThrow(ChacaError);
         });
       });
     });
@@ -86,11 +87,11 @@ describe("Array fields defintion", () => {
 
   describe("object definition", () => {
     describe("max argument", () => {
-      it("max = 10. should return an array with length <= max parameter", () => {
+      it("max = 10. should return an array with length <= max parameter", async () => {
         const schema = chaca.schema({
           id: { type: () => modules.id.mongodbId(), isArray: { max: 10 } },
         });
-        const docs = schema.object();
+        const docs = await schema.object();
         const id = docs.id;
 
         expect(id.length).toBeLessThanOrEqual(10);
@@ -101,14 +102,14 @@ describe("Array fields defintion", () => {
           id: { type: () => modules.id.mongodbId(), isArray: { max: -10 } },
         });
 
-        expect(() => schema.object()).toThrow(ChacaError);
+        expect(() => schema.object()).rejects.toThrow(ChacaError);
       });
 
-      it("max = 0. should return an empty array", () => {
+      it("max = 0. should return an empty array", async () => {
         const schema = chaca.schema({
           id: { type: () => modules.id.mongodbId(), isArray: { max: 0 } },
         });
-        const docs = schema.object();
+        const docs = await schema.object();
         const id = docs.id;
 
         expect(id).toHaveLength(0);
@@ -116,11 +117,11 @@ describe("Array fields defintion", () => {
     });
 
     describe("min argument", () => {
-      it("min = 3. should return an array with length >= min parameter", () => {
+      it("min = 3. should return an array with length >= min parameter", async () => {
         const schema = chaca.schema({
           id: { type: () => modules.id.uuid(), isArray: { min: 3 } },
         });
-        const docs = schema.object();
+        const docs = await schema.object();
         const id = docs.id;
 
         expect(id.length).toBeGreaterThanOrEqual(3);
@@ -131,14 +132,14 @@ describe("Array fields defintion", () => {
           id: { type: () => modules.id.mongodbId(), isArray: { min: -3 } },
         });
 
-        expect(() => schema.object()).toThrow(ChacaError);
+        expect(() => schema.object()).rejects.toThrow(ChacaError);
       });
 
-      it("min = 0. should return an array with length between 0 and 10", () => {
+      it("min = 0. should return an array with length between 0 and 10", async () => {
         const schema = chaca.schema({
           id: { type: () => modules.id.mongodbId(), isArray: { min: 0 } },
         });
-        const docs = schema.object();
+        const docs = await schema.object();
         const id = docs.id;
 
         expect(id.length).toBeGreaterThanOrEqual(0);
@@ -147,38 +148,38 @@ describe("Array fields defintion", () => {
     });
 
     describe("min and max argument", () => {
-      it("isArray = {}. should return an array with length between 0 and 10", () => {
+      it("isArray = {}. should return an array with length between 0 and 10", async () => {
         const schema = chaca.schema({
           id: { type: () => modules.id.mongodbId(), isArray: {} },
         });
-        const docs = schema.object();
+        const docs = await schema.object();
         const id = docs.id;
 
         expect(id.length).toBeGreaterThanOrEqual(0);
         expect(id.length).toBeLessThanOrEqual(10);
       });
 
-      it("min = 3 & max = 10. should return an array with length betwwen min and max parameters", () => {
+      it("min = 3 & max = 10. should return an array with length betwwen min and max parameters", async () => {
         const schema = chaca.schema({
           id: {
             type: () => modules.id.uuid(),
             isArray: { min: 3, max: 10 },
           },
         });
-        const docs = schema.object();
+        const docs = await schema.object();
         const id = docs.id;
 
         expect(id.length >= 3 && id.length <= 10).toBe(true);
       });
 
-      it("min = 0 & max = 0. should return an empty array", () => {
+      it("min = 0 & max = 0. should return an empty array", async () => {
         const schema = chaca.schema({
           id: {
             type: () => modules.id.uuid(),
             isArray: { min: 0, max: 0 },
           },
         });
-        const docs = schema.object();
+        const docs = await schema.object();
         const id = docs.id;
 
         expect(id).toHaveLength(0);
@@ -192,27 +193,27 @@ describe("Array fields defintion", () => {
           },
         });
 
-        expect(() => schema.object()).toThrow(ChacaError);
+        expect(() => schema.object()).rejects.toThrow(ChacaError);
       });
     });
   });
 
   describe("number definition", () => {
-    it("isArray = 20. should return an array of documents with the id property with 20 values", () => {
+    it("isArray = 20. should return an array of documents with the id property with 20 values", async () => {
       const schema = chaca.schema({
         id: { type: () => modules.id.uuid(), isArray: 20 },
       });
 
-      const doc = schema.object();
+      const doc = await schema.object();
       expect(doc.id).toHaveLength(20);
     });
 
-    it("isArray = 0. should return an array with 0 elements", () => {
+    it("isArray = 0. should return an array with 0 elements", async () => {
       const schema = chaca.schema({
         id: { type: () => modules.id.uuid(), isArray: 0 },
       });
 
-      const doc = schema.object();
+      const doc = await schema.object();
       expect(doc.id).toHaveLength(0);
     });
 
@@ -221,7 +222,7 @@ describe("Array fields defintion", () => {
         id: { type: () => modules.id.uuid(), isArray: -5 },
       });
 
-      expect(() => schema.object()).toThrow(ChacaError);
+      expect(() => schema.object()).rejects.toThrow(ChacaError);
     });
   });
 });

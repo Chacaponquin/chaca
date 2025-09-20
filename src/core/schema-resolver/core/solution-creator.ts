@@ -29,7 +29,7 @@ export class SolutionCreator {
       caller: field.getFieldRoute(),
     });
 
-    const isNull = field.isNull({
+    const isNull = await field.isNull({
       store: store,
       currentDocument: currentDocument,
       index: indexDoc,

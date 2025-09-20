@@ -4,27 +4,27 @@ import { describe, expect, it } from "vitest";
 describe("Key field", () => {
   describe("invalid data", () => {
     it("return null. should throw an error", () => {
-      expect(() => {
-        chaca.schema({ key: chaca.key(() => null) }).array(50);
-      }).toThrow(ChacaError);
+      expect(() =>
+        chaca.schema({ key: chaca.key(() => null) }).array(50),
+      ).rejects.toThrow(ChacaError);
     });
 
     it("return undefined. should throw an error", () => {
-      expect(() => {
-        chaca.schema({ key: chaca.key(() => undefined) }).array(50);
-      }).toThrow(ChacaError);
+      expect(() =>
+        chaca.schema({ key: chaca.key(() => undefined) }).array(50),
+      ).rejects.toThrow(ChacaError);
     });
   });
 
   describe("define isArray", () => {
     it("define an array key field. should throw an error", () => {
-      expect(() => {
+      expect(() =>
         chaca
           .schema({
             key: { type: chaca.key(chaca.sequence()), isArray: 20 },
           })
-          .array(50);
-      }).toThrow(ChacaError);
+          .array(50),
+      ).rejects.toThrow(ChacaError);
     });
   });
 
@@ -36,17 +36,21 @@ describe("Key field", () => {
             test: { type: chaca.key(chaca.sequence()), possibleNull: 0.1 },
           })
           .array(50),
-      ).toThrow(ChacaError);
+      ).rejects.toThrow(ChacaError);
     });
 
-    it("possibleNull = 0. should not throw an error", () => {
-      expect(() =>
-        chaca
-          .schema({
-            test: { type: chaca.key(chaca.sequence()), possibleNull: 0 },
-          })
-          .array(50),
-      ).not.toThrow(ChacaError);
+    it("possibleNull = 0. should not throw an error", async () => {
+      const result = await chaca
+        .schema({
+          test: { type: chaca.key(chaca.sequence()), possibleNull: 0 },
+        })
+        .array(50);
+
+      for (const index of result.keys()) {
+        const r = result[index];
+
+        expect(r === index + 1);
+      }
     });
   });
 });

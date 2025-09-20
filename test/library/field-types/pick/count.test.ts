@@ -54,7 +54,7 @@ describe("pick count argument", () => {
           }),
         });
 
-        expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+        expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
       });
     });
 
@@ -64,7 +64,7 @@ describe("pick count argument", () => {
           pick: chaca.pick({ values: [1, 2, 3], count: { max: 4 } }),
         });
 
-        expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+        expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
       });
 
       it("values = [1, 2, 3] & count.max = 2. should return an array with length less or equal than 2", async () => {
@@ -82,7 +82,7 @@ describe("pick count argument", () => {
           pick: chaca.pick({ values: [1, 2, 3], count: { max: -1 } }),
         });
 
-        expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+        expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
       });
     });
 
@@ -112,7 +112,7 @@ describe("pick count argument", () => {
           pick: chaca.pick({ values: [1, 2, 3], count: { min: 4 } }),
         });
 
-        expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+        expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
       });
 
       it("values = [1, 2, 3] & count.min = 1. should return an array with length greater than 1", async () => {
@@ -130,7 +130,7 @@ describe("pick count argument", () => {
           pick: chaca.pick({ values: [1, 2, 3], count: { min: -1 } }),
         });
 
-        expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+        expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
       });
     });
   });
@@ -151,7 +151,7 @@ describe("pick count argument", () => {
         pick: chaca.pick({ values: [1, 2, 3], count: () => -1 }),
       });
 
-      expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+      expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
     });
 
     it("values = [1, 2, 3, 4, 5] & count = function that returns 6. should throw an error", () => {
@@ -159,7 +159,7 @@ describe("pick count argument", () => {
         pick: chaca.pick({ values: [1, 2, 3, 4, 5], count: () => 6 }),
       });
 
-      expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+      expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
     });
 
     it("values = [1, 2, 3, 4, 5] & count = 5. should return an array that includes 1, 2, 3, 4, 5", async () => {

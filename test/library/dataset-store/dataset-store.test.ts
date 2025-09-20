@@ -3,7 +3,7 @@ import { chaca, ChacaError, modules } from "../../../src";
 
 describe("Dataset store", () => {
   describe("store.currentDocuments", () => {
-    it("get previous documents", () => {
+    it("get previous documents", async () => {
       const schema = chaca.schema({
         store: ({ store }) => {
           return store.currentDocuments();
@@ -14,7 +14,7 @@ describe("Dataset store", () => {
         { name: "schema", documents: 10, schema: schema },
       ]);
 
-      const result = dataset.generate();
+      const result = await dataset.generate();
 
       for (let index = 0; index < result.schema.length; index++) {
         expect(result.schema[index].store).toHaveLength(index);
@@ -24,7 +24,7 @@ describe("Dataset store", () => {
 
   describe("store.get", () => {
     describe("where config", () => {
-      it("get schema.id greater than 5", () => {
+      it("get schema.id greater than 5", async () => {
         const schema = chaca.schema({
           id: chaca.sequence(),
         });
@@ -44,7 +44,7 @@ describe("Dataset store", () => {
           { name: "schema2", documents: 10, schema: schema2 },
         ]);
 
-        const result = dataset.generate();
+        const result = await dataset.generate();
 
         for (const v of result.schema2) {
           expect(v.store).toEqual([6, 7, 8, 9, 10]);
@@ -68,10 +68,10 @@ describe("Dataset store", () => {
         { name: "schema2", documents: 10, schema: schema2 },
       ]);
 
-      expect(() => dataset.generate()).toThrow(ChacaError);
+      expect(() => dataset.generate()).rejects.toThrow(ChacaError);
     });
 
-    it("get all schema.object.id values", () => {
+    it("get all schema.object.id values", async () => {
       const schema = chaca.schema({
         object: chaca.schema({ id: () => modules.id.uuid() }),
       });
@@ -87,14 +87,16 @@ describe("Dataset store", () => {
         { name: "schema2", documents: 10, schema: schema2 },
       ]);
 
-      const result = dataset.generate();
+      const result = await dataset.generate();
 
       for (const v of result.schema2) {
-        expect(v.store).toEqual(result.schema.map((s) => s.object.id));
+        expect(v.store).toEqual(
+          result.schema.map((s: { object: { id: number } }) => s.object.id),
+        );
       }
     });
 
-    it("get all schema.id values", () => {
+    it("get all schema.id values", async () => {
       const schema = chaca.schema({
         id: () => modules.id.uuid(),
       });
@@ -110,19 +112,19 @@ describe("Dataset store", () => {
         { name: "schema2", documents: 10, schema: schema2 },
       ]);
 
-      const result = dataset.generate();
+      const result = await dataset.generate();
 
       for (const v of result.schema2) {
-        expect(v.store).toEqual(result.schema.map((s) => s.id));
+        expect(v.store).toEqual(result.schema.map((s: { id: number }) => s.id));
       }
     });
 
-    it("get all schema objects", () => {
+    it("get all schema objects", async () => {
       const schema = chaca.schema({});
 
       const schema2 = chaca.schema({
-        store: ({ store }) => {
-          return store.get("schema");
+        store: async ({ store }) => {
+          return await store.get("schema");
         },
       });
 
@@ -131,7 +133,7 @@ describe("Dataset store", () => {
         { name: "schema2", documents: 10, schema: schema2 },
       ]);
 
-      const result = dataset.generate();
+      const result = await dataset.generate();
 
       for (const v of result.schema2) {
         for (const object of v.store) {

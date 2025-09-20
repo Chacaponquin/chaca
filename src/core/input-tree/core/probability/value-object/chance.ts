@@ -44,7 +44,7 @@ export abstract class Chance {
     return type;
   }
 
-  abstract value(props: ValueProps): number;
+  abstract value(props: ValueProps): Promise<number>;
 }
 
 export class ProbabilityChance extends Chance {
@@ -67,8 +67,8 @@ export class ProbabilityChance extends Chance {
     this.prob = save;
   }
 
-  value(): number {
-    return this.prob;
+  value(): Promise<number> {
+    return new Promise((resolve) => resolve(this.prob));
   }
 }
 
@@ -83,8 +83,8 @@ export class FunctionChance extends Chance {
     this.route = route;
   }
 
-  value({ currentDocument, store }: ValueProps): number {
-    const result = this.func({
+  async value({ currentDocument, store }: ValueProps): Promise<number> {
+    const result = await this.func({
       store: store,
       currentFields: currentDocument.getDocumentObject(),
     });

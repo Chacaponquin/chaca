@@ -14,7 +14,9 @@ describe("ref.nullWhenEmpty", () => {
       { name: "schema2", documents: 30, schema: schema2 },
     ]);
 
-    expect(() => dataset.generate()).toThrow(NotEnoughValuesForRefError);
+    expect(() => dataset.generate()).rejects.toThrow(
+      NotEnoughValuesForRefError,
+    );
   });
 
   it("nullWhenEmpty = false. should throw an error", async () => {

@@ -1,12 +1,12 @@
 import { IResolver } from "../../interfaces/resolvers";
 import { CustomFieldResolver } from "../custom/custom-resolver";
 import { RefFieldResolver } from "../ref/ref-field-resolver";
-import { SequenceFieldResolver } from "../sequence";
+import { SequenceFieldResolver } from "../sequence/sequence-resolver";
 
 export type KeyFieldResolverProps =
   | RefFieldResolver
   | SequenceFieldResolver
-  | CustomFieldResolver<any, any>;
+  | CustomFieldResolver;
 
 export class KeyFieldResolver extends IResolver {
   constructor(readonly type: KeyFieldResolverProps) {

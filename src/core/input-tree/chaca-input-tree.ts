@@ -22,9 +22,9 @@ import {
   SequenceValueNode,
   SequentialValueNode,
 } from "./core";
-import { SequentialFieldResolver } from "../resolvers/core/sequential";
+import { SequentialFieldResolver } from "../resolvers/core/sequential/sequential-resolver";
 import { SchemaStore } from "../schema-store/schema-store";
-import { PickFieldResolver } from "../resolvers/core/pick";
+import { PickFieldResolver } from "../resolvers/core/pick/pick-resolver";
 import { ChacaUtils } from "../utils";
 import { PossibleNullMapper } from "./core/map/possible-null";
 import { NotNull } from "./core/possible-null/possible-null";

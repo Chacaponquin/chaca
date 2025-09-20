@@ -29,7 +29,7 @@ export class ArrayCreator {
         solution.insertNode(s);
 
         // fill solution
-        this.fillSolution.execute({
+        await this.fillSolution.execute({
           indexDoc: indexDoc,
           input: input,
           solution: s,

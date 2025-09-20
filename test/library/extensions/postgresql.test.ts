@@ -21,14 +21,16 @@ describe("Postgresql", () => {
     },
   });
 
-  describe("columns config", () => {
+  describe("columns config", async () => {
     const schema = chaca.schema({
       id: chaca.sequence(),
       username: () => modules.internet.username(),
     });
 
+    const data = await schema.array(10);
+
     describe("keys config", () => {
-      it("with nested schema keys = ['id']. should throw an error", () => {
+      it("with nested schema keys = ['id']. should throw an error", async () => {
         const schema = chaca.schema({
           id: chaca.sequence(),
           object: chaca.schema({
@@ -37,7 +39,7 @@ describe("Postgresql", () => {
           }),
         });
 
-        const result = chaca.transform(schema.array(10), {
+        const result = chaca.transform(await schema.array(10), {
           filename: "schema",
           format: { ext: "postgresql", declarationOnly: true, keys: ["id"] },
         });
@@ -50,7 +52,7 @@ describe("Postgresql", () => {
       });
 
       it("keys = ['id']", () => {
-        const result = chaca.transform(schema.array(10), {
+        const result = chaca.transform(data, {
           format: {
             ext: "postgresql",
             keys: ["id"],
@@ -65,7 +67,7 @@ describe("Postgresql", () => {
       });
 
       it("keys: []. should define an serial id for the table", () => {
-        const result = chaca.transform(schema.array(10), {
+        const result = chaca.transform(data, {
           format: {
             ext: "postgresql",
             keys: [],
@@ -82,7 +84,7 @@ describe("Postgresql", () => {
 
     describe("nulls config", () => {
       it("nulls = ['username']", () => {
-        const result = chaca.transform(schema.array(10), {
+        const result = chaca.transform(data, {
           format: {
             ext: "postgresql",
             keys: ["id"],
@@ -100,7 +102,7 @@ describe("Postgresql", () => {
 
     describe("uniques config", () => {
       it("uniques = ['username']", () => {
-        const result = chaca.transform(schema.array(10), {
+        const result = chaca.transform(data, {
           format: {
             ext: "postgresql",
             keys: ["id"],
@@ -117,7 +119,7 @@ describe("Postgresql", () => {
     });
 
     describe("refs config", () => {
-      it("create reference from object.ref to id", () => {
+      it("create reference from object.ref to id", async () => {
         const schema = chaca.schema({
           id: chaca.sequence(),
           object: chaca.schema({
@@ -126,7 +128,7 @@ describe("Postgresql", () => {
           }),
         });
 
-        const result = chaca.transform(schema.array(10), {
+        const result = chaca.transform(await schema.array(10), {
           format: {
             ext: "postgresql",
             keys: ["id", "object.object_id"],

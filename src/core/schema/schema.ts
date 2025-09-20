@@ -23,7 +23,7 @@ export class Schema<K = any> {
    * @param props.filename name for the file
    * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
    */
-  transform(documents: number, props: DumpConfig): DumpFile[] {
+  async transform(documents: number, props: DumpConfig): Promise<DumpFile[]> {
     const filter = new GeneratorFilter(this.utils);
     const resolver = new DumpResolver(
       this.utils,
@@ -32,7 +32,9 @@ export class Schema<K = any> {
       props,
     );
 
-    return resolver.data(this.array(documents));
+    const data = await this.array(documents);
+
+    return resolver.data(data);
   }
 
   /**

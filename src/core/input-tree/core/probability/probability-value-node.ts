@@ -45,16 +45,16 @@ export class ProbabilityValueNode extends InputTreeNode {
     }
   }
 
-  private value(props: Props) {
+  private value(props: Props): Promise<unknown> {
     return this.options.value(props);
   }
 
-  generate(props: GenerateProps): Promise<FieldNode> {
+  async generate(props: GenerateProps): Promise<FieldNode> {
     const result = new SingleResultNode({
       name: this.getName(),
-      value: this.value(props),
+      value: await this.value(props),
     });
 
-    return new Promise((resolve) => resolve(result));
+    return result;
   }
 }

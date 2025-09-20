@@ -2,7 +2,9 @@ import { DatasetStore } from "../../../dataset-store/dataset-store";
 
 export type Chance = number | ChanceFunction;
 
-export type ChanceFunction = (props: ChanceFunctionProps) => number;
+export type ChanceFunction = (
+  props: ChanceFunctionProps,
+) => number | Promise<number>;
 
 export type ChanceFunctionProps<C = any> = {
   /** Current schema document fields */

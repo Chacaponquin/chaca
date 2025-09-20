@@ -69,7 +69,7 @@ export abstract class Count {
     return type;
   }
 
-  abstract limit(props: LimitProps): Promise<number> | number;
+  abstract limit(props: LimitProps): Promise<number>;
 }
 
 export class IntegerCount extends Count {
@@ -95,8 +95,8 @@ export class IntegerCount extends Count {
     this.value = value;
   }
 
-  limit(): number {
-    return this.value;
+  limit(): Promise<number> {
+    return new Promise((resolve) => resolve(this.value));
   }
 }
 
@@ -196,9 +196,9 @@ export class LimitCount extends Count {
     this.max = max;
   }
 
-  limit(): number {
+  limit(): Promise<number> {
     const limit = this.datatypeModule.int({ min: this.min, max: this.max });
 
-    return limit;
+    return new Promise((resolve) => resolve(limit));
   }
 }

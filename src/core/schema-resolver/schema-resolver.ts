@@ -91,6 +91,7 @@ export class SchemaResolver<K = any> {
 
   async resolve(): Promise<K[]> {
     this.buildInputTree();
+
     await this.buildTrees(this.route);
 
     return this.getDocumentsArray();

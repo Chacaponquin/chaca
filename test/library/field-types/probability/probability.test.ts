@@ -18,7 +18,7 @@ describe("Probability field", () => {
       prob: chaca.probability([]),
     });
 
-    expect(() => schema.array(10)).toThrow(ChacaError);
+    expect(() => schema.array(10)).rejects.toThrow(ChacaError);
   });
 
   it("create a schema with a probability field with 3 elements", async () => {

@@ -19,7 +19,9 @@ describe("Ref field", () => {
       { name: "schema2", documents: 10, schema: schema2 },
     ]);
 
-    expect(() => dataset.generate()).toThrow(TryRefANoKeyFieldError);
+    expect(async () => await dataset.generate()).rejects.toThrow(
+      TryRefANoKeyFieldError,
+    );
   });
 
   describe("ref a nested schema", () => {
@@ -100,7 +102,9 @@ describe("Ref field", () => {
       { name: "schema2", documents: 10, schema: schema2 },
     ]);
 
-    expect(() => dataset.generate()).toThrow(NotExistRefFieldError);
+    expect(async () => await dataset.generate()).rejects.toThrow(
+      NotExistRefFieldError,
+    );
   });
 
   it("try ref a not existing field. should throw an error", () => {
@@ -115,9 +119,9 @@ describe("Ref field", () => {
       { name: "Dataset2", documents: 30, schema: dataset2 },
     ]);
 
-    expect(() => {
-      dataset.generate();
-    }).toThrow(NotExistRefFieldError);
+    expect(async () => await dataset.generate()).rejects.toThrow(
+      NotExistRefFieldError,
+    );
   });
 
   describe("ref a nested schema key field", () => {
@@ -161,7 +165,7 @@ describe("Ref field", () => {
         { name: "schema2", documents: 10, schema: schema2 },
       ]);
 
-      expect(() => dataset.generate()).toThrow(NotExistRefFieldError);
+      expect(() => dataset.generate()).rejects.toThrow(NotExistRefFieldError);
     });
   });
 });

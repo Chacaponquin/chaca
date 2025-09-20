@@ -48,17 +48,19 @@ export class ChancesArray {
     }
   }
 
-  value({ currentDocument, store }: ValueProps): unknown {
+  async value({ currentDocument, store }: ValueProps): Promise<unknown> {
     const values = this.options.map((o) => o.value);
 
-    const weights: number[] = this.options.map((o) => {
-      const chance = o.chance.value({
+    const weights: number[] = [];
+
+    for (const o of this.options) {
+      const chance = await o.chance.value({
         currentDocument: currentDocument,
         store: store,
       });
 
-      return chance;
-    });
+      weights.push(chance);
+    }
 
     const distribution = this.createDistribution(values, weights, 10);
 

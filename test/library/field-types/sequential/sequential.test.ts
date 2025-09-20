@@ -9,21 +9,21 @@ describe("# Sequential Field test", () => {
           test: { type: chaca.sequential([1, 2, 3]), isArray: 20 },
         })
         .array(50),
-    ).toThrow(ChacaError);
+    ).rejects.toThrow(ChacaError);
   });
 
-  it("Try create an possible null sequential field", () => {
+  it("Try create an possible null sequential field", async () => {
     const schema = chaca.schema({
       test: { type: chaca.sequential([1, 2, 3, 4, 5]), possibleNull: 0.7 },
     });
 
-    const data = schema.array(5);
+    const data = await schema.array(5);
 
     expect(data.map((d) => d.test).some((v) => v === null)).toBe(true);
   });
 
-  it("Correct define of a schema with sequential field", () => {
-    const CORRECT_SEQUENTIAL_DATA = chaca
+  it("Correct define of a schema with sequential field", async () => {
+    const CORRECT_SEQUENTIAL_DATA = await chaca
       .schema({
         favoriteNumber: chaca.sequential([1, 2, 3, 4]),
       })
@@ -36,8 +36,8 @@ describe("# Sequential Field test", () => {
     expect(CORRECT_SEQUENTIAL_DATA[3].favoriteNumber).toBe(4);
   });
 
-  it("Correct define of a schema with sequential loop field", () => {
-    const DATA = chaca
+  it("Correct define of a schema with sequential loop field", async () => {
+    const DATA = await chaca
       .schema({
         favoriteNumber: chaca.sequential([1, 2, 3, 4], { loop: true }),
       })
@@ -52,8 +52,8 @@ describe("# Sequential Field test", () => {
     expect(DATA[5].favoriteNumber).toBe(2);
   });
 
-  it("Too much sequential values test", () => {
-    const TOO_MUCH_VALUES_SEQUENTIAL_DATA = chaca
+  it("Too much sequential values test", async () => {
+    const TOO_MUCH_VALUES_SEQUENTIAL_DATA = await chaca
       .schema({
         favoriteNumber: chaca.sequential([
           1, 2, 3, 4, 5, 4, 5, 6, 6, 5, 1, 5, 5,
@@ -71,27 +71,27 @@ describe("# Sequential Field test", () => {
   it("Not enought values for the generate data. Should return an error", () => {
     expect(() =>
       chaca.schema({ test: chaca.sequential([1, 2]) }).array(10),
-    ).toThrow(EmptySequentialValuesError);
+    ).rejects.toThrow(EmptySequentialValuesError);
   });
 
   it("Pass a string as a the sequential values. Should return an error", () => {
-    expect(() => {
+    expect(() =>
       chaca
         .schema({
           favoriteNumber: chaca.sequential("" as any),
         })
-        .object();
-    }).toThrow(EmptySequentialValuesError);
+        .object(),
+    ).rejects.toThrow(EmptySequentialValuesError);
   });
 
   it("Pass a number as a the sequential values. Should return an error", () => {
-    expect(() => {
+    expect(() =>
       chaca
         .schema({
           favoriteNumber: chaca.sequential(5 as any),
         })
-        .array(5);
-    }).toThrow(EmptySequentialValuesError);
+        .array(5),
+    ).rejects.toThrow(EmptySequentialValuesError);
   });
 
   it("Pass false in config.loop and generate 10 docuements. Should throw an error", () => {
@@ -99,16 +99,18 @@ describe("# Sequential Field test", () => {
       favoriteNumber: chaca.sequential([1, 2, 3, 4], { loop: false }),
     });
 
-    expect(() => NO_LOOP_SEQUENTIAL_SCHEMA.array(10)).toThrow(ChacaError);
+    expect(() => NO_LOOP_SEQUENTIAL_SCHEMA.array(10)).rejects.toThrow(
+      ChacaError,
+    );
   });
 
   it("Pass an empty array as sequential values. Should return an error", () => {
-    expect(() => {
+    expect(() =>
       chaca
         .schema({
           favoriteNumber: chaca.sequential([]),
         })
-        .array(5);
-    }).toThrow(EmptySequentialValuesError);
+        .array(5),
+    ).rejects.toThrow(EmptySequentialValuesError);
   });
 });

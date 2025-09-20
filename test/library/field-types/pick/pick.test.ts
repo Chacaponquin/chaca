@@ -34,7 +34,7 @@ describe("Pick field", () => {
       pick: chaca.pick({ values: [1, 2, 3], count: -1 }),
     });
 
-    expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+    expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
   });
 
   it("count=2 & values=[1]. should throw an error", () => {
@@ -42,7 +42,7 @@ describe("Pick field", () => {
       pick: chaca.pick({ values: [1], count: 2 }),
     });
 
-    expect(() => schema.object()).toThrow(PickFieldDefinitionError);
+    expect(() => schema.object()).rejects.toThrow(PickFieldDefinitionError);
   });
 
   it("count=2 & values=[1, 2]. should return [1, 2]", async () => {
