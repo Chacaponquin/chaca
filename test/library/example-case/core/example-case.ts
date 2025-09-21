@@ -2,14 +2,33 @@ import { describe, expect, it } from "vitest";
 import fs from "fs";
 import { Dataset, ExtensionConfigs } from "../../../../src";
 
+interface Props {
+  dataset: Dataset;
+  filename: string;
+  location: string;
+  check?: (data: any) => void;
+}
+
 export class ExampleCaseTest {
-  constructor(
-    private readonly dataset: Dataset,
-    private readonly filename: string,
-    private readonly location: string,
-  ) {}
+  private readonly dataset: Dataset;
+  private readonly filename: string;
+  private readonly location: string;
+  private readonly check?: (data: any) => void;
+
+  constructor({ dataset, filename, location, check }: Props) {
+    this.dataset = dataset;
+    this.location = location;
+    this.filename = filename;
+    this.check = check;
+  }
 
   execute() {
+    describe("Generation", async () => {
+      const data = await this.dataset.generate();
+
+      if (this.check) this.check(data);
+    });
+
     describe("postgresql", () => {
       it("no arguments", async () => {
         await this.export({
@@ -212,9 +231,7 @@ export class ExampleCaseTest {
     });
   }
 
-  private async export(
-    props: ExtensionConfigs & { location: string },
-  ): Promise<void> {
+  async export(props: ExtensionConfigs & { location: string }): Promise<void> {
     const routes = await this.dataset.export({
       filename: this.filename,
       verbose: false,

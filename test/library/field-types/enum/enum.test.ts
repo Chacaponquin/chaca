@@ -3,8 +3,8 @@ import { describe, expect, it } from "vitest";
 
 describe("Enum field", () => {
   it("values = []. should throw an error", () => {
-    expect(() =>
-      chaca.schema({ enum: chaca.enum([]) }).array(5),
+    expect(
+      async () => await chaca.schema({ enum: chaca.enum([]) }).array(5),
     ).rejects.toThrow(EmptyEnumValuesError);
   });
 

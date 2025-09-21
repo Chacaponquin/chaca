@@ -9,5 +9,12 @@ export const SUPPORT_TICKET_SCHEMA = chaca.schema({
   title: () => modules.lorem.sentence(),
   status: chaca.enum(["pending", "on-process", "closed"]),
   created_at: () => modules.date.past(),
-  close_date: () => modules.date.past(),
+  close_date: ({ currentFields }) => {
+    if (currentFields.status === "closed") {
+      return modules.date.between({
+        from: currentFields.created_at,
+        to: new Date(),
+      });
+    }
+  },
 });

@@ -23,7 +23,7 @@ export const PAYMENT_SCHEMA = chaca.schema({
       if (found.status === "delivered") {
         return "completed";
       } else {
-        return chaca.utils.oneOfArray(["pending"]);
+        return chaca.utils.oneOfArray(["pending", "fail"]);
       }
     }
 
