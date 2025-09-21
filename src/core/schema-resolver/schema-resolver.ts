@@ -49,6 +49,7 @@ export class SchemaResolver<K = any> {
 
   private isBuilding = false;
   private finishBuilding = false;
+  private stopped = false;
 
   private schemasStore: SchemaStore;
 
@@ -152,6 +153,14 @@ export class SchemaResolver<K = any> {
     return this.isBuilding;
   }
 
+  isStopped(): boolean {
+    return this.stopped;
+  }
+
+  stop(): void {
+    this.stopped = true;
+  }
+
   setInjectedSchemas(array: SchemaResolver[]): void {
     this.schemasStore.setInjectedSchemas(array);
   }
@@ -218,7 +227,7 @@ export class SchemaResolver<K = any> {
   }
 
   async buildTrees(caller: NodeRoute): Promise<void> {
-    if (!this.finishBuilding) {
+    if (!this.finishBuilding && !this.stopped) {
       if (!this.isBuilding) {
         if (this.inputTree) {
           if (this.consoleVerbose) {
