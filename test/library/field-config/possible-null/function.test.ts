@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { countNulls } from "./core/count-nulls";
 import { chaca, modules } from "../../../../src";
 import { WrongPossibleNullDefinitionError } from "../../../../src/errors";
-import { fetchInstance } from "../../../shared/core/fetch-instance";
+import { PromiseGeneratorValue } from "../../../shared/core/promise-value-generator";
 
 describe("Possible null function definition", () => {
   it("function that return a 0. should return an non-null values", async () => {
@@ -83,10 +83,8 @@ describe("Possible null function definition", () => {
       const schema = chaca.schema({
         null: {
           type: () => modules.color.cmyk(),
-          possibleNull: async () => {
-            await fetchInstance.post(`/module/datatype/boolean`);
-
-            return true;
+          possibleNull: () => {
+            return PromiseGeneratorValue.execute(true);
           },
         },
       });
@@ -100,13 +98,8 @@ describe("Possible null function definition", () => {
       const schema = chaca.schema({
         null: {
           type: () => modules.color.cmyk(),
-          possibleNull: async () => {
-            const { data: value } = await fetchInstance.post(
-              `/module/datatype/int`,
-              { min: -10, max: -1 },
-            );
-
-            return value;
+          possibleNull: () => {
+            return PromiseGeneratorValue.execute(-1);
           },
         },
       });
@@ -120,13 +113,8 @@ describe("Possible null function definition", () => {
       const schema = chaca.schema({
         null: {
           type: () => modules.color.cmyk(),
-          possibleNull: async () => {
-            const { data: value } = await fetchInstance.post(
-              `/module/datatype/float`,
-              { min: 0.5, max: 0.9 },
-            );
-
-            return value;
+          possibleNull: () => {
+            return PromiseGeneratorValue.execute(0.7);
           },
         },
       });

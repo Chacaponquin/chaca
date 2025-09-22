@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { chaca, ChacaError } from "../../../src";
-import { fetchInstance } from "../../shared/core/fetch-instance";
+import { PromiseGeneratorValue } from "../../shared/core/promise-value-generator";
 
 describe("Dataset generation (schema count)", () => {
   const schema = chaca.schema({});
@@ -47,13 +47,8 @@ describe("Dataset generation (schema count)", () => {
       const dataset = chaca.dataset([
         {
           name: "schema1",
-          documents: async () => {
-            const { data } = await fetchInstance.post(`/module/datatype/int`, {
-              min: 10,
-              max: 10,
-            });
-
-            return data;
+          documents: () => {
+            return PromiseGeneratorValue.execute(10);
           },
           schema: schema,
         },
@@ -68,13 +63,8 @@ describe("Dataset generation (schema count)", () => {
       const dataset = chaca.dataset([
         {
           name: "schema1",
-          documents: async () => {
-            const { data } = await fetchInstance.post(`/module/datatype/int`, {
-              min: 0,
-              max: 0,
-            });
-
-            return data;
+          documents: () => {
+            return PromiseGeneratorValue.execute(0);
           },
           schema: schema,
         },
@@ -89,13 +79,8 @@ describe("Dataset generation (schema count)", () => {
       const dataset = chaca.dataset([
         {
           name: "schema1",
-          documents: async () => {
-            const { data } = await fetchInstance.post(`/module/datatype/int`, {
-              min: -10,
-              max: -1,
-            });
-
-            return data;
+          documents: () => {
+            return PromiseGeneratorValue.execute(-1);
           },
           schema: schema,
         },
