@@ -2,8 +2,10 @@ import { ChacaError } from "../../errors";
 import { DatatypeModule } from "../../modules/datatype";
 import { InputTreeNode, KeyValueNode, RefValueNode } from "../input-tree/core";
 import { SchemaResolver } from "../schema-resolver/schema-resolver";
+import { SchemaCount } from "../schema-resolver/value-object/schema-count";
+import { SchemaCountExecutor } from "../schema-resolver/value-object/schema-count-executor";
 import { ChacaUtils } from "../utils";
-import { DatasetSchema } from "./interfaces/resolver";
+import { DatasetSchema } from "./interfaces/dataset-schema";
 
 interface Props {
   schemas: DatasetSchema[];
@@ -22,39 +24,22 @@ export class DatasetResolver<K = any> {
     this.verbose = verbose;
     this.createSchemaResolvers(schemas);
     this.validateNotRepeatSchemaNames(schemas);
-    this.validateSchemaDocuments(schemas);
     this.injectSchemas();
     this.buildInputTrees();
     this.buildRefFields();
-  }
-
-  findResolver(name: string): SchemaResolver | null {
-    const found = this.resolvers.find((r) => r.getSchemaName() === name);
-
-    return found ? found : null;
   }
 
   getResolvers() {
     return this.resolvers;
   }
 
-  private validateSchemaDocuments(schemas: DatasetSchema[]): void {
-    for (const schema of schemas) {
-      if (schema.documents < 0) {
-        throw new ChacaError(
-          `The number of documents to generate for schema ${schema.name} cannot be a negative value (${schema.documents})`,
-        );
-      }
-    }
-  }
-
   private validateNotRepeatSchemaNames(schemas: DatasetSchema[]): void {
     for (let i = 0; i < schemas.length; i++) {
-      const notRepeat =
-        schemas.filter((s) => s.name.trim() === schemas[i].name.trim())
-          .length === 1;
+      const notRepeat = schemas.filter(
+        (s) => s.name.trim() === schemas[i].name.trim(),
+      );
 
-      if (!notRepeat) {
+      if (notRepeat.length > 1) {
         throw new ChacaError(
           `The name '${schemas[i].name}' is repeat. Your schemas must have different names`,
         );
@@ -72,7 +57,12 @@ export class DatasetResolver<K = any> {
         return new SchemaResolver(this.utils, this.datatypeModule, {
           name: schema.name,
           input: schema.schema.input,
-          countDoc: schema.documents,
+          countExecutor: SchemaCountExecutor.create({
+            value: schema.documents,
+            name: schema.name,
+            singleSchema: false,
+          }),
+          count: new SchemaCount({ name: schema.name, singleSchema: false }),
           schemaIndex: schemaIndex,
           consoleVerbose: this.verbose,
         });

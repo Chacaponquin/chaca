@@ -2,21 +2,21 @@ import { SchemaStore } from "../schema-store/schema-store";
 import { DocumentTree } from "../result-tree/classes/document/document-tree";
 import { GetStoreConfig } from "../schema-store/interfaces/schema-store";
 import { SchemaResolver } from "../schema-resolver/schema-resolver";
-import { GetConfig } from "./value-object";
+import { GetConfig } from "./value-object/get-config";
 import { NodeRoute } from "../input-tree/core/node/value-object/route";
 import { FieldNode } from "../result-tree/classes/node/field-node";
 
 interface Props {
   schemasStore: SchemaStore;
-  omitCurrentDocument: DocumentTree;
   omitResolver: SchemaResolver;
   caller: NodeRoute;
+  omitCurrentDocument?: DocumentTree;
 }
 
 /** Store to interact with all datasets */
 export class DatasetStore {
   private readonly schemasStore: SchemaStore;
-  private readonly omitCurrentDocument: DocumentTree<any>;
+  private readonly omitCurrentDocument: DocumentTree | undefined;
   private readonly omitResolver: SchemaResolver;
   private readonly caller: NodeRoute;
 

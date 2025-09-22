@@ -6,9 +6,9 @@ import {
 } from "../../schema-store/interfaces/schema-store";
 
 interface Props {
-  omitCurrentDocument: DocumentTree;
   omitResolver: SchemaResolver;
   config?: GetStoreConfig;
+  omitCurrentDocument?: DocumentTree;
 }
 
 export class GetConfig {

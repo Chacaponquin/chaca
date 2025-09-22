@@ -48,7 +48,12 @@ import {
   GetStoreWhere,
 } from "./core/schema-store/interfaces/schema-store";
 
-import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
+import {
+  DatasetSchema,
+  DatasetSchemaCount,
+  DatasetSchemaCountFunction,
+  DatasetSchemaCountFunctionProps,
+} from "./core/dataset-resolver/interfaces/dataset-schema";
 
 import {
   RefFieldConfig,
@@ -130,6 +135,9 @@ export type {
   ExportFormat,
   FileConfig,
   DatasetSchema,
+  DatasetSchemaCount,
+  DatasetSchemaCountFunction,
+  DatasetSchemaCountFunctionProps,
   FieldToRef,
   RefFieldWhere,
   GetStoreConfig,

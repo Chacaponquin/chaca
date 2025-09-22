@@ -12,8 +12,24 @@ import { TRANSPORTER_SCHEMA } from "./transporter";
 import { USER_SCHEMA } from "./user";
 
 export const ECOMMERCE_DATASET = chaca.dataset([
-  { documents: 20, name: "Client", schema: CLIENT_SCHEMA },
-  { documents: 10, name: "Employee", schema: EMPLOYEE_SCHEMA },
+  {
+    documents: async ({ store }) => {
+      const users = await store.get("User");
+
+      return users.filter((u) => u.role === "client").length;
+    },
+    name: "Client",
+    schema: CLIENT_SCHEMA,
+  },
+  {
+    documents: async ({ store }) => {
+      const users = await store.get("User");
+
+      return users.filter((u) => u.role === "employee").length;
+    },
+    name: "Employee",
+    schema: EMPLOYEE_SCHEMA,
+  },
   { documents: 80, name: "OrderDetail", schema: ORDER_DETAIL_SCHEMA },
   { documents: 30, name: "Order", schema: ORDER_SCHEMA },
   { documents: 6, name: "Payment", schema: PAYMENT_SCHEMA },

@@ -1,6 +1,7 @@
 import { WrongPossibleNullDefinitionError } from "../../../../errors";
 import { DatasetStore } from "../../../dataset-store/dataset-store";
 import { DocumentTree } from "../../../result-tree/classes/document/document-tree";
+import { SchemaCount } from "../../../schema-resolver/value-object/schema-count";
 import { PossibleNullFunction } from "../../../schema/interfaces/schema";
 import { ChacaUtils } from "../../../utils";
 
@@ -11,7 +12,7 @@ interface BooleanProps {
 
 interface AbsoluteProps {
   value: number;
-  total: number;
+  total: SchemaCount;
   route: string;
 }
 
@@ -137,10 +138,13 @@ export class ProbabilityNull extends PossibleNull {
 }
 
 export class AbsoluteNullCount extends PossibleNull {
-  private readonly indexes: number[];
+  private indexes: number[];
   private readonly value: number;
 
-  constructor(utils: ChacaUtils, { total, value, route }: AbsoluteProps) {
+  constructor(
+    utils: ChacaUtils,
+    { total: itotal, value, route }: AbsoluteProps,
+  ) {
     super();
 
     if (value < 0) {
@@ -152,20 +156,23 @@ export class AbsoluteNullCount extends PossibleNull {
 
     this.value = value;
 
-    const all: number[] = [];
+    // register observer
+    itotal.register((total) => {
+      const all: number[] = [];
 
-    for (let i = 0; i < total; i++) {
-      all.push(i);
-    }
+      for (let i = 0; i < total; i++) {
+        all.push(i);
+      }
 
-    if (value > all.length) {
-      throw new WrongPossibleNullDefinitionError(
-        route,
-        `The number of elements to select must be less or equal than the array length`,
-      );
-    }
+      if (value > all.length) {
+        throw new WrongPossibleNullDefinitionError(
+          route,
+          `The number of elements to select must be less or equal than the array length`,
+        );
+      }
 
-    this.indexes = utils.pick({ values: all, count: value });
+      this.indexes = utils.pick({ values: all, count: value });
+    });
   }
 
   is({ index }: IsProps): Promise<boolean> {

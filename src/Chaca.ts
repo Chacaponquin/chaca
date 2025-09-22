@@ -1,7 +1,7 @@
 import { KeyField, KeyFieldProps } from "./core/fields/core/key/key-field";
 import { ChacaUtils } from "./core/utils";
 import { SchemaInput } from "./core/schema/interfaces/schema";
-import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
+import { DatasetSchema } from "./core/dataset-resolver/interfaces/dataset-schema";
 import { ExportResolver } from "./core/export/resolvers/export/export";
 import { DumpConfig, FileConfig } from "./core/export/interfaces/export";
 import { PickField, PickFieldProps } from "./core/fields/core/pick/pick-field";

@@ -69,8 +69,9 @@ describe("# Sequential Field test", () => {
   });
 
   it("Not enought values for the generate data. Should return an error", () => {
-    expect(() =>
-      chaca.schema({ test: chaca.sequential([1, 2]) }).array(10),
+    expect(
+      async () =>
+        await chaca.schema({ test: chaca.sequential([1, 2]) }).array(10),
     ).rejects.toThrow(EmptySequentialValuesError);
   });
 

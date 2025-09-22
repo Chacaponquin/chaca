@@ -39,12 +39,13 @@ import { StartsWith } from "./core/sequence/value-object/starts-with";
 import { ResolverValidator } from "./core/validators/resolver";
 import { NodeRoute } from "./core/node/value-object/route";
 import { SchemaToResolve } from "../schema-resolver/value-object/schema-input";
+import { SchemaCount } from "../schema-resolver/value-object/schema-count";
 
 interface Props {
   name: string;
   schemaToResolve: SchemaToResolve;
   schemasStore: SchemaStore;
-  count: number;
+  count: SchemaCount;
 }
 
 interface CreateNodeProps {
@@ -62,7 +63,7 @@ export class ChacaInputTree {
   private nodes: InputTreeNode[];
   private schemasStore: SchemaStore;
   private name: string;
-  private count: number;
+  private count: SchemaCount;
 
   // ref nodes
   private refToResolve: RefValueNode[];

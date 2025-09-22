@@ -8,6 +8,8 @@ import { GeneratorFilter } from "../export/resolvers/generator-filter/generator-
 import { DumpResolver } from "../export/resolvers/dump/dump";
 import { DumpFile } from "../export/generators/generator/generator";
 import { DEFAULT_SCHEMA_NAME } from "./core/default-name";
+import { SchemaCountExecutor } from "../schema-resolver/value-object/schema-count-executor";
+import { SchemaCount } from "../schema-resolver/value-object/schema-count";
 
 export class Schema<K = any> {
   constructor(
@@ -76,13 +78,23 @@ export class Schema<K = any> {
    * @param countDocuments number of documents that you want to create
    */
   array(countDocuments: number): Promise<K[]> {
+    const name = DEFAULT_SCHEMA_NAME;
+
     const schemaToResolve = new SchemaResolver<K>(
       this.utils,
       this.datatypeModule,
       {
-        name: DEFAULT_SCHEMA_NAME,
+        name: name,
         input: this.input,
-        countDoc: countDocuments,
+        count: new SchemaCount({
+          name: name,
+          singleSchema: true,
+        }),
+        countExecutor: SchemaCountExecutor.create({
+          value: countDocuments,
+          singleSchema: true,
+          name: name,
+        }),
         schemaIndex: 0,
         consoleVerbose: false,
       },

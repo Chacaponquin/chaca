@@ -64,7 +64,10 @@ export class SchemaStore {
 
         await currentSchema.buildTrees(caller);
 
-        values = currentSchema.getAllValuesByRoute(routeArray.slice(1), config);
+        values = await currentSchema.getAllValuesByRoute(
+          routeArray.slice(1),
+          config,
+        );
 
         foundSchema = true;
       }

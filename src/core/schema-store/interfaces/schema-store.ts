@@ -14,9 +14,9 @@ export type GetStoreConfig = {
 /**
  * Function that filters the store schema fields
  */
-export type GetStoreWhere<T = any> = (fields: T) => boolean;
+export type GetStoreWhere<T = any> = (fields: T) => boolean | Promise<boolean>;
 
 export type GetStoreValueConfig<C = any> = GetStoreConfig & {
-  omitDocument: DocumentTree<C>;
+  omitDocument?: DocumentTree<C>;
   omitResolver: SchemaResolver;
 };

@@ -22,21 +22,26 @@ export class ChacaResultTree<D = any> {
     this.documents.push(document);
   }
 
-  getAllValuesByNodeRoute(
+  async getAllValuesByNodeRoute(
     fieldTreeRoute: string[],
     config: GetStoreValueConfig,
-  ): FieldNode[] {
+  ): Promise<FieldNode[]> {
     const whereFunction = config.where;
 
     let filterDocuemnts: DocumentTree<D>[];
 
     if (whereFunction) {
-      filterDocuemnts = this.documents.filter((d) => {
-        const isValid =
-          d !== config.omitDocument && whereFunction(d.getDocumentObject());
+      filterDocuemnts = [];
 
-        return isValid;
-      });
+      for (const d of this.documents) {
+        const isValid: boolean =
+          d !== config.omitDocument &&
+          (await whereFunction(d.getDocumentObject()));
+
+        if (isValid) {
+          filterDocuemnts.push(d);
+        }
+      }
     } else {
       filterDocuemnts = this.documents;
     }

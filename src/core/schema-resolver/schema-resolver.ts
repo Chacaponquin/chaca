@@ -16,8 +16,10 @@ import { FillSolution } from "./core/fill-solution";
 import { SchemaToResolve } from "./value-object/schema-input";
 import { DocumentTree } from "../result-tree/classes/document/document-tree";
 import { FieldNode } from "../result-tree/classes/node/field-node";
-import { CountDoc } from "./value-object/count";
 import { SchemaName } from "./value-object/schema-name";
+import { SchemaCountExecutor } from "./value-object/schema-count-executor";
+import { DatasetStore } from "../dataset-store/dataset-store";
+import { SchemaCount } from "./value-object/schema-count";
 
 interface GetRefValueProps {
   caller: NodeRoute;
@@ -27,7 +29,8 @@ interface GetRefValueProps {
 interface Props {
   name: string;
   input: SchemaInput;
-  countDoc: number;
+  countExecutor: SchemaCountExecutor;
+  count: SchemaCount;
   schemaIndex: number;
   consoleVerbose: boolean;
 }
@@ -44,7 +47,8 @@ export class SchemaResolver<K = any> {
   private inputTree: ChacaInputTree | null = null;
   private resultTree: ChacaResultTree<K>;
   private name: string;
-  private countDoc: number;
+  private countDocExecutor: SchemaCountExecutor;
+  private count: SchemaCount;
   private input: SchemaToResolve;
 
   private isBuilding = false;
@@ -57,7 +61,7 @@ export class SchemaResolver<K = any> {
   constructor(
     private readonly utils: ChacaUtils,
     private readonly datatypeModule: DatatypeModule,
-    { consoleVerbose, countDoc, schemaIndex, name, input }: Props,
+    { consoleVerbose, count, countExecutor, schemaIndex, name, input }: Props,
   ) {
     this.index = schemaIndex;
     this.name = new SchemaName(name, this.index).value();
@@ -67,7 +71,8 @@ export class SchemaResolver<K = any> {
     this.consoleVerbose = consoleVerbose;
 
     this.resultTree = new ChacaResultTree<K>(this.name);
-    this.countDoc = new CountDoc(countDoc).value();
+    this.countDocExecutor = countExecutor;
+    this.count = count;
 
     this.fillSolution = new FillSolution();
     this.solutionCreator = new SolutionCreator(
@@ -135,7 +140,7 @@ export class SchemaResolver<K = any> {
         name: this.name,
         schemaToResolve: this.input,
         schemasStore: this.schemasStore,
-        count: this.countDoc,
+        count: this.count,
       });
     }
   }
@@ -164,27 +169,32 @@ export class SchemaResolver<K = any> {
     return this.resultTree;
   }
 
-  getAllValuesByRoute(
+  async getAllValuesByRoute(
     fieldToGet: string[],
     config: GetStoreValueConfig,
-  ): Array<DocumentTree<K> | FieldNode> {
+  ): Promise<Array<DocumentTree<K> | FieldNode>> {
     if (fieldToGet.length === 0) {
       const whereFunction = config.where;
 
       if (whereFunction) {
-        const filterDocuments = this.resultTree.getDocuments().filter((d) => {
-          return (
-            d !== config.omitDocument && whereFunction(d.getDocumentObject())
-          );
-        });
+        const filterDocuments = [];
+
+        for (const d of this.resultTree.getDocuments()) {
+          const condition =
+            d !== config.omitDocument &&
+            (await whereFunction(d.getDocumentObject()));
+
+          if (condition) {
+            filterDocuments.push(d);
+          }
+        }
 
         return filterDocuments;
       } else {
-        const filterDocuments = this.resultTree.getDocuments();
-        return filterDocuments;
+        return this.resultTree.getDocuments();
       }
     } else {
-      const allNodes = this.resultTree.getAllValuesByNodeRoute(
+      const allNodes = await this.resultTree.getAllValuesByNodeRoute(
         fieldToGet,
         config,
       );
@@ -229,7 +239,25 @@ export class SchemaResolver<K = any> {
           // indicar que se está construyendo los datos
           this.isBuilding = true;
 
-          for (let indexDoc = 0; indexDoc < this.countDoc; indexDoc++) {
+          // calculate count
+          let count: number;
+          const save = this.count.value();
+
+          if (save === null) {
+            count = await this.countDocExecutor.value({
+              store: new DatasetStore({
+                caller: this.route,
+                omitResolver: this,
+                schemasStore: this.schemasStore,
+              }),
+            });
+
+            this.count.setValue(count);
+          } else {
+            count = save;
+          }
+
+          for (let indexDoc = 0; indexDoc < count; indexDoc++) {
             const newDoc = new DocumentTree<K>();
 
             // insertar el nuevo documento

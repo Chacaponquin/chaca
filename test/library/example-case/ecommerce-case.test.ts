@@ -15,41 +15,57 @@ describe("Ecommerce case", () => {
       const payments = data["Payment"];
       const orders = data["Order"];
 
-      it("all clients are from user clients", () => {
-        for (const c of clients) {
-          const found = users.find((u: { id: string }) => u.id === c.id);
+      describe("clients", () => {
+        it("user clients length = clients length", () => {
+          expect(clients.length).toBe(
+            users.filter((u: { role: string }) => u.role === "client").length,
+          );
+        });
 
-          expect(found).not.toBeUndefined();
-          expect(found.role).toBe("client");
-        }
-      });
+        it("all clients are from user clients", () => {
+          for (const c of clients) {
+            const found = users.find((u: { id: string }) => u.id === c.id);
 
-      it("all employees are from user employee", () => {
-        for (const c of employees) {
-          const found = users.find((u: { id: string }) => u.id === c.id);
-
-          expect(found).not.toBeUndefined();
-          expect(found.role).toBe("employee");
-        }
-      });
-
-      it("more normal clients than the others", () => {
-        let normalCount = 0;
-        let premiumCount = 0;
-        let vipCount = 0;
-
-        for (const c of clients) {
-          if (c.level === "normal") {
-            normalCount++;
-          } else if (c.level === "premium") {
-            premiumCount++;
-          } else if (c.level === "vip") {
-            vipCount++;
+            expect(found).not.toBeUndefined();
+            expect(found.role).toBe("client");
           }
-        }
+        });
 
-        expect(normalCount).toBeGreaterThan(vipCount);
-        expect(normalCount).toBeGreaterThan(premiumCount);
+        it("more normal clients than the others", () => {
+          let normalCount = 0;
+          let premiumCount = 0;
+          let vipCount = 0;
+
+          for (const c of clients) {
+            if (c.level === "normal") {
+              normalCount++;
+            } else if (c.level === "premium") {
+              premiumCount++;
+            } else if (c.level === "vip") {
+              vipCount++;
+            }
+          }
+
+          expect(normalCount).toBeGreaterThan(vipCount);
+          expect(normalCount).toBeGreaterThan(premiumCount);
+        });
+      });
+
+      describe("employees", () => {
+        it("user employees length = employees length", () => {
+          expect(employees.length).toBe(
+            users.filter((u: { role: string }) => u.role === "employee").length,
+          );
+        });
+
+        it("all employees are from user employee", () => {
+          for (const c of employees) {
+            const found = users.find((u: { id: string }) => u.id === c.id);
+
+            expect(found).not.toBeUndefined();
+            expect(found.role).toBe("employee");
+          }
+        });
       });
 
       it("order products must be uniques", () => {
