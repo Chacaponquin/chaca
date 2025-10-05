@@ -6,4 +6,5 @@ export const PROGRAM_SCHEMA = chaca.schema({
   level: chaca.enum(["undergraduate", "postgraduate"]),
   department_id: chaca.ref("Department.id"),
   period_duration: () => modules.datatype.int({ min: 4, max: 8 }),
+  cost: () => modules.datatype.float({ precision: 2, min: 1, max: 1000 }),
 });

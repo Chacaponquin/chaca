@@ -13,6 +13,7 @@ export const STUDENT_SCHEMA = chaca.schema({
   birthdate: () => modules.date.birthdate({ mode: "age", min: 16 }),
   country: () => modules.address.country(),
   program_id: chaca.ref("Program.id"),
+  status: chaca.enum(["active", "suspend", "init", "graduated"]),
   actual_period: async ({ store, currentFields }) => {
     const programs = await store.get("Program");
 
@@ -22,5 +23,4 @@ export const STUDENT_SCHEMA = chaca.schema({
       return modules.datatype.int({ min: 0, max: found.period_duration });
     }
   },
-  status: chaca.enum(["active", "suspend", "init", "graduated"]),
 });

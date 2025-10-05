@@ -210,7 +210,7 @@ export class DateModule {
       const minimun = new Date(refDate).setUTCFullYear(refYear - max - 1);
       const maximun = new Date(refDate).setUTCFullYear(refYear - min);
 
-      return new Date(this.datatypeModule.int({ min: maximun, max: minimun }));
+      return new Date(this.datatypeModule.int({ min: minimun, max: maximun }));
     } else {
       const minimun = new Date(Date.UTC(0, 0, 2)).setUTCFullYear(min);
       const maximun = new Date(Date.UTC(0, 11, 30)).setUTCFullYear(max);

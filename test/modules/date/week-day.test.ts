@@ -1,12 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { modules } from "../../../src";
 
-describe("date modules", () => {
-  it("date.month", () => {
-    expect(modules.date.constants.months).include(modules.date.month());
-  });
-
-  it("date.weekDay", () => {
+describe("data.weekDay", () => {
+  it("should return a week day constant value", () => {
     expect(modules.date.constants.weekDays).include(modules.date.weekDay());
   });
 });

@@ -35,7 +35,7 @@ export type FieldObjectInput<R = any> = {
    */
   isArray?: IsArrayConfig;
   /** Null schema field configuration
-   * - `boolean` - `true` 50% chances to be null, `false` 0% chances
+   * - `boolean` - `true` 100% chances to be null, `false` 0% chances
    * - `number` specific porcent of chances
    * - `function` function that returns a number between 0 and 1 or a boolean. Receive 'currentFields' and 'store' as parameters
    */

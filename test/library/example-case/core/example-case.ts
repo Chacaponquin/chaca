@@ -23,11 +23,13 @@ export class ExampleCaseTest {
   }
 
   execute() {
-    describe("Generation", async () => {
-      const data = await this.dataset.generate();
+    if (this.check) {
+      describe("Generation", async () => {
+        const data = await this.dataset.generate();
 
-      if (this.check) this.check(data);
-    });
+        if (this.check) this.check(data);
+      });
+    }
 
     describe("postgresql", () => {
       it("no arguments", async () => {

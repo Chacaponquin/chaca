@@ -18,4 +18,10 @@ export const TEACHER_SCHEMA = chaca.schema({
   employment_date: () => modules.date.past(),
   salary: () => modules.datatype.int({ min: 1000, max: 10000 }),
   status: chaca.enum(["active", "licence", "retired"]),
+  school_dean_id: {
+    type: chaca.ref("School.id", {}),
+    possibleNull: ({ currentFields }) => {
+      return currentFields.status !== "active";
+    },
+  },
 });

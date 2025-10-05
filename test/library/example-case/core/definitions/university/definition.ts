@@ -13,15 +13,15 @@ import { TEACHER_SCHEMA } from "./teacher";
 import { USER_SCHEMA } from "./user";
 
 export const UNIVERSITY_DATASET = chaca.dataset([
-  { documents: 10, name: "BookLoan", schema: BOOK_LOAN },
-  { documents: 10, name: "Book", schema: BOOK_SCHEMA },
-  { documents: 10, name: "Course", schema: COURSE_SCHEMA },
-  { documents: 10, name: "Department", schema: DEPARTMENT_SCHEMA },
-  { documents: 10, name: "Grade", schema: GRADE_SCHEMA },
-  { documents: 10, name: "Payment", schema: PAYMENT_SCHEMA },
-  { documents: 10, name: "Program", schema: PROGRAM_SCHEMA },
-  { documents: 10, name: "Registration", schema: REGISTRATION_SCHEMA },
-  { documents: 10, name: "School", schema: SCHOOL_SCHEMA },
+  { documents: 30, name: "BookLoan", schema: BOOK_LOAN },
+  { documents: 60, name: "Book", schema: BOOK_SCHEMA },
+  { documents: 100, name: "Course", schema: COURSE_SCHEMA },
+  { documents: 30, name: "Department", schema: DEPARTMENT_SCHEMA },
+  { documents: 120, name: "Grade", schema: GRADE_SCHEMA },
+  { documents: 200, name: "Payment", schema: PAYMENT_SCHEMA },
+  { documents: 35, name: "Program", schema: PROGRAM_SCHEMA },
+  { documents: 120, name: "Registration", schema: REGISTRATION_SCHEMA },
+  { documents: 20, name: "School", schema: SCHOOL_SCHEMA },
   {
     documents: async ({ store }) => {
       const users = await store.get("User");
@@ -40,5 +40,5 @@ export const UNIVERSITY_DATASET = chaca.dataset([
     name: "Teacher",
     schema: TEACHER_SCHEMA,
   },
-  { documents: 50, name: "User", schema: USER_SCHEMA },
+  { documents: 150, name: "User", schema: USER_SCHEMA },
 ]);
