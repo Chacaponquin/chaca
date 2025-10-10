@@ -27,7 +27,8 @@ export class ImageModule {
     const width = iwidth ? iwidth : size;
     const height = iheight ? iheight : size;
 
-    const url = `https://loremflickr.com/${width}/${height}/${category}`;
+    const url = `https://lexica.art/api/v1/search?q=${category}&width=${width}&height=${height}`;
+
     return url;
   }
 
