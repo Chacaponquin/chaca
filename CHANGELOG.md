@@ -1,5 +1,13 @@
 # chaca@2.1.0
 
+## 🌚 Features
+
+- All dataset and schema operations are now async functions
+
+## 🪛 Fix
+
+- Issues with `date.birthdate` generation problems were fixed
+
 # chaca@2.0.0
 
 ## 🌚 Features
