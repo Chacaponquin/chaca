@@ -3,7 +3,6 @@ import { chaca, modules } from "../../../../../../src";
 export const PAYMENT_SCHEMA = chaca.schema({
   id: chaca.key(() => modules.id.uuid()),
   method: chaca.enum(["credit-card", "transfer", "cash"]),
-  registration_id: chaca.ref("Registration.id", {}),
   status: ({ currentFields, store }) => {
     const exists = store.currentDocuments().filter((r) => {
       return r.registration_id === currentFields.id && r.status !== "failed";
@@ -15,6 +14,11 @@ export const PAYMENT_SCHEMA = chaca.schema({
       return chaca.utils.oneOfArray(["pending", "completed", "failed"]);
     }
   },
+  registration_id: chaca.ref("Registration.id", {
+    where: ({ refFields }) => {
+      return refFields.status === "active";
+    },
+  }),
   concept: chaca.enum([
     "registration",
     "extra-course",
