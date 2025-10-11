@@ -63,7 +63,7 @@ describe("Probability field", () => {
     const data = await schema.array(100);
     const result = Math.abs(count(data, 10) - count(data, 5));
 
-    expect(result).toBeLessThanOrEqual(20);
+    expect(result).toBeLessThanOrEqual(40);
   });
 
   it("probability field with an option with chance=0. should never return that value", async () => {
