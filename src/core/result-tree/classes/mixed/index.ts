@@ -13,7 +13,7 @@ export class MixedFieldNode extends FieldNode {
     let resultObject = {};
 
     this.nodes.forEach((n) => {
-      resultObject = { ...resultObject, [n.name]: n.getRealValue() };
+      resultObject = { ...resultObject, [n.name]: n.value() };
     });
 
     return resultObject;

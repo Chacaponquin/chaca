@@ -10,7 +10,7 @@ export interface GetRefValueProps {
 export abstract class FieldNode {
   constructor(readonly name: string) {}
 
-  protected abstract value(): unknown | unknown[];
+  abstract value(): unknown | unknown[];
   abstract getNodeByRoute(fieldTreeRoute: string[]): FieldNode;
 
   protected abstract getRefValueByNodeRoute(
@@ -20,9 +20,5 @@ export abstract class FieldNode {
   getRefValueByRoute(props: GetRefValueProps): SingleResultNode {
     const value = this.getRefValueByNodeRoute(props);
     return value;
-  }
-
-  getRealValue() {
-    return this.value();
   }
 }

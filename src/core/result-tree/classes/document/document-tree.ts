@@ -20,7 +20,7 @@ export class DocumentTree<D = any> {
 
     for (const n of this.nodes) {
       const nodeName = n.name;
-      const nodeValue = n.getRealValue();
+      const nodeValue = n.value();
 
       returnObject = { ...returnObject, [nodeName]: nodeValue };
     }

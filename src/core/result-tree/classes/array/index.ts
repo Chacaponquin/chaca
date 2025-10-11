@@ -17,7 +17,7 @@ export class ArrayResultNode extends FieldNode {
   }
 
   value(): unknown[] {
-    return this.nodes.map((n) => n.getRealValue());
+    return this.nodes.map((n) => n.value());
   }
 
   insertNode(n: FieldNode) {

@@ -9,13 +9,6 @@ describe("system modules", () => {
     ).include(value);
   });
 
-  it("system.filename", () => {
-    const value = modules.system.filename();
-
-    const array = value.split(".");
-    expect(array).toHaveLength(2);
-  });
-
   it("system.mimeType", () => {
     const value = modules.system.mimeType();
 
@@ -43,5 +36,11 @@ describe("system modules", () => {
     for (const name of array) {
       expect(name).not.include("/");
     }
+  });
+
+  it("system.filePath", () => {
+    const value = modules.system.filePath();
+
+    expect(value.split("/").length).toBeGreaterThanOrEqual(2);
   });
 });

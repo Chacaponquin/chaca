@@ -16,7 +16,7 @@ export class SingleResultNode extends FieldNode {
     this._value = value;
   }
 
-  protected value(): unknown {
+  value(): unknown {
     return this._value;
   }
 

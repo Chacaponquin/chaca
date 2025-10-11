@@ -26,7 +26,7 @@ export class KeyValueNode extends InputTreeNode {
   async generate(props: GenerateProps): Promise<FieldNode> {
     const node = await this.fieldNode.generate(props);
 
-    const value = node.getRealValue();
+    const value = node.value();
 
     if (value === null || value === undefined) {
       throw new ChacaError(

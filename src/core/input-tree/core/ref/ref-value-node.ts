@@ -194,10 +194,10 @@ export class RefValueNode extends InputTreeNode {
           }
 
           if (refItSelf || this.nullWhenEmpty()) {
-            return node ? node.getRealValue() : null;
+            return node ? node.value() : null;
           }
 
-          return node.getRealValue();
+          return node.value();
         } else {
           if (allValues.length === 0 && !refItSelf && !this.nullWhenEmpty()) {
             throw new NotEnoughValuesForRefError(
@@ -209,10 +209,10 @@ export class RefValueNode extends InputTreeNode {
           const node = this.utils.oneOfArray(allValues);
 
           if (refItSelf || this.nullWhenEmpty()) {
-            return node ? node.getRealValue() : null;
+            return node ? node.value() : null;
           }
 
-          return node.getRealValue();
+          return node.value();
         }
       } else {
         throw new CyclicAccessDataError(

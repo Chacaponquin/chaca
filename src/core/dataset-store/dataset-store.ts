@@ -64,7 +64,7 @@ export class DatasetStore {
 
     for (const node of foundNodes) {
       if (node instanceof FieldNode) {
-        values.push(node.getRealValue() as R);
+        values.push(node.value() as R);
       } else {
         values.push(node.getDocumentObject());
       }
