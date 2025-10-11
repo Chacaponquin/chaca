@@ -1,6 +1,6 @@
 import { FileConfig } from "../../interfaces/export";
-import { DatasetSchema } from "../../../dataset-resolver/interfaces/resolver";
-import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { DatasetSchema } from "../../../dataset-resolver/interfaces/dataset-schema";
+import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { FileName } from "../../value-object/name";
 import { Location } from "../../value-object/location";
 import { FileFormat } from "../../value-object/format";

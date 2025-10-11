@@ -1,3 +1,33 @@
+# chaca@2.1.0
+
+## 🌚 Features
+
+- All dataset, schema and dataset store operations are now async functions
+- You can define the number of documents to generate as a function that depends on the current state of the dataset.
+
+  ```ts
+  chaca.dataset([
+    {
+      name: "User",
+      schema: userSchema,
+      documents: 50,
+    },
+    {
+      name: "Writer",
+      schema: writerSchema,
+      documents: async ({ store }) => {
+        const users = await store.get("User");
+
+        return users.filter((u) => u.role === "writer");
+      },
+    },
+  ]);
+  ```
+
+## 🪛 Fix
+
+- Issues with `date.birthdate` generation problems were fixed
+
 # chaca@2.0.0
 
 ## 🌚 Features

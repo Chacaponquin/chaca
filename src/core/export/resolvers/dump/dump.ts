@@ -1,9 +1,9 @@
 import { DatatypeModule } from "../../../../modules/datatype";
-import { DatasetSchema } from "../../../dataset-resolver/interfaces/resolver";
-import { DatasetResolver } from "../../../dataset-resolver/resolver";
+import { DatasetSchema } from "../../../dataset-resolver/interfaces/dataset-schema";
+import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { ChacaUtils } from "../../../utils";
 import { Filename } from "../../generators/file-creator/filename";
-import { DumpFile } from "../../generators/generator";
+import { DumpFile } from "../../generators/generator/generator";
 import { DumpConfig } from "../../interfaces/export";
 import { FileFormat } from "../../value-object/format";
 import { FileName } from "../../value-object/name";
@@ -43,7 +43,7 @@ export class DumpResolver {
     });
   }
 
-  relational(schemas: DatasetSchema[]): DumpFile[] {
+  async relational(schemas: DatasetSchema[]): Promise<DumpFile[]> {
     const generator = this.filter.execute(this.format.value());
 
     const resolver = new DatasetResolver(this.utils, this.datatypeModule, {
@@ -51,7 +51,7 @@ export class DumpResolver {
       verbose: this.verbose.value(),
     });
 
-    const result = generator.dumpRelational({
+    const result = await generator.dumpRelational({
       resolver: resolver,
       filename: new Filename(this.filename.value()),
     });

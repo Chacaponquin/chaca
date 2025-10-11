@@ -1,12 +1,12 @@
-import { CustomFieldResolver } from "./custom";
-import { EnumFieldResolver } from "./enum";
-import { MixedFieldResolver } from "./mixed";
-import { RefFieldResolver } from "./ref";
-import { SequentialFieldResolver } from "./sequential";
-import { KeyFieldResolver } from "./key";
-import { SequenceFieldResolver } from "./sequence";
-import { ProbabilityFieldResolver } from "./probability";
-import { PickFieldResolver } from "./pick";
+import { CustomFieldResolver } from "./custom/custom-resolver";
+import { EnumFieldResolver } from "./enum/enum-resolver";
+import { MixedFieldResolver } from "./mixed/mixed-resolver";
+import { RefFieldResolver } from "./ref/ref-field-resolver";
+import { SequentialFieldResolver } from "./sequential/sequential-resolver";
+import { KeyFieldResolver } from "./key/key-resolver";
+import { SequenceFieldResolver } from "./sequence/sequence-resolver";
+import { ProbabilityFieldResolver } from "./probability/probability-resolver";
+import { PickFieldResolver } from "./pick/pick-resolver";
 
 export {
   CustomFieldResolver,

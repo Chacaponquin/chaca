@@ -136,8 +136,8 @@ export class ExtensionTester {
 
   async export({ data, filename, error }: ExportProps): Promise<void> {
     if (error) {
-      await expect(async () => {
-        await chaca.export(data, {
+      await expect(() => {
+        return chaca.export(data, {
           filename: filename,
           location: `./data/${this.extension}`,
           format: this.extension,

@@ -1,8 +1,8 @@
 import fs from "fs";
 import path from "path";
-import { Schema } from "../../core/schema";
+import { Schema } from "../../core/schema/schema";
 import { ExportFormat } from "../../core/export/interfaces/export";
-import { Dataset } from "../../core/dataset";
+import { Dataset } from "../../core/dataset/dataset";
 
 interface Props {
   filename: string;

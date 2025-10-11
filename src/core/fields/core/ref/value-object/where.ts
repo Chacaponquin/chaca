@@ -1,4 +1,4 @@
-import { RefFieldWhere } from "..";
+import { RefFieldWhere } from "../ref-field";
 
 export class Where {
   private readonly where: RefFieldWhere | null;

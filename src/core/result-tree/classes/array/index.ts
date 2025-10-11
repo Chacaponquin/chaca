@@ -1,5 +1,5 @@
 import { ChacaError, NotExistRefFieldError } from "../../../../errors";
-import { FieldNode, GetRefValueProps } from "../node";
+import { FieldNode, GetRefValueProps } from "../node/field-node";
 import { SingleResultNode } from "../single-result";
 
 interface Props {
@@ -17,7 +17,7 @@ export class ArrayResultNode extends FieldNode {
   }
 
   value(): unknown[] {
-    return this.nodes.map((n) => n.getRealValue());
+    return this.nodes.map((n) => n.value());
   }
 
   insertNode(n: FieldNode) {

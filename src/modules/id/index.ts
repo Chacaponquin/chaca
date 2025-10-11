@@ -41,8 +41,8 @@ export class IdModule {
    * @param length Length of the generated string. Defaults to `20`.
    *
    * @example
-   * modules.id.nanoid() // ptL0KpX_yRMI98JFr6B3n
-   * modules.id.nanoid({ length: 10 }) // VsvwSdm_Am
+   * modules.id.nanoid() // 'ptL0KpX_yRMI98JFr6B3n'
+   * modules.id.nanoid({ length: 10 }) // 'VsvwSdm_Am'
    */
   nanoid({ length: ilength }: NanoidProps = {}) {
     const length = typeof ilength === "number" && ilength >= 0 ? ilength : 20;

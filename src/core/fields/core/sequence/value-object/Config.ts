@@ -1,4 +1,4 @@
-import { SequenceFieldProps } from "../SequenceField";
+import { SequenceFieldProps } from "../sequence-field";
 
 export class Config {
   private _config: Required<SequenceFieldProps> = {

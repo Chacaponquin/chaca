@@ -14,7 +14,7 @@ npm install chaca
 
 ## 📘 Documentation
 
-Visit our website to read the documentation. [Chaca Docs](https://chaca-doc.vercel.app/)
+Visit our website to read the documentation. [Chaca Docs](https://chaca.app)
 
 ## 😎 Usage
 
@@ -40,7 +40,7 @@ const movieSchema = chaca.schema({
 });
 
 // Generate 20 objects with the defined schema
-const docs = movieSchema.array(20);
+const docs = await movieSchema.array(20);
 
 /*
 [
@@ -66,11 +66,11 @@ await movieSchema.export(20, {
 
 ## 🕹️ CLI
 
-See [CLI guide](https://chaca-doc.vercel.app/docs/guide/command-line)
+See [CLI guide](https://chaca.app/docs/guides/cli)
 
 ## 🌐 Try our REST API
 
-If you don't want to use our npm package you can use our [REST API](https://chaca-doc.vercel.app/docs/api-rest/overview) to create your mock data
+If you don't want to use our npm package you can use our [REST API](https://chaca.app/docs/rest-api/overview) to create your mock data
 
 ## 🗂️ Changelog
 

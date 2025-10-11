@@ -2,21 +2,22 @@ import { ChacaError, chaca } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("# Sequence field tests", () => {
-  it("Simple sequence definition", () => {
+  it("Simple sequence definition", async () => {
     const schema = chaca.schema({
       test: chaca.sequence(),
     });
 
-    const data = schema.array(5);
+    const data = await schema.array(5);
+
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
 
-  it("Object definition of simple sequence field", () => {
+  it("Object definition of simple sequence field", async () => {
     const schema = chaca.schema({
       test: { type: chaca.sequence() },
     });
 
-    const data = schema.array(5);
+    const data = await schema.array(5);
 
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });
@@ -28,24 +29,24 @@ describe("# Sequence field tests", () => {
           test: { type: chaca.sequence(), isArray: 20 },
         })
         .array(20),
-    ).toThrow(ChacaError);
+    ).rejects.toThrow(ChacaError);
   });
 
-  it("Object definition of possible null sequence field. At least one value should be null", () => {
+  it("Object definition of possible null sequence field. At least one value should be null", async () => {
     const schema = chaca.schema({
       test: { type: chaca.sequence(), possibleNull: 0.5 },
     });
 
-    const data = schema.array(20);
+    const data = await schema.array(20);
     expect(data.some((o) => o.test === null)).toBe(true);
   });
 
-  it("Create a sequence field as key field", () => {
+  it("Create a sequence field as key field", async () => {
     const schema = chaca.schema({
       test: chaca.key(chaca.sequence()),
     });
 
-    const data = schema.array(5);
+    const data = await schema.array(5);
 
     expect(data.every((o, i) => o.test === i + 1)).toBe(true);
   });

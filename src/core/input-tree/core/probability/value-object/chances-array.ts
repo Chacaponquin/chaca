@@ -1,7 +1,7 @@
 import { WrongProbabilityFieldDefinitionError } from "../../../../../errors";
-import { DatasetStore } from "../../../../dataset-store";
-import { ProbabilityOption } from "../../../../fields/core/probability";
-import { DocumentTree } from "../../../../result-tree/classes";
+import { DatasetStore } from "../../../../dataset-store/dataset-store";
+import { ProbabilityOption } from "../../../../fields/core/probability/probability-field";
+import { DocumentTree } from "../../../../result-tree/classes/document/document-tree";
 import { ChacaUtils } from "../../../../utils";
 import { Chance } from "./chance";
 import { ChanceValue } from "./chance-value";
@@ -48,17 +48,19 @@ export class ChancesArray {
     }
   }
 
-  value({ currentDocument, store }: ValueProps): unknown {
+  async value({ currentDocument, store }: ValueProps): Promise<unknown> {
     const values = this.options.map((o) => o.value);
 
-    const weights: number[] = this.options.map((o) => {
-      const chance = o.chance.value({
+    const weights: number[] = [];
+
+    for (const o of this.options) {
+      const chance = await o.chance.value({
         currentDocument: currentDocument,
         store: store,
       });
 
-      return chance;
-    });
+      weights.push(chance);
+    }
 
     const distribution = this.createDistribution(values, weights, 10);
 

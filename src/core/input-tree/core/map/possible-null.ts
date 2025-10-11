@@ -1,5 +1,6 @@
 import { WrongPossibleNullDefinitionError } from "../../../../errors";
 import { FieldPossibleNull } from "../../../schema-resolver/value-object/possible-null";
+import { SchemaCount } from "../../../schema-resolver/value-object/schema-count";
 import { ChacaUtils } from "../../../utils";
 import {
   AbsoluteNullCount,
@@ -8,12 +9,12 @@ import {
   NotNull,
   PossibleNull,
   ProbabilityNull,
-} from "../possible-null";
+} from "../possible-null/possible-null";
 
 interface Props {
   value: FieldPossibleNull;
   route: string;
-  countDocs: number;
+  countDocs: SchemaCount;
 }
 
 export class PossibleNullMapper {

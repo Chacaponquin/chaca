@@ -1,10 +1,10 @@
-import { EnumField } from "./enum";
-import { KeyField } from "./key";
-import { PickField } from "./pick";
-import { ProbabilityField } from "./probability";
-import { RefField } from "./ref";
-import { SequenceField } from "./sequence/SequenceField";
-import { SequentialField } from "./sequential/SequentialField";
+import { EnumField } from "./enum/enum-field";
+import { KeyField } from "./key/key-field";
+import { PickField } from "./pick/pick-field";
+import { ProbabilityField } from "./probability/probability-field";
+import { RefField } from "./ref/ref-field";
+import { SequenceField } from "./sequence/sequence-field";
+import { SequentialField } from "./sequential/sequential-field";
 
 export {
   EnumField,

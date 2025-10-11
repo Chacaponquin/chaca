@@ -105,14 +105,13 @@ export class FinanceModule {
    * @returns string
    */
   creditCard(): string {
-    let retString = "";
+    let retString = String(this.datatypeModule.int({ min: 0, max: 9 }));
 
-    for (let i = 1; i <= 12; i++) {
-      if (i % 4 === 0) retString = retString.concat("-");
+    for (let i = 1; i < 16; i++) {
+      if (i % 4 === 0) retString = retString + "-";
 
-      retString = retString.concat(
-        String(this.datatypeModule.int({ min: 0, max: 9 })),
-      );
+      retString =
+        retString + String(this.datatypeModule.int({ min: 0, max: 9 }));
     }
 
     return retString;
@@ -271,8 +270,6 @@ export class FinanceModule {
    *
    * @example
    * modules.finance.litecoinAddress() // 'MoQaSTGWBRXkWfyxKbNKuPrAWGELzcW'
-   *
-   * @since 5.0.0
    */
   litecoinAddress(): string {
     const addressLength = this.datatypeModule.int({ min: 26, max: 33 });

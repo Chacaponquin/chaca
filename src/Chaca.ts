@@ -1,30 +1,27 @@
-import { Schema } from "./core/schema";
-import { EnumField } from "./core/fields/core/enum";
-import { KeyField, KeyFieldProps } from "./core/fields/core/key";
-import { RefFieldConfig, FieldToRef, RefField } from "./core/fields/core/ref";
-import {
-  SequenceField,
-  SequenceFieldProps,
-} from "./core/fields/core/sequence/SequenceField";
-import {
-  SequentialField,
-  SequentialFieldConfig,
-} from "./core/fields/core/sequential/SequentialField";
+import { KeyField, KeyFieldProps } from "./core/fields/core/key/key-field";
 import { ChacaUtils } from "./core/utils";
 import { SchemaInput } from "./core/schema/interfaces/schema";
-import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
+import { DatasetSchema } from "./core/dataset-resolver/interfaces/dataset-schema";
 import { ExportResolver } from "./core/export/resolvers/export/export";
 import { DumpConfig, FileConfig } from "./core/export/interfaces/export";
-import {
-  ProbabilityOption,
-  ProbabilityField,
-} from "./core/fields/core/probability";
-import { PickField, PickFieldProps } from "./core/fields/core/pick";
-import { Dataset } from "./core/dataset";
+import { PickField, PickFieldProps } from "./core/fields/core/pick/pick-field";
 import { DatatypeModule } from "./modules/datatype";
 import { GeneratorFilter } from "./core/export/resolvers/generator-filter/generator-filter";
-import { DumpFile } from "./core/export/generators/generator";
+import { DumpFile } from "./core/export/generators/generator/generator";
 import { DumpResolver } from "./core/export/resolvers/dump/dump";
+import {
+  EnumField,
+  ProbabilityField,
+  RefField,
+  SequenceField,
+  SequentialField,
+} from "./core/fields/core";
+import { ProbabilityOption } from "./core/fields/core/probability/probability-field";
+import { Dataset } from "./core/dataset/dataset";
+import { SequenceFieldProps } from "./core/fields/core/sequence/sequence-field";
+import { SequentialFieldConfig } from "./core/fields/core/sequential/sequential-field";
+import { FieldToRef, RefFieldConfig } from "./core/fields/core/ref/ref-field";
+import { Schema } from "./core/schema/schema";
 
 export class Chaca {
   constructor(

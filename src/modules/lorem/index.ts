@@ -154,7 +154,6 @@ export class LoremModule {
   }
 
   /**
-   * Generates the given number of paragraphs.
    * Generates a paragraph with the given number of sentences.
    *
    * @param args.count The number of sentences to generate.
@@ -180,8 +179,8 @@ export class LoremModule {
   /**
    * Generates a single sentence.
    *
-   * @param args.wordsMin Minimun of words in each sentence
-   * @param args.wordsMax Maximun of words in each sentence
+   * @param args.wordsMin Minimun of words
+   * @param args.wordsMax Maximun of words
    *
    * @example
    * modules.lorem.sentence() // 'Voluptatum cupiditate suscipit autem eveniet aut dolorem aut officiis distinctio.'

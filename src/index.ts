@@ -9,7 +9,10 @@ import {
   PossibleNullFunctionProps,
 } from "./core/schema/interfaces/schema";
 
-import { CustomField, CustomFieldProps } from "./core/fields/core/custom";
+import {
+  CustomField,
+  CustomFieldProps,
+} from "./core/fields/core/custom/custom-field";
 
 import {
   ExportFormat,
@@ -27,7 +30,7 @@ import {
   YamlFormatConfig,
 } from "./core/export/interfaces/export";
 
-import { Schema } from "./core/schema";
+import { Schema } from "./core/schema/schema";
 
 import {
   ChacaError,
@@ -43,9 +46,14 @@ import {
 import {
   GetStoreConfig,
   GetStoreWhere,
-} from "./core/schema-store/interfaces/store";
+} from "./core/schema-store/interfaces/schema-store";
 
-import { DatasetSchema } from "./core/dataset-resolver/interfaces/resolver";
+import {
+  DatasetSchema,
+  DatasetSchemaCount,
+  DatasetSchemaCountFunction,
+  DatasetSchemaCountFunctionProps,
+} from "./core/dataset-resolver/interfaces/dataset-schema";
 
 import {
   RefFieldConfig,
@@ -53,22 +61,22 @@ import {
   RefField,
   RefFieldWhereProps,
   RefFieldWhere,
-} from "./core/fields/core/ref";
+} from "./core/fields/core/ref/ref-field";
 
 import {
   SequentialField,
   SequentialFieldConfig,
-} from "./core/fields/core/sequential/SequentialField";
+} from "./core/fields/core/sequential/sequential-field";
 
-import { KeyField, KeyFieldProps } from "./core/fields/core/key";
+import { KeyField, KeyFieldProps } from "./core/fields/core/key/key-field";
 
 import {
   SequenceField,
   SequenceFieldProps,
-} from "./core/fields/core/sequence/SequenceField";
+} from "./core/fields/core/sequence/sequence-field";
 
-import { DatasetStore } from "./core/dataset-store";
-import { EnumField } from "./core/fields/core/enum";
+import { DatasetStore } from "./core/dataset-store/dataset-store";
+import { EnumField } from "./core/fields/core/enum/enum-field";
 import { Chaca } from "./Chaca";
 import { ChacaUtils } from "./core/utils";
 
@@ -78,7 +86,7 @@ import {
   ProbabilityOption,
   ChanceFunction,
   ChanceFunctionProps,
-} from "./core/fields/core/probability";
+} from "./core/fields/core/probability/probability-field";
 
 import {
   PickField,
@@ -87,10 +95,10 @@ import {
   PickCountFunction,
   PickCountFunctionProps,
   PickCountLimits,
-} from "./core/fields/core/pick";
+} from "./core/fields/core/pick/pick-field";
 
 import { ChacaModules } from "./modules";
-import { Dataset } from "./core/dataset";
+import { Dataset } from "./core/dataset/dataset";
 import { DumpConfig, DumpFile } from "./core/export/resolvers/dump/dump";
 
 const utils = new ChacaUtils();
@@ -127,6 +135,9 @@ export type {
   ExportFormat,
   FileConfig,
   DatasetSchema,
+  DatasetSchemaCount,
+  DatasetSchemaCountFunction,
+  DatasetSchemaCountFunctionProps,
   FieldToRef,
   RefFieldWhere,
   GetStoreConfig,

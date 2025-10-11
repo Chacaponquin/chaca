@@ -1,5 +1,6 @@
 import { InputTreeNode, MixedValueNode } from "../../input-tree/core";
-import { FieldNode, MixedFieldNode } from "../../result-tree/classes";
+import { MixedFieldNode } from "../../result-tree/classes/mixed";
+import { FieldNode } from "../../result-tree/classes/node/field-node";
 import { FillSolution } from "./fill-solution";
 import { SolutionCreator } from "./solution-creator";
 
@@ -15,13 +16,13 @@ export class SubFieldsCreator {
     private readonly fillSolution: FillSolution,
   ) {}
 
-  execute({ field, indexDoc, node }: Props) {
+  async execute({ field, indexDoc, node }: Props): Promise<void> {
     if (field instanceof MixedValueNode && node instanceof MixedFieldNode) {
       const subFields = field.getFields();
 
       for (const subField of subFields) {
         // filtrar el subField segun su tipo
-        const solution = this.creator.execute({
+        const solution = await this.creator.execute({
           field: subField,
           indexDoc: indexDoc,
         });
@@ -29,7 +30,7 @@ export class SubFieldsCreator {
         // insertar la solucion del field en la solucion del mixed field pasado por parametro
         node.insertNode(solution);
 
-        this.fillSolution.execute({
+        await this.fillSolution.execute({
           indexDoc: indexDoc,
           input: subField,
           solution: solution,

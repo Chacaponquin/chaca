@@ -2,6 +2,8 @@ name: 🖥️ Workflow Dev
 on:
   push:
     branches: [chaca-dev]
+  pull_request:
+    branches: [chaca-dev, main]
 jobs:
   release:
     name: 🖥️ Dev
@@ -9,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x, 20.x]
+        node-version: [20.x, 22.x]
 
     steps:
       - name: Checkout

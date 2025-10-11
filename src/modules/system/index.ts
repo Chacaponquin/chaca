@@ -3,6 +3,7 @@ import { MIME_TYPES } from "./constants/mime-types";
 import { FILE_EXTENSIONS } from "./constants/file-extensions";
 import { WordModule } from "../word";
 import { DatatypeModule } from "../datatype";
+import { nonStandardExpressions } from "./constants/non-standard-cron-expressions";
 
 export interface CronProps {
   includeYear?: boolean;
@@ -37,7 +38,9 @@ export class SystemModule {
    */
   filename({ ext: iext }: FilenameProps = {}): string {
     const ext =
-      typeof iext === "string" && iext.length > 0 ? iext : this.fileExt();
+      typeof iext === "string" && iext.trim().length > 0
+        ? `.${iext}`
+        : this.fileExt();
 
     const length = this.datatypeModule.int({ min: 1, max: 5 });
 
@@ -45,7 +48,7 @@ export class SystemModule {
       length: length,
     }).map(() => this.wordModule.noun({ language: "en" }));
 
-    return `${arrayNames.join("_")}${ext}`;
+    return `${arrayNames.join("_")}${ext}`.trim();
   }
 
   /**
@@ -111,8 +114,8 @@ export class SystemModule {
   /**
    * Returns a random cron expression.
    *
-   * @param args.includeYear Whether to include a year in the generated expression. Defaults to `false`.
-   * @param args.includeNonStandard Whether to include a `@yearly`, `@monthly`, `@daily`, etc text labels in the generated expression. Defaults to `false`.
+   * @param args.includeYear Whether to include a year in the generated expression. Default `false`.
+   * @param args.includeNonStandard Whether to include a `@yearly`, `@monthly`, `@daily`, etc text labels in the generated expression. Default`false`.
    *
    * @example
    * modules.system.cron() // '45 23 * * 6'
@@ -145,23 +148,17 @@ export class SystemModule {
     const dayOfWeek = this.utils.oneOfArray(daysOfWeek);
     const year = this.utils.oneOfArray(years);
 
+    let standard = !includeNonStandard;
+
     // create and return the cron expression string
     let standardExpression = `${minute} ${hour} ${day} ${month} ${dayOfWeek}`;
+
     if (includeYear) {
+      standard = true;
       standardExpression += ` ${year}`;
     }
 
-    const nonStandardExpressions = [
-      "@annually",
-      "@daily",
-      "@hourly",
-      "@monthly",
-      "@reboot",
-      "@weekly",
-      "@yearly",
-    ];
-
-    return !includeNonStandard || this.datatypeModule.boolean()
+    return standard
       ? standardExpression
       : this.utils.oneOfArray(nonStandardExpressions);
   }

@@ -1,5 +1,5 @@
-import { Schema } from "..";
-import { DatasetStore } from "../../dataset-store";
+import { Schema } from "../schema";
+import { DatasetStore } from "../../dataset-store/dataset-store";
 import {
   EnumField,
   KeyField,
@@ -9,7 +9,7 @@ import {
   SequenceField,
   SequentialField,
 } from "../../fields/core";
-import { CustomField } from "../../fields/core/custom";
+import { CustomField } from "../../fields/core/custom/custom-field";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
 import { FieldIsArray } from "../../schema-resolver/value-object/array";
 import { FieldPossibleNull } from "../../schema-resolver/value-object/possible-null";
@@ -35,9 +35,9 @@ export type FieldObjectInput<R = any> = {
    */
   isArray?: IsArrayConfig;
   /** Null schema field configuration
-   * - `boolean` - `true` 50% chances to be null, `false` 0% chances
+   * - `boolean` - `true` 100% chances to be null, `false` 0% chances
    * - `number` specific porcent of chances
-   * - `function` function that returns a number between 0 and 100 or a boolean. Receive 'currentFields' and 'store' as parameters
+   * - `function` function that returns a number between 0 and 1 or a boolean. Receive 'currentFields' and 'store' as parameters
    */
   possibleNull?: PossibleNullConfig;
 };
@@ -59,21 +59,25 @@ export type ArrayLimitObject = { min?: number; max?: number };
 
 export type IsArrayFunction = (
   props: IsArrayFunctionProps,
-) => ArrayLimitObject | number | undefined;
+) =>
+  | ArrayLimitObject
+  | number
+  | undefined
+  | Promise<ArrayLimitObject | number | undefined>;
 export type IsArrayFunctionProps<C = any> = {
   /** Current schema document fields */
   currentFields: C;
-  /** Store to interact with all datasets */
+  /** Store to interact with all dataset schemas */
   store: DatasetStore;
 };
 
 export type PossibleNullFunction = (
   props: PossibleNullFunctionProps,
-) => number | boolean | undefined;
+) => number | boolean | undefined | Promise<number | boolean | undefined>;
 export type PossibleNullFunctionProps<C = any> = {
   /** Current schema document fields */
   currentFields: C;
-  /** Store to interact with all datasets */
+  /** Store to interact with all dataset schemas */
   store: DatasetStore;
 };
 

@@ -1,11 +1,11 @@
-import { CsvProps } from "../generators/csv";
-import { JavaProps } from "../generators/java";
-import { JavascriptProps } from "../generators/javascript";
-import { JsonProps } from "../generators/json";
-import { PythonProps } from "../generators/python";
-import { SQLProps } from "../generators/sql";
-import { TypescriptProps } from "../generators/typescript";
-import { YamlProps } from "../generators/yaml";
+import { CsvProps } from "../generators/csv/csv-generator";
+import { JavaProps } from "../generators/java/java-generator";
+import { JavascriptProps } from "../generators/javascript/javascript-generator";
+import { JsonProps } from "../generators/json/json-generator";
+import { PythonProps } from "../generators/python/python-generator";
+import { SQLProps } from "../generators/sql/sql-generator";
+import { TypescriptProps } from "../generators/typescript/typescript-generator";
+import { YamlProps } from "../generators/yaml/yaml-generator";
 
 /** Export files extensions */
 export type ExportFormat = Extensions | ExtensionConfigs;

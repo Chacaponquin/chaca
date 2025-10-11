@@ -19,7 +19,7 @@ import {
   SequentialFieldResolver,
 } from "../../resolvers/core";
 import { IResolver } from "../../resolvers/interfaces/resolvers";
-import { Schema } from "../../schema";
+import { Schema } from "../../schema/schema";
 import {
   FieldObjectInput,
   FieldTypes,

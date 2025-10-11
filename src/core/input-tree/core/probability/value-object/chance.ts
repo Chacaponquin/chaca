@@ -1,10 +1,10 @@
 import { WrongProbabilityFieldDefinitionError } from "../../../../../errors";
-import { DatasetStore } from "../../../../dataset-store";
+import { DatasetStore } from "../../../../dataset-store/dataset-store";
 import {
   ChanceFunction,
   Chance as IChance,
-} from "../../../../fields/core/probability";
-import { DocumentTree } from "../../../../result-tree/classes";
+} from "../../../../fields/core/probability/probability-field";
+import { DocumentTree } from "../../../../result-tree/classes/document/document-tree";
 
 interface Props {
   value: IChance;
@@ -44,7 +44,7 @@ export abstract class Chance {
     return type;
   }
 
-  abstract value(props: ValueProps): number;
+  abstract value(props: ValueProps): Promise<number>;
 }
 
 export class ProbabilityChance extends Chance {
@@ -67,8 +67,8 @@ export class ProbabilityChance extends Chance {
     this.prob = save;
   }
 
-  value(): number {
-    return this.prob;
+  value(): Promise<number> {
+    return new Promise((resolve) => resolve(this.prob));
   }
 }
 
@@ -83,8 +83,8 @@ export class FunctionChance extends Chance {
     this.route = route;
   }
 
-  value({ currentDocument, store }: ValueProps): number {
-    const result = this.func({
+  async value({ currentDocument, store }: ValueProps): Promise<number> {
+    const result = await this.func({
       store: store,
       currentFields: currentDocument.getDocumentObject(),
     });
