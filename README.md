@@ -40,7 +40,7 @@ const movieSchema = chaca.schema({
 });
 
 // Generate 20 objects with the defined schema
-const docs = movieSchema.array(20);
+const docs = await movieSchema.array(20);
 
 /*
 [
