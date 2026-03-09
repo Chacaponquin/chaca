@@ -202,9 +202,16 @@ export class DateModule {
 
     const refYear = refDate.getUTCFullYear();
 
-    const min: number =
-      typeof imin === "number" && imin > 0 ? imin : refYear - 18;
-    const max: number = typeof imax === "number" ? imax : refYear - 80;
+    let min: number;
+    let max: number;
+
+    if (mode === "age") {
+      min = typeof imin === "number" && imin >= 0 ? imin : 18;
+      max = typeof imax === "number" && imax >= 0 ? imax : 80;
+    } else {
+      min = typeof imin === "number" && imin > 0 ? imin : refYear - 80;
+      max = typeof imax === "number" && imax > 0 ? imax : refYear - 18;
+    }
 
     if (mode === "age") {
       const minimun = new Date(refDate).setUTCFullYear(refYear - max - 1);

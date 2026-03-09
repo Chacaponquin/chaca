@@ -20,4 +20,16 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 
+# Claude AI Agent temporary files
+.claude
+.claude-workspace
+*.claude-session
+.claude-memory
+.claude-cache
+claude-*.tmp
+.anthropic-cache
+.ai-context
+.agent-state
+.assistant-memory
+
 
