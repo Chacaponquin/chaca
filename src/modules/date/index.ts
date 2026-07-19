@@ -213,6 +213,12 @@ export class DateModule {
       max = typeof imax === "number" && imax > 0 ? imax : refYear - 18;
     }
 
+    if (min > max) {
+      throw new ChacaError(
+        `The min ${mode} (${min}) must be lower than or equal to the max ${mode} (${max}).`,
+      );
+    }
+
     if (mode === "age") {
       const minimun = new Date(refDate).setUTCFullYear(refYear - max - 1);
       const maximun = new Date(refDate).setUTCFullYear(refYear - min);
