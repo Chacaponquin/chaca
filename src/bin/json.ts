@@ -10,7 +10,7 @@ interface Props extends CommonProps {
   indent: number;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const json: CommandModule<{}, Props> = {
   command: "json",
   describe: description("json"),

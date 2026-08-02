@@ -4,7 +4,10 @@ import { Parent } from "./parent";
 export class JavaClassFieldName {
   private _name: string;
 
-  constructor(private readonly utils: ChacaUtils, name: string) {
+  constructor(
+    private readonly utils: ChacaUtils,
+    name: string,
+  ) {
     this._name = name;
   }
 

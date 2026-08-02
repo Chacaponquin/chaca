@@ -24,7 +24,10 @@ interface Option {
 export class ChancesArray {
   private readonly options: Option[] = [];
 
-  constructor(private readonly utils: ChacaUtils, { options, route }: Props) {
+  constructor(
+    private readonly utils: ChacaUtils,
+    { options, route }: Props,
+  ) {
     if (options.length > 0) {
       for (const option of options) {
         if (typeof option === "object" && option !== null) {

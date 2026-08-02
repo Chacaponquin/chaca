@@ -50,6 +50,16 @@ export type FileConfig = {
 
 export type DumpConfig = Omit<FileConfig, "location">;
 
+/**
+ * Contract the CLI relies on to export a config module without knowing whether
+ * it is a `Schema` or a `Dataset`. Each implementation adapts the uniform
+ * `(documents, config)` call to its own export signature (a `Dataset` ignores
+ * the document count). This keeps the CLI free of type discrimination.
+ */
+export interface CliExportable {
+  exportFromCli(documents: number, config: FileConfig): Promise<string[]>;
+}
+
 export type ExtensionConfigs =
   | JsonFormatConfig
   | CsvFormatConfig

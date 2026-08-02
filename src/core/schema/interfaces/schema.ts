@@ -82,13 +82,7 @@ export type PossibleNullFunctionProps<C = any> = {
 };
 
 export type IsArrayConfig =
-  | number
-  | ArrayLimitObject
-  | IsArrayFunction
-  | undefined;
+  number | ArrayLimitObject | IsArrayFunction | undefined;
 
 export type PossibleNullConfig =
-  | boolean
-  | number
-  | PossibleNullFunction
-  | undefined;
+  boolean | number | PossibleNullFunction | undefined;

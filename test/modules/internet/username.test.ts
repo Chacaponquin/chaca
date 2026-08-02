@@ -2,9 +2,13 @@ import { modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("internet.username", () => {
-  it("Wno arguments. should return a username", () => {
-    const username = modules.internet.username();
-    expect(typeof username).toBe("string");
+  it("no arguments. should return a non-empty username without spaces", () => {
+    for (let i = 0; i < 100; i++) {
+      const username = modules.internet.username();
+
+      expect(username.length).toBeGreaterThan(0);
+      expect(username).not.toContain(" ");
+    }
   });
 
   describe("firstName argument", () => {
@@ -28,9 +32,8 @@ describe("internet.username", () => {
         firstName: "john",
       });
 
-      expect(username.includes("hector") && username.includes("john")).toBe(
-        true,
-      );
+      expect(username.includes("hector")).toBe(true);
+      expect(username.includes("john")).toBe(true);
     });
   });
 });

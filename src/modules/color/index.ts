@@ -80,15 +80,15 @@ export class ColorModule {
   /**
    * Returns an RGB color.
    *
-   * @param options.prefix Prefix of the generated hex color. Only applied when `'hex'` format is used. Defaults to `'0x'`.
+   * @param options.prefix Prefix of the generated hex color. Only applied when `'hex'` format is used. Defaults to `'#'`.
    * @param options.casing Letter type case of the generated hex color. Only applied when `'hex'` format is used. Defaults to `'mixed'`.
    * @param options.format Format of generated RGB color. Defaults to `'hex'`.
    * @param options.includeAlpha Adds an alpha value to the color (RGBA). Defaults to `false`.
    *
    * @example
-   * modules.color.rgb({ prefix: '#' }) // '#ffffFF'
-   * modules.color.rgb({ casing: 'upper' }) // '0xFFFFFF'
-   * modules.color.rgb({ casing: 'lower' }) // '0xffffff'
+   * modules.color.rgb({ prefix: '0x' }) // '0xffffFF'
+   * modules.color.rgb({ casing: 'upper' }) // '#FFFFFF'
+   * modules.color.rgb({ casing: 'lower' }) // '#ffffff'
    * modules.color.rgb({ prefix: '#', casing: 'lower' }) // '#ffffff'
    * modules.color.rgb({ format: 'hex', casing: 'lower' }) // '#ffffff'
    * modules.color.rgb({ format: 'css' }) // 'rgb(255, 0, 0)'
@@ -121,7 +121,7 @@ export class ColorModule {
       cssFunction = "rgba";
     }
 
-    const returnColor = prefix + toColorFormat(color, format, cssFunction);
+    const returnColor = toColorFormat(color, format, cssFunction);
     if (casing === "lower") {
       return returnColor.toLowerCase();
     } else if (casing === "upper") {
@@ -198,7 +198,7 @@ export class ColorModule {
    * it is bounded to 230 as anything above will not
    * make a noticeable difference in the browser.
    *
-   * @param options.format Format of generated LCH color. Defaults to `'decimal'`.
+   * @param options.format Format of generated LCH color. Defaults to `'css'`.
    *
    * @example
    * modules.color.lch({ format: 'css' }) // lch(52.2345% 72.2 56.2)

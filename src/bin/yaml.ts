@@ -22,7 +22,7 @@ const lineWidth: Options = {
   describe: "Set max line width. Default `80`",
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const yaml: CommandModule<{}, Props> = {
   command: "yaml",
   describe: description("yaml"),

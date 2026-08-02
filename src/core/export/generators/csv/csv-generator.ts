@@ -4,19 +4,15 @@ import {
   DumpRelationalProps,
   Generator,
 } from "../generator/generator";
-import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { DataValidator } from "./core/validator";
 import { Filename } from "../file-creator/filename";
 import { ZipConfig } from "../params";
 import { CodeProps, CsvCodeCreator } from "./core/creator";
-import { FileCreator } from "../file-creator/file-creator";
-import { Route } from "../file-creator/route";
 
 export type CsvProps = ZipConfig & CodeProps;
 
 export class CsvGenerator extends Generator {
   private readonly creator: CsvCodeCreator;
-  private readonly zip: boolean;
 
   constructor({
     zip = false,
@@ -30,7 +26,7 @@ export class CsvGenerator extends Generator {
     sortHeader = false,
     unwindArrays = false,
   }: CsvProps) {
-    super({ ext: "csv" });
+    super({ ext: "csv", zip: zip });
 
     this.creator = new CsvCodeCreator(
       {
@@ -46,34 +42,6 @@ export class CsvGenerator extends Generator {
       },
       new DataValidator(),
     );
-
-    this.zip = Boolean(zip);
-  }
-
-  async createRelationalFile(
-    fileCreator: FileCreator,
-    resolver: DatasetResolver,
-  ): Promise<string[]> {
-    const allRoutes = [] as Route[];
-
-    for (const r of resolver.getResolvers()) {
-      const filename = new Filename(r.getSchemaName());
-      const route = fileCreator.generateRoute(filename);
-      const code = this.creator.execute(await r.resolve());
-
-      await fileCreator.writeFile(route, code);
-
-      allRoutes.push(route);
-    }
-
-    if (this.zip) {
-      const zip = fileCreator.createZip();
-      await zip.multiple(allRoutes);
-
-      return [zip.route];
-    } else {
-      return allRoutes.map((r) => r.value());
-    }
   }
 
   dump({ filename, data }: DumpProps): DumpFile[] {
@@ -93,20 +61,5 @@ export class CsvGenerator extends Generator {
     }
 
     return result;
-  }
-
-  async createFile(fileCreator: FileCreator, data: any): Promise<string[]> {
-    const code = this.creator.execute(data);
-    const route = fileCreator.generateRoute(fileCreator.filename);
-    await fileCreator.writeFile(route, code);
-
-    if (this.zip) {
-      const zip = fileCreator.createZip();
-      await zip.multiple([route]);
-
-      return [zip.route];
-    } else {
-      return [route.value()];
-    }
   }
 }

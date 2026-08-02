@@ -20,7 +20,7 @@ const ipackage: Options = {
     "Name of the package in which the classes will be found. Default `chaca.data`",
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const java: CommandModule<{}, Props> = {
   command: "java",
   describe: description("javascript"),

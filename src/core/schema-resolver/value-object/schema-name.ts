@@ -3,7 +3,10 @@ import { ChacaError } from "../../../errors";
 export class SchemaName {
   private _value: string;
 
-  constructor(name: string, private readonly index: number) {
+  constructor(
+    name: string,
+    private readonly index: number,
+  ) {
     this._value = this.validate(name);
   }
 

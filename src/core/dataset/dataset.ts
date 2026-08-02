@@ -2,17 +2,24 @@ import { DatatypeModule } from "../../modules/datatype";
 import { DatasetSchema } from "../dataset-resolver/interfaces/dataset-schema";
 import { DatasetResolver } from "../dataset-resolver/dataset-resolver";
 import { ExportResolver } from "../export/resolvers/export/export";
-import { DumpConfig, FileConfig } from "../export/interfaces/export";
+import {
+  CliExportable,
+  DumpConfig,
+  FileConfig,
+} from "../export/interfaces/export";
 import { ChacaUtils } from "../utils";
 import { GeneratorFilter } from "../export/resolvers/generator-filter/generator-filter";
 import { DumpResolver } from "../export/resolvers/dump/dump";
 import { DumpFile } from "../export/generators/generator/generator";
+import { FileWriter } from "../export/writers/file-writer";
+import { UnavailableFileWriter } from "../export/writers/unavailable/unavailable-file-writer";
 
-export class Dataset<K = any> {
+export class Dataset<K = any> implements CliExportable {
   constructor(
     private readonly schemas: DatasetSchema[],
     private readonly utils: ChacaUtils,
     private readonly datatypeModule: DatatypeModule,
+    private readonly fileWriter: FileWriter = new UnavailableFileWriter(),
   ) {}
 
   /**
@@ -48,11 +55,21 @@ export class Dataset<K = any> {
       this.utils,
       this.datatypeModule,
       filter,
+      this.fileWriter,
       config,
     );
     const routes = await resolver.relational(this.schemas);
 
     return routes;
+  }
+
+  /**
+   * Adapts the CLI's uniform export call to the dataset `export` signature.
+   * The document count is defined per schema, so it is ignored here.
+   * @internal
+   */
+  exportFromCli(_documents: number, config: FileConfig): Promise<string[]> {
+    return this.export(config);
   }
 
   /**

@@ -1,7 +1,9 @@
 {
   "compilerOptions": {
-    "outDir": "lib",
+    "outDir": "dist",
     "module": "CommonJS",
+    "target": "ES2022",
+    "lib": ["ES2022"],
 
     "removeComments": false,
     "strict": true,
@@ -11,7 +13,6 @@
     "noUnusedParameters": false,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "downlevelIteration": true,
     "isolatedModules": true,
     "declaration": true,
     "esModuleInterop": true

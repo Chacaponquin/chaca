@@ -12,7 +12,7 @@ interface Props extends CommonProps {
   skipInvalid: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const js: CommandModule<{}, Props> = {
   command: "js",
   describe: description("javascript"),

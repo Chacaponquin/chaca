@@ -45,7 +45,7 @@ const trimFields: Options = {
   describe: "Should the field values be trimmed? Default `false`",
 };
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const csv: CommandModule<{}, Props> = {
   command: "csv",
   describe: description("csv"),

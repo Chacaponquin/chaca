@@ -23,7 +23,10 @@ export class TableName {
 export class ColumnName {
   private readonly name: string;
 
-  constructor(private readonly utils: ChacaUtils, name: string) {
+  constructor(
+    private readonly utils: ChacaUtils,
+    name: string,
+  ) {
     this.name = `${name}`;
   }
 

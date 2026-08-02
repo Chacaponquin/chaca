@@ -2,7 +2,10 @@ import { ChacaUtils } from "../../../../utils";
 import { Route } from "./route";
 
 export class JavascriptClassName {
-  constructor(private readonly utils: ChacaUtils, private route: Route) {}
+  constructor(
+    private readonly utils: ChacaUtils,
+    private route: Route,
+  ) {}
 
   equal(other: JavascriptClassName): boolean {
     return other.route.equal(this.route);
@@ -14,7 +17,10 @@ export class JavascriptClassName {
 }
 
 export class JavascriptClassFieldName {
-  constructor(private readonly utils: ChacaUtils, private _name: string) {}
+  constructor(
+    private readonly utils: ChacaUtils,
+    private _name: string,
+  ) {}
 
   equal(other: JavascriptClassFieldName): boolean {
     return other._name === this._name;

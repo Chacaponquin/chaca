@@ -4,7 +4,6 @@ import {
   DumpRelationalProps,
   Generator,
 } from "../generator/generator";
-import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { Filename } from "../file-creator/filename";
 import { JavascriptCodeCreator } from "./core/creator";
 import { ChacaUtils } from "../../../utils";
@@ -16,8 +15,6 @@ import {
 } from "../params";
 import { SpaceIndex } from "../../core/space-index";
 import { SkipInvalid } from "../../core/skip-invalid";
-import { FileCreator } from "../file-creator/file-creator";
-import { Route } from "../file-creator/route";
 import { DeclarationOnly } from "../../core/declaration-only";
 
 export type JavascriptProps = ZipConfig &
@@ -26,15 +23,13 @@ export type JavascriptProps = ZipConfig &
   SkipInvalidConfig;
 
 export class JavascriptGenerator extends Generator {
-  private readonly zip: boolean;
   private readonly separate: boolean;
 
   private readonly creator: JavascriptCodeCreator;
 
   constructor(utils: ChacaUtils, config: JavascriptProps) {
-    super({ ext: "js" });
+    super({ ext: "js", zip: config.zip });
 
-    this.zip = Boolean(config.zip);
     this.separate = Boolean(config.separate);
 
     this.creator = new JavascriptCodeCreator(
@@ -72,39 +67,6 @@ export class JavascriptGenerator extends Generator {
     }
   }
 
-  async createRelationalFile(
-    fileCreator: FileCreator,
-    resolver: DatasetResolver,
-  ): Promise<string[]> {
-    if (this.separate) {
-      const routes = [] as Route[];
-
-      for (const r of resolver.getResolvers()) {
-        const code = this.creator.execute({
-          data: await r.resolve(),
-          name: r.getSchemaName(),
-        });
-        const filename = new Filename(r.getSchemaName());
-        const route = fileCreator.generateRoute(filename);
-
-        await fileCreator.writeFile(route, code);
-
-        routes.push(route);
-      }
-
-      if (this.zip) {
-        const zip = fileCreator.createZip();
-        await zip.multiple(routes);
-
-        return [zip.route];
-      } else {
-        return routes.map((r) => r.value());
-      }
-    } else {
-      return await this.createFile(fileCreator, await resolver.resolve());
-    }
-  }
-
   dump({ filename, data }: DumpProps): DumpFile[] {
     const code = this.creator.execute({
       data: data,
@@ -112,25 +74,5 @@ export class JavascriptGenerator extends Generator {
     });
 
     return [{ filename: filename.value(), content: code }];
-  }
-
-  async createFile(fileCreator: FileCreator, data: any): Promise<string[]> {
-    const route = fileCreator.generateRoute(fileCreator.filename);
-
-    const code = this.creator.execute({
-      data: data,
-      name: fileCreator.filename.value(),
-    });
-
-    await fileCreator.writeFile(route, code);
-
-    if (this.zip) {
-      const zip = fileCreator.createZip();
-      await zip.multiple([route]);
-
-      return [zip.route];
-    } else {
-      return [route.value()];
-    }
   }
 }

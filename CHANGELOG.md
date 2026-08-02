@@ -1,3 +1,58 @@
+# chaca@2.2.0
+
+## 🌚 Features
+
+### Browser support
+
+- **`chaca` is now isomorphic.** It can be installed and used in browser apps (React, Vue, Svelte, etc.), not only in Node. Your bundler automatically resolves the browser-safe build through the package `exports` map — no configuration needed.
+- The package now ships **both ESM and CommonJS** builds, each with its own type definitions.
+- Use `transform` to serialize your data to any supported format (`json`, `csv`, `yaml`, `postgresql`, `java`, `python`, `typescript`, `javascript`) fully **in memory**. This is the way to obtain file contents in the browser (e.g. to trigger a download):
+
+  ```ts
+  import { chaca, modules } from "chaca";
+
+  const schema = chaca.schema({
+    id: chaca.key(() => modules.id.uuid()),
+    name: () => modules.person.firstName(),
+  });
+
+  const [file] = await schema.transform(50, {
+    filename: "users",
+    format: "json",
+  });
+
+  // file.filename -> "users.json"
+  // file.content  -> serialized string, ready to download or display
+  ```
+
+- The `FileWriter` type is now exported, so advanced users can plug in a custom output target when constructing a `Schema`/`Dataset`.
+
+## 🪛 Fix
+
+- `transform` on a relational JSON dataset without `separate` returned an unresolved value instead of the serialized data. It now returns the correct output.
+- Exporting relational **TypeScript** data with `separate: true` did not await the resolved data; the generated files now contain the fully resolved values.
+- `modules.datatype.hexadecimal` could include the character `G`, which is not a valid hexadecimal digit. The output is now always valid hex.
+- `modules.address.country` never matched the continents `Oceania` and `Antarctica` because the `continent` type declared them as `"Oseania"` and `"Antartica"`; filtering by those continents silently fell back to any country. The type now uses the correct names.
+- `modules.date.past`, `modules.date.soon` and `modules.date.between` no longer **mutate** the `refDate`/`to` `Date` object you pass in — they work on a copy. This also fixes `between({ to })`, which could return a value outside the expected range because `from` and `to` ended up being the same mutated object.
+- `modules.date.timeAgo()` without arguments can now return `"N months ago"`; the `months` unit was missing from the random unit pool.
+- `modules.internet.email` with a provider that already contains a TLD (e.g. `{ provider: 'yahoo.com' }`) no longer appends an extra `.com` (`pedro@yahoo.com.com` → `pedro@yahoo.com`). Providers without a dot keep getting `.com` appended.
+- `modules.system.filename` with an extension that starts with a dot (e.g. `{ ext: '.gif' }`) no longer produces a double dot in the filename.
+- `modules.color.rgb` with `format: 'css'` or `format: 'binary'` no longer prepends the hex `prefix` to the output (it produced invalid values like `#rgb(12, 34, 56)`). The `prefix` option now only applies to the `'hex'` format, as documented.
+- `modules.color` constants: removed a duplicated `rec2020` entry from the CSS spaces list.
+- `modules.image` methods now URL-encode the category in the generated URL, so categories with spaces or special characters produce valid URLs.
+
+## ⚠️ Behavior changes
+
+- `modules.finance.ethereumAddress` now returns the address with the `0x` prefix, as its documentation always stated (42 characters in total instead of 40).
+- `modules.color.rgb({ format: 'css' })` output changed as described in the fixes above; update any code that relied on the previous prefixed value.
+- The `continent` option type of `modules.address.country` changed from `"Oseania" | "Antartica"` to `"Oceania" | "Antarctica"`; update your code if you passed the misspelled values.
+
+## ⚠️ Notes
+
+- In the **browser** build, `export` (which writes files to the filesystem) is not available and throws a descriptive error. Use `transform` to get the file contents in memory instead. In **Node**, `export` keeps working exactly as before.
+- The build output moved from `lib/` to `dist/`. The public entry point is unchanged (`import { chaca } from "chaca"`); only update your imports if you were relying on internal deep paths such as `chaca/lib/...`.
+- Internal: the `nanoid-cjs` dependency was replaced with `nanoid`. There is no API change — `modules.id.nanoid()` behaves as before.
+
 # chaca@2.1.0
 
 ## 🌚 Features

@@ -30,12 +30,7 @@ export type BirthDateProps = {
 };
 
 export type TimeUnits =
-  | "years"
-  | "seconds"
-  | "minutes"
-  | "days"
-  | "hours"
-  | "months";
+  "years" | "seconds" | "minutes" | "days" | "hours" | "months";
 
 export type TimeAgoProps = {
   unit?: TimeUnits;
@@ -181,7 +176,7 @@ export class DateModule {
    * - `'age'`: The min and max options define the age of the person (e.g. `18` - `42`).
    * - `'year'`: The min and max options define the range the birthdate may be in (e.g. `1900` - `2000`).
    *
-   * Defaults to `year`.
+   * Defaults to `age`.
    *
    * @example
    * modules.date.birthdate() // 1977-07-10T01:37:30.719Z
@@ -292,7 +287,7 @@ export class DateModule {
    * @returns string
    */
   timeAgo({ unit: iunit }: TimeAgoProps = {}) {
-    const units = ["years", "seconds", "minutes", "days", "hours"];
+    const units = ["years", "seconds", "minutes", "days", "hours", "months"];
 
     const unit =
       typeof iunit === "string" ? iunit : this.utils.oneOfArray(units);
@@ -355,7 +350,7 @@ export class DateModule {
 
   private argToDate(date: ArgDate | undefined): Date {
     if (date instanceof Date) {
-      return date;
+      return new Date(date.getTime());
     } else if (typeof date === "string") {
       return new Date(date);
     } else {

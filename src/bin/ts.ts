@@ -14,7 +14,7 @@ interface Props extends CommonProps {
   declarationOnly: boolean;
 }
 
-// eslint-disable-next-line @typescript-eslint/ban-types
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export const ts: CommandModule<{}, Props> = {
   command: "ts",
   describe: description("typescript"),

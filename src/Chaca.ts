@@ -3,6 +3,7 @@ import { ChacaUtils } from "./core/utils";
 import { SchemaInput } from "./core/schema/interfaces/schema";
 import { DatasetSchema } from "./core/dataset-resolver/interfaces/dataset-schema";
 import { ExportResolver } from "./core/export/resolvers/export/export";
+import { FileWriter } from "./core/export/writers/file-writer";
 import { DumpConfig, FileConfig } from "./core/export/interfaces/export";
 import { PickField, PickFieldProps } from "./core/fields/core/pick/pick-field";
 import { DatatypeModule } from "./modules/datatype";
@@ -27,6 +28,7 @@ export class Chaca {
   constructor(
     private readonly datatypeModule: DatatypeModule,
     readonly utils: ChacaUtils,
+    private readonly fileWriter: FileWriter,
   ) {}
 
   /**
@@ -40,7 +42,12 @@ export class Chaca {
    * })
    */
   schema<K = any>(input: SchemaInput): Schema<K> {
-    const newSchema = new Schema<K>(input, this.utils, this.datatypeModule);
+    const newSchema = new Schema<K>(
+      input,
+      this.utils,
+      this.datatypeModule,
+      this.fileWriter,
+    );
     return newSchema;
   }
 
@@ -141,6 +148,7 @@ export class Chaca {
       this.utils,
       this.datatypeModule,
       filter,
+      this.fileWriter,
       config,
     );
 
@@ -154,7 +162,12 @@ export class Chaca {
    * @param schemas Array with the schemas config
    */
   dataset<K = any>(schemas: DatasetSchema[]): Dataset<K> {
-    const dataset = new Dataset<K>(schemas, this.utils, this.datatypeModule);
+    const dataset = new Dataset<K>(
+      schemas,
+      this.utils,
+      this.datatypeModule,
+      this.fileWriter,
+    );
     return dataset;
   }
 

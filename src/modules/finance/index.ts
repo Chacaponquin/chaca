@@ -126,7 +126,7 @@ export class FinanceModule {
    * @returns string
    */
   ethereumAddress(): string {
-    return this.datatypeModule.hexadecimal({ length: 40, case: "lower" });
+    return `0x${this.datatypeModule.hexadecimal({ length: 40, case: "lower" })}`;
   }
 
   /**

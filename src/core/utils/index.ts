@@ -8,12 +8,7 @@ import {
 import { Case } from "change-case-all";
 
 export type TimeUnits =
-  | "years"
-  | "seconds"
-  | "minutes"
-  | "days"
-  | "hours"
-  | "months";
+  "years" | "seconds" | "minutes" | "days" | "hours" | "months";
 
 export type SumDateRangeProps = {
   date: Date;

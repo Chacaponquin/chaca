@@ -4,9 +4,7 @@ import { RefFieldResolver } from "../ref/ref-field-resolver";
 import { SequenceFieldResolver } from "../sequence/sequence-resolver";
 
 export type KeyFieldResolverProps =
-  | RefFieldResolver
-  | SequenceFieldResolver
-  | CustomFieldResolver;
+  RefFieldResolver | SequenceFieldResolver | CustomFieldResolver;
 
 export class KeyFieldResolver extends IResolver {
   constructor(readonly type: KeyFieldResolverProps) {
