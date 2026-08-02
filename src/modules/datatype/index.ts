@@ -157,8 +157,8 @@ export class DatatypeModule {
   /**
    * Returns a integer number
    *
-   * @param args.min Minimun posible value
-   * @param args.max Maximun posible value
+   * @param args.min Minimun posible value (inclusive)
+   * @param args.max Maximun posible value (exclusive)
    *
    * @example
    * modules.datatype.int() // 462

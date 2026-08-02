@@ -5,7 +5,15 @@ import prettierRecommended from "eslint-plugin-prettier/recommended";
 
 export default tseslint.config(
   {
-    ignores: ["node_modules/", "dist/", "lib/", "data/", "test/cli/"],
+    ignores: [
+      "node_modules/",
+      "dist/",
+      "lib/",
+      "data/",
+      "test/cli/",
+      "test-report/",
+      "coverage/",
+    ],
   },
 
   js.configs.recommended,

@@ -75,12 +75,12 @@ export class Dataset<K = any> implements CliExportable {
   /**
    * Generates the dataset data through the defined schemas
    */
-  generate(): Promise<K> {
+  async generate(): Promise<K> {
     const resolver = new DatasetResolver<K>(this.utils, this.datatypeModule, {
       schemas: this.schemas,
       verbose: false,
     });
 
-    return resolver.resolve();
+    return await resolver.resolve();
   }
 }

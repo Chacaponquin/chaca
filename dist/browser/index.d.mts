@@ -1438,9 +1438,21 @@ declare class Chaca {
 declare class ChacaError extends Error {
     constructor(message: string);
 }
+declare class WrongArrayDefinitionError extends ChacaError {
+    readonly fieldRoute: string;
+    constructor(fieldRoute: string, message: string);
+}
+declare class WrongPossibleNullDefinitionError extends ChacaError {
+    readonly fieldRoute: string;
+    constructor(fieldRoute: string, message: string);
+}
 declare class EmptySequentialValuesError extends ChacaError {
     readonly fieldRoute: string;
     constructor(fieldRoute: string);
+}
+declare class WrongProbabilityFieldDefinitionError extends ChacaError {
+    readonly fieldRoute: string;
+    constructor(fieldRoute: string, message: string);
 }
 declare class PickFieldDefinitionError extends ChacaError {
     readonly fieldRoute: string;
@@ -1466,6 +1478,32 @@ declare class NotExistRefFieldError extends ChacaError {
 declare class EmptyEnumValuesError extends ChacaError {
     readonly fieldRoute: string;
     constructor(fieldRoute: string);
+}
+
+type index_ChacaError = ChacaError;
+declare const index_ChacaError: typeof ChacaError;
+type index_CyclicAccessDataError = CyclicAccessDataError;
+declare const index_CyclicAccessDataError: typeof CyclicAccessDataError;
+type index_EmptyEnumValuesError = EmptyEnumValuesError;
+declare const index_EmptyEnumValuesError: typeof EmptyEnumValuesError;
+type index_EmptySequentialValuesError = EmptySequentialValuesError;
+declare const index_EmptySequentialValuesError: typeof EmptySequentialValuesError;
+type index_NotEnoughValuesForRefError = NotEnoughValuesForRefError;
+declare const index_NotEnoughValuesForRefError: typeof NotEnoughValuesForRefError;
+type index_NotExistRefFieldError = NotExistRefFieldError;
+declare const index_NotExistRefFieldError: typeof NotExistRefFieldError;
+type index_PickFieldDefinitionError = PickFieldDefinitionError;
+declare const index_PickFieldDefinitionError: typeof PickFieldDefinitionError;
+type index_TryRefANoKeyFieldError = TryRefANoKeyFieldError;
+declare const index_TryRefANoKeyFieldError: typeof TryRefANoKeyFieldError;
+type index_WrongArrayDefinitionError = WrongArrayDefinitionError;
+declare const index_WrongArrayDefinitionError: typeof WrongArrayDefinitionError;
+type index_WrongPossibleNullDefinitionError = WrongPossibleNullDefinitionError;
+declare const index_WrongPossibleNullDefinitionError: typeof WrongPossibleNullDefinitionError;
+type index_WrongProbabilityFieldDefinitionError = WrongProbabilityFieldDefinitionError;
+declare const index_WrongProbabilityFieldDefinitionError: typeof WrongProbabilityFieldDefinitionError;
+declare namespace index {
+  export { index_ChacaError as ChacaError, index_CyclicAccessDataError as CyclicAccessDataError, index_EmptyEnumValuesError as EmptyEnumValuesError, index_EmptySequentialValuesError as EmptySequentialValuesError, index_NotEnoughValuesForRefError as NotEnoughValuesForRefError, index_NotExistRefFieldError as NotExistRefFieldError, index_PickFieldDefinitionError as PickFieldDefinitionError, index_TryRefANoKeyFieldError as TryRefANoKeyFieldError, index_WrongArrayDefinitionError as WrongArrayDefinitionError, index_WrongPossibleNullDefinitionError as WrongPossibleNullDefinitionError, index_WrongProbabilityFieldDefinitionError as WrongProbabilityFieldDefinitionError };
 }
 
 type NanoidProps = {
@@ -2329,7 +2367,7 @@ declare class SystemModule {
     mimeType(): string;
     /**
      * Return a file extension
-     * @example modules.system.fileExt() // 'mp4'
+     * @example modules.system.fileExt() // '.mp4'
      * @returns string
      */
     fileExt(): string;
@@ -3915,7 +3953,7 @@ declare class DateModule {
      * - `'age'`: The min and max options define the age of the person (e.g. `18` - `42`).
      * - `'year'`: The min and max options define the range the birthdate may be in (e.g. `1900` - `2000`).
      *
-     * Defaults to `year`.
+     * Defaults to `age`.
      *
      * @example
      * modules.date.birthdate() // 1977-07-10T01:37:30.719Z
@@ -4116,7 +4154,7 @@ declare class ScienceModule {
 /**
  * Color space names supported by CSS.
  */
-declare const CSS_SPACES: readonly ["sRGB", "display-p3", "rec2020", "a98-rgb", "prophoto-rgb", "rec2020"];
+declare const CSS_SPACES: readonly ["sRGB", "display-p3", "rec2020", "a98-rgb", "prophoto-rgb"];
 type CSSSpace = (typeof CSS_SPACES)[number];
 
 type StringColorFormat = "css" | "binary";
@@ -4152,7 +4190,7 @@ declare class ColorModule {
     constructor(utils: ChacaUtils, datatypeModule: DatatypeModule);
     readonly constants: {
         cssFunctions: readonly ["rgb", "rgba", "hsl", "hsla", "hwb", "cmyk", "lab", "lch", "color"];
-        cssSpaces: readonly ["sRGB", "display-p3", "rec2020", "a98-rgb", "prophoto-rgb", "rec2020"];
+        cssSpaces: readonly ["sRGB", "display-p3", "rec2020", "a98-rgb", "prophoto-rgb"];
         human: string[];
     };
     /**
@@ -4284,4 +4322,4 @@ declare const modules: ChacaModules;
  */
 declare const chaca: Chaca;
 
-export { Chaca, ChacaError, ChacaModules, ChacaUtils, type Chance, type ChanceFunction, type ChanceFunctionProps, type CsvFormatConfig, type CustomField, type CustomFieldProps, CyclicAccessDataError, Dataset, type DatasetSchema, type DatasetSchemaCount, type DatasetSchemaCountFunction, type DatasetSchemaCountFunctionProps, DatasetStore, type DumpConfig, type DumpFile, EmptyEnumValuesError, EmptySequentialValuesError, EnumField, type ExportFormat, type ExportSQLFormat, type ExtensionConfigs, type Extensions, type FieldObjectInput, type FieldToRef, type FieldTypes, type FileConfig, type FileWriter, type GetStoreConfig, type GetStoreWhere, type IsArrayConfig, type JavaFormatConfig, type JavascriptFormatConfig, type JsonFormatConfig, KeyField, type KeyFieldProps, NotEnoughValuesForRefError, NotExistRefFieldError, type PickCount, type PickCountFunction, type PickCountFunctionProps, type PickCountLimits, PickField, PickFieldDefinitionError, type PickFieldProps, type PossibleNullConfig, type PossibleNullFunction, type PossibleNullFunctionProps, type PostgresqlFormatConfig, ProbabilityField, type ProbabilityOption, type PythonFormatConfig, RefField, type RefFieldConfig, type RefFieldWhere, type RefFieldWhereProps, Schema, type SchemaFieldConfig, type SchemaInput, SequenceField, type SequenceFieldProps, SequentialField, type SequentialFieldConfig, TryRefANoKeyFieldError, type TypescriptFormatConfig, type WriteFilesProps, type YamlFormatConfig, chaca, modules };
+export { Chaca, ChacaError, ChacaModules, ChacaUtils, type Chance, type ChanceFunction, type ChanceFunctionProps, type CsvFormatConfig, type CustomField, type CustomFieldProps, CyclicAccessDataError, Dataset, type DatasetSchema, type DatasetSchemaCount, type DatasetSchemaCountFunction, type DatasetSchemaCountFunctionProps, DatasetStore, type DumpConfig, type DumpFile, EmptyEnumValuesError, EmptySequentialValuesError, EnumField, index as Errors, type ExportFormat, type ExportSQLFormat, type ExtensionConfigs, type Extensions, type FieldObjectInput, type FieldToRef, type FieldTypes, type FileConfig, type FileWriter, type GetStoreConfig, type GetStoreWhere, type IsArrayConfig, type JavaFormatConfig, type JavascriptFormatConfig, type JsonFormatConfig, KeyField, type KeyFieldProps, NotEnoughValuesForRefError, NotExistRefFieldError, type PickCount, type PickCountFunction, type PickCountFunctionProps, type PickCountLimits, PickField, PickFieldDefinitionError, type PickFieldProps, type PossibleNullConfig, type PossibleNullFunction, type PossibleNullFunctionProps, type PostgresqlFormatConfig, ProbabilityField, type ProbabilityOption, type PythonFormatConfig, RefField, type RefFieldConfig, type RefFieldWhere, type RefFieldWhereProps, Schema, type SchemaFieldConfig, type SchemaInput, SequenceField, type SequenceFieldProps, SequentialField, type SequentialFieldConfig, TryRefANoKeyFieldError, type TypescriptFormatConfig, type WriteFilesProps, type YamlFormatConfig, chaca, modules };

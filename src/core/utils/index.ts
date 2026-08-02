@@ -262,7 +262,7 @@ export class ChacaUtils {
     }
 
     if (count === values.length) {
-      return values;
+      return [...values];
     } else {
       const generate = (banned: number[]): number => {
         let num = this.datatypeModule.int({

@@ -29,14 +29,15 @@ export type FieldObjectInput<R = any> = {
   /** Schema field type*/
   type: FieldTypes<R>;
   /** Array schema field configuration
-   * - `boolean`- array length between 1 and 10
    * - `number` - specific array length
    * - `config.min` and `config.max` - limits of array length
+   * - `function` - function that returns a number or a `{ min, max }` object. Receive 'currentFields' and 'store' as parameters
    */
   isArray?: IsArrayConfig;
   /** Null schema field configuration
    * - `boolean` - `true` 100% chances to be null, `false` 0% chances
-   * - `number` specific porcent of chances
+   * - `float` between 0 and 1 - probability for each document of being null
+   * - `integer` greater than or equal to 1 - exact number of documents with a null value
    * - `function` function that returns a number between 0 and 1 or a boolean. Receive 'currentFields' and 'store' as parameters
    */
   possibleNull?: PossibleNullConfig;

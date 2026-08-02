@@ -4,6 +4,9 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   test: {
     testTimeout: 100000,
+    outputFile: {
+      html: "./test-report/index.html",
+    },
     coverage: {
       provider: "istanbul",
       reporter: ["json", "html"],

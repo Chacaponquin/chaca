@@ -20,13 +20,13 @@ describe("Dataset generation (schema count)", () => {
       expect(data.schema2).toHaveLength(10);
     });
 
-    it("trying generate a schema data with documents = -10. should throw an error", () => {
+    it("trying generate a schema data with documents = -10. should throw an error", async () => {
       const dataset = chaca.dataset([
         { name: "schema", documents: 10, schema: schema },
         { name: "schema2", documents: -10, schema: schema2 },
       ]);
 
-      expect(async () => await dataset.generate()).rejects.toThrow(ChacaError);
+      await expect(dataset.generate()).rejects.toThrow(ChacaError);
     });
 
     it("generate dataset with 10 schema1 and 0 schema2. should return 10 schema1 documents and 0 schema2 documents", async () => {
@@ -75,7 +75,7 @@ describe("Dataset generation (schema count)", () => {
       expect(data.schema1).toHaveLength(0);
     });
 
-    it("generate dataset with schema1 count as async function that return a negative number. should throw an error", () => {
+    it("generate dataset with schema1 count as async function that return a negative number. should throw an error", async () => {
       const dataset = chaca.dataset([
         {
           name: "schema1",
@@ -86,7 +86,38 @@ describe("Dataset generation (schema count)", () => {
         },
       ]);
 
-      expect(async () => await dataset.generate()).rejects.toThrow(ChacaError);
+      await expect(dataset.generate()).rejects.toThrow(ChacaError);
+    });
+  });
+
+  describe("count function with store argument", () => {
+    it("schema2 count depends on schema1 documents. should generate one schema2 document per schema1 document", async () => {
+      const dataset = chaca.dataset([
+        { name: "schema1", documents: 7, schema: schema },
+        {
+          name: "schema2",
+          documents: async ({ store }) => {
+            const docs = await store.get("schema1");
+            return docs.length;
+          },
+          schema: schema2,
+        },
+      ]);
+
+      const data = await dataset.generate();
+
+      expect(data.schema1).toHaveLength(7);
+      expect(data.schema2).toHaveLength(7);
+    });
+  });
+
+  describe("invalid count", () => {
+    it("documents = string. should throw an error", async () => {
+      const dataset = chaca.dataset([
+        { name: "schema1", documents: "10" as never, schema: schema },
+      ]);
+
+      await expect(dataset.generate()).rejects.toThrow(ChacaError);
     });
   });
 
@@ -111,12 +142,12 @@ describe("Dataset generation (schema count)", () => {
       expect(data.schema1).toHaveLength(10);
     });
 
-    it("generate dataset with schema1 count as function that return -10. should throw an error", () => {
+    it("generate dataset with schema1 count as function that return -10. should throw an error", async () => {
       const dataset = chaca.dataset([
         { name: "schema1", documents: () => -10, schema: schema },
       ]);
 
-      expect(async () => await dataset.generate()).rejects.toThrow(ChacaError);
+      await expect(dataset.generate()).rejects.toThrow(ChacaError);
     });
   });
 });

@@ -7,7 +7,7 @@ import {
 import { describe, expect, it } from "vitest";
 
 describe("Ref field", () => {
-  it("try ref a no key field. should throw an error", () => {
+  it("try ref a no key field. should throw an error", async () => {
     const schema = chaca.schema({
       name: () => modules.internet.username(),
     });
@@ -19,7 +19,9 @@ describe("Ref field", () => {
       { name: "schema2", documents: 10, schema: schema2 },
     ]);
 
-    expect(async () => await dataset.generate()).rejects.toThrow(
+    // generate() may throw synchronously (ref resolution happens in the
+    // DatasetResolver constructor), so wrap the call in an async function
+    await expect(async () => await dataset.generate()).rejects.toThrow(
       TryRefANoKeyFieldError,
     );
   });
@@ -92,7 +94,7 @@ describe("Ref field", () => {
     });
   });
 
-  it("try ref an empty string. should throw an error", () => {
+  it("try ref an empty string. should throw an error", async () => {
     const schema = chaca.schema({});
 
     const schema2 = chaca.schema({ ref: chaca.ref("") });
@@ -102,12 +104,12 @@ describe("Ref field", () => {
       { name: "schema2", documents: 10, schema: schema2 },
     ]);
 
-    expect(async () => await dataset.generate()).rejects.toThrow(
+    await expect(async () => await dataset.generate()).rejects.toThrow(
       NotExistRefFieldError,
     );
   });
 
-  it("try ref a not existing field. should throw an error", () => {
+  it("try ref a not existing field. should throw an error", async () => {
     const dataset1 = chaca.schema({
       id: chaca.key(() => modules.id.uuid()),
     });
@@ -119,7 +121,7 @@ describe("Ref field", () => {
       { name: "Dataset2", documents: 30, schema: dataset2 },
     ]);
 
-    expect(async () => await dataset.generate()).rejects.toThrow(
+    await expect(async () => await dataset.generate()).rejects.toThrow(
       NotExistRefFieldError,
     );
   });
@@ -148,7 +150,7 @@ describe("Ref field", () => {
       }
     });
 
-    it("try ref an nested schema array field. should throw an error", () => {
+    it("try ref an nested schema array field. should throw an error", async () => {
       const schema = chaca.schema({
         array: {
           type: chaca.schema({
@@ -165,7 +167,7 @@ describe("Ref field", () => {
         { name: "schema2", documents: 10, schema: schema2 },
       ]);
 
-      expect(() => dataset.generate()).rejects.toThrow(NotExistRefFieldError);
+      await expect(dataset.generate()).rejects.toThrow(NotExistRefFieldError);
     });
   });
 });

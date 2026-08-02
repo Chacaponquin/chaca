@@ -22,7 +22,7 @@ describe("utils.dotCase", () => {
     expect(value).toBe("helloworld");
   });
 
-  it("'hello+-world='. should return 'helloWorld'", () => {
+  it("'hello+-world='. should return 'hello.world'", () => {
     const value = chaca.utils.dotCase("hello+-world=");
     expect(value).toBe("hello.world");
   });

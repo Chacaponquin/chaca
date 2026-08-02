@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chaca, ChacaError, modules } from "../../../../src";
+import { chaca, ChacaError, Errors, modules } from "../../../../src";
 
 describe("Is array function definition", () => {
   it("isArray = function that returns undefined. should always return a not array value", async () => {
@@ -32,12 +32,25 @@ describe("Is array function definition", () => {
       expect(doc.id).toHaveLength(0);
     });
 
-    it("isArray = -5. should throw an error", () => {
+    it("isArray = -5. should throw an error", async () => {
       const schema = chaca.schema({
         id: { type: () => modules.id.uuid(), isArray: () => -5 },
       });
 
-      expect(() => schema.object()).rejects.toThrow(ChacaError);
+      await expect(schema.object()).rejects.toThrow(ChacaError);
+    });
+
+    it("isArray = function that returns a string. should throw an error", async () => {
+      const schema = chaca.schema({
+        id: {
+          type: () => modules.id.uuid(),
+          isArray: () => "hola" as never,
+        },
+      });
+
+      await expect(schema.object()).rejects.toThrow(
+        Errors.WrongArrayDefinitionError,
+      );
     });
   });
 
@@ -80,7 +93,7 @@ describe("Is array function definition", () => {
         expect(id).toHaveLength(0);
       });
 
-      it("function that returns min = 5 & max = 0. should return throw an error", () => {
+      it("function that returns min = 5 & max = 0. should return throw an error", async () => {
         const schema = chaca.schema({
           id: {
             type: () => modules.id.uuid(),
@@ -88,8 +101,31 @@ describe("Is array function definition", () => {
           },
         });
 
-        expect(() => schema.object()).rejects.toThrow(ChacaError);
+        await expect(schema.object()).rejects.toThrow(ChacaError);
       });
+    });
+  });
+
+  describe("function arguments", () => {
+    it("the function receives currentFields and store", async () => {
+      let receivedArgs: unknown;
+
+      const schema = chaca.schema({
+        name: () => "chaca",
+        tags: {
+          type: () => "tag",
+          isArray: (args) => {
+            receivedArgs = args;
+            return 2;
+          },
+        },
+      });
+
+      const doc = await schema.object();
+
+      expect(doc.tags).toHaveLength(2);
+      expect(receivedArgs).toHaveProperty("currentFields");
+      expect(receivedArgs).toHaveProperty("store");
     });
   });
 });

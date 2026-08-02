@@ -52,7 +52,7 @@ describe("Dataset store", () => {
       });
     });
 
-    it("get not existing field values (schema.object.id). should throw an error", () => {
+    it("get not existing field values (schema.object.id). should throw an error", async () => {
       const schema = chaca.schema({
         id: () => modules.id.uuid(),
       });
@@ -68,7 +68,7 @@ describe("Dataset store", () => {
         { name: "schema2", documents: 10, schema: schema2 },
       ]);
 
-      expect(() => dataset.generate()).rejects.toThrow(ChacaError);
+      await expect(dataset.generate()).rejects.toThrow(ChacaError);
     });
 
     it("get all schema.object.id values", async () => {
@@ -117,6 +117,23 @@ describe("Dataset store", () => {
       for (const v of result.schema2) {
         expect(v.store).toEqual(result.schema.map((s: { id: number }) => s.id));
       }
+    });
+
+    it("two schemas that access each other. should throw a cyclic access error", async () => {
+      const schema = chaca.schema({
+        value: ({ store }) => store.get("schema2.value"),
+      });
+
+      const schema2 = chaca.schema({
+        value: ({ store }) => store.get("schema.value"),
+      });
+
+      const dataset = chaca.dataset([
+        { name: "schema", documents: 5, schema: schema },
+        { name: "schema2", documents: 5, schema: schema2 },
+      ]);
+
+      await expect(dataset.generate()).rejects.toThrow(ChacaError);
     });
 
     it("get all schema objects", async () => {

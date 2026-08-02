@@ -1,6 +1,41 @@
 import { ChacaUtils } from "../../../../utils";
 import { Route } from "./route";
 
+const PYTHON_RESERVED_WORDS = [
+  "and",
+  "as",
+  "assert",
+  "async",
+  "await",
+  "break",
+  "class",
+  "continue",
+  "def",
+  "del",
+  "elif",
+  "else",
+  "except",
+  "finally",
+  "for",
+  "from",
+  "global",
+  "if",
+  "import",
+  "in",
+  "is",
+  "lambda",
+  "nonlocal",
+  "not",
+  "or",
+  "pass",
+  "raise",
+  "return",
+  "try",
+  "while",
+  "with",
+  "yield",
+];
+
 export class PythonClassName {
   constructor(
     private readonly utils: ChacaUtils,
@@ -27,6 +62,12 @@ export class PythonClassFieldName {
   }
 
   string() {
-    return this.utils.snakeCase(this._name);
+    const name = this.utils.snakeCase(this._name);
+
+    if (PYTHON_RESERVED_WORDS.includes(name)) {
+      return `${name}_`;
+    }
+
+    return name;
   }
 }

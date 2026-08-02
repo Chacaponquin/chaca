@@ -4,12 +4,12 @@ import { WrongPossibleNullDefinitionError } from "../../../../src/errors";
 import { countNulls } from "./core/count-nulls";
 
 describe("Possible null float definition", () => {
-  it("possibleNull = 1.5. should throw an error", () => {
+  it("possibleNull = 1.5. should throw an error", async () => {
     const schema = chaca.schema({
       null: { type: () => modules.color.cmyk(), possibleNull: 1.5 },
     });
 
-    expect(async () => await schema.array(50)).rejects.toThrow(
+    await expect(schema.array(50)).rejects.toThrow(
       WrongPossibleNullDefinitionError,
     );
   });
@@ -24,12 +24,12 @@ describe("Possible null float definition", () => {
     expect(countNulls(data)).toBeGreaterThan(0);
   });
 
-  it("possibleNull = -0.6. Should throw an error", () => {
+  it("possibleNull = -0.6. Should throw an error", async () => {
     const schema = chaca.schema({
       null: { type: () => modules.color.cmyk(), possibleNull: -0.6 },
     });
 
-    expect(async () => await schema.array(50)).rejects.toThrow(
+    await expect(schema.array(50)).rejects.toThrow(
       WrongPossibleNullDefinitionError,
     );
   });

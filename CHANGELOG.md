@@ -27,9 +27,39 @@
 
 - The `FileWriter` type is now exported, so advanced users can plug in a custom output target when constructing a `Schema`/`Dataset`.
 
+### Errors
+
+- Every exception is now grouped under a single `Errors` namespace for easier discovery:
+
+  ```ts
+  import { Errors } from "chaca";
+
+  try {
+    await schema.export(/* ... */);
+  } catch (e) {
+    if (e instanceof Errors.TryRefANoKeyFieldError) {
+      /* handle the specific error */
+    }
+    if (e instanceof Errors.ChacaError) {
+      /* catch-all for any chaca error */
+    }
+  }
+  ```
+
+- `WrongArrayDefinitionError`, `WrongPossibleNullDefinitionError` and `WrongProbabilityFieldDefinitionError` — announced back in `2.0.0` but never actually exported — are now reachable through the `Errors` namespace. The existing flat error exports (`ChacaError`, `TryRefANoKeyFieldError`, ...) keep working unchanged.
+
+### Sequence field
+
+- `chaca.sequence` now accepts the correctly-spelled `startsWith` option. The misspelled `starsWith` keeps working as a deprecated alias (when both are passed, `startsWith` wins).
+
 ## 🪛 Fix
 
 - `transform` on a relational JSON dataset without `separate` returned an unresolved value instead of the serialized data. It now returns the correct output.
+- `chaca.pick` with a `count: { min, max }` range could never select `max` elements (the upper bound was effectively exclusive). The range is now inclusive, as documented.
+- `isArray: { min, max }` had the same problem: the generated array could never reach `max` elements. The upper bound is now inclusive.
+- `Dataset.generate()` threw synchronously for reference-wiring errors (`TryRefANoKeyFieldError`, `NotExistRefFieldError`), so a `.catch()` on the returned promise never caught them. All errors now surface as promise rejections.
+- A `probability` field where every option has `chance: 0` silently produced `undefined`. It now throws a descriptive `WrongProbabilityFieldDefinitionError`.
+- Documentation fixes: `possibleNull` now documents the integer semantics (an integer ≥ 1 is an exact count of null documents, a float in [0, 1] is a probability); the `isArray` doc no longer lists `boolean` as a valid config (it never was); `modules.datatype.int` documents that `max` is exclusive.
 - Exporting relational **TypeScript** data with `separate: true` did not await the resolved data; the generated files now contain the fully resolved values.
 - `modules.datatype.hexadecimal` could include the character `G`, which is not a valid hexadecimal digit. The output is now always valid hex.
 - `modules.address.country` never matched the continents `Oceania` and `Antarctica` because the `continent` type declared them as `"Oseania"` and `"Antartica"`; filtering by those continents silently fell back to any country. The type now uses the correct names.
@@ -40,6 +70,23 @@
 - `modules.color.rgb` with `format: 'css'` or `format: 'binary'` no longer prepends the hex `prefix` to the output (it produced invalid values like `#rgb(12, 34, 56)`). The `prefix` option now only applies to the `'hex'` format, as documented.
 - `modules.color` constants: removed a duplicated `rec2020` entry from the CSS spaces list.
 - `modules.image` methods now URL-encode the category in the generated URL, so categories with spaces or special characters produce valid URLs.
+- `chaca.utils.pick` with `count` equal to the array length returned the input array **by reference**, so mutating the result also mutated your original array. It now returns a copy.
+- Defining a schema field with a primitive value (e.g. `chaca.schema({ name: "hola" })`) threw a cryptic JavaScript `TypeError`. It now throws a descriptive `ChacaError` indicating the field type is invalid.
+
+- CSV export: missing field values (objects with different keys) were serialized as the literal string `undefined`. They now produce an empty cell.
+- YAML export: `bigint` values were silently dropped from the output (objects lost the key, arrays lost the element). They are now serialized — as a plain integer when the value fits in a safe JavaScript integer, and as a decimal string otherwise.
+- Java export: the generated `Main.java` never compiled — the last `add(...)` statement was missing its semicolon. Every statement is now properly terminated.
+- Java export: decimal values were emitted as `double` literals (e.g. `5.5`) for fields typed `Float`, which does not compile. They now use the `f` suffix (`5.5f`).
+- Java export: `bigint` values generated invalid code (the expression `BigInteger.valueOf(...)` was used as the field **type**). They are now typed `BigInteger`, built with `new BigInteger("<value>")`, and the `java.math.BigInteger` import is included.
+- Java export: `Date` values emitted a stray semicolon inside the constructor call and an ISO string with a trailing `Z` that `LocalDateTime.parse` cannot parse. Both are fixed.
+- Java export: fields named like Java reserved words (`class`, `int`, ...) generated invalid identifiers. They are now renamed with a `Value` suffix (`classValue`), which also avoids the `getClass()` collision with `Object`.
+- Java export: exporting documents with mixed types for the same field threw a `ChacaError` with an **empty message**. It now reports the field and the conflicting types.
+- Java export: `RegExp` values generated `Patter.compile(...)` (typo). Now `Pattern.compile(...)`.
+- Python export: fields named like Python reserved words (`class`, `import`, `from`, ...) generated invalid syntax. They are now renamed with a trailing underscore (`class_`), following PEP 8.
+- PostgreSQL export: string values with single quotes produced broken SQL (`'l'agua'`) and double quotes were escaped with invalid backslashes. Single quotes are now doubled (`'l''agua'`), the standard SQL escape.
+- PostgreSQL export: columns where every value is `null` were generated **without a type** (`n NULL,`), which is invalid SQL. They now fall back to `TEXT`.
+- PostgreSQL export: `Date` values were exported as `DATE` with only the date part, silently dropping the time. They are now exported as `TIMESTAMP` with the full ISO value.
+- PostgreSQL export: tables or columns named like reserved SQL words (`select`, `user`, `table`, ...) produced invalid statements. They are now double quoted (`"user"`).
 
 ## ⚠️ Behavior changes
 
@@ -73,7 +120,7 @@
       documents: async ({ store }) => {
         const users = await store.get("User");
 
-        return users.filter((u) => u.role === "writer");
+        return users.filter((u) => u.role === "writer").length;
       },
     },
   ]);

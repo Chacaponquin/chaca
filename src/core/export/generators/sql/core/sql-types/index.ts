@@ -75,11 +75,11 @@ export class SQLDate extends SQLDatatype {
   }
 
   definition(): string {
-    return "DATE";
+    return "TIMESTAMP";
   }
 
   string(): string {
-    return `'${this.value.toISOString().slice(0, 10)}'`;
+    return `'${this.value.toISOString()}'`;
   }
 
   similar(other: SQLDatatype): boolean {
@@ -105,7 +105,7 @@ export class SQLNull extends SQLDatatype {
   }
 
   definition(): string {
-    return "NULL";
+    return "TEXT";
   }
 
   string(): string {
@@ -242,20 +242,7 @@ export abstract class SQLString extends SQLDatatype {
   }
 
   string(): string {
-    let value = "";
-
-    const json = JSON.stringify(this.value);
-    for (let i = 0; i < json.length; i++) {
-      if (i === 0) {
-        value += `'`;
-      } else if (i === json.length - 1) {
-        value += `'`;
-      } else {
-        value += json[i];
-      }
-    }
-
-    return value;
+    return `'${this.value.replace(/'/g, "''")}'`;
   }
 }
 

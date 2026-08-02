@@ -1,4 +1,4 @@
-import { ChacaError, chaca } from "../../../../src";
+import { WrongProbabilityFieldDefinitionError, chaca } from "../../../../src";
 import { describe, expect, it } from "vitest";
 
 function count(data: any[], value: number): number {
@@ -13,12 +13,80 @@ function count(data: any[], value: number): number {
 }
 
 describe("Probability field", () => {
-  it("create a schema with a probability field without values. Should throw an error", () => {
+  it("create a schema with a probability field without values. Should throw an error", async () => {
     const schema = chaca.schema({
       prob: chaca.probability([]),
     });
 
-    expect(() => schema.array(10)).rejects.toThrow(ChacaError);
+    await expect(schema.array(10)).rejects.toThrow(
+      WrongProbabilityFieldDefinitionError,
+    );
+  });
+
+  it("all options with chance = 0. Should throw an error", async () => {
+    const schema = chaca.schema({
+      prob: chaca.probability([
+        { chance: 0, value: 10 },
+        { chance: 0, value: 5 },
+      ]),
+    });
+
+    await expect(schema.object()).rejects.toThrow(
+      WrongProbabilityFieldDefinitionError,
+    );
+  });
+
+  it("option with chance greater than 1. Should throw an error", async () => {
+    const schema = chaca.schema({
+      prob: chaca.probability([{ chance: 1.5, value: 10 }]),
+    });
+
+    await expect(schema.object()).rejects.toThrow(
+      WrongProbabilityFieldDefinitionError,
+    );
+  });
+
+  it("option with negative chance. Should throw an error", async () => {
+    const schema = chaca.schema({
+      prob: chaca.probability([
+        { chance: -0.5, value: 10 },
+        { chance: 0.5, value: 5 },
+      ]),
+    });
+
+    await expect(schema.object()).rejects.toThrow(
+      WrongProbabilityFieldDefinitionError,
+    );
+  });
+
+  it("option with a not number or function chance. Should throw an error", async () => {
+    const schema = chaca.schema({
+      prob: chaca.probability([{ chance: "0.5" as any, value: 10 }]),
+    });
+
+    await expect(schema.object()).rejects.toThrow(
+      WrongProbabilityFieldDefinitionError,
+    );
+  });
+
+  it("option that is not an object. Should throw an error", async () => {
+    const schema = chaca.schema({
+      prob: chaca.probability([null as any]),
+    });
+
+    await expect(schema.object()).rejects.toThrow(
+      WrongProbabilityFieldDefinitionError,
+    );
+  });
+
+  it("chance function that returns a not number value. Should throw an error", async () => {
+    const schema = chaca.schema({
+      prob: chaca.probability([{ chance: () => "0.5" as any, value: 10 }]),
+    });
+
+    await expect(schema.object()).rejects.toThrow(
+      WrongProbabilityFieldDefinitionError,
+    );
   });
 
   it("create a schema with a probability field with 3 elements", async () => {
@@ -31,6 +99,11 @@ describe("Probability field", () => {
     });
 
     const data = await schema.array(50);
+
+    // every generated value belongs to the declared value set
+    for (const doc of data) {
+      expect([10, 5, 1]).toContain(doc.prob);
+    }
 
     expect(count(data, 10)).toBeGreaterThanOrEqual(30);
   });
@@ -46,9 +119,21 @@ describe("Probability field", () => {
 
     const data = await schema.array(50);
 
-    const total = count(data, 10);
+    for (const doc of data) {
+      expect([10, 5, 1]).toContain(doc.prob);
+    }
 
-    expect(total).toBeGreaterThanOrEqual(30);
+    expect(count(data, 10)).toBeGreaterThanOrEqual(30);
+  });
+
+  it("probability field with an only option with chance=1. Should always return that value", async () => {
+    const schema = chaca.schema({
+      prob: chaca.probability([{ chance: 1, value: 10 }]),
+    });
+
+    const data = await schema.array(20);
+
+    expect(data.every((d) => d.prob === 10)).toBe(true);
   });
 
   it("probability field with 2 elements with 0.8 chance", async () => {

@@ -15,6 +15,10 @@ var yaml__default = /*#__PURE__*/_interopDefault(yaml);
 
 var __defProp = Object.defineProperty;
 var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
 var __publicField = (obj, key, value) => __defNormalProp(obj, typeof key !== "symbol" ? key + "" : key, value);
 
 // src/core/fields/core/key/key-field.ts
@@ -26,6 +30,20 @@ var KeyField = class {
 };
 
 // src/errors/index.ts
+var errors_exports = {};
+__export(errors_exports, {
+  ChacaError: () => ChacaError,
+  CyclicAccessDataError: () => CyclicAccessDataError,
+  EmptyEnumValuesError: () => EmptyEnumValuesError,
+  EmptySequentialValuesError: () => EmptySequentialValuesError,
+  NotEnoughValuesForRefError: () => NotEnoughValuesForRefError,
+  NotExistRefFieldError: () => NotExistRefFieldError,
+  PickFieldDefinitionError: () => PickFieldDefinitionError,
+  TryRefANoKeyFieldError: () => TryRefANoKeyFieldError,
+  WrongArrayDefinitionError: () => WrongArrayDefinitionError,
+  WrongPossibleNullDefinitionError: () => WrongPossibleNullDefinitionError,
+  WrongProbabilityFieldDefinitionError: () => WrongProbabilityFieldDefinitionError
+});
 var ChacaError = class extends Error {
   constructor(message) {
     super(message);
@@ -6037,7 +6055,7 @@ var SchemaToResolve = class {
         isArray: new FieldIsArray(),
         possibleNull: new FieldPossibleNull()
       };
-      if ("type" in field) {
+      if (typeof field === "object" && field !== null && "type" in field) {
         const fieldObject = field;
         const type = this.filter({ config: fieldObject.type, route });
         resolverObject.type = type;
@@ -7939,7 +7957,7 @@ var ChacaUtils = class {
       );
     }
     if (count === values.length) {
-      return values;
+      return [...values];
     } else {
       const generate = (banned2) => {
         let num = this.datatypeModule.int({
@@ -11973,7 +11991,8 @@ var InternetModule = class {
       firstName,
       lastName
     });
-    const email = `${username}@${provider}.com`;
+    const domain = provider.includes(".") ? provider : `${provider}.com`;
+    const email = `${username}@${domain}`;
     return email.toLowerCase();
   }
   /**
@@ -12403,7 +12422,9 @@ var ImageModule = class {
     const size = this.datatypeModule.int({ min: 640, max: 4e3 });
     const width = iwidth ? iwidth : size;
     const height = iheight ? iheight : size;
-    const url = `https://lexica.art/api/v1/search?q=${category}&width=${width}&height=${height}`;
+    const url = `https://lexica.art/api/v1/search?q=${encodeURIComponent(
+      category
+    )}&width=${width}&height=${height}`;
     return url;
   }
   /**
@@ -12870,7 +12891,7 @@ var SystemModule = class {
    * @returns string
    */
   filename({ ext: iext } = {}) {
-    const ext = typeof iext === "string" && iext.trim().length > 0 ? `.${iext}` : this.fileExt();
+    const ext = typeof iext === "string" && iext.trim().length > 0 ? `.${iext.trim().replace(/^\.+/, "")}` : this.fileExt();
     const length = this.datatypeModule.int({ min: 1, max: 5 });
     const arrayNames = Array.from({
       length
@@ -12887,7 +12908,7 @@ var SystemModule = class {
   }
   /**
    * Return a file extension
-   * @example modules.system.fileExt() // 'mp4'
+   * @example modules.system.fileExt() // '.mp4'
    * @returns string
    */
   fileExt() {
@@ -15583,7 +15604,7 @@ var FinanceModule = class {
    * @returns string
    */
   ethereumAddress() {
-    return this.datatypeModule.hexadecimal({ length: 40, case: "lower" });
+    return `0x${this.datatypeModule.hexadecimal({ length: 40, case: "lower" })}`;
   }
   /**
    * @example
@@ -18003,7 +18024,7 @@ var DateModule = class {
    * - `'age'`: The min and max options define the age of the person (e.g. `18` - `42`).
    * - `'year'`: The min and max options define the range the birthdate may be in (e.g. `1900` - `2000`).
    *
-   * Defaults to `year`.
+   * Defaults to `age`.
    *
    * @example
    * modules.date.birthdate() // 1977-07-10T01:37:30.719Z
@@ -18099,7 +18120,7 @@ var DateModule = class {
    * @returns string
    */
   timeAgo({ unit: iunit } = {}) {
-    const units = ["years", "seconds", "minutes", "days", "hours"];
+    const units = ["years", "seconds", "minutes", "days", "hours", "months"];
     const unit = typeof iunit === "string" ? iunit : this.utils.oneOfArray(units);
     switch (unit) {
       case "days":
@@ -18156,7 +18177,7 @@ var DateModule = class {
   }
   argToDate(date) {
     if (date instanceof Date) {
-      return date;
+      return new Date(date.getTime());
     } else if (typeof date === "string") {
       return new Date(date);
     } else {
@@ -30328,8 +30349,7 @@ var CSS_SPACES = [
   "display-p3",
   "rec2020",
   "a98-rgb",
-  "prophoto-rgb",
-  "rec2020"
+  "prophoto-rgb"
 ];
 var CSS_FUNCTIONS = [
   "rgb",
@@ -30690,6 +30710,7 @@ exports.DatasetStore = DatasetStore;
 exports.EmptyEnumValuesError = EmptyEnumValuesError;
 exports.EmptySequentialValuesError = EmptySequentialValuesError;
 exports.EnumField = EnumField;
+exports.Errors = errors_exports;
 exports.KeyField = KeyField;
 exports.NotEnoughValuesForRefError = NotEnoughValuesForRefError;
 exports.NotExistRefFieldError = NotExistRefFieldError;

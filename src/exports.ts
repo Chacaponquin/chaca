@@ -113,6 +113,15 @@ export {
   PickFieldDefinitionError,
 };
 
+/**
+ * Namespace grouping every error the library can throw. Preferred over the flat
+ * exports for discoverability, e.g. `Errors.TryRefANoKeyFieldError`. It always
+ * stays in sync with `./errors`, so newly added exceptions are exposed here
+ * automatically. `ChacaError` (the base class of all of them) is also kept as a
+ * top-level export for the common catch-all `instanceof ChacaError` check.
+ */
+export * as Errors from "./errors";
+
 export {
   KeyField,
   RefField,

@@ -88,7 +88,7 @@ export class Chaca {
 
   /**
    * Sequence field
-   * @param config.starsWith Init value for the field. Default `1`
+   * @param config.startsWith Init value for the field. Default `1`
    * @param config.step Step between field values in schema documents. Default `1`
    *
    * @example
