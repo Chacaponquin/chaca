@@ -395,7 +395,7 @@ var postgresql = {
       indent: indent2,
       declarationOnly: declarationOnly2,
       skipInvalid: skipInvalid2,
-      generateIds: generateIds2
+      generateIds: generateIds4
     } = argv;
     await run({
       count: count2,
@@ -406,7 +406,95 @@ var postgresql = {
         indent: indent2,
         declarationOnly: declarationOnly2,
         skipInvalid: skipInvalid2,
-        generateIds: generateIds2
+        generateIds: generateIds4
+      },
+      output: output2,
+      route: config2
+    });
+  }
+};
+
+// src/bin/sqlite.ts
+var generateIds2 = {
+  describe: "Generates a sequential id for tables that are created and for which no PRIMARY KEY is defined",
+  boolean: true
+};
+var sqlite = {
+  command: "sqlite",
+  describe: description("sql"),
+  builder: {
+    ...common,
+    ...indent,
+    ...declarationOnly,
+    ...skipInvalid,
+    generateIds: generateIds2
+  },
+  handler: async (argv) => {
+    const {
+      config: config2,
+      count: count2,
+      filename: filename2,
+      output: output2,
+      zip: zip2,
+      indent: indent2,
+      declarationOnly: declarationOnly2,
+      skipInvalid: skipInvalid2,
+      generateIds: generateIds4
+    } = argv;
+    await run({
+      count: count2,
+      filename: filename2,
+      format: {
+        ext: "sqlite",
+        zip: zip2,
+        indent: indent2,
+        declarationOnly: declarationOnly2,
+        skipInvalid: skipInvalid2,
+        generateIds: generateIds4
+      },
+      output: output2,
+      route: config2
+    });
+  }
+};
+
+// src/bin/mysql.ts
+var generateIds3 = {
+  describe: "Generates a sequential id for tables that are created and for which no PRIMARY KEY is defined",
+  boolean: true
+};
+var mysql = {
+  command: "mysql",
+  describe: description("sql"),
+  builder: {
+    ...common,
+    ...indent,
+    ...declarationOnly,
+    ...skipInvalid,
+    generateIds: generateIds3
+  },
+  handler: async (argv) => {
+    const {
+      config: config2,
+      count: count2,
+      filename: filename2,
+      output: output2,
+      zip: zip2,
+      indent: indent2,
+      declarationOnly: declarationOnly2,
+      skipInvalid: skipInvalid2,
+      generateIds: generateIds4
+    } = argv;
+    await run({
+      count: count2,
+      filename: filename2,
+      format: {
+        ext: "mysql",
+        zip: zip2,
+        indent: indent2,
+        declarationOnly: declarationOnly2,
+        skipInvalid: skipInvalid2,
+        generateIds: generateIds4
       },
       output: output2,
       route: config2
@@ -462,6 +550,8 @@ yargs__default.default.command(js);
 yargs__default.default.command(java);
 yargs__default.default.command(ts);
 yargs__default.default.command(postgresql);
+yargs__default.default.command(sqlite);
+yargs__default.default.command(mysql);
 yargs__default.default.command(python);
 yargs__default.default.parse();
 //# sourceMappingURL=chaca.js.map

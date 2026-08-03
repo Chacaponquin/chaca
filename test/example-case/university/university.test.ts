@@ -5,8 +5,6 @@ import { UNIVERSITY_DATASET } from "./definitions/definition";
 describe("University case", () => {
   const example = new ExampleCaseTest({
     dataset: UNIVERSITY_DATASET,
-    filename: "university",
-    location: "university",
     check: (data) => {
       const teachers = data["Teacher"];
       const users = data["User"];

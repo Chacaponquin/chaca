@@ -843,7 +843,7 @@ type YamlProps = {
 /** Export files extensions */
 type ExportFormat = Extensions | ExtensionConfigs;
 type Extensions = "json" | "java" | "typescript" | "csv" | "javascript" | "yaml" | "python" | ExportSQLFormat;
-type ExportSQLFormat = "postgresql";
+type ExportSQLFormat = "postgresql" | "sqlite" | "mysql";
 /**
  * Export file configuration
  */
@@ -876,9 +876,15 @@ type DumpConfig = Omit<FileConfig, "location">;
 interface CliExportable {
     exportFromCli(documents: number, config: FileConfig): Promise<string[]>;
 }
-type ExtensionConfigs = JsonFormatConfig | CsvFormatConfig | JavaFormatConfig | TypescriptFormatConfig | JavascriptFormatConfig | YamlFormatConfig | PythonFormatConfig | PostgresqlFormatConfig;
+type ExtensionConfigs = JsonFormatConfig | CsvFormatConfig | JavaFormatConfig | TypescriptFormatConfig | JavascriptFormatConfig | YamlFormatConfig | PythonFormatConfig | PostgresqlFormatConfig | SqliteFormatConfig | MysqlFormatConfig;
 type PostgresqlFormatConfig = {
     ext: "postgresql";
+} & SQLProps;
+type SqliteFormatConfig = {
+    ext: "sqlite";
+} & SQLProps;
+type MysqlFormatConfig = {
+    ext: "mysql";
 } & SQLProps;
 type PythonFormatConfig = {
     ext: "python";
@@ -937,7 +943,7 @@ declare class Schema<K = any> implements CliExportable {
      *
      * @param documents number of documents that you want to create
      * @param props.filename name for the file
-     * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+     * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
      */
     transform(documents: number, props: DumpConfig): Promise<DumpFile[]>;
     /**
@@ -945,7 +951,7 @@ declare class Schema<K = any> implements CliExportable {
      * @param documents number of documents that you want to create
      * @param config.filename file name
      * @param config.location location of the file
-     * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+     * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
      *
      * @returns Promise<string[]>
      */
@@ -1285,7 +1291,7 @@ declare class Dataset<K = any> implements CliExportable {
      * Generates and serializes dataset data as a specific file format
      *
      * @param props.filename name for the file
-     * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+     * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
      * @param config.verbose show log in console progretion
      */
     transform(props: DumpConfig): Promise<DumpFile[]>;
@@ -1294,7 +1300,7 @@ declare class Dataset<K = any> implements CliExportable {
      * @param schemas Array with the schemas config
      * @param config.filename file name
      * @param config.location location of the file
-     * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+     * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
      * @param config.verbose show log in console progretion
      */
     export(config: FileConfig): Promise<string[]>;
@@ -1388,7 +1394,7 @@ declare class Chaca {
      * @param data Data you want to export
      * @param config.filename file name
      * @param config.location location of the file
-     * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+     * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
      *
      * @example
      * const data = [
@@ -1440,7 +1446,7 @@ declare class Chaca {
      *
      * @param data Data to transform
      * @param props.filename name for the file
-     * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+     * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
      */
     transform(data: any, props: DumpConfig): DumpFile[];
 }

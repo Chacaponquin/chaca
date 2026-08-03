@@ -5,8 +5,6 @@ import { ECOMMERCE_DATASET } from "./definitions/definition";
 describe("Ecommerce case", () => {
   const example = new ExampleCaseTest({
     dataset: ECOMMERCE_DATASET,
-    filename: "ecommerce",
-    location: "ecommerce",
     check: (data) => {
       const users = data["User"];
       const clients = data["Client"];

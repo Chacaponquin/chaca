@@ -5,8 +5,6 @@ import { AIRLINE_DATASET } from "./definitions/definition";
 describe("Airline case", () => {
   const example = new ExampleCaseTest({
     dataset: AIRLINE_DATASET,
-    filename: "airline",
-    location: "airline",
     check: (data) => {
       const gates = data["Gate"];
       const aircrafts = data["Aircraft"];

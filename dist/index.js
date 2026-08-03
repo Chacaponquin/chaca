@@ -3769,11 +3769,274 @@ var POSTGRES_RESERVED_WORDS = [
   "window",
   "with"
 ];
+var MYSQL_RESERVED_WORDS = [
+  "accessible",
+  "add",
+  "all",
+  "alter",
+  "analyze",
+  "and",
+  "as",
+  "asc",
+  "asensitive",
+  "before",
+  "between",
+  "bigint",
+  "binary",
+  "blob",
+  "both",
+  "by",
+  "call",
+  "cascade",
+  "case",
+  "change",
+  "char",
+  "character",
+  "check",
+  "collate",
+  "column",
+  "condition",
+  "constraint",
+  "continue",
+  "convert",
+  "create",
+  "cross",
+  "cube",
+  "cume_dist",
+  "current_date",
+  "current_time",
+  "current_timestamp",
+  "current_user",
+  "cursor",
+  "database",
+  "databases",
+  "day_hour",
+  "day_microsecond",
+  "day_minute",
+  "day_second",
+  "dec",
+  "decimal",
+  "declare",
+  "default",
+  "delayed",
+  "delete",
+  "dense_rank",
+  "desc",
+  "describe",
+  "deterministic",
+  "distinct",
+  "distinctrow",
+  "div",
+  "double",
+  "drop",
+  "dual",
+  "each",
+  "else",
+  "elseif",
+  "empty",
+  "enclosed",
+  "escaped",
+  "except",
+  "exists",
+  "exit",
+  "explain",
+  "false",
+  "fetch",
+  "first_value",
+  "float",
+  "float4",
+  "float8",
+  "for",
+  "force",
+  "foreign",
+  "from",
+  "fulltext",
+  "function",
+  "generated",
+  "get",
+  "grant",
+  "group",
+  "grouping",
+  "groups",
+  "having",
+  "high_priority",
+  "hour_microsecond",
+  "hour_minute",
+  "hour_second",
+  "if",
+  "ignore",
+  "in",
+  "index",
+  "infile",
+  "inner",
+  "inout",
+  "insensitive",
+  "insert",
+  "int",
+  "int1",
+  "int2",
+  "int3",
+  "int4",
+  "int8",
+  "integer",
+  "interval",
+  "into",
+  "io_after_gtids",
+  "io_before_gtids",
+  "is",
+  "iterate",
+  "join",
+  "json_table",
+  "key",
+  "keys",
+  "kill",
+  "lag",
+  "last_value",
+  "lateral",
+  "lead",
+  "leading",
+  "leave",
+  "left",
+  "like",
+  "limit",
+  "linear",
+  "lines",
+  "load",
+  "localtime",
+  "localtimestamp",
+  "lock",
+  "long",
+  "longblob",
+  "longtext",
+  "loop",
+  "low_priority",
+  "master_bind",
+  "master_ssl_verify_server_cert",
+  "match",
+  "maxvalue",
+  "mediumblob",
+  "mediumint",
+  "mediumtext",
+  "middleint",
+  "minute_microsecond",
+  "minute_second",
+  "mod",
+  "modifies",
+  "natural",
+  "not",
+  "no_write_to_binlog",
+  "null",
+  "numeric",
+  "nth_value",
+  "ntile",
+  "of",
+  "on",
+  "optimize",
+  "optimizer_costs",
+  "option",
+  "optionally",
+  "or",
+  "order",
+  "out",
+  "outer",
+  "outfile",
+  "over",
+  "partition",
+  "percent_rank",
+  "precision",
+  "primary",
+  "procedure",
+  "purge",
+  "range",
+  "rank",
+  "read",
+  "reads",
+  "read_write",
+  "real",
+  "recursive",
+  "references",
+  "regexp",
+  "release",
+  "rename",
+  "repeat",
+  "replace",
+  "require",
+  "resignal",
+  "restrict",
+  "return",
+  "revoke",
+  "right",
+  "rlike",
+  "row",
+  "rows",
+  "row_number",
+  "schema",
+  "schemas",
+  "second_microsecond",
+  "select",
+  "sensitive",
+  "separator",
+  "set",
+  "show",
+  "signal",
+  "smallint",
+  "spatial",
+  "specific",
+  "sql",
+  "sqlexception",
+  "sqlstate",
+  "sqlwarning",
+  "sql_big_result",
+  "sql_calc_found_rows",
+  "sql_small_result",
+  "ssl",
+  "starting",
+  "stored",
+  "straight_join",
+  "system",
+  "table",
+  "terminated",
+  "then",
+  "tinyblob",
+  "tinyint",
+  "tinytext",
+  "to",
+  "trailing",
+  "trigger",
+  "true",
+  "undo",
+  "union",
+  "unique",
+  "unlock",
+  "unsigned",
+  "update",
+  "usage",
+  "use",
+  "using",
+  "utc_date",
+  "utc_time",
+  "utc_timestamp",
+  "values",
+  "varbinary",
+  "varchar",
+  "varcharacter",
+  "varying",
+  "virtual",
+  "when",
+  "where",
+  "while",
+  "window",
+  "with",
+  "write",
+  "xor",
+  "year_month",
+  "zerofill"
+];
 function quoteReserved(name) {
-  if (POSTGRES_RESERVED_WORDS.includes(name.toLowerCase())) {
-    return `"${name}"`;
-  }
-  return name;
+  const lower = name.toLowerCase();
+  const standard = POSTGRES_RESERVED_WORDS.includes(lower) ? `"${name}"` : name;
+  const mysql = MYSQL_RESERVED_WORDS.includes(lower) ? `\`${name}\`` : name;
+  return { postgres: standard, sqlite: standard, mysql };
 }
 var TableName = class _TableName {
   constructor(utils2, route) {
@@ -3805,6 +4068,9 @@ var ColumnName = class {
 };
 
 // src/core/export/generators/sql/core/sql-types/index.ts
+function same(value) {
+  return { postgres: value, sqlite: value, mysql: value };
+}
 var SQLDatatype = class {
   isSimilar(other) {
     if (other instanceof SQLNull || this instanceof SQLNull) {
@@ -3838,13 +4104,13 @@ var SQLBoolean = class _SQLBoolean extends SQLDatatype {
     return false;
   }
   definition() {
-    return "BOOLEAN";
+    return same("BOOLEAN");
   }
   refValue() {
     return this;
   }
   string() {
-    return this.value ? "TRUE" : "FALSE";
+    return same(this.value ? "TRUE" : "FALSE");
   }
   similar(other) {
     return other instanceof _SQLBoolean;
@@ -3862,10 +4128,20 @@ var SQLDate = class _SQLDate extends SQLDatatype {
     return this;
   }
   definition() {
-    return "TIMESTAMP";
+    return {
+      postgres: "TIMESTAMP",
+      sqlite: "TEXT",
+      mysql: "DATETIME(3)"
+    };
   }
   string() {
-    return `'${this.value.toISOString()}'`;
+    const iso = this.value.toISOString();
+    return {
+      postgres: `'${iso}'`,
+      sqlite: `'${iso}'`,
+      // mysql does not accept the trailing 'Z' zulu marker in datetime literals
+      mysql: `'${iso.slice(0, -1)}'`
+    };
   }
   similar(other) {
     return other instanceof _SQLDate;
@@ -3885,10 +4161,10 @@ var SQLNull = class _SQLNull extends SQLDatatype {
     return this;
   }
   definition() {
-    return "TEXT";
+    return same("TEXT");
   }
   string() {
-    return `NULL`;
+    return same("NULL");
   }
   greaterThan() {
     return false;
@@ -3918,7 +4194,11 @@ var SQLBigint = class extends SQLNumber {
     return this;
   }
   definition() {
-    return "BIGINT";
+    return {
+      postgres: "BIGINT",
+      sqlite: "INTEGER",
+      mysql: "BIGINT"
+    };
   }
   greaterThan(other) {
     if (other instanceof SQLNumber) {
@@ -3927,7 +4207,7 @@ var SQLBigint = class extends SQLNumber {
     return false;
   }
   string() {
-    return `${this.value}`;
+    return same(`${this.value}`);
   }
 };
 var SQLInteger = class extends SQLNumber {
@@ -3944,10 +4224,10 @@ var SQLInteger = class extends SQLNumber {
     return false;
   }
   definition() {
-    return "INTEGER";
+    return same("INTEGER");
   }
   string() {
-    return `${this.value}`;
+    return same(`${this.value}`);
   }
 };
 var SQLFloat = class extends SQLNumber {
@@ -3967,17 +4247,33 @@ var SQLFloat = class extends SQLNumber {
     return false;
   }
   definition() {
-    return "FLOAT";
+    return {
+      postgres: "FLOAT",
+      sqlite: "REAL",
+      mysql: "DOUBLE"
+    };
   }
   string() {
     if (this.value === Infinity) {
-      return "'+infinity'";
+      return {
+        postgres: "'+infinity'",
+        sqlite: "9e999",
+        mysql: `${Number.MAX_VALUE}`
+      };
     } else if (this.value === -Infinity) {
-      return "'-infinity'";
+      return {
+        postgres: "'-infinity'",
+        sqlite: "-9e999",
+        mysql: `${-Number.MAX_VALUE}`
+      };
     } else if (Number.isNaN(this.value)) {
-      return `'NaN'`;
+      return {
+        postgres: `'NaN'`,
+        sqlite: `'NaN'`,
+        mysql: "NULL"
+      };
     } else {
-      return `${this.value}`;
+      return same(`${this.value}`);
     }
   }
 };
@@ -3993,7 +4289,13 @@ var SQLString = class _SQLString extends SQLDatatype {
     return "string";
   }
   string() {
-    return `'${this.value.replace(/'/g, "''")}'`;
+    const escaped = this.value.replace(/'/g, "''");
+    return {
+      postgres: `'${escaped}'`,
+      sqlite: `'${escaped}'`,
+      // mysql treats backslash as an escape character inside string literals
+      mysql: `'${this.value.replace(/\\/g, "\\\\").replace(/'/g, "''")}'`
+    };
   }
 };
 var SQLText = class extends SQLString {
@@ -4004,7 +4306,7 @@ var SQLText = class extends SQLString {
     return this;
   }
   definition() {
-    return "TEXT";
+    return same("TEXT");
   }
   greaterThan(other) {
     if (other instanceof SQLString) {
@@ -4018,7 +4320,11 @@ var SQLVarchar = class extends SQLString {
     super(value);
   }
   definition() {
-    return "VARCHAR(255)";
+    return {
+      postgres: "VARCHAR(255)",
+      sqlite: "TEXT",
+      mysql: "VARCHAR(255)"
+    };
   }
   refValue() {
     return this;
@@ -4038,10 +4344,14 @@ var SQLSerial = class extends SQLNumber {
     return new SQLInteger(Number(this.value));
   }
   string() {
-    return `${this.value}`;
+    return same(`${this.value}`);
   }
   definition() {
-    return "SERIAL";
+    return {
+      postgres: "SERIAL",
+      sqlite: "INTEGER",
+      mysql: "INT AUTO_INCREMENT"
+    };
   }
   greaterThan() {
     return false;
@@ -4111,7 +4421,7 @@ var SQLColumn = class {
     this._isNull = value;
   }
   definition() {
-    return `${this._datatype.definition()}`;
+    return this._datatype.definition();
   }
   name() {
     return this._name.value();
@@ -4123,7 +4433,7 @@ var SQLColumn = class {
         this._isNull = true;
       }
     } else {
-      const route = `${table.name()}.${this.name()}`;
+      const route = `${table.name().postgres}.${this.name().postgres}`;
       const type1 = v.primitive();
       const type2 = this._datatype.primitive();
       throw new ChacaError(
@@ -4290,7 +4600,7 @@ var FillParentKeys = class {
       const key = keys[i];
       const name = new ColumnName(
         this.utils,
-        `${parent.name()}_${key.column().name()}`
+        `${parent.name().postgres}_${key.column().name().postgres}`
       );
       const column = table.addColumn(
         new SQLColumn({
@@ -4500,7 +4810,7 @@ var ValueCreator3 = class {
           }
           if (!row.hasKey()) {
             throw new ChacaError(
-              `The table ${objectTable.name()} must have at least 1 PRIMARY KEY`
+              `The table ${objectTable.name().postgres} must have at least 1 PRIMARY KEY`
             );
           }
         }
@@ -4551,7 +4861,7 @@ var ValueCreator3 = class {
           }
           if (!row.hasKey()) {
             throw new ChacaError(
-              `The table ${arrayTable.name()} must have at least 1 PRIMARY KEY`
+              `The table ${arrayTable.name().postgres} must have at least 1 PRIMARY KEY`
             );
           }
         }
@@ -4625,15 +4935,15 @@ var PostgreSQL = class extends SQLExtensionGenerator {
   values(tables) {
     let code = ``;
     for (const table of tables.tables) {
-      const columns = table.columns().filter((c) => !c.disabled()).map((c) => c.name()).join(", ");
-      code += `INSERT INTO ${table.name()} (${columns})
+      const columns = table.columns().filter((c) => !c.disabled()).map((c) => c.name().postgres).join(", ");
+      code += `INSERT INTO ${table.name().postgres} (${columns})
 `;
       code += `VALUES
 `;
       const values = [];
       table.iterate((row) => {
         this.index.push();
-        const v = row.map((v2) => v2.string()).join(", ");
+        const v = row.map((v2) => v2.string().postgres).join(", ");
         const rowCode = this.index.create(`(${v})`);
         values.push(rowCode);
         this.index.reverse();
@@ -4647,12 +4957,14 @@ var PostgreSQL = class extends SQLExtensionGenerator {
   tables(tables) {
     let code = ``;
     for (const table of tables.tables) {
-      code += `CREATE TABLE ${table.name()} (
+      code += `CREATE TABLE ${table.name().postgres} (
 `;
       const columns = table.columns().filter((c) => !c.disabled()).map((column) => {
         let code2 = ``;
         this.index.push();
-        code2 += this.index.create(`${column.name()} ${column.definition()}`);
+        code2 += this.index.create(
+          `${column.name().postgres} ${column.definition().postgres}`
+        );
         if (column.isKey()) {
           code2 += ` PRIMARY KEY`;
         } else {
@@ -4665,14 +4977,161 @@ var PostgreSQL = class extends SQLExtensionGenerator {
         }
         const ref = column.ref();
         if (ref !== null) {
-          const table2 = ref.table.name();
-          const col = ref.column.name();
+          const table2 = ref.table.name().postgres;
+          const col = ref.column.name().postgres;
           code2 += ` REFERENCES ${table2}(${col})`;
         }
         this.index.reverse();
         return code2;
       }).join(",\n");
       code += `${columns}
+`;
+      code += `);
+
+`;
+    }
+    return code;
+  }
+};
+
+// src/core/export/generators/sql/core/generators/sqlite.ts
+var SQLite = class extends SQLExtensionGenerator {
+  constructor(index) {
+    super();
+    __publicField(this, "index", index);
+  }
+  values(tables) {
+    let code = ``;
+    for (const table of tables.tables) {
+      const columns = table.columns().filter((c) => !c.disabled()).map((c) => c.name().sqlite).join(", ");
+      code += `INSERT INTO ${table.name().sqlite} (${columns})
+`;
+      code += `VALUES
+`;
+      const values = [];
+      table.iterate((row) => {
+        this.index.push();
+        const v = row.map((v2) => v2.string().sqlite).join(", ");
+        const rowCode = this.index.create(`(${v})`);
+        values.push(rowCode);
+        this.index.reverse();
+      });
+      code += `${values.join(",\n")};
+
+`;
+    }
+    return code;
+  }
+  tables(tables) {
+    let code = `PRAGMA foreign_keys = ON;
+
+`;
+    for (const table of tables.tables) {
+      code += `CREATE TABLE ${table.name().sqlite} (
+`;
+      const columns = table.columns().filter((c) => !c.disabled()).map((column) => {
+        let code2 = ``;
+        this.index.push();
+        code2 += this.index.create(
+          `${column.name().sqlite} ${column.definition().sqlite}`
+        );
+        if (column.isKey()) {
+          code2 += ` PRIMARY KEY`;
+        } else {
+          if (column.isUnique()) {
+            code2 += ` UNIQUE`;
+          }
+          if (!column.isNull()) {
+            code2 += ` NOT NULL`;
+          }
+        }
+        const ref = column.ref();
+        if (ref !== null) {
+          const table2 = ref.table.name().sqlite;
+          const col = ref.column.name().sqlite;
+          code2 += ` REFERENCES ${table2}(${col})`;
+        }
+        this.index.reverse();
+        return code2;
+      }).join(",\n");
+      code += `${columns}
+`;
+      code += `);
+
+`;
+    }
+    return code;
+  }
+};
+
+// src/core/export/generators/sql/core/generators/mysql.ts
+var MySQL = class extends SQLExtensionGenerator {
+  constructor(index) {
+    super();
+    __publicField(this, "index", index);
+  }
+  values(tables) {
+    let code = ``;
+    for (const table of tables.tables) {
+      const columns = table.columns().filter((c) => !c.disabled()).map((c) => c.name().mysql).join(", ");
+      code += `INSERT INTO ${table.name().mysql} (${columns})
+`;
+      code += `VALUES
+`;
+      const values = [];
+      table.iterate((row) => {
+        this.index.push();
+        const v = row.map((v2) => v2.string().mysql).join(", ");
+        const rowCode = this.index.create(`(${v})`);
+        values.push(rowCode);
+        this.index.reverse();
+      });
+      code += `${values.join(",\n")};
+
+`;
+    }
+    return code;
+  }
+  tables(tables) {
+    let code = ``;
+    for (const table of tables.tables) {
+      code += `CREATE TABLE ${table.name().mysql} (
+`;
+      const activeColumns = table.columns().filter((c) => !c.disabled());
+      const lines = activeColumns.map((column) => {
+        let code2 = ``;
+        this.index.push();
+        code2 += this.index.create(
+          `${column.name().mysql} ${column.definition().mysql}`
+        );
+        if (column.isKey()) {
+          code2 += ` PRIMARY KEY`;
+        } else {
+          if (column.isUnique()) {
+            code2 += ` UNIQUE`;
+          }
+          if (!column.isNull()) {
+            code2 += ` NOT NULL`;
+          }
+        }
+        this.index.reverse();
+        return code2;
+      });
+      for (const column of activeColumns) {
+        const ref = column.ref();
+        if (ref !== null) {
+          this.index.push();
+          const table2 = ref.table.name().mysql;
+          const col = ref.column.name().mysql;
+          lines.push(
+            this.index.create(
+              `FOREIGN KEY (${column.name().mysql}) REFERENCES ${table2}(${col})`
+            )
+          );
+          this.index.reverse();
+        }
+      }
+      code += `${lines.join(",\n")}
 `;
       code += `);
 
@@ -4825,7 +5284,10 @@ var TablesFixer = class {
         while (!stop) {
           const found = table.columns().filter((c) => !c.disabled()).find((c) => c !== column && c.equal(column._name));
           if (found) {
-            const name = new ColumnName(this.utils, `${column.name()}_1`);
+            const name = new ColumnName(
+              this.utils,
+              `${column.name().postgres}_1`
+            );
             column.setName(name);
           } else {
             stop = true;
@@ -4965,6 +5427,7 @@ var SQLGenerator = class extends Generator {
   constructor(utils2, format, config) {
     super({ ext: "sql", zip: config.zip });
     __publicField(this, "utils", utils2);
+    __publicField(this, "format", format);
     __publicField(this, "indent");
     __publicField(this, "skipInvalid");
     __publicField(this, "declarationOnly");
@@ -5014,10 +5477,9 @@ var SQLGenerator = class extends Generator {
     const allTables = new SQLTables(this.utils);
     const organizer = new TableOrganizer();
     const validator = new DataValidator3();
-    const postgres = new PostgreSQL(this.indent);
     const generator = new SQLDataGenerator(
       this.utils,
-      postgres,
+      this.extension(),
       validator,
       fixer,
       this.skipInvalid,
@@ -5048,10 +5510,9 @@ var SQLGenerator = class extends Generator {
     });
     const tables = new SQLTables(this.utils);
     const validator = new DataValidator3();
-    const postgres = new PostgreSQL(this.indent);
     const generator = new SQLDataGenerator(
       this.utils,
-      postgres,
+      this.extension(),
       validator,
       fixer,
       this.skipInvalid,
@@ -5066,6 +5527,15 @@ var SQLGenerator = class extends Generator {
     });
     const code = generator.code(tables);
     return [{ content: code, filename: filename.value() }];
+  }
+  extension() {
+    if (this.format === "sqlite") {
+      return new SQLite(this.indent);
+    }
+    if (this.format === "mysql") {
+      return new MySQL(this.indent);
+    }
+    return new PostgreSQL(this.indent);
   }
 };
 
@@ -5753,7 +6223,7 @@ var GeneratorFilter = class {
       gen = new TypescriptGenerator(this.utils, {});
     } else if (format === "yaml") {
       gen = new YamlGenerator({});
-    } else if (format === "postgresql") {
+    } else if (format === "postgresql" || format === "sqlite" || format === "mysql") {
       gen = new SQLGenerator(this.utils, format, {});
     } else if (format === "python") {
       gen = new PythonGenerator(this.utils, {});
@@ -5766,7 +6236,7 @@ var GeneratorFilter = class {
         gen = new JavaGenerator(this.utils, format);
       } else if (format.ext === "javascript") {
         gen = new JavascriptGenerator(this.utils, format);
-      } else if (format.ext === "postgresql") {
+      } else if (format.ext === "postgresql" || format.ext === "sqlite" || format.ext === "mysql") {
         gen = new SQLGenerator(this.utils, format.ext, format);
       } else if (format.ext === "python") {
         gen = new PythonGenerator(this.utils, format);
@@ -5801,6 +6271,10 @@ var FileFormat = class {
         this._value = this.validateJs(format);
       } else if (format.ext === "postgresql") {
         this._value = this.validatePostgresql(format);
+      } else if (format.ext === "sqlite") {
+        this._value = this.validateSqlite(format);
+      } else if (format.ext === "mysql") {
+        this._value = this.validateMysql(format);
       } else if (format.ext === "python") {
         this._value = this.validatePython(format);
       } else if (format.ext === "typescript") {
@@ -5838,6 +6312,20 @@ var FileFormat = class {
   }
   validatePostgresql(format) {
     const config = { ext: "postgresql" };
+    if (typeof format === "object" && format !== null) {
+      config.zip = Boolean(format.zip);
+    }
+    return config;
+  }
+  validateSqlite(format) {
+    const config = { ext: "sqlite" };
+    if (typeof format === "object" && format !== null) {
+      config.zip = Boolean(format.zip);
+    }
+    return config;
+  }
+  validateMysql(format) {
+    const config = { ext: "mysql" };
     if (typeof format === "object" && format !== null) {
       config.zip = Boolean(format.zip);
     }
@@ -6060,7 +6548,7 @@ var Schema = class {
    *
    * @param documents number of documents that you want to create
    * @param props.filename name for the file
-   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    */
   async transform(documents, props) {
     const filter = new GeneratorFilter(this.utils);
@@ -6078,7 +6566,7 @@ var Schema = class {
    * @param documents number of documents that you want to create
    * @param config.filename file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    *
    * @returns Promise<string[]>
    */
@@ -7267,7 +7755,7 @@ var Dataset = class {
    * Generates and serializes dataset data as a specific file format
    *
    * @param props.filename name for the file
-   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    * @param config.verbose show log in console progretion
    */
   transform(props) {
@@ -7285,7 +7773,7 @@ var Dataset = class {
    * @param schemas Array with the schemas config
    * @param config.filename file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    * @param config.verbose show log in console progretion
    */
   async export(config) {
@@ -7418,7 +7906,7 @@ var Chaca = class {
    * @param data Data you want to export
    * @param config.filename file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    *
    * @example
    * const data = [
@@ -7493,7 +7981,7 @@ var Chaca = class {
    *
    * @param data Data to transform
    * @param props.filename name for the file
-   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    */
   transform(data, props) {
     const filter = new GeneratorFilter(this.utils);
