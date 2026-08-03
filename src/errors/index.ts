@@ -6,7 +6,10 @@ export class ChacaError extends Error {
 }
 
 export class WrongArrayDefinitionError extends ChacaError {
-  constructor(readonly fieldRoute: string, message: string) {
+  constructor(
+    readonly fieldRoute: string,
+    message: string,
+  ) {
     super(`On '${fieldRoute}'. ${message}`);
 
     this.name = "ChacaError.WrongArrayDefinitionError";
@@ -14,7 +17,10 @@ export class WrongArrayDefinitionError extends ChacaError {
 }
 
 export class WrongPossibleNullDefinitionError extends ChacaError {
-  constructor(readonly fieldRoute: string, message: string) {
+  constructor(
+    readonly fieldRoute: string,
+    message: string,
+  ) {
     super(`On '${fieldRoute}'. ${message}`);
 
     this.name = `ChacaError.WrongPossibleNullDefinitionError`;
@@ -30,7 +36,10 @@ export class EmptySequentialValuesError extends ChacaError {
 }
 
 export class WrongProbabilityFieldDefinitionError extends ChacaError {
-  constructor(readonly fieldRoute: string, message: string) {
+  constructor(
+    readonly fieldRoute: string,
+    message: string,
+  ) {
     super(`On '${fieldRoute}'. ${message}`);
 
     this.name = "ChacaError.WrongProbabilityFieldDefinitionError";
@@ -38,7 +47,10 @@ export class WrongProbabilityFieldDefinitionError extends ChacaError {
 }
 
 export class PickFieldDefinitionError extends ChacaError {
-  constructor(readonly fieldRoute: string, message: string) {
+  constructor(
+    readonly fieldRoute: string,
+    message: string,
+  ) {
     super(`On field '${fieldRoute}'. ${message}`);
 
     this.name = "ChacaError.PickFieldDefinitionError";
@@ -56,7 +68,10 @@ export class TryRefANoKeyFieldError extends ChacaError {
 }
 
 export class NotEnoughValuesForRefError extends ChacaError {
-  constructor(readonly refFieldRoute: string, readonly keyFieldRoute: string) {
+  constructor(
+    readonly refFieldRoute: string,
+    readonly keyFieldRoute: string,
+  ) {
     super(
       `Not enough values of '${keyFieldRoute}' for the ref field '${refFieldRoute}'`,
     );
@@ -73,7 +88,10 @@ export class CyclicAccessDataError extends ChacaError {
 }
 
 export class NotExistRefFieldError extends ChacaError {
-  constructor(readonly fieldRoute: string, readonly refFieldRoute: string) {
+  constructor(
+    readonly fieldRoute: string,
+    readonly refFieldRoute: string,
+  ) {
     super(`From '${fieldRoute}', The field '${refFieldRoute}' does not exists`);
     this.name = "ChacaError.NotExistRefFieldError";
   }

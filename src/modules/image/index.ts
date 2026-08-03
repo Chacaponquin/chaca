@@ -27,7 +27,9 @@ export class ImageModule {
     const width = iwidth ? iwidth : size;
     const height = iheight ? iheight : size;
 
-    const url = `https://lexica.art/api/v1/search?q=${category}&width=${width}&height=${height}`;
+    const url = `https://lexica.art/api/v1/search?q=${encodeURIComponent(
+      category,
+    )}&width=${width}&height=${height}`;
 
     return url;
   }

@@ -95,7 +95,7 @@ export class SchemaToResolve {
         possibleNull: new FieldPossibleNull(),
       } as ResolverObject;
 
-      if ("type" in field) {
+      if (typeof field === "object" && field !== null && "type" in field) {
         const fieldObject = field as FieldObjectInput;
         const type = this.filter({ config: fieldObject.type, route: route });
 

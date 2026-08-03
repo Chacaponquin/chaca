@@ -30,4 +30,12 @@ describe("# Sequence field step config tests", () => {
 
     expect(await valid(schema, 1)).toBe(true);
   });
+
+  it("Define step = -1. Values should decrease on each document", async () => {
+    const schema = chaca.schema({ test: chaca.sequence({ step: -1 }) });
+
+    const data = await schema.array(4);
+
+    expect(data.map((o) => o.test)).toEqual([1, 0, -1, -2]);
+  });
 });

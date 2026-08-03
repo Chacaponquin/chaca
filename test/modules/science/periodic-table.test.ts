@@ -11,11 +11,20 @@ describe("science.periodicTableElement", () => {
   });
 
   describe("type argument", () => {
-    it("type = 'symbol'. should return an element symbol");
-    const value = modules.science.periodicTableElement({ type: "symbol" });
+    it("type = 'symbol'. should return an element symbol", () => {
+      const value = modules.science.periodicTableElement({ type: "symbol" });
 
-    expect(
-      modules.science.constants.periodicTableElements.map((p) => p.symbol),
-    ).include(value);
+      expect(
+        modules.science.constants.periodicTableElements.map((p) => p.symbol),
+      ).include(value);
+    });
+
+    it("type = 'name'. should return an element name", () => {
+      const value = modules.science.periodicTableElement({ type: "name" });
+
+      expect(
+        modules.science.constants.periodicTableElements.map((p) => p.name),
+      ).include(value);
+    });
   });
 });

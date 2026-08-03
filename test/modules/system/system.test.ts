@@ -18,14 +18,7 @@ describe("system modules", () => {
   it("system.semver", () => {
     const value = modules.system.semver();
 
-    const array = value.split(".");
-
-    expect(array).toHaveLength(3);
-
-    for (const v of array) {
-      expect(Number(v)).toBeGreaterThanOrEqual(0);
-      expect(Number(v)).toBeLessThanOrEqual(9);
-    }
+    expect(value).toMatch(/^\d\.\d\.\d$/);
   });
 
   it("system.directoryPath", () => {
@@ -33,14 +26,26 @@ describe("system modules", () => {
 
     const array = value.split("/");
 
+    expect(array.length).toBeGreaterThanOrEqual(1);
+    expect(array.length).toBeLessThanOrEqual(5);
+
     for (const name of array) {
-      expect(name).not.include("/");
+      expect(name.length).toBeGreaterThan(0);
     }
   });
 
   it("system.filePath", () => {
     const value = modules.system.filePath();
 
-    expect(value.split("/").length).toBeGreaterThanOrEqual(2);
+    const array = value.split("/");
+
+    expect(array.length).toBeGreaterThanOrEqual(2);
+
+    const filename = array[array.length - 1];
+    const extension = filename.slice(filename.lastIndexOf("."));
+
+    expect(
+      Object.values(modules.system.constants.fileExtensions).flat(),
+    ).include(extension);
   });
 });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chaca } from "../../../../src";
+import { chaca, NotEnoughValuesForRefError } from "../../../../src";
 
 describe("ref.where", () => {
   describe("ref with array definition", () => {
@@ -26,10 +26,13 @@ describe("ref.where", () => {
         ])
         .generate();
 
+      const keys = data.schema.map((s: { id: number }) => s.id);
+
       for (const s2 of data.schema2) {
         expect(s2.ref).toHaveLength(50);
 
         for (const v of s2.ref) {
+          expect(keys).include(v);
           expect(s2.ref.filter((s: { id: number }) => s === v)).toHaveLength(1);
         }
       }
@@ -84,8 +87,84 @@ describe("ref.where", () => {
       ])
       .generate();
 
+    const keys = data.schema.map((s: { number: number }) => s.number);
+
     for (const s2 of data.schema2) {
       expect(s2.ref % 2 !== 0).toBe(true);
+      expect(keys).include(s2.ref);
     }
+  });
+
+  it("where = undefined & unique = true. all refs belong to schema keys", async () => {
+    const schema = chaca.schema({
+      number: chaca.key(chaca.sequence()),
+    });
+
+    const schema2 = chaca.schema({
+      ref: chaca.ref("schema.number", {
+        where: undefined,
+        unique: true,
+      }),
+    });
+
+    const data = await chaca
+      .dataset([
+        { name: "schema", documents: 30, schema: schema },
+        { name: "schema2", documents: 30, schema: schema2 },
+      ])
+      .generate();
+
+    const keys = data.schema.map((s: { number: number }) => s.number);
+
+    for (const s2 of data.schema2) {
+      expect(keys).include(s2.ref);
+    }
+  });
+
+  describe("where filters out every value", () => {
+    it("without nullOnEmpty. should throw NotEnoughValuesForRefError", async () => {
+      const schema = chaca.schema({
+        number: chaca.key(chaca.sequence()),
+      });
+
+      const schema2 = chaca.schema({
+        ref: chaca.ref("schema.number", {
+          where: () => false,
+        }),
+      });
+
+      const dataset = chaca.dataset([
+        { name: "schema", documents: 10, schema: schema },
+        { name: "schema2", documents: 10, schema: schema2 },
+      ]);
+
+      await expect(dataset.generate()).rejects.toThrow(
+        NotEnoughValuesForRefError,
+      );
+    });
+
+    it("with nullOnEmpty = true. all refs should be null", async () => {
+      const schema = chaca.schema({
+        number: chaca.key(chaca.sequence()),
+      });
+
+      const schema2 = chaca.schema({
+        ref: chaca.ref("schema.number", {
+          where: () => false,
+          nullOnEmpty: true,
+        }),
+      });
+
+      const data = await chaca
+        .dataset([
+          { name: "schema", documents: 10, schema: schema },
+          { name: "schema2", documents: 10, schema: schema2 },
+        ])
+        .generate();
+
+      for (const s2 of data.schema2) {
+        expect(s2.ref).toBeNull();
+      }
+    });
   });
 });

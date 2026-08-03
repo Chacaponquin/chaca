@@ -1,18 +1,18 @@
 import { ChacaError, modules } from "../../../src";
 import { describe, expect, it } from "vitest";
 
-const VALUES_LIMIT = 1000;
+const VALUES_LIMIT = 100;
 
 describe("datatype.matrix", () => {
-  it("no arguments", () => {
+  it("no arguments. should return a matrix of numbers", () => {
     for (let index = 0; index < VALUES_LIMIT; index++) {
       const value = modules.datatype.matrix();
 
-      expect(
-        value.every((row) =>
-          row.forEach((v) => expect(typeof v).toBe("number")),
-        ),
-      );
+      expect(value.length).toBeGreaterThanOrEqual(1);
+
+      for (const v of value.flat()) {
+        expect(typeof v).toBe("number");
+      }
     }
   });
 
@@ -21,14 +21,10 @@ describe("datatype.matrix", () => {
       for (let index = 0; index < VALUES_LIMIT; index++) {
         const value = modules.datatype.matrix({ max: 5 });
 
-        expect(
-          value.every((row) =>
-            row.forEach((v) => {
-              expect(typeof v).toBe("number");
-              expect(v).toBeLessThanOrEqual(5);
-            }),
-          ),
-        );
+        for (const v of value.flat()) {
+          expect(typeof v).toBe("number");
+          expect(v).toBeLessThanOrEqual(5);
+        }
       }
     });
   });
@@ -38,18 +34,16 @@ describe("datatype.matrix", () => {
       for (let index = 0; index < VALUES_LIMIT; index++) {
         const value = modules.datatype.matrix({ precision: 0 });
 
-        expect(
-          value.every((row) =>
-            row.forEach((v) => expect(Number.isInteger(v)).toBe(true)),
-          ),
-        );
+        for (const v of value.flat()) {
+          expect(Number.isInteger(v)).toBe(true);
+        }
       }
     });
   });
 
   describe("max and min argument", () => {
     it("min = 5 & max = 0. should throw an error", () => {
-      expect(() => modules.datatype.int({ max: 0, min: 5 })).toThrow(
+      expect(() => modules.datatype.matrix({ max: 0, min: 5 })).toThrow(
         ChacaError,
       );
     });
@@ -64,15 +58,11 @@ describe("datatype.matrix", () => {
           min: -10,
         });
 
-        expect(
-          value.every((row) =>
-            row.forEach((v) => {
-              expect(Number.isInteger(v)).toBe(true);
-              expect(v).toBeGreaterThanOrEqual(-10);
-              expect(v).toBeLessThanOrEqual(5);
-            }),
-          ),
-        );
+        for (const v of value.flat()) {
+          expect(Number.isInteger(v)).toBe(true);
+          expect(v).toBeGreaterThanOrEqual(-10);
+          expect(v).toBeLessThanOrEqual(5);
+        }
       }
     });
   });

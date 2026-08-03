@@ -31,6 +31,16 @@ describe("person modules", () => {
     expect(all.includes(value)).toBe(true);
   });
 
+  it("person.prefix with sex = 'male'", () => {
+    const value = modules.person.prefix({ sex: "male" });
+    expect(modules.person.constants.prefixes.male.includes(value)).toBe(true);
+  });
+
+  it("person.prefix with sex = 'female'", () => {
+    const value = modules.person.prefix({ sex: "female" });
+    expect(modules.person.constants.prefixes.female.includes(value)).toBe(true);
+  });
+
   it("person.sex", () => {
     const value = modules.person.sex();
     expect(modules.person.constants.sexs.includes(value)).toBe(true);

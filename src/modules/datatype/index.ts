@@ -157,8 +157,8 @@ export class DatatypeModule {
   /**
    * Returns a integer number
    *
-   * @param args.min Minimun posible value
-   * @param args.max Maximun posible value
+   * @param args.min Minimun posible value (inclusive)
+   * @param args.max Maximun posible value (exclusive)
    *
    * @example
    * modules.datatype.int() // 462
@@ -286,7 +286,7 @@ export class DatatypeModule {
     const utils = new ChacaUtils();
 
     const numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
-    const characters = ["A", "B", "C", "D", "E", "F", "G"];
+    const characters = ["A", "B", "C", "D", "E", "F"];
 
     const length =
       typeof ilength === "number" && ilength >= 0
@@ -457,7 +457,7 @@ export class DatatypeModule {
         for (let i = 0; i < ibanned.length; i++) {
           banned.push(ibanned[i]);
         }
-      } else if (Array.isArray(banned)) {
+      } else if (Array.isArray(ibanned)) {
         for (const c of ibanned) {
           banned.push(c);
         }

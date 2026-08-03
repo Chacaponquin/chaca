@@ -13,11 +13,11 @@ export type CountryProps = {
   continent?:
     | "Asia"
     | "Africa"
-    | "Oseania"
+    | "Oceania"
     | "Europe"
     | "South America"
     | "North America"
-    | "Antartica";
+    | "Antarctica";
 };
 
 export type LatitudeProps = {

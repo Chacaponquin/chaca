@@ -1,8 +1,9 @@
 import fs from "fs";
 import path from "path";
-import { Schema } from "../../core/schema/schema";
-import { ExportFormat } from "../../core/export/interfaces/export";
-import { Dataset } from "../../core/dataset/dataset";
+import {
+  CliExportable,
+  ExportFormat,
+} from "../../core/export/interfaces/export";
 
 interface Props {
   filename: string;
@@ -16,25 +17,26 @@ export async function run({ route, count, filename, output, format }: Props) {
   if (!fs.existsSync(route)) {
     throw Error(`The config file '${route}' not exist's`);
   } else {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const config = require(path.resolve(process.cwd(), route));
+    // The config module is resolved from a user-supplied path at runtime, so it
+    // cannot be a static import.
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const config: Partial<CliExportable> = require(
+      path.resolve(process.cwd(), route),
+    );
 
-    if (config instanceof Schema) {
-      await config.export(count, {
-        filename: filename,
-        format: format,
-        location: output,
-        verbose: true,
-      });
-    } else if (config instanceof Dataset) {
-      await config.export({
-        filename: filename,
-        format: format,
-        location: output,
-        verbose: true,
-      });
-    } else {
+    // A `Schema` and a `Dataset` both implement `exportFromCli`, so the CLI does
+    // not need to know which one it received. This also avoids `instanceof`,
+    // which is unreliable here because the config file resolves the library
+    // through its own `require` (a different module instance than this bundle).
+    if (typeof config?.exportFromCli !== "function") {
       throw new Error(`You must export a schema or a dataset`);
     }
+
+    await config.exportFromCli(count, {
+      filename: filename,
+      format: format,
+      location: output,
+      verbose: true,
+    });
   }
 }

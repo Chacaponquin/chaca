@@ -71,4 +71,9 @@ describe("# Animal modules tests", () => {
     const value = modules.animal.snake();
     expect(modules.animal.constants.snakes.includes(value)).toBe(true);
   });
+
+  it("animal.type", () => {
+    const value = modules.animal.type();
+    expect(modules.animal.constants.animalTypes.includes(value)).toBe(true);
+  });
 });

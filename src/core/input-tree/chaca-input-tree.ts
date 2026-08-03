@@ -219,7 +219,7 @@ export class ChacaInputTree {
       });
 
       const startsWith = new StartsWith({
-        value: object.type.getConfig().starsWith,
+        value: object.type.getConfig().startsWith,
         route: actualRoute.string(),
       });
 
@@ -237,7 +237,7 @@ export class ChacaInputTree {
         });
 
         const startsWith = new StartsWith({
-          value: object.type.type.getConfig().starsWith,
+          value: object.type.type.getConfig().startsWith,
           route: actualRoute.string(),
         });
 

@@ -1,21 +1,28 @@
-import { ExportResolver } from "../export/resolvers/export/export";
+﻿import { ExportResolver } from "../export/resolvers/export/export";
 import { SchemaInput } from "./interfaces/schema";
-import { DumpConfig, FileConfig } from "../export/interfaces/export";
+import {
+  CliExportable,
+  DumpConfig,
+  FileConfig,
+} from "../export/interfaces/export";
 import { SchemaResolver } from "../schema-resolver/schema-resolver";
 import { ChacaUtils } from "../utils";
 import { DatatypeModule } from "../../modules/datatype";
 import { GeneratorFilter } from "../export/resolvers/generator-filter/generator-filter";
 import { DumpResolver } from "../export/resolvers/dump/dump";
 import { DumpFile } from "../export/generators/generator/generator";
+import { FileWriter } from "../export/writers/file-writer";
+import { UnavailableFileWriter } from "../export/writers/unavailable/unavailable-file-writer";
 import { DEFAULT_SCHEMA_NAME } from "./core/default-name";
 import { SchemaCountExecutor } from "../schema-resolver/value-object/schema-count-executor";
 import { SchemaCount } from "../schema-resolver/value-object/schema-count";
 
-export class Schema<K = any> {
+export class Schema<K = any> implements CliExportable {
   constructor(
     readonly input: SchemaInput,
     private readonly utils: ChacaUtils,
     private readonly datatypeModule: DatatypeModule,
+    private readonly fileWriter: FileWriter = new UnavailableFileWriter(),
   ) {}
 
   /**
@@ -23,7 +30,7 @@ export class Schema<K = any> {
    *
    * @param documents number of documents that you want to create
    * @param props.filename name for the file
-   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    */
   async transform(documents: number, props: DumpConfig): Promise<DumpFile[]> {
     const filter = new GeneratorFilter(this.utils);
@@ -44,7 +51,7 @@ export class Schema<K = any> {
    * @param documents number of documents that you want to create
    * @param config.filename file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    *
    * @returns Promise<string[]>
    */
@@ -54,6 +61,7 @@ export class Schema<K = any> {
       this.utils,
       this.datatypeModule,
       filter,
+      this.fileWriter,
       config,
     );
 
@@ -62,6 +70,14 @@ export class Schema<K = any> {
     ]);
 
     return routes;
+  }
+
+  /**
+   * Adapts the CLI's uniform export call to the schema `export` signature.
+   * @internal
+   */
+  exportFromCli(documents: number, config: FileConfig): Promise<string[]> {
+    return this.export(documents, config);
   }
 
   /**

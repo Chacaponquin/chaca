@@ -4,7 +4,6 @@ import {
   DumpRelationalProps,
   Generator,
 } from "../generator/generator";
-import { DatasetResolver } from "../../../dataset-resolver/dataset-resolver";
 import { ClassesCreator } from "./core/classes-creator";
 import { Filename } from "../file-creator/filename";
 import { ValueCreator } from "./core/value-creator";
@@ -21,8 +20,6 @@ import {
 import { ChacaUtils } from "../../../utils";
 import { SkipInvalid } from "../../core/skip-invalid";
 import { Package } from "./value-object/package";
-import { FileCreator } from "../file-creator/file-creator";
-import { Route } from "../file-creator/route";
 import { DeclarationOnly } from "../../core/declaration-only";
 
 export type JavaProps = ZipConfig &
@@ -34,14 +31,14 @@ export type JavaProps = ZipConfig &
   };
 
 export class JavaGenerator extends Generator {
-  private readonly zip: boolean;
   private readonly creator: JavaCodeCreator;
   private readonly skipInvalid: SkipInvalid;
 
-  constructor(private readonly utils: ChacaUtils, config: JavaProps) {
-    super({ ext: "java" });
-
-    this.zip = Boolean(config.zip);
+  constructor(
+    private readonly utils: ChacaUtils,
+    config: JavaProps,
+  ) {
+    super({ ext: "java", zip: config.zip });
 
     this.creator = new JavaCodeCreator({
       indent: new SpaceIndex(config.indent),
@@ -81,48 +78,6 @@ export class JavaGenerator extends Generator {
     return result;
   }
 
-  async createRelationalFile(
-    fileCreator: FileCreator,
-    resolver: DatasetResolver,
-  ): Promise<string[]> {
-    const classes = new JavaClasses();
-    const valueCreator = new ValueCreator(
-      this.utils,
-      classes,
-      this.skipInvalid,
-    );
-    const validator = new DataValidator();
-    const creator = new ClassesCreator(valueCreator, validator);
-
-    for (const r of resolver.getResolvers()) {
-      creator.execute({
-        name: r.getSchemaName(),
-        data: await r.resolve(),
-      });
-    }
-
-    const routes = [] as Route[];
-    for (const { content, filename: ifilename } of this.creator.execute(
-      classes,
-    )) {
-      const filename = new Filename(ifilename);
-      const route = fileCreator.generateRoute(filename);
-
-      await fileCreator.writeFile(route, content);
-
-      routes.push(route);
-    }
-
-    if (this.zip) {
-      const zip = fileCreator.createZip();
-      await zip.multiple(routes);
-
-      return [zip.route];
-    } else {
-      return routes.map((r) => r.value());
-    }
-  }
-
   dump({ data, filename }: DumpProps): DumpFile[] {
     const classes = new JavaClasses();
     const valueCreator = new ValueCreator(
@@ -149,42 +104,5 @@ export class JavaGenerator extends Generator {
     }
 
     return result;
-  }
-
-  async createFile(fileCreator: FileCreator, data: any): Promise<string[]> {
-    const classes = new JavaClasses();
-    const valueCreator = new ValueCreator(
-      this.utils,
-      classes,
-      this.skipInvalid,
-    );
-    const validator = new DataValidator();
-    const creator = new ClassesCreator(valueCreator, validator);
-
-    creator.execute({
-      name: fileCreator.filename.value(),
-      data: data,
-    });
-
-    const routes = [] as Route[];
-    for (const { content, filename: ifilename } of this.creator.execute(
-      classes,
-    )) {
-      const filename = new Filename(ifilename);
-      const route = fileCreator.generateRoute(filename);
-
-      await fileCreator.writeFile(route, content);
-
-      routes.push(route);
-    }
-
-    if (this.zip) {
-      const zip = fileCreator.createZip();
-      await zip.multiple(routes);
-
-      return [zip.route];
-    } else {
-      return routes.map((r) => r.value());
-    }
   }
 }

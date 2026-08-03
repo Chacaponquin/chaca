@@ -57,4 +57,31 @@ describe("datatype.number", () => {
       );
     });
   });
+
+  describe("precision argument", () => {
+    it("precision = 0 & min = 0 & max = 100. should always return an integer", () => {
+      for (let index = 0; index < VALUES_LIMIT; index++) {
+        const value = modules.datatype.number({
+          precision: 0,
+          min: 0,
+          max: 100,
+        });
+
+        expect(Number.isInteger(value)).toBe(true);
+      }
+    });
+
+    it("precision = 2 & min = 0 & max = 10. should return numbers with at most 2 decimal digits", () => {
+      for (let index = 0; index < VALUES_LIMIT; index++) {
+        const value = modules.datatype.number({
+          precision: 2,
+          min: 0,
+          max: 10,
+        });
+
+        const decimals = String(value).split(".")[1];
+        expect(decimals === undefined || decimals.length <= 2).toBe(true);
+      }
+    });
+  });
 });

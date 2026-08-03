@@ -1,45 +1,66 @@
 {
   "name": "chaca",
-  "version": "2.1.0",
+  "version": "2.2.0",
   "description": "Create and export mock data with your rules",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "engines": {
-    "node": ">=16"
+    "node": ">=18"
   },
-  "exports": "./lib/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "browser": {
+        "types": "./dist/browser/index.d.ts",
+        "import": "./dist/browser/index.mjs",
+        "require": "./dist/browser/index.js",
+        "default": "./dist/browser/index.mjs"
+      },
+      "node": {
+        "types": "./dist/index.d.ts",
+        "import": "./dist/index.mjs",
+        "require": "./dist/index.js"
+      },
+      "default": "./dist/index.mjs"
+    },
+    "./package.json": "./package.json"
+  },
   "bin": {
-    "chaca": "./lib/bin/chaca.js"
+    "chaca": "./dist/bin/chaca.js"
   },
   "files": [
-    "lib/**/*",
+    "dist/**/*",
     "LICENSE",
     "CONTRIBUTING.md",
     "README.md",
     "CHANGELOG.md"
   ],
   "scripts": {
-    "prepare": "husky install",
-    "clean": "rm -rf ./lib",
+    "prepare": "husky",
+    "clean": "rm -rf ./dist ./lib",
     "build": "npm run fix && npm run build:lib",
-    "build:lib": "npm run clean && tsc --build --verbose",
-    "test": "vitest test",
+    "build:lib": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:report": "vitest run --reporter=default --reporter=html",
     "test:coverage": "rm -rf ./data && vitest run --coverage",
-    "test:field-types": "vitest test/library/field-types",
-    "test:cases": "vitest test/library/example-cases",
-    "test:modules": "vitest test/modules",
-    "test:library": "vitest test/library",
-    "test:export": "vitest test/library/extensions",
-    "test:utils": "vitest test/library/utils",
-    "test:cli": "vitest test/cli",
-    "prettier-format": "prettier --config .prettierrc src/**/*.ts --write",
-    "lint-fix": "eslint --fix src/**/*.ts",
-    "lint": "eslint src/**/*.ts",
-    "fix": "npm run lint-fix && npm run prettier-format"
+    "test:field-types": "vitest run test/library/field-types",
+    "test:cases": "vitest run test/example-case",
+    "test:modules": "vitest run test/modules",
+    "test:library": "vitest run test/library",
+    "test:export": "vitest run test/library/extensions",
+    "test:utils": "vitest run test/library/utils",
+    "test:cli": "vitest run test/cli",
+    "prettier-format": "prettier --write \"src/**/*.ts\"",
+    "lint": "eslint .",
+    "fix": "npm run lint && npm run prettier-format",
+    "prepublishOnly": "npm run build",
+    "test:watch": "vitest"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Chacaponquin/chaca.git"
+    "url": "git+https://github.com/hgomezrobaina/chaca.git"
   },
   "keywords": [
     "chaca",
@@ -50,50 +71,56 @@
     "data",
     "fake-data-generator",
     "relational data",
-    "generator"
+    "generator",
+    "browser",
+    "typescript",
+    "faker",
+    "seed",
+    "csv",
+    "sql"
   ],
   "author": "Chacaponquin <hectorangel2001@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "@types/adm-zip": "^0.5.0",
+    "@eslint/js": "^9.39.5",
     "@types/js-yaml": "^4.0.9",
-    "@types/json2csv": "^5.0.3",
-    "@types/node": "^18.8.0",
+    "@types/node": "^26.1.1",
     "@types/shelljs": "^0.8.15",
-    "@types/uuid": "^8.3.4",
     "@types/yargs": "^17.0.33",
-    "@typescript-eslint/eslint-plugin": "^5.38.1",
-    "@typescript-eslint/parser": "^5.38.1",
-    "@vitest/coverage-istanbul": "^3.2.4",
-    "eslint": "^8.24.0",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-import-resolver-typescript": "^3.5.2",
-    "eslint-plugin-file-extension-in-import-ts": "^1.0.1",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "husky": "^8.0.3",
-    "prettier": "^2.7.1",
+    "@typescript-eslint/eslint-plugin": "^8.64.0",
+    "@typescript-eslint/parser": "^8.64.0",
+    "@vitest/coverage-istanbul": "^4.1.10",
+    "@vitest/ui": "^4.1.10",
+    "eslint": "^9.39.5",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-import-resolver-typescript": "^4.4.5",
+    "eslint-plugin-import": "^2.32.0",
+    "eslint-plugin-prettier": "^5.5.6",
+    "husky": "^9.1.7",
+    "prettier": "^3.9.5",
     "shelljs": "^0.8.5",
-    "ts-node": "^10.9.1",
-    "tslib": "^2.6.0",
+    "tsup": "^8.5.1",
     "tsx": "^4.20.6",
-    "typescript": "^4.8.4",
-    "vitest": "^3.2.4"
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.64.0",
+    "vitest": "^4.1.10"
   },
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
-    "adm-zip": "^0.5.9",
+    "adm-zip": "^0.6.0",
     "change-case-all": "^2.1.0",
     "js-yaml": "^4.1.0",
     "json-2-csv": "^5.5.6",
     "lorem-ipsum": "^2.0.8",
-    "nanoid-cjs": "^0.0.7",
+    "nanoid": "^3.3.16",
     "ulid": "^2.3.0",
-    "uuid": "^10.0.0",
+    "uuid": "^14.0.1",
     "yargs": "^17.7.2"
   },
   "bugs": {
-    "url": "https://github.com/Chacaponquin/chaca/issues"
+    "url": "https://github.com/hgomezrobaina/chaca/issues"
   },
-  "homepage": "https://chaca.app"
+  "homepage": "https://chaca.app",
+  "browser": "./dist/browser/index.js",
+  "sideEffects": false
 }

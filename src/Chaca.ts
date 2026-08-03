@@ -1,8 +1,9 @@
-import { KeyField, KeyFieldProps } from "./core/fields/core/key/key-field";
+﻿import { KeyField, KeyFieldProps } from "./core/fields/core/key/key-field";
 import { ChacaUtils } from "./core/utils";
 import { SchemaInput } from "./core/schema/interfaces/schema";
 import { DatasetSchema } from "./core/dataset-resolver/interfaces/dataset-schema";
 import { ExportResolver } from "./core/export/resolvers/export/export";
+import { FileWriter } from "./core/export/writers/file-writer";
 import { DumpConfig, FileConfig } from "./core/export/interfaces/export";
 import { PickField, PickFieldProps } from "./core/fields/core/pick/pick-field";
 import { DatatypeModule } from "./modules/datatype";
@@ -27,6 +28,7 @@ export class Chaca {
   constructor(
     private readonly datatypeModule: DatatypeModule,
     readonly utils: ChacaUtils,
+    private readonly fileWriter: FileWriter,
   ) {}
 
   /**
@@ -40,7 +42,12 @@ export class Chaca {
    * })
    */
   schema<K = any>(input: SchemaInput): Schema<K> {
-    const newSchema = new Schema<K>(input, this.utils, this.datatypeModule);
+    const newSchema = new Schema<K>(
+      input,
+      this.utils,
+      this.datatypeModule,
+      this.fileWriter,
+    );
     return newSchema;
   }
 
@@ -81,7 +88,7 @@ export class Chaca {
 
   /**
    * Sequence field
-   * @param config.starsWith Init value for the field. Default `1`
+   * @param config.startsWith Init value for the field. Default `1`
    * @param config.step Step between field values in schema documents. Default `1`
    *
    * @example
@@ -121,7 +128,7 @@ export class Chaca {
    * @param data Data you want to export
    * @param config.filename file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    *
    * @example
    * const data = [
@@ -141,6 +148,7 @@ export class Chaca {
       this.utils,
       this.datatypeModule,
       filter,
+      this.fileWriter,
       config,
     );
 
@@ -154,7 +162,12 @@ export class Chaca {
    * @param schemas Array with the schemas config
    */
   dataset<K = any>(schemas: DatasetSchema[]): Dataset<K> {
-    const dataset = new Dataset<K>(schemas, this.utils, this.datatypeModule);
+    const dataset = new Dataset<K>(
+      schemas,
+      this.utils,
+      this.datatypeModule,
+      this.fileWriter,
+    );
     return dataset;
   }
 
@@ -196,7 +209,7 @@ export class Chaca {
    *
    * @param data Data to transform
    * @param props.filename name for the file
-   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    */
   transform(data: any, props: DumpConfig): DumpFile[] {
     const filter = new GeneratorFilter(this.utils);

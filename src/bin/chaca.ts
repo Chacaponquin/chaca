@@ -8,6 +8,8 @@ import { js } from "./js";
 import { java } from "./java";
 import { ts } from "./ts";
 import { postgresql } from "./postgresql";
+import { sqlite } from "./sqlite";
+import { mysql } from "./mysql";
 import { python } from "./python";
 
 yargs.command(json);
@@ -17,6 +19,8 @@ yargs.command(js);
 yargs.command(java);
 yargs.command(ts);
 yargs.command(postgresql);
+yargs.command(sqlite);
+yargs.command(mysql);
 yargs.command(python);
 
 yargs.parse();

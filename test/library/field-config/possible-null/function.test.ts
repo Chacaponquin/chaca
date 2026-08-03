@@ -25,14 +25,47 @@ describe("Possible null function definition", () => {
     expect(countNulls(data)).toBe(50);
   });
 
-  it("function that return a number-greater-than-1. should throw an error", () => {
+  it("function that return a number-greater-than-1. should throw an error", async () => {
     const schema = chaca.schema({
       null: { type: () => modules.color.cmyk(), possibleNull: () => 1.5 },
     });
 
-    expect(() => schema.array(50)).rejects.toThrow(
+    await expect(schema.array(50)).rejects.toThrow(
       WrongPossibleNullDefinitionError,
     );
+  });
+
+  it("function that returns a string. should throw an error", async () => {
+    const schema = chaca.schema({
+      null: {
+        type: () => modules.color.cmyk(),
+        possibleNull: () => "hola" as never,
+      },
+    });
+
+    await expect(schema.array(50)).rejects.toThrow(
+      WrongPossibleNullDefinitionError,
+    );
+  });
+
+  it("the function receives currentFields and store", async () => {
+    let receivedArgs: unknown;
+
+    const schema = chaca.schema({
+      name: () => "chaca",
+      null: {
+        type: () => modules.color.cmyk(),
+        possibleNull: (args) => {
+          receivedArgs = args;
+          return false;
+        },
+      },
+    });
+
+    await schema.object();
+
+    expect(receivedArgs).toHaveProperty("currentFields");
+    expect(receivedArgs).toHaveProperty("store");
   });
 
   it("function that return a number between 0 and 1. should return at least one null value", async () => {
@@ -45,12 +78,12 @@ describe("Possible null function definition", () => {
     expect(countNulls(data)).toBeGreaterThan(0);
   });
 
-  it("function that return a negative number. should throw an error", () => {
+  it("function that return a negative number. should throw an error", async () => {
     const schema = chaca.schema({
       null: { type: () => modules.color.cmyk(), possibleNull: () => -60 },
     });
 
-    expect(() => schema.array(50)).rejects.toThrow(
+    await expect(schema.array(50)).rejects.toThrow(
       WrongPossibleNullDefinitionError,
     );
   });
@@ -94,7 +127,7 @@ describe("Possible null function definition", () => {
       expect(countNulls(data)).toBe(50);
     });
 
-    it("async function that returns a negative number. should throw an error", () => {
+    it("async function that returns a negative number. should throw an error", async () => {
       const schema = chaca.schema({
         null: {
           type: () => modules.color.cmyk(),
@@ -104,7 +137,7 @@ describe("Possible null function definition", () => {
         },
       });
 
-      expect(async () => await schema.array(50)).rejects.toThrow(
+      await expect(schema.array(50)).rejects.toThrow(
         WrongPossibleNullDefinitionError,
       );
     });

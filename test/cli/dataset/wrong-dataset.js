@@ -1,4 +1,4 @@
-const { chaca, modules } = require("../../../lib");
+const { chaca, modules } = require("../../../dist");
 
 const USER_SCHEMA = chaca.schema({
   id: chaca.key(() => modules.id.uuid()),

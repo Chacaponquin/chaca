@@ -8,12 +8,7 @@ import {
 import { Case } from "change-case-all";
 
 export type TimeUnits =
-  | "years"
-  | "seconds"
-  | "minutes"
-  | "days"
-  | "hours"
-  | "months";
+  "years" | "seconds" | "minutes" | "days" | "hours" | "months";
 
 export type SumDateRangeProps = {
   date: Date;
@@ -267,7 +262,7 @@ export class ChacaUtils {
     }
 
     if (count === values.length) {
-      return values;
+      return [...values];
     } else {
       const generate = (banned: number[]): number => {
         let num = this.datatypeModule.int({

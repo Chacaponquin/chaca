@@ -11,7 +11,10 @@ import { FieldNode } from "../../../result-tree/classes/node/field-node";
 export type KeyFieldProps = RefValueNode | SequenceValueNode | CustomValueNode;
 
 export class KeyValueNode extends InputTreeNode {
-  constructor(route: NodeRoute, private readonly fieldNode: KeyFieldProps) {
+  constructor(
+    route: NodeRoute,
+    private readonly fieldNode: KeyFieldProps,
+  ) {
     super(route, new NotArray(), new NotNull());
   }
 
