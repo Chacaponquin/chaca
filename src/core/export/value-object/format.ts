@@ -6,6 +6,7 @@ import {
   JsonFormatConfig,
   PostgresqlFormatConfig,
   SqliteFormatConfig,
+  MysqlFormatConfig,
   PythonFormatConfig,
   TypescriptFormatConfig,
   YamlFormatConfig,
@@ -31,6 +32,8 @@ export class FileFormat {
         this._value = this.validatePostgresql(format);
       } else if (format.ext === "sqlite") {
         this._value = this.validateSqlite(format);
+      } else if (format.ext === "mysql") {
+        this._value = this.validateMysql(format);
       } else if (format.ext === "python") {
         this._value = this.validatePython(format);
       } else if (format.ext === "typescript") {
@@ -91,6 +94,16 @@ export class FileFormat {
 
   private validateSqlite(format: SqliteFormatConfig): SqliteFormatConfig {
     const config: SqliteFormatConfig = { ext: "sqlite" };
+
+    if (typeof format === "object" && format !== null) {
+      config.zip = Boolean(format.zip);
+    }
+
+    return config;
+  }
+
+  private validateMysql(format: MysqlFormatConfig): MysqlFormatConfig {
+    const config: MysqlFormatConfig = { ext: "mysql" };
 
     if (typeof format === "object" && format !== null) {
       config.zip = Boolean(format.zip);

@@ -109,7 +109,7 @@ export class SQLColumn {
         this._isNull = true;
       }
     } else {
-      const route = `${table.name()}.${this.name()}`;
+      const route = `${table.name().postgres}.${this.name().postgres}`;
       const type1 = v.primitive();
       const type2 = this._datatype.primitive();
 

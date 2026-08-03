@@ -7,6 +7,7 @@ import {
 } from "../generator/generator";
 import { PostgreSQL } from "./core/generators/postgres";
 import { SQLite } from "./core/generators/sqlite";
+import { MySQL } from "./core/generators/mysql";
 import {
   SQLDataGenerator,
   SQLExtensionGenerator,
@@ -174,6 +175,10 @@ export class SQLGenerator extends Generator {
   private extension(): SQLExtensionGenerator {
     if (this.format === "sqlite") {
       return new SQLite(this.indent);
+    }
+
+    if (this.format === "mysql") {
+      return new MySQL(this.indent);
     }
 
     return new PostgreSQL(this.indent);

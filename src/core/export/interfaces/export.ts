@@ -20,7 +20,7 @@ export type Extensions =
   | "python"
   | ExportSQLFormat;
 
-export type ExportSQLFormat = "postgresql" | "sqlite";
+export type ExportSQLFormat = "postgresql" | "sqlite" | "mysql";
 
 /**
  * Export file configuration
@@ -69,7 +69,8 @@ export type ExtensionConfigs =
   | YamlFormatConfig
   | PythonFormatConfig
   | PostgresqlFormatConfig
-  | SqliteFormatConfig;
+  | SqliteFormatConfig
+  | MysqlFormatConfig;
 
 export type PostgresqlFormatConfig = {
   ext: "postgresql";
@@ -77,6 +78,10 @@ export type PostgresqlFormatConfig = {
 
 export type SqliteFormatConfig = {
   ext: "sqlite";
+} & SQLProps;
+
+export type MysqlFormatConfig = {
+  ext: "mysql";
 } & SQLProps;
 
 export type PythonFormatConfig = {

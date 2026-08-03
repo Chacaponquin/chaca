@@ -22,7 +22,7 @@ export class FillParentKeys {
 
       const name = new ColumnName(
         this.utils,
-        `${parent.name()}_${key.column().name()}`,
+        `${parent.name().postgres}_${key.column().name().postgres}`,
       );
 
       const column = table.addColumn(

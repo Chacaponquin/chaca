@@ -62,6 +62,21 @@
 
 - The generated script enables `PRAGMA foreign_keys = ON` and uses SQLite-native types: `INTEGER PRIMARY KEY` for generated ids, `TEXT` for strings and dates (ISO format), `REAL` for floats and `INTEGER` for bigints.
 
+### MySQL export
+
+- New `mysql` export format, available in `export`, `transform` and the CLI (`chaca mysql`). It shares every option with the `postgresql` and `sqlite` formats (`keys`, `uniques`, `nulls`, `refs`, `generateIds`, `declarationOnly`, ...):
+
+  ```ts
+  await dataset.export({
+    filename: "data",
+    location: "./data",
+    format: "mysql",
+  });
+  ```
+
+- The generated script uses MySQL-native types and syntax: `INT AUTO_INCREMENT PRIMARY KEY` for generated ids, `VARCHAR(255)`/`TEXT` for strings, `DATETIME(3)` for dates, `DOUBLE` for floats and `BIGINT` for bigints. Identifiers that collide with MySQL reserved words are quoted with backticks, and foreign keys are declared as table-level `FOREIGN KEY` constraints (InnoDB ignores inline column `REFERENCES` clauses).
+- MySQL limitations to be aware of: `DOUBLE` cannot represent `Infinity`/`NaN`, so infinities are clamped to the `DOUBLE` range limits (`±1.7976931348623157e+308`) and `NaN` is exported as `NULL` (add the column to `nulls` if your data contains `NaN`). Backslashes in strings are escaped (`\` → `\\`), since MySQL treats them as escape characters.
+
 ### Sequence field
 
 - `chaca.sequence` now accepts the correctly-spelled `startsWith` option. The misspelled `starsWith` keeps working as a deprecated alias (when both are passed, `startsWith` wins).

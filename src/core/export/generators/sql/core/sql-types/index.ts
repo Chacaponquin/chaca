@@ -6,10 +6,11 @@
 export interface SQLExtensionValues {
   postgres: string;
   sqlite: string;
+  mysql: string;
 }
 
 function same(value: string): SQLExtensionValues {
-  return { postgres: value, sqlite: value };
+  return { postgres: value, sqlite: value, mysql: value };
 }
 
 export abstract class SQLDatatype {
@@ -92,11 +93,19 @@ export class SQLDate extends SQLDatatype {
     return {
       postgres: "TIMESTAMP",
       sqlite: "TEXT",
+      mysql: "DATETIME(3)",
     };
   }
 
   string(): SQLExtensionValues {
-    return same(`'${this.value.toISOString()}'`);
+    const iso = this.value.toISOString();
+
+    return {
+      postgres: `'${iso}'`,
+      sqlite: `'${iso}'`,
+      // mysql does not accept the trailing 'Z' zulu marker in datetime literals
+      mysql: `'${iso.slice(0, -1)}'`,
+    };
   }
 
   similar(other: SQLDatatype): boolean {
@@ -168,6 +177,7 @@ export class SQLBigint extends SQLNumber {
     return {
       postgres: "BIGINT",
       sqlite: "INTEGER",
+      mysql: "BIGINT",
     };
   }
 
@@ -235,22 +245,31 @@ export class SQLFloat extends SQLNumber {
     return {
       postgres: "FLOAT",
       sqlite: "REAL",
+      mysql: "DOUBLE",
     };
   }
 
   string(): SQLExtensionValues {
+    // mysql DOUBLE cannot represent Infinity or NaN, so infinities are
+    // clamped to the DOUBLE range limits and NaN falls back to NULL
     if (this.value === Infinity) {
       return {
         postgres: "'+infinity'",
         sqlite: "9e999",
+        mysql: `${Number.MAX_VALUE}`,
       };
     } else if (this.value === -Infinity) {
       return {
         postgres: "'-infinity'",
         sqlite: "-9e999",
+        mysql: `${-Number.MAX_VALUE}`,
       };
     } else if (Number.isNaN(this.value)) {
-      return same(`'NaN'`);
+      return {
+        postgres: `'NaN'`,
+        sqlite: `'NaN'`,
+        mysql: "NULL",
+      };
     } else {
       return same(`${this.value}`);
     }
@@ -271,7 +290,14 @@ export abstract class SQLString extends SQLDatatype {
   }
 
   string(): SQLExtensionValues {
-    return same(`'${this.value.replace(/'/g, "''")}'`);
+    const escaped = this.value.replace(/'/g, "''");
+
+    return {
+      postgres: `'${escaped}'`,
+      sqlite: `'${escaped}'`,
+      // mysql treats backslash as an escape character inside string literals
+      mysql: `'${this.value.replace(/\\/g, "\\\\").replace(/'/g, "''")}'`,
+    };
   }
 }
 
@@ -306,6 +332,7 @@ export class SQLVarchar extends SQLString {
     return {
       postgres: "VARCHAR(255)",
       sqlite: "TEXT",
+      mysql: "VARCHAR(255)",
     };
   }
 
@@ -339,6 +366,7 @@ export class SQLSerial extends SQLNumber {
     return {
       postgres: "SERIAL",
       sqlite: "INTEGER",
+      mysql: "INT AUTO_INCREMENT",
     };
   }
 

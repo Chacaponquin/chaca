@@ -26,7 +26,7 @@ export class Dataset<K = any> implements CliExportable {
    * Generates and serializes dataset data as a specific file format
    *
    * @param props.filename name for the file
-   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'python'`)
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    * @param config.verbose show log in console progretion
    */
   transform(props: DumpConfig): Promise<DumpFile[]> {
@@ -46,7 +46,7 @@ export class Dataset<K = any> implements CliExportable {
    * @param schemas Array with the schemas config
    * @param config.filename file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'python'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'mysql'` | `'python'`)
    * @param config.verbose show log in console progretion
    */
   async export(config: FileConfig): Promise<string[]> {

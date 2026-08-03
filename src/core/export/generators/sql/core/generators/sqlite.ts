@@ -14,10 +14,10 @@ export class SQLite extends SQLExtensionGenerator {
       const columns = table
         .columns()
         .filter((c) => !c.disabled())
-        .map((c) => c.name())
+        .map((c) => c.name().sqlite)
         .join(", ");
 
-      code += `INSERT INTO ${table.name()} (${columns})\n`;
+      code += `INSERT INTO ${table.name().sqlite} (${columns})\n`;
 
       code += `VALUES\n`;
 
@@ -44,7 +44,7 @@ export class SQLite extends SQLExtensionGenerator {
     let code = `PRAGMA foreign_keys = ON;\n\n`;
 
     for (const table of tables.tables) {
-      code += `CREATE TABLE ${table.name()} (\n`;
+      code += `CREATE TABLE ${table.name().sqlite} (\n`;
 
       const columns = table
         .columns()
@@ -55,7 +55,7 @@ export class SQLite extends SQLExtensionGenerator {
           this.index.push();
 
           code += this.index.create(
-            `${column.name()} ${column.definition().sqlite}`,
+            `${column.name().sqlite} ${column.definition().sqlite}`,
           );
 
           if (column.isKey()) {
@@ -72,8 +72,8 @@ export class SQLite extends SQLExtensionGenerator {
 
           const ref = column.ref();
           if (ref !== null) {
-            const table = ref.table.name();
-            const col = ref.column.name();
+            const table = ref.table.name().sqlite;
+            const col = ref.column.name().sqlite;
 
             code += ` REFERENCES ${table}(${col})`;
           }
