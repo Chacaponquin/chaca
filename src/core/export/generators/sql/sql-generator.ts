@@ -6,7 +6,11 @@ import {
   Generator,
 } from "../generator/generator";
 import { PostgreSQL } from "./core/generators/postgres";
-import { SQLDataGenerator } from "./core/generators/base";
+import { SQLite } from "./core/generators/sqlite";
+import {
+  SQLDataGenerator,
+  SQLExtensionGenerator,
+} from "./core/generators/base";
 import { SQLTables } from "./core/table/tables";
 import { DataValidator } from "./core/generators/validator";
 import { TableOrganizer } from "./core/generators/organizer";
@@ -57,7 +61,7 @@ export class SQLGenerator extends Generator {
 
   constructor(
     private readonly utils: ChacaUtils,
-    format: ExportSQLFormat,
+    private readonly format: ExportSQLFormat,
     config: SQLProps,
   ) {
     super({ ext: "sql", zip: config.zip });
@@ -104,10 +108,9 @@ export class SQLGenerator extends Generator {
     const allTables = new SQLTables(this.utils);
     const organizer = new TableOrganizer();
     const validator = new DataValidator();
-    const postgres = new PostgreSQL(this.indent);
     const generator = new SQLDataGenerator(
       this.utils,
-      postgres,
+      this.extension(),
       validator,
       fixer,
       this.skipInvalid,
@@ -146,10 +149,9 @@ export class SQLGenerator extends Generator {
 
     const tables = new SQLTables(this.utils);
     const validator = new DataValidator();
-    const postgres = new PostgreSQL(this.indent);
     const generator = new SQLDataGenerator(
       this.utils,
-      postgres,
+      this.extension(),
       validator,
       fixer,
       this.skipInvalid,
@@ -167,5 +169,13 @@ export class SQLGenerator extends Generator {
     const code = generator.code(tables);
 
     return [{ content: code, filename: filename.value() }];
+  }
+
+  private extension(): SQLExtensionGenerator {
+    if (this.format === "sqlite") {
+      return new SQLite(this.indent);
+    }
+
+    return new PostgreSQL(this.indent);
   }
 }

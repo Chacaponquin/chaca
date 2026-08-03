@@ -313,8 +313,8 @@ declare class DatatypeModule {
     /**
      * Returns a integer number
      *
-     * @param args.min Minimun posible value
-     * @param args.max Maximun posible value
+     * @param args.min Minimun posible value (inclusive)
+     * @param args.max Maximun posible value (exclusive)
      *
      * @example
      * modules.datatype.int() // 462
@@ -973,12 +973,21 @@ declare class EnumField<R = any> {
 
 type SequenceFieldProps = Partial<{
     /** Init value for the field. Default `1`*/
+    startsWith: number;
+    /**
+     * Init value for the field. Default `1`
+     * @deprecated Use `startsWith` instead
+     */
     starsWith: number;
     /** Step between field values in schema documents. Default `1` */
     step: number;
 }>;
+interface SequenceFieldConfig {
+    startsWith: number;
+    step: number;
+}
 declare class SequenceField {
-    readonly config: Required<SequenceFieldProps>;
+    readonly config: SequenceFieldConfig;
     constructor(config?: SequenceFieldProps);
 }
 
@@ -1010,14 +1019,15 @@ type FieldObjectInput<R = any> = {
     /** Schema field type*/
     type: FieldTypes<R>;
     /** Array schema field configuration
-     * - `boolean`- array length between 1 and 10
      * - `number` - specific array length
      * - `config.min` and `config.max` - limits of array length
+     * - `function` - function that returns a number or a `{ min, max }` object. Receive 'currentFields' and 'store' as parameters
      */
     isArray?: IsArrayConfig;
     /** Null schema field configuration
      * - `boolean` - `true` 100% chances to be null, `false` 0% chances
-     * - `number` specific porcent of chances
+     * - `float` between 0 and 1 - probability for each document of being null
+     * - `integer` greater than or equal to 1 - exact number of documents with a null value
      * - `function` function that returns a number between 0 and 1 or a boolean. Receive 'currentFields' and 'store' as parameters
      */
     possibleNull?: PossibleNullConfig;
@@ -1347,7 +1357,7 @@ declare class Chaca {
     sequential<K = any>(values: K[], config?: SequentialFieldConfig): SequentialField<K>;
     /**
      * Sequence field
-     * @param config.starsWith Init value for the field. Default `1`
+     * @param config.startsWith Init value for the field. Default `1`
      * @param config.step Step between field values in schema documents. Default `1`
      *
      * @example

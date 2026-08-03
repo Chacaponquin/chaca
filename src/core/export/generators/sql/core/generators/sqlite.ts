@@ -2,7 +2,7 @@ import { SpaceIndex } from "../../../../core/space-index";
 import { SQLTables } from "../table/tables";
 import { SQLExtensionGenerator } from "./base";
 
-export class PostgreSQL extends SQLExtensionGenerator {
+export class SQLite extends SQLExtensionGenerator {
   constructor(private readonly index: SpaceIndex) {
     super();
   }
@@ -26,7 +26,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
       table.iterate((row) => {
         this.index.push();
 
-        const v = row.map((v) => v.string().postgres).join(", ");
+        const v = row.map((v) => v.string().sqlite).join(", ");
         const rowCode = this.index.create(`(${v})`);
         values.push(rowCode);
 
@@ -40,7 +40,8 @@ export class PostgreSQL extends SQLExtensionGenerator {
   }
 
   tables(tables: SQLTables): string {
-    let code = ``;
+    // sqlite does not enforce foreign keys unless the pragma is enabled
+    let code = `PRAGMA foreign_keys = ON;\n\n`;
 
     for (const table of tables.tables) {
       code += `CREATE TABLE ${table.name()} (\n`;
@@ -54,7 +55,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
           this.index.push();
 
           code += this.index.create(
-            `${column.name()} ${column.definition().postgres}`,
+            `${column.name()} ${column.definition().sqlite}`,
           );
 
           if (column.isKey()) {

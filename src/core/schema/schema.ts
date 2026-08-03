@@ -1,4 +1,4 @@
-import { ExportResolver } from "../export/resolvers/export/export";
+﻿import { ExportResolver } from "../export/resolvers/export/export";
 import { SchemaInput } from "./interfaces/schema";
 import {
   CliExportable,
@@ -30,7 +30,7 @@ export class Schema<K = any> implements CliExportable {
    *
    * @param documents number of documents that you want to create
    * @param props.filename name for the file
-   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'python'`)
    */
   async transform(documents: number, props: DumpConfig): Promise<DumpFile[]> {
     const filter = new GeneratorFilter(this.utils);
@@ -51,7 +51,7 @@ export class Schema<K = any> implements CliExportable {
    * @param documents number of documents that you want to create
    * @param config.filename file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'python'`)
    *
    * @returns Promise<string[]>
    */

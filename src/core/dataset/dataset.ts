@@ -1,4 +1,4 @@
-import { DatatypeModule } from "../../modules/datatype";
+﻿import { DatatypeModule } from "../../modules/datatype";
 import { DatasetSchema } from "../dataset-resolver/interfaces/dataset-schema";
 import { DatasetResolver } from "../dataset-resolver/dataset-resolver";
 import { ExportResolver } from "../export/resolvers/export/export";
@@ -26,7 +26,7 @@ export class Dataset<K = any> implements CliExportable {
    * Generates and serializes dataset data as a specific file format
    *
    * @param props.filename name for the file
-   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param props.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'python'`)
    * @param config.verbose show log in console progretion
    */
   transform(props: DumpConfig): Promise<DumpFile[]> {
@@ -46,7 +46,7 @@ export class Dataset<K = any> implements CliExportable {
    * @param schemas Array with the schemas config
    * @param config.filename file name
    * @param config.location location of the file
-   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'python'`)
+   * @param config.format file extension (`'java'` | `'csv'` | `'typescript'` | `'json'` | `'javascript'` | `'yaml'` | `'postgresql'` | `'sqlite'` | `'python'`)
    * @param config.verbose show log in console progretion
    */
   async export(config: FileConfig): Promise<string[]> {

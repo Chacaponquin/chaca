@@ -1,10 +1,24 @@
+/**
+ * Representation of a value or type definition for each supported
+ * SQL extension. Every `SQLDatatype` is forced to declare how it is
+ * exported in each one of them.
+ */
+export interface SQLExtensionValues {
+  postgres: string;
+  sqlite: string;
+}
+
+function same(value: string): SQLExtensionValues {
+  return { postgres: value, sqlite: value };
+}
+
 export abstract class SQLDatatype {
-  abstract definition(): string;
-  abstract string(): string;
-  protected abstract greaterThan(other: SQLDatatype): boolean;
-  protected abstract similar(other: SQLDatatype): boolean;
+  abstract definition(): SQLExtensionValues;
+  abstract string(): SQLExtensionValues;
   abstract refValue(): SQLDatatype;
   abstract primitive(): string;
+  protected abstract greaterThan(other: SQLDatatype): boolean;
+  protected abstract similar(other: SQLDatatype): boolean;
 
   isSimilar(other: SQLDatatype): boolean {
     if (other instanceof SQLNull || this instanceof SQLNull) {
@@ -44,16 +58,16 @@ export class SQLBoolean extends SQLDatatype {
     return false;
   }
 
-  definition(): string {
-    return "BOOLEAN";
+  definition(): SQLExtensionValues {
+    return same("BOOLEAN");
   }
 
   refValue(): SQLDatatype {
     return this;
   }
 
-  string(): string {
-    return this.value ? "TRUE" : "FALSE";
+  string(): SQLExtensionValues {
+    return same(this.value ? "TRUE" : "FALSE");
   }
 
   similar(other: SQLDatatype): boolean {
@@ -74,12 +88,15 @@ export class SQLDate extends SQLDatatype {
     return this;
   }
 
-  definition(): string {
-    return "TIMESTAMP";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "TIMESTAMP",
+      sqlite: "TEXT",
+    };
   }
 
-  string(): string {
-    return `'${this.value.toISOString()}'`;
+  string(): SQLExtensionValues {
+    return same(`'${this.value.toISOString()}'`);
   }
 
   similar(other: SQLDatatype): boolean {
@@ -104,12 +121,12 @@ export class SQLNull extends SQLDatatype {
     return this;
   }
 
-  definition(): string {
-    return "TEXT";
+  definition(): SQLExtensionValues {
+    return same("TEXT");
   }
 
-  string(): string {
-    return `NULL`;
+  string(): SQLExtensionValues {
+    return same("NULL");
   }
 
   greaterThan(): boolean {
@@ -147,8 +164,11 @@ export class SQLBigint extends SQLNumber {
     return this;
   }
 
-  definition(): string {
-    return "BIGINT";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "BIGINT",
+      sqlite: "INTEGER",
+    };
   }
 
   greaterThan(other: SQLDatatype): boolean {
@@ -159,8 +179,8 @@ export class SQLBigint extends SQLNumber {
     return false;
   }
 
-  string(): string {
-    return `${this.value}`;
+  string(): SQLExtensionValues {
+    return same(`${this.value}`);
   }
 }
 
@@ -181,12 +201,12 @@ export class SQLInteger extends SQLNumber {
     return false;
   }
 
-  definition(): string {
-    return "INTEGER";
+  definition(): SQLExtensionValues {
+    return same("INTEGER");
   }
 
-  string(): string {
-    return `${this.value}`;
+  string(): SQLExtensionValues {
+    return same(`${this.value}`);
   }
 }
 
@@ -211,19 +231,28 @@ export class SQLFloat extends SQLNumber {
     return false;
   }
 
-  definition(): string {
-    return "FLOAT";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "FLOAT",
+      sqlite: "REAL",
+    };
   }
 
-  string(): string {
+  string(): SQLExtensionValues {
     if (this.value === Infinity) {
-      return "'+infinity'";
+      return {
+        postgres: "'+infinity'",
+        sqlite: "9e999",
+      };
     } else if (this.value === -Infinity) {
-      return "'-infinity'";
+      return {
+        postgres: "'-infinity'",
+        sqlite: "-9e999",
+      };
     } else if (Number.isNaN(this.value)) {
-      return `'NaN'`;
+      return same(`'NaN'`);
     } else {
-      return `${this.value}`;
+      return same(`${this.value}`);
     }
   }
 }
@@ -241,8 +270,8 @@ export abstract class SQLString extends SQLDatatype {
     return "string";
   }
 
-  string(): string {
-    return `'${this.value.replace(/'/g, "''")}'`;
+  string(): SQLExtensionValues {
+    return same(`'${this.value.replace(/'/g, "''")}'`);
   }
 }
 
@@ -255,8 +284,8 @@ export class SQLText extends SQLString {
     return this;
   }
 
-  definition(): string {
-    return "TEXT";
+  definition(): SQLExtensionValues {
+    return same("TEXT");
   }
 
   greaterThan(other: SQLDatatype): boolean {
@@ -273,8 +302,11 @@ export class SQLVarchar extends SQLString {
     super(value);
   }
 
-  definition(): string {
-    return "VARCHAR(255)";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "VARCHAR(255)",
+      sqlite: "TEXT",
+    };
   }
 
   refValue(): SQLDatatype {
@@ -299,12 +331,15 @@ export class SQLSerial extends SQLNumber {
     return new SQLInteger(Number(this.value));
   }
 
-  string(): string {
-    return `${this.value}`;
+  string(): SQLExtensionValues {
+    return same(`${this.value}`);
   }
 
-  definition(): string {
-    return "SERIAL";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "SERIAL",
+      sqlite: "INTEGER",
+    };
   }
 
   greaterThan(): boolean {

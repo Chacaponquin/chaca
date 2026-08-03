@@ -287,7 +287,10 @@ var LimitsArray = class extends IsArray {
     this.max = max;
   }
   execute() {
-    const limit = this.datatypeModule.int({ min: this.min, max: this.max });
+    const limit = this.datatypeModule.int({
+      min: this.min,
+      max: this.max + 1
+    });
     return new Promise((resolve) => resolve(limit));
   }
 };
@@ -1462,7 +1465,10 @@ var LimitCount = class extends Count {
     this.max = max;
   }
   limit() {
-    const limit = this.datatypeModule.int({ min: this.min, max: this.max });
+    const limit = this.datatypeModule.int({
+      min: this.min,
+      max: this.max + 1
+    });
     return new Promise((resolve) => resolve(limit));
   }
 };
@@ -1569,6 +1575,8 @@ var ChancesArray = class {
   constructor(utils2, { options, route }) {
     __publicField(this, "utils", utils2);
     __publicField(this, "options", []);
+    __publicField(this, "route");
+    this.route = route;
     if (options.length > 0) {
       for (const option of options) {
         if (typeof option === "object" && option !== null) {
@@ -1598,6 +1606,13 @@ var ChancesArray = class {
         store
       });
       weights.push(chance);
+    }
+    const sum = weights.reduce((a, b) => a + b, 0);
+    if (sum === 0) {
+      throw new WrongProbabilityFieldDefinitionError(
+        this.route,
+        `At least one option of the probability field must have a chance greater than 0`
+      );
     }
     const distribution = this.createDistribution(values, weights, 10);
     return this.utils.oneOfArray(distribution);
@@ -1773,12 +1788,14 @@ var RefField = class {
 var Config = class {
   constructor(config) {
     __publicField(this, "_config", {
-      starsWith: 1,
+      startsWith: 1,
       step: 1
     });
-    if (typeof config === "object") {
-      if (typeof config.starsWith === "number") {
-        this._config.starsWith = config.starsWith;
+    if (typeof config === "object" && config !== null) {
+      if (typeof config.startsWith === "number") {
+        this._config.startsWith = config.startsWith;
+      } else if (typeof config.starsWith === "number") {
+        this._config.startsWith = config.starsWith;
       }
       if (typeof config.step === "number") {
         this._config.step = config.step;
@@ -2596,6 +2613,7 @@ var CsvCodeCreator = class {
       expandArrayObjects: this.config.expandArrayObjects,
       expandNestedObjects: this.config.expandNestedObjects,
       parseValue: this.config.parseValue,
+      emptyFieldValue: "",
       delimiter: {
         field: this.config.delimiter?.field,
         eol: this.config.delimiter?.eol,
@@ -2730,7 +2748,11 @@ var SaveJavaClass = class {
         const greater = found.datatype().greater(datatype);
         found.setDatatype(greater);
       } else {
-        throw new ChacaError(``);
+        const type1 = found.datatype().primitive();
+        const type2 = datatype.primitive();
+        throw new ChacaError(
+          `On field '${name.name()}' exist values of type ${type1} and ${type2}. The data must be uniform`
+        );
       }
       return found;
     } else {
@@ -2817,6 +2839,64 @@ var JavaClasses = class {
 };
 
 // src/core/export/generators/java/core/names.ts
+var JAVA_RESERVED_WORDS = [
+  "abstract",
+  "assert",
+  "boolean",
+  "break",
+  "byte",
+  "case",
+  "catch",
+  "char",
+  "class",
+  "const",
+  "continue",
+  "default",
+  "do",
+  "double",
+  "else",
+  "enum",
+  "extends",
+  "final",
+  "finally",
+  "float",
+  "for",
+  "goto",
+  "if",
+  "implements",
+  "import",
+  "instanceof",
+  "int",
+  "interface",
+  "long",
+  "native",
+  "new",
+  "package",
+  "private",
+  "protected",
+  "public",
+  "return",
+  "short",
+  "static",
+  "strictfp",
+  "super",
+  "switch",
+  "synchronized",
+  "this",
+  "throw",
+  "throws",
+  "transient",
+  "try",
+  "void",
+  "volatile",
+  "while",
+  "true",
+  "false",
+  "null",
+  "var",
+  "record",
+  "yield"
+];
 var JavaClassFieldName = class {
   constructor(utils2, name) {
     __publicField(this, "utils", utils2);
@@ -2824,10 +2904,10 @@ var JavaClassFieldName = class {
     this._name = name;
   }
   getter() {
-    return `${this.utils.camelCase(`get_${this.name()}`)}`;
+    return `${this.utils.camelCase(`get_${this.string()}`)}`;
   }
   setter() {
-    return `${this.utils.camelCase(`set_${this.name()}`)}`;
+    return `${this.utils.camelCase(`set_${this.string()}`)}`;
   }
   equal(other) {
     return this._name === other._name;
@@ -2836,7 +2916,11 @@ var JavaClassFieldName = class {
     return this._name;
   }
   string() {
-    return this.utils.camelCase(this._name);
+    const name = this.utils.camelCase(this._name);
+    if (JAVA_RESERVED_WORDS.includes(name)) {
+      return `${name}Value`;
+    }
+    return name;
   }
 };
 var JavaClassName = class {
@@ -2953,7 +3037,7 @@ var JavaFloat = class _JavaFloat extends JavaNumber {
     } else if (Number.isNaN(this.value)) {
       return "Float.NaN";
     } else {
-      return `${this.value}`;
+      return `${this.value}f`;
     }
   }
 };
@@ -3013,14 +3097,16 @@ var JavaBigint = class _JavaBigint extends JavaDatatype {
   greaterThan() {
     return false;
   }
-  string() {
-    return `BigInteger`;
+  string(_, imports) {
+    imports.add(new Import(["java", "math", "BigInteger"]));
+    return `new BigInteger("${this.value.toString()}")`;
   }
   equal(other) {
     return other instanceof _JavaBigint;
   }
-  definition() {
-    return `BigInteger.valueOf(${Number(this.value)})`;
+  definition(imports) {
+    imports.add(new Import(["java", "math", "BigInteger"]));
+    return "BigInteger";
   }
 };
 var JavaDate = class _JavaDate extends JavaDatatype {
@@ -3039,7 +3125,7 @@ var JavaDate = class _JavaDate extends JavaDatatype {
   }
   string(_, imports) {
     imports.add(new Import(["java", "time", "LocalDateTime"]));
-    return `LocalDateTime.parse("${this.value.toISOString()}");`;
+    return `LocalDateTime.parse("${this.value.toISOString().slice(0, -1)}")`;
   }
   definition(imports) {
     imports.add(new Import(["java", "time", "LocalDateTime"]));
@@ -3068,7 +3154,7 @@ var JavaRegexp = class _JavaRegexp extends JavaDatatype {
   }
   string(_, imports) {
     imports.add(new Import(["java", "util", "regex", "Pattern"]));
-    return `Patter.compile("${String(this.value)}")`;
+    return `Pattern.compile("${String(this.value)}")`;
   }
   definition(imports) {
     imports.add(new Import(["java", "util", "regex", "Pattern"]));
@@ -3394,11 +3480,11 @@ var JavaCodeCreator = class {
           v.string(this.config.indent, imports)
         );
         this.config.indent.reverse();
-        code3 += "\n" + this.config.indent.create(")");
+        code3 += "\n" + this.config.indent.create(");");
         return code3;
-      }).join(";\n");
+      }).join("\n");
       return code2;
-    }).join(";\n\n");
+    }).join("\n\n");
     this.config.indent.reverse();
     content += "\n" + this.config.indent.create(`}`);
     this.config.indent.reverse();
@@ -3529,12 +3615,35 @@ var TypescriptGenerator = class extends Generator {
     }
   }
 };
+function normalizeBigints(value) {
+  if (typeof value === "bigint") {
+    const max = BigInt(Number.MAX_SAFE_INTEGER);
+    if (value <= max && value >= -max) {
+      return Number(value);
+    }
+    return value.toString();
+  }
+  if (Array.isArray(value)) {
+    return value.map(normalizeBigints);
+  }
+  if (value !== null && typeof value === "object") {
+    const prototype = Object.getPrototypeOf(value);
+    if (prototype === Object.prototype || prototype === null) {
+      const result = {};
+      for (const [key, entry] of Object.entries(value)) {
+        result[key] = normalizeBigints(entry);
+      }
+      return result;
+    }
+  }
+  return value;
+}
 var YamlCodeCreator = class {
   constructor(config) {
     __publicField(this, "config", config);
   }
   execute(data) {
-    return yaml__default.default.dump(data, {
+    return yaml__default.default.dump(normalizeBigints(data), {
       skipInvalid: true,
       indent: this.config.indent.step(),
       sortKeys: this.config.sortKeys,
@@ -3581,6 +3690,91 @@ var YamlGenerator = class extends Generator {
 };
 
 // src/core/export/generators/sql/core/generators/names.ts
+var POSTGRES_RESERVED_WORDS = [
+  "all",
+  "analyse",
+  "analyze",
+  "and",
+  "any",
+  "array",
+  "as",
+  "asc",
+  "asymmetric",
+  "both",
+  "case",
+  "cast",
+  "check",
+  "collate",
+  "column",
+  "constraint",
+  "create",
+  "current_catalog",
+  "current_date",
+  "current_role",
+  "current_time",
+  "current_timestamp",
+  "current_user",
+  "default",
+  "deferrable",
+  "desc",
+  "distinct",
+  "do",
+  "else",
+  "end",
+  "except",
+  "false",
+  "fetch",
+  "for",
+  "foreign",
+  "from",
+  "grant",
+  "group",
+  "having",
+  "in",
+  "initially",
+  "intersect",
+  "into",
+  "lateral",
+  "leading",
+  "limit",
+  "localtime",
+  "localtimestamp",
+  "not",
+  "null",
+  "offset",
+  "on",
+  "only",
+  "or",
+  "order",
+  "placing",
+  "primary",
+  "references",
+  "returning",
+  "select",
+  "session_user",
+  "some",
+  "symmetric",
+  "table",
+  "then",
+  "to",
+  "trailing",
+  "true",
+  "union",
+  "unique",
+  "user",
+  "using",
+  "variadic",
+  "when",
+  "where",
+  "window",
+  "with"
+];
+function quoteReserved(name) {
+  if (POSTGRES_RESERVED_WORDS.includes(name.toLowerCase())) {
+    return `"${name}"`;
+  }
+  return name;
+}
 var TableName = class _TableName {
   constructor(utils2, route) {
     __publicField(this, "utils", utils2);
@@ -3593,7 +3787,7 @@ var TableName = class _TableName {
     return this.route.string() === t.route.string();
   }
   value() {
-    return this.utils.pascalCase(this.route.string());
+    return quoteReserved(this.utils.pascalCase(this.route.string()));
   }
 };
 var ColumnName = class {
@@ -3606,7 +3800,7 @@ var ColumnName = class {
     return c.name === this.name;
   }
   value() {
-    return this.utils.snakeCase(this.name);
+    return quoteReserved(this.utils.snakeCase(this.name));
   }
 };
 
@@ -3668,10 +3862,10 @@ var SQLDate = class _SQLDate extends SQLDatatype {
     return this;
   }
   definition() {
-    return "DATE";
+    return "TIMESTAMP";
   }
   string() {
-    return `'${this.value.toISOString().slice(0, 10)}'`;
+    return `'${this.value.toISOString()}'`;
   }
   similar(other) {
     return other instanceof _SQLDate;
@@ -3691,7 +3885,7 @@ var SQLNull = class _SQLNull extends SQLDatatype {
     return this;
   }
   definition() {
-    return "NULL";
+    return "TEXT";
   }
   string() {
     return `NULL`;
@@ -3799,18 +3993,7 @@ var SQLString = class _SQLString extends SQLDatatype {
     return "string";
   }
   string() {
-    let value = "";
-    const json = JSON.stringify(this.value);
-    for (let i = 0; i < json.length; i++) {
-      if (i === 0) {
-        value += `'`;
-      } else if (i === json.length - 1) {
-        value += `'`;
-      } else {
-        value += json[i];
-      }
-    }
-    return value;
+    return `'${this.value.replace(/'/g, "''")}'`;
   }
 };
 var SQLText = class extends SQLString {
@@ -5317,6 +5500,40 @@ var Route3 = class _Route {
 };
 
 // src/core/export/generators/python/core/names.ts
+var PYTHON_RESERVED_WORDS = [
+  "and",
+  "as",
+  "assert",
+  "async",
+  "await",
+  "break",
+  "class",
+  "continue",
+  "def",
+  "del",
+  "elif",
+  "else",
+  "except",
+  "finally",
+  "for",
+  "from",
+  "global",
+  "if",
+  "import",
+  "in",
+  "is",
+  "lambda",
+  "nonlocal",
+  "not",
+  "or",
+  "pass",
+  "raise",
+  "return",
+  "try",
+  "while",
+  "with",
+  "yield"
+];
 var PythonClassName = class {
   constructor(utils2, route) {
     __publicField(this, "utils", utils2);
@@ -5338,7 +5555,11 @@ var PythonClassFieldName = class {
     return other._name === this._name;
   }
   string() {
-    return this.utils.snakeCase(this._name);
+    const name = this.utils.snakeCase(this._name);
+    if (PYTHON_RESERVED_WORDS.includes(name)) {
+      return `${name}_`;
+    }
+    return name;
   }
 };
 
@@ -6212,7 +6433,7 @@ var ChacaInputTree = class {
         value: object.type.getConfig().step
       });
       const startsWith = new StartsWith({
-        value: object.type.getConfig().starsWith,
+        value: object.type.getConfig().startsWith,
         route: actualRoute.string()
       });
       returnNode = new SequenceValueNode(
@@ -6228,7 +6449,7 @@ var ChacaInputTree = class {
           value: object.type.type.getConfig().step
         });
         const startsWith = new StartsWith({
-          value: object.type.type.getConfig().starsWith,
+          value: object.type.type.getConfig().startsWith,
           route: actualRoute.string()
         });
         const schemaValueNode = new SequenceValueNode(
@@ -7090,12 +7311,12 @@ var Dataset = class {
   /**
    * Generates the dataset data through the defined schemas
    */
-  generate() {
+  async generate() {
     const resolver = new DatasetResolver(this.utils, this.datatypeModule, {
       schemas: this.schemas,
       verbose: false
     });
-    return resolver.resolve();
+    return await resolver.resolve();
   }
 };
 
@@ -7160,7 +7381,7 @@ var Chaca = class {
   }
   /**
    * Sequence field
-   * @param config.starsWith Init value for the field. Default `1`
+   * @param config.startsWith Init value for the field. Default `1`
    * @param config.step Step between field values in schema documents. Default `1`
    *
    * @example
@@ -7399,8 +7620,8 @@ var DatatypeModule = class {
   /**
    * Returns a integer number
    *
-   * @param args.min Minimun posible value
-   * @param args.max Maximun posible value
+   * @param args.min Minimun posible value (inclusive)
+   * @param args.max Maximun posible value (exclusive)
    *
    * @example
    * modules.datatype.int() // 462

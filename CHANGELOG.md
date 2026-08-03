@@ -48,6 +48,20 @@
 
 - `WrongArrayDefinitionError`, `WrongPossibleNullDefinitionError` and `WrongProbabilityFieldDefinitionError` — announced back in `2.0.0` but never actually exported — are now reachable through the `Errors` namespace. The existing flat error exports (`ChacaError`, `TryRefANoKeyFieldError`, ...) keep working unchanged.
 
+### SQLite export
+
+- New `sqlite` export format, available in `export`, `transform` and the CLI (`chaca sqlite`). It shares every option with the `postgresql` format (`keys`, `uniques`, `nulls`, `refs`, `generateIds`, `declarationOnly`, ...):
+
+  ```ts
+  await dataset.export({
+    filename: "data",
+    location: "./data",
+    format: "sqlite",
+  });
+  ```
+
+- The generated script enables `PRAGMA foreign_keys = ON` and uses SQLite-native types: `INTEGER PRIMARY KEY` for generated ids, `TEXT` for strings and dates (ISO format), `REAL` for floats and `INTEGER` for bigints.
+
 ### Sequence field
 
 - `chaca.sequence` now accepts the correctly-spelled `startsWith` option. The misspelled `starsWith` keeps working as a deprecated alias (when both are passed, `startsWith` wins).

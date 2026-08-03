@@ -1,4 +1,4 @@
-import { CsvProps } from "../generators/csv/csv-generator";
+﻿import { CsvProps } from "../generators/csv/csv-generator";
 import { JavaProps } from "../generators/java/java-generator";
 import { JavascriptProps } from "../generators/javascript/javascript-generator";
 import { JsonProps } from "../generators/json/json-generator";
@@ -20,7 +20,7 @@ export type Extensions =
   | "python"
   | ExportSQLFormat;
 
-export type ExportSQLFormat = "postgresql";
+export type ExportSQLFormat = "postgresql" | "sqlite";
 
 /**
  * Export file configuration
@@ -68,10 +68,15 @@ export type ExtensionConfigs =
   | JavascriptFormatConfig
   | YamlFormatConfig
   | PythonFormatConfig
-  | PostgresqlFormatConfig;
+  | PostgresqlFormatConfig
+  | SqliteFormatConfig;
 
 export type PostgresqlFormatConfig = {
   ext: "postgresql";
+} & SQLProps;
+
+export type SqliteFormatConfig = {
+  ext: "sqlite";
 } & SQLProps;
 
 export type PythonFormatConfig = {

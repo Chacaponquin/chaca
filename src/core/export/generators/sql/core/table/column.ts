@@ -1,6 +1,6 @@
 import { ChacaError } from "../../../../../../errors";
 import { ColumnName } from "../generators/names";
-import { SQLDatatype, SQLNull } from "../sql-types";
+import { SQLDatatype, SQLExtensionValues, SQLNull } from "../sql-types";
 import { SQLTable } from "./table";
 
 interface Props {
@@ -93,8 +93,8 @@ export class SQLColumn {
     this._isNull = value;
   }
 
-  definition(): string {
-    return `${this._datatype.definition()}`;
+  definition(): SQLExtensionValues {
+    return this._datatype.definition();
   }
 
   name() {
