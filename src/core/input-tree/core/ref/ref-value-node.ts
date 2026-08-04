@@ -15,7 +15,7 @@ import { RefRoute } from "./value-object/route";
 import { IsArray, NotArray } from "../is-array/is-array";
 import { SchemaResolver } from "../../../schema-resolver/schema-resolver";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null/possible-null";
+import { NotNull, PossibleNull } from "../possible-null/possible-null";
 import { DocumentTree } from "../../../result-tree/classes/document/document-tree";
 import { SingleResultNode } from "../../../result-tree/classes/single-result";
 import { FieldNode } from "../../../result-tree/classes/node/field-node";
@@ -24,6 +24,7 @@ export class RefValueNode extends InputTreeNode {
   private refFieldTreeRoute: RefRoute;
   private schemaRefIndex: number | null = null;
   private allRefNodes: SearchedRefValue[] | null = null;
+  private noMoreValues = false;
 
   constructor(
     private readonly utils: ChacaUtils,
@@ -87,6 +88,14 @@ export class RefValueNode extends InputTreeNode {
     } else {
       return this.schemasStore.get(this.schemaRefIndex);
     }
+  }
+
+  /**
+   * Cuando no quedan valores para referenciar, todas las iteraciones restantes
+   * de un array darían el mismo resultado vacío, por lo que se corta el llenado.
+   */
+  stopArrayFill(): boolean {
+    return this.noMoreValues;
   }
 
   checkIfFieldExists(fieldTreeRoute: string[]): boolean {
@@ -191,6 +200,8 @@ export class RefValueNode extends InputTreeNode {
 
           if (node) {
             node.changeIsTaken(this.getFieldRoute());
+          } else {
+            this.noMoreValues = true;
           }
 
           if (refItSelf || this.nullWhenEmpty()) {
@@ -207,6 +218,10 @@ export class RefValueNode extends InputTreeNode {
           }
 
           const node = this.utils.oneOfArray(allValues);
+
+          if (!node) {
+            this.noMoreValues = true;
+          }
 
           if (refItSelf || this.nullWhenEmpty()) {
             return node ? node.value() : null;
@@ -244,12 +259,17 @@ export class RefValueNode extends InputTreeNode {
     this.schemaRefIndex = resolverIndex;
   }
 
+  /**
+   * Los elementos de un array no son campos, por lo que no llevan la
+   * configuracion de nulos del campo: `possibleNull` decide si el valor del
+   * campo es un array o `null`, no si cada elemento lo es.
+   */
   getNoArrayNode(): InputTreeNode {
     const newRefNode = new RefValueNode(
       this.utils,
       this.route,
       new NotArray(),
-      this.possibleNull,
+      new NotNull(),
       this.refField,
       this.schemasStore,
     );

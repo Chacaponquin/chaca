@@ -14,6 +14,7 @@ These tests serve two purposes:
 | [ecommerce](ecommerce/README.md)   | Online store: users, products, orders, payments, shipments, support. |
 | [university](university/README.md) | University: students, courses, registrations, grades, library.       |
 | [airline](airline/README.md)       | Flight network: fleet, routes, crews, bookings, check-ins, baggage.  |
+| [hospital](hospital/README.md)     | Hospital: admissions, bed assignments, appointments, prescriptions, billing. |
 
 ## Structure
 

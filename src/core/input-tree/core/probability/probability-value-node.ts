@@ -4,7 +4,7 @@ import { GenerateProps, InputTreeNode } from "../node/input-tree-node";
 import { IsArray, NotArray } from "../is-array/is-array";
 import { ChancesArray } from "./value-object/chances-array";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null/possible-null";
+import { NotNull, PossibleNull } from "../possible-null/possible-null";
 import { DocumentTree } from "../../../result-tree/classes/document/document-tree";
 import { FieldNode } from "../../../result-tree/classes/node/field-node";
 import { SingleResultNode } from "../../../result-tree/classes/single-result";
@@ -28,11 +28,16 @@ export class ProbabilityValueNode extends InputTreeNode {
     this.options = options;
   }
 
+  /**
+   * Los elementos de un array no son campos, por lo que no llevan la
+   * configuracion de nulos del campo: `possibleNull` decide si el valor del
+   * campo es un array o `null`, no si cada elemento lo es.
+   */
   getNoArrayNode(): InputTreeNode {
     return new ProbabilityValueNode(
       this.route,
       new NotArray(),
-      this.possibleNull,
+      new NotNull(),
       this.options,
     );
   }

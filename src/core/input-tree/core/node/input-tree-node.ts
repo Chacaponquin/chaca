@@ -53,6 +53,15 @@ export abstract class InputTreeNode {
     return this.getPossibleNull().can();
   }
 
+  /**
+   * Indica que el nodo no tiene más valores posibles que generar, por lo que
+   * al llenar un array no tiene sentido seguir iterando. Solo los nodos que
+   * dependen de un conjunto finito de valores (como `ref`) lo sobreescriben.
+   */
+  stopArrayFill(): boolean {
+    return false;
+  }
+
   async isNull<K>({
     currentDocument,
     store,

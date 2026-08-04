@@ -3,7 +3,7 @@ import { TryRefANoKeyFieldError } from "../../../../errors";
 import { KeyValueNode } from "../key/key-value-node";
 import { IsArray, NotArray } from "../is-array/is-array";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null/possible-null";
+import { NotNull, PossibleNull } from "../possible-null/possible-null";
 import { MixedFieldNode } from "../../../result-tree/classes/mixed";
 import { FieldNode } from "../../../result-tree/classes/node/field-node";
 
@@ -18,12 +18,13 @@ export class MixedValueNode extends InputTreeNode {
     return this.nodes;
   }
 
+  /**
+   * Los elementos de un array no son campos, por lo que no llevan la
+   * configuracion de nulos del campo: `possibleNull` decide si el valor del
+   * campo es un array o `null`, no si cada elemento lo es.
+   */
   getNoArrayNode(): InputTreeNode {
-    const node = new MixedValueNode(
-      this.route,
-      new NotArray(),
-      this.possibleNull,
-    );
+    const node = new MixedValueNode(this.route, new NotArray(), new NotNull());
     node.nodes = this.nodes;
 
     return node;

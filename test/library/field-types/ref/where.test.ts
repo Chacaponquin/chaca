@@ -166,5 +166,38 @@ describe("ref.where", () => {
         expect(s2.ref).toBeNull();
       }
     });
+
+    describe("with array field definition and nullOnEmpty = true", () => {
+      it("where lets only the odd numbers through. the array should stop once every odd number was taken, instead of padding with null", async () => {
+        const schema = chaca.schema({
+          number: chaca.key(chaca.sequence()),
+        });
+
+        const schema2 = chaca.schema({
+          ref: {
+            type: chaca.ref("schema.number", {
+              unique: true,
+              nullOnEmpty: true,
+              where: ({ refFields }) => refFields.number % 2 !== 0,
+            }),
+            isArray: 20,
+          },
+        });
+
+        const data = await chaca
+          .dataset([
+            { name: "schema", documents: 10, schema: schema },
+            { name: "schema2", documents: 1, schema: schema2 },
+          ])
+          .generate();
+
+        const refs = data.schema2[0].ref as number[];
+
+        // only 5 odd numbers exist among 1..10, isArray asks for 20
+        expect(refs).toHaveLength(5);
+        expect(refs.every((r) => r % 2 !== 0)).toBe(true);
+        expect(new Set(refs).size).toBe(5);
+      });
+    });
   });
 });

@@ -122,6 +122,39 @@
 - `modules.finance.ethereumAddress` now returns the address with the `0x` prefix, as its documentation always stated (42 characters in total instead of 40).
 - `modules.color.rgb({ format: 'css' })` output changed as described in the fixes above; update any code that relied on the previous prefixed value.
 - The `continent` option type of `modules.address.country` changed from `"Oseania" | "Antartica"` to `"Oceania" | "Antarctica"`; update your code if you passed the misspelled values.
+- An **array `ref` field that runs out of values to reference no longer pads the array with `null`**. It now stops as soon as there is nothing left to take, so the array only contains the references that could actually be resolved:
+
+  ```ts
+  const schema2 = chaca.schema({
+    ref: {
+      type: chaca.ref("schema.id", { unique: true, nullOnEmpty: true }),
+      isArray: 100,
+    },
+  });
+
+  // with only 6 documents available in `schema`:
+  // before -> [1, 2, 3, 4, 5, 6, null, null, ... 94 nulls]
+  // now    -> [1, 2, 3, 4, 5, 6]
+  ```
+
+  This also applies to a schema that references **itself**: its first document used to get an array full of `null` (there are no other documents yet) and now gets an empty array. Single (non array) `ref` fields are unchanged — they still return `null` when empty, and still throw `NotEnoughValuesForRefError` when `nullOnEmpty` is `false`. Besides the output change, this avoids scanning the referenced schema once per remaining array position, which was noticeably slow for large `isArray` values.
+
+- **`possibleNull` no longer applies to the elements of an array field.** It describes the *field*, so it decides whether the field's value is a complete array or `null` — it is never re-evaluated for each element. Previously, a field combining `isArray` with a **float probability** (or a **function** returning one) rolled the dice again per element and could produce `null` values scattered inside the array:
+
+  ```ts
+  const schema = chaca.schema({
+    values: {
+      type: () => modules.id.uuid(),
+      isArray: 10,
+      possibleNull: 0.5,
+    },
+  });
+
+  // before -> [uuid, null, null, uuid, null, uuid, uuid, null, uuid, uuid]
+  // now    -> either null, or an array of exactly 10 non-null values
+  ```
+
+  This affects every field type (`ref`, `enum`, `pick`, nested schemas, custom functions, ...). The `possibleNull: true` / `false` and exact-count (integer) forms already behaved this way and are unchanged.
 
 ## ⚠️ Notes
 
