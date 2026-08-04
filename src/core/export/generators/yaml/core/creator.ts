@@ -1,4 +1,4 @@
-import yaml from "js-yaml";
+import { dump } from "js-yaml";
 import { SpaceIndex } from "../../../core/space-index";
 
 interface Props {
@@ -47,7 +47,7 @@ export class YamlCodeCreator {
   constructor(private readonly config: Props) {}
 
   execute(data: any): string {
-    return yaml.dump(normalizeBigints(data), {
+    return dump(normalizeBigints(data), {
       skipInvalid: true,
       indent: this.config.indent.step(),
       sortKeys: this.config.sortKeys,
