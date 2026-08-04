@@ -1,15 +1,22 @@
 import { SequenceFieldProps } from "../sequence-field";
 
+interface InnerConfig {
+  startsWith: number;
+  step: number;
+}
+
 export class Config {
-  private _config: Required<SequenceFieldProps> = {
-    starsWith: 1,
+  private _config: InnerConfig = {
+    startsWith: 1,
     step: 1,
   };
 
   constructor(config?: SequenceFieldProps) {
-    if (typeof config === "object") {
-      if (typeof config.starsWith === "number") {
-        this._config.starsWith = config.starsWith;
+    if (typeof config === "object" && config !== null) {
+      if (typeof config.startsWith === "number") {
+        this._config.startsWith = config.startsWith;
+      } else if (typeof config.starsWith === "number") {
+        this._config.startsWith = config.starsWith;
       }
 
       if (typeof config.step === "number") {

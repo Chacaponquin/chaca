@@ -2,17 +2,34 @@ import { chaca, ChacaError } from "../../../src";
 import { describe, expect, it } from "vitest";
 
 describe("util.replaceSymbols", () => {
-  it("argument = #####. Should return a string with only numbers", () => {
+  it("argument = '#####'. should return a string with only numbers", () => {
     const val = chaca.utils.replaceSymbols("#####");
 
-    let is = true;
-    for (let i = 0; i < val.length && is; i++) {
-      if (Number.isNaN(Number(val[i]))) {
-        is = false;
-      }
-    }
+    expect(val).toMatch(/^\d{5}$/);
+  });
 
-    expect(is).toBe(true);
+  it("argument = '?????'. should return a string with only upper letters", () => {
+    const val = chaca.utils.replaceSymbols("?????");
+
+    expect(val).toMatch(/^[A-Z]{5}$/);
+  });
+
+  it("argument = '$$$$$'. should return a string with only lower letters", () => {
+    const val = chaca.utils.replaceSymbols("$$$$$");
+
+    expect(val).toMatch(/^[a-z]{5}$/);
+  });
+
+  it("argument = '*****'. should return a string with digits or letters", () => {
+    const val = chaca.utils.replaceSymbols("*****");
+
+    expect(val).toMatch(/^[a-zA-Z0-9]{5}$/);
+  });
+
+  it("text with literals. should keep the literals in place", () => {
+    const val = chaca.utils.replaceSymbols("PIN: ##-??");
+
+    expect(val).toMatch(/^PIN: \d{2}-[A-Z]{2}$/);
   });
 
   describe("symbols argument", () => {
@@ -23,7 +40,7 @@ describe("util.replaceSymbols", () => {
     });
 
     it("symbols = {}. should replace symbols with default rules", () => {
-      const value = chaca.utils.replaceSymbols("foo", { symbols: undefined });
+      const value = chaca.utils.replaceSymbols("foo", { symbols: {} });
 
       expect(value).toBe("foo");
     });

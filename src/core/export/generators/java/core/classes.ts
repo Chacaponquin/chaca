@@ -65,7 +65,12 @@ export class SaveJavaClass {
         const greater = found.datatype().greater(datatype);
         found.setDatatype(greater);
       } else {
-        throw new ChacaError(``);
+        const type1 = found.datatype().primitive();
+        const type2 = datatype.primitive();
+
+        throw new ChacaError(
+          `On field '${name.name()}' exist values of type ${type1} and ${type2}. The data must be uniform`,
+        );
       }
 
       return found;

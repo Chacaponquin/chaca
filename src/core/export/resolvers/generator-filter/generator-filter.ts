@@ -31,7 +31,11 @@ export class GeneratorFilter {
       gen = new TypescriptGenerator(this.utils, {});
     } else if (format === "yaml") {
       gen = new YamlGenerator({});
-    } else if (format === "postgresql") {
+    } else if (
+      format === "postgresql" ||
+      format === "sqlite" ||
+      format === "mysql"
+    ) {
       gen = new SQLGenerator(this.utils, format, {});
     } else if (format === "python") {
       gen = new PythonGenerator(this.utils, {});
@@ -47,7 +51,11 @@ export class GeneratorFilter {
         gen = new JavaGenerator(this.utils, format);
       } else if (format.ext === "javascript") {
         gen = new JavascriptGenerator(this.utils, format);
-      } else if (format.ext === "postgresql") {
+      } else if (
+        format.ext === "postgresql" ||
+        format.ext === "sqlite" ||
+        format.ext === "mysql"
+      ) {
         gen = new SQLGenerator(this.utils, format.ext, format);
       } else if (format.ext === "python") {
         gen = new PythonGenerator(this.utils, format);

@@ -19,11 +19,20 @@ export class ArrayCreator {
   async execute({ indexDoc, input, solution }: Props): Promise<void> {
     if (solution instanceof ArrayResultNode) {
       for (let i = 0; i < solution.limit; i++) {
+        const field = input.getNoArrayNode();
+
         // resolver el field y guardarlo en un nodo
         const s = await this.creator.execute({
-          field: input.getNoArrayNode(),
+          field: field,
           indexDoc: indexDoc,
         });
+
+        // si el field se quedo sin valores posibles, las iteraciones restantes
+        // darian el mismo resultado vacio, por lo que se descarta este nodo y
+        // el array queda unicamente con los valores que si se pudieron generar
+        if (field.stopArrayFill()) {
+          break;
+        }
 
         // insertar el field en el array de soluciones
         solution.insertNode(s);

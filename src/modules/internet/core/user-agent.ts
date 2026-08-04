@@ -246,8 +246,8 @@ export function GenerateUserAgent(
           arch === "win"
             ? `(Windows NT ${version_string.nt()}${proc ? `; ${proc}` : ""}`
             : arch === "mac"
-            ? `(Macintosh; ${proc} Mac OS X ${version_string.osx()}`
-            : `(X11; Linux ${proc}`;
+              ? `(Macintosh; ${proc} Mac OS X ${version_string.osx()}`
+              : `(X11; Linux ${proc}`;
 
       return `Mozilla/5.0 ${os_ver}; rv:${firefox_ver.slice(
         0,
@@ -281,8 +281,8 @@ export function GenerateUserAgent(
           arch === "win"
             ? `(Windows NT ${version_string.nt()}; U; ${randomLang()}${presto_ver}`
             : arch === "lin"
-            ? `(X11; Linux ${randomProc(arch)}; U; ${randomLang()}${presto_ver}`
-            : `(Macintosh; Intel Mac OS X ${version_string.osx()} U; ${randomLang()} Presto/${version_string.presto()} Version/${version_string.presto2()})`;
+              ? `(X11; Linux ${randomProc(arch)}; U; ${randomLang()}${presto_ver}`
+              : `(Macintosh; Intel Mac OS X ${version_string.osx()} U; ${randomLang()} Presto/${version_string.presto()} Version/${version_string.presto2()})`;
 
       return `Opera/${datatypeModule.int({
         min: 9,
@@ -323,8 +323,8 @@ export function GenerateUserAgent(
                 "_",
               )}) `
             : arch === "win"
-            ? `(Windows; U; Windows NT ${version_string.nt()})`
-            : `(X11; Linux ${randomProc(arch)}`;
+              ? `(Windows; U; Windows NT ${version_string.nt()})`
+              : `(X11; Linux ${randomProc(arch)}`;
 
       return `Mozilla/5.0 ${os_ver} AppleWebKit/${safari} (KHTML, like Gecko) Chrome/${version_string.chrome()} Safari/${safari}`;
     },

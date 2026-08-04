@@ -14,10 +14,10 @@ export class PostgreSQL extends SQLExtensionGenerator {
       const columns = table
         .columns()
         .filter((c) => !c.disabled())
-        .map((c) => c.name())
+        .map((c) => c.name().postgres)
         .join(", ");
 
-      code += `INSERT INTO ${table.name()} (${columns})\n`;
+      code += `INSERT INTO ${table.name().postgres} (${columns})\n`;
 
       code += `VALUES\n`;
 
@@ -26,7 +26,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
       table.iterate((row) => {
         this.index.push();
 
-        const v = row.map((v) => v.string()).join(", ");
+        const v = row.map((v) => v.string().postgres).join(", ");
         const rowCode = this.index.create(`(${v})`);
         values.push(rowCode);
 
@@ -43,7 +43,7 @@ export class PostgreSQL extends SQLExtensionGenerator {
     let code = ``;
 
     for (const table of tables.tables) {
-      code += `CREATE TABLE ${table.name()} (\n`;
+      code += `CREATE TABLE ${table.name().postgres} (\n`;
 
       const columns = table
         .columns()
@@ -53,7 +53,9 @@ export class PostgreSQL extends SQLExtensionGenerator {
 
           this.index.push();
 
-          code += this.index.create(`${column.name()} ${column.definition()}`);
+          code += this.index.create(
+            `${column.name().postgres} ${column.definition().postgres}`,
+          );
 
           if (column.isKey()) {
             code += ` PRIMARY KEY`;
@@ -69,8 +71,8 @@ export class PostgreSQL extends SQLExtensionGenerator {
 
           const ref = column.ref();
           if (ref !== null) {
-            const table = ref.table.name();
-            const col = ref.column.name();
+            const table = ref.table.name().postgres;
+            const col = ref.column.name().postgres;
 
             code += ` REFERENCES ${table}(${col})`;
           }

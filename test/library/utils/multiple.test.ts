@@ -3,6 +3,15 @@ import { chaca } from "../../../src";
 
 describe("utils.multiple", () => {
   describe("generator argument", () => {
+    it("generator receives the element index", () => {
+      const value = chaca.utils.multiple({
+        generator: (i) => `element-${i}`,
+        count: 3,
+      });
+
+      expect(value).toEqual(["element-0", "element-1", "element-2"]);
+    });
+
     it("always return undefined. should return an undefined array", () => {
       const value = chaca.utils.multiple({
         generator: () => undefined,

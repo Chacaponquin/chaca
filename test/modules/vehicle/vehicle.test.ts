@@ -26,4 +26,20 @@ describe("vehicle modules", () => {
     const value = modules.vehicle.fuel();
     expect(modules.vehicle.constants.fuels).include(value);
   });
+
+  it("vehicle.vehicle", () => {
+    const value = modules.vehicle.vehicle();
+
+    // value is `${manufacturer} ${model}` and both parts can contain spaces,
+    // so find the manufacturer prefix and check the remainder is a model
+    const isValid = modules.vehicle.constants.manufacturers.some(
+      (manufacturer) =>
+        value.startsWith(`${manufacturer} `) &&
+        modules.vehicle.constants.models.includes(
+          value.slice(manufacturer.length + 1),
+        ),
+    );
+
+    expect(isValid).toBe(true);
+  });
 });

@@ -68,7 +68,10 @@ export class TablesFixer {
             .find((c) => c !== column && c.equal(column._name));
 
           if (found) {
-            const name = new ColumnName(this.utils, `${column.name()}_1`);
+            const name = new ColumnName(
+              this.utils,
+              `${column.name().postgres}_1`,
+            );
             column.setName(name);
           } else {
             stop = true;

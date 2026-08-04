@@ -1,4 +1,4 @@
-import { CsvProps } from "../generators/csv/csv-generator";
+﻿import { CsvProps } from "../generators/csv/csv-generator";
 import { JavaProps } from "../generators/java/java-generator";
 import { JavascriptProps } from "../generators/javascript/javascript-generator";
 import { JsonProps } from "../generators/json/json-generator";
@@ -20,7 +20,7 @@ export type Extensions =
   | "python"
   | ExportSQLFormat;
 
-export type ExportSQLFormat = "postgresql";
+export type ExportSQLFormat = "postgresql" | "sqlite" | "mysql";
 
 /**
  * Export file configuration
@@ -50,6 +50,16 @@ export type FileConfig = {
 
 export type DumpConfig = Omit<FileConfig, "location">;
 
+/**
+ * Contract the CLI relies on to export a config module without knowing whether
+ * it is a `Schema` or a `Dataset`. Each implementation adapts the uniform
+ * `(documents, config)` call to its own export signature (a `Dataset` ignores
+ * the document count). This keeps the CLI free of type discrimination.
+ */
+export interface CliExportable {
+  exportFromCli(documents: number, config: FileConfig): Promise<string[]>;
+}
+
 export type ExtensionConfigs =
   | JsonFormatConfig
   | CsvFormatConfig
@@ -58,10 +68,20 @@ export type ExtensionConfigs =
   | JavascriptFormatConfig
   | YamlFormatConfig
   | PythonFormatConfig
-  | PostgresqlFormatConfig;
+  | PostgresqlFormatConfig
+  | SqliteFormatConfig
+  | MysqlFormatConfig;
 
 export type PostgresqlFormatConfig = {
   ext: "postgresql";
+} & SQLProps;
+
+export type SqliteFormatConfig = {
+  ext: "sqlite";
+} & SQLProps;
+
+export type MysqlFormatConfig = {
+  ext: "mysql";
 } & SQLProps;
 
 export type PythonFormatConfig = {

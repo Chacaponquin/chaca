@@ -39,7 +39,7 @@ export class SystemModule {
   filename({ ext: iext }: FilenameProps = {}): string {
     const ext =
       typeof iext === "string" && iext.trim().length > 0
-        ? `.${iext}`
+        ? `.${iext.trim().replace(/^\.+/, "")}`
         : this.fileExt();
 
     const length = this.datatypeModule.int({ min: 1, max: 5 });
@@ -62,7 +62,7 @@ export class SystemModule {
 
   /**
    * Return a file extension
-   * @example modules.system.fileExt() // 'mp4'
+   * @example modules.system.fileExt() // '.mp4'
    * @returns string
    */
   fileExt(): string {

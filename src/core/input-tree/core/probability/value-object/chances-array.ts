@@ -23,8 +23,14 @@ interface Option {
 
 export class ChancesArray {
   private readonly options: Option[] = [];
+  private readonly route: string;
 
-  constructor(private readonly utils: ChacaUtils, { options, route }: Props) {
+  constructor(
+    private readonly utils: ChacaUtils,
+    { options, route }: Props,
+  ) {
+    this.route = route;
+
     if (options.length > 0) {
       for (const option of options) {
         if (typeof option === "object" && option !== null) {
@@ -60,6 +66,15 @@ export class ChancesArray {
       });
 
       weights.push(chance);
+    }
+
+    const sum = weights.reduce((a, b) => a + b, 0);
+
+    if (sum === 0) {
+      throw new WrongProbabilityFieldDefinitionError(
+        this.route,
+        `At least one option of the probability field must have a chance greater than 0`,
+      );
     }
 
     const distribution = this.createDistribution(values, weights, 10);

@@ -43,7 +43,7 @@ describe("Is array function definition", () => {
       expect(doc.id).toHaveLength(0);
     });
 
-    it("isArray = async function that returns -5. should throw an error", () => {
+    it("isArray = async function that returns -5. should throw an error", async () => {
       const schema = chaca.schema({
         id: {
           type: () => modules.id.uuid(),
@@ -51,7 +51,7 @@ describe("Is array function definition", () => {
         },
       });
 
-      expect(() => schema.object()).rejects.toThrow(ChacaError);
+      await expect(schema.object()).rejects.toThrow(ChacaError);
     });
   });
 
@@ -99,7 +99,7 @@ describe("Is array function definition", () => {
         expect(id).toHaveLength(0);
       });
 
-      it("async function that returns min = 5 & max = 0. should return throw an error", () => {
+      it("async function that returns min = 5 & max = 0. should return throw an error", async () => {
         const schema = chaca.schema({
           id: {
             type: () => modules.id.uuid(),
@@ -107,7 +107,7 @@ describe("Is array function definition", () => {
           },
         });
 
-        expect(() => schema.object()).rejects.toThrow(ChacaError);
+        await expect(schema.object()).rejects.toThrow(ChacaError);
       });
     });
   });

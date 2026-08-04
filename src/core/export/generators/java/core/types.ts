@@ -91,7 +91,7 @@ export class JavaFloat extends JavaNumber {
     } else if (Number.isNaN(this.value)) {
       return "Float.NaN";
     } else {
-      return `${this.value}`;
+      return `${this.value}f`;
     }
   }
 }
@@ -165,16 +165,20 @@ export class JavaBigint extends JavaDatatype {
     return false;
   }
 
-  string(): string {
-    return `BigInteger`;
+  string(_: SpaceIndex, imports: Imports): string {
+    imports.add(new Import(["java", "math", "BigInteger"]));
+
+    return `new BigInteger("${this.value.toString()}")`;
   }
 
   equal(other: JavaDatatype): boolean {
     return other instanceof JavaBigint;
   }
 
-  definition(): string {
-    return `BigInteger.valueOf(${Number(this.value)})`;
+  definition(imports: Imports): string {
+    imports.add(new Import(["java", "math", "BigInteger"]));
+
+    return "BigInteger";
   }
 }
 
@@ -198,7 +202,7 @@ export class JavaDate extends JavaDatatype {
   string(_: SpaceIndex, imports: Imports): string {
     imports.add(new Import(["java", "time", "LocalDateTime"]));
 
-    return `LocalDateTime.parse("${this.value.toISOString()}");`;
+    return `LocalDateTime.parse("${this.value.toISOString().slice(0, -1)}")`;
   }
 
   definition(imports: Imports): string {
@@ -236,7 +240,7 @@ export class JavaRegexp extends JavaDatatype {
   string(_: SpaceIndex, imports: Imports): string {
     imports.add(new Import(["java", "util", "regex", "Pattern"]));
 
-    return `Patter.compile("${String(this.value)}")`;
+    return `Pattern.compile("${String(this.value)}")`;
   }
 
   definition(imports: Imports): string {

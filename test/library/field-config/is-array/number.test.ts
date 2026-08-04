@@ -20,11 +20,11 @@ describe("Is array number definition", () => {
     expect(doc.id).toHaveLength(0);
   });
 
-  it("isArray = -5. should throw an error", () => {
+  it("isArray = -5. should throw an error", async () => {
     const schema = chaca.schema({
       id: { type: () => modules.id.uuid(), isArray: -5 },
     });
 
-    expect(() => schema.object()).rejects.toThrow(ChacaError);
+    await expect(schema.object()).rejects.toThrow(ChacaError);
   });
 });

@@ -7,9 +7,10 @@
 # testing
 /coverage
 /data
+/test-report
 
 # production
-/lib
+/dist
 
 # misc
 .DS_Store
@@ -19,5 +20,17 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 package-lock.json
+
+# Claude AI Agent temporary files
+.claude
+.claude-workspace
+*.claude-session
+.claude-memory
+.claude-cache
+claude-*.tmp
+.anthropic-cache
+.ai-context
+.agent-state
+.assistant-memory
 
 

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { modules } from "../../../src";
-import { validate } from "uuid";
+import { validate, version } from "uuid";
 import { isCuid } from "@paralleldrive/cuid2";
 
 describe("# Id modules test", () => {
@@ -8,6 +8,7 @@ describe("# Id modules test", () => {
     const value = modules.id.uuid();
 
     expect(validate(value)).toBe(true);
+    expect(version(value)).toBe(4);
   });
 
   it("id.cuid", () => {
@@ -19,44 +20,40 @@ describe("# Id modules test", () => {
   it("id.mongodbId", () => {
     const value = modules.id.mongodbId();
 
-    expect(typeof value).toBe("string");
+    expect(value).toMatch(/^[0-9a-f]{24}$/);
   });
 
   it("id.ulid", () => {
     const value = modules.id.ulid();
 
-    expect(typeof value).toBe("string");
+    expect(value).toMatch(/^[0-9A-HJKMNP-TV-Z]{26}$/);
   });
 
   describe("id.nanoid", () => {
-    it("no params. Should return a string with length 20", () => {
-      const value = modules.id.nanoid();
+    const NANOID_ALPHABET = /^[A-Za-z0-9_-]+$/;
+
+    it.each([
+      { name: "no params", args: undefined },
+      { name: "length = undefined", args: { length: undefined } },
+      { name: "length = -5", args: { length: -5 } },
+    ])("$name. Should return a string with length 20", ({ args }) => {
+      const value = modules.id.nanoid(args);
 
       expect(value).toHaveLength(20);
+      expect(value).toMatch(NANOID_ALPHABET);
     });
 
     it("length = 10. Should return a string with length 10", () => {
       const value = modules.id.nanoid({ length: 10 });
 
       expect(value).toHaveLength(10);
+      expect(value).toMatch(NANOID_ALPHABET);
     });
 
-    it("length = -5. Should return a string with length 20", () => {
-      const value = modules.id.nanoid({ length: -5 });
-
-      expect(value).toHaveLength(20);
-    });
-
-    it("length = 0. Should return a string with length 0", () => {
+    it("length = 0. Should return an empty string", () => {
       const value = modules.id.nanoid({ length: 0 });
 
       expect(value).toHaveLength(0);
-    });
-
-    it("length = undefined. Should return a string with length 20", () => {
-      const value = modules.id.nanoid({ length: undefined });
-
-      expect(value).toHaveLength(20);
     });
   });
 });

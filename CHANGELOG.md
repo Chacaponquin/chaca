@@ -1,3 +1,167 @@
+# chaca@2.2.0
+
+## 🌚 Features
+
+### Browser support
+
+- **`chaca` is now isomorphic.** It can be installed and used in browser apps (React, Vue, Svelte, etc.), not only in Node. Your bundler automatically resolves the browser-safe build through the package `exports` map — no configuration needed.
+- The package now ships **both ESM and CommonJS** builds, each with its own type definitions.
+- Use `transform` to serialize your data to any supported format (`json`, `csv`, `yaml`, `postgresql`, `java`, `python`, `typescript`, `javascript`) fully **in memory**. This is the way to obtain file contents in the browser (e.g. to trigger a download):
+
+  ```ts
+  import { chaca, modules } from "chaca";
+
+  const schema = chaca.schema({
+    id: chaca.key(() => modules.id.uuid()),
+    name: () => modules.person.firstName(),
+  });
+
+  const [file] = await schema.transform(50, {
+    filename: "users",
+    format: "json",
+  });
+
+  // file.filename -> "users.json"
+  // file.content  -> serialized string, ready to download or display
+  ```
+
+- The `FileWriter` type is now exported, so advanced users can plug in a custom output target when constructing a `Schema`/`Dataset`.
+
+### Errors
+
+- Every exception is now grouped under a single `Errors` namespace for easier discovery:
+
+  ```ts
+  import { Errors } from "chaca";
+
+  try {
+    await schema.export(/* ... */);
+  } catch (e) {
+    if (e instanceof Errors.TryRefANoKeyFieldError) {
+      /* handle the specific error */
+    }
+    if (e instanceof Errors.ChacaError) {
+      /* catch-all for any chaca error */
+    }
+  }
+  ```
+
+- `WrongArrayDefinitionError`, `WrongPossibleNullDefinitionError` and `WrongProbabilityFieldDefinitionError` — announced back in `2.0.0` but never actually exported — are now reachable through the `Errors` namespace. The existing flat error exports (`ChacaError`, `TryRefANoKeyFieldError`, ...) keep working unchanged.
+
+### SQLite export
+
+- New `sqlite` export format, available in `export`, `transform` and the CLI (`chaca sqlite`). It shares every option with the `postgresql` format (`keys`, `uniques`, `nulls`, `refs`, `generateIds`, `declarationOnly`, ...):
+
+  ```ts
+  await dataset.export({
+    filename: "data",
+    location: "./data",
+    format: "sqlite",
+  });
+  ```
+
+- The generated script enables `PRAGMA foreign_keys = ON` and uses SQLite-native types: `INTEGER PRIMARY KEY` for generated ids, `TEXT` for strings and dates (ISO format), `REAL` for floats and `INTEGER` for bigints.
+
+### MySQL export
+
+- New `mysql` export format, available in `export`, `transform` and the CLI (`chaca mysql`). It shares every option with the `postgresql` and `sqlite` formats (`keys`, `uniques`, `nulls`, `refs`, `generateIds`, `declarationOnly`, ...):
+
+  ```ts
+  await dataset.export({
+    filename: "data",
+    location: "./data",
+    format: "mysql",
+  });
+  ```
+
+- The generated script uses MySQL-native types and syntax: `INT AUTO_INCREMENT PRIMARY KEY` for generated ids, `VARCHAR(255)`/`TEXT` for strings, `DATETIME(3)` for dates, `DOUBLE` for floats and `BIGINT` for bigints. Identifiers that collide with MySQL reserved words are quoted with backticks, and foreign keys are declared as table-level `FOREIGN KEY` constraints (InnoDB ignores inline column `REFERENCES` clauses).
+- MySQL limitations to be aware of: `DOUBLE` cannot represent `Infinity`/`NaN`, so infinities are clamped to the `DOUBLE` range limits (`±1.7976931348623157e+308`) and `NaN` is exported as `NULL` (add the column to `nulls` if your data contains `NaN`). Backslashes in strings are escaped (`\` → `\\`), since MySQL treats them as escape characters.
+
+### Sequence field
+
+- `chaca.sequence` now accepts the correctly-spelled `startsWith` option. The misspelled `starsWith` keeps working as a deprecated alias (when both are passed, `startsWith` wins).
+
+## 🪛 Fix
+
+- `transform` on a relational JSON dataset without `separate` returned an unresolved value instead of the serialized data. It now returns the correct output.
+- `chaca.pick` with a `count: { min, max }` range could never select `max` elements (the upper bound was effectively exclusive). The range is now inclusive, as documented.
+- `isArray: { min, max }` had the same problem: the generated array could never reach `max` elements. The upper bound is now inclusive.
+- `Dataset.generate()` threw synchronously for reference-wiring errors (`TryRefANoKeyFieldError`, `NotExistRefFieldError`), so a `.catch()` on the returned promise never caught them. All errors now surface as promise rejections.
+- A `probability` field where every option has `chance: 0` silently produced `undefined`. It now throws a descriptive `WrongProbabilityFieldDefinitionError`.
+- Documentation fixes: `possibleNull` now documents the integer semantics (an integer ≥ 1 is an exact count of null documents, a float in [0, 1] is a probability); the `isArray` doc no longer lists `boolean` as a valid config (it never was); `modules.datatype.int` documents that `max` is exclusive.
+- Exporting relational **TypeScript** data with `separate: true` did not await the resolved data; the generated files now contain the fully resolved values.
+- `modules.datatype.hexadecimal` could include the character `G`, which is not a valid hexadecimal digit. The output is now always valid hex.
+- `modules.address.country` never matched the continents `Oceania` and `Antarctica` because the `continent` type declared them as `"Oseania"` and `"Antartica"`; filtering by those continents silently fell back to any country. The type now uses the correct names.
+- `modules.date.past`, `modules.date.soon` and `modules.date.between` no longer **mutate** the `refDate`/`to` `Date` object you pass in — they work on a copy. This also fixes `between({ to })`, which could return a value outside the expected range because `from` and `to` ended up being the same mutated object.
+- `modules.date.timeAgo()` without arguments can now return `"N months ago"`; the `months` unit was missing from the random unit pool.
+- `modules.internet.email` with a provider that already contains a TLD (e.g. `{ provider: 'yahoo.com' }`) no longer appends an extra `.com` (`pedro@yahoo.com.com` → `pedro@yahoo.com`). Providers without a dot keep getting `.com` appended.
+- `modules.system.filename` with an extension that starts with a dot (e.g. `{ ext: '.gif' }`) no longer produces a double dot in the filename.
+- `modules.color.rgb` with `format: 'css'` or `format: 'binary'` no longer prepends the hex `prefix` to the output (it produced invalid values like `#rgb(12, 34, 56)`). The `prefix` option now only applies to the `'hex'` format, as documented.
+- `modules.color` constants: removed a duplicated `rec2020` entry from the CSS spaces list.
+- `modules.image` methods now URL-encode the category in the generated URL, so categories with spaces or special characters produce valid URLs.
+- `chaca.utils.pick` with `count` equal to the array length returned the input array **by reference**, so mutating the result also mutated your original array. It now returns a copy.
+- Defining a schema field with a primitive value (e.g. `chaca.schema({ name: "hola" })`) threw a cryptic JavaScript `TypeError`. It now throws a descriptive `ChacaError` indicating the field type is invalid.
+
+- CSV export: missing field values (objects with different keys) were serialized as the literal string `undefined`. They now produce an empty cell.
+- YAML export: `bigint` values were silently dropped from the output (objects lost the key, arrays lost the element). They are now serialized — as a plain integer when the value fits in a safe JavaScript integer, and as a decimal string otherwise.
+- Java export: the generated `Main.java` never compiled — the last `add(...)` statement was missing its semicolon. Every statement is now properly terminated.
+- Java export: decimal values were emitted as `double` literals (e.g. `5.5`) for fields typed `Float`, which does not compile. They now use the `f` suffix (`5.5f`).
+- Java export: `bigint` values generated invalid code (the expression `BigInteger.valueOf(...)` was used as the field **type**). They are now typed `BigInteger`, built with `new BigInteger("<value>")`, and the `java.math.BigInteger` import is included.
+- Java export: `Date` values emitted a stray semicolon inside the constructor call and an ISO string with a trailing `Z` that `LocalDateTime.parse` cannot parse. Both are fixed.
+- Java export: fields named like Java reserved words (`class`, `int`, ...) generated invalid identifiers. They are now renamed with a `Value` suffix (`classValue`), which also avoids the `getClass()` collision with `Object`.
+- Java export: exporting documents with mixed types for the same field threw a `ChacaError` with an **empty message**. It now reports the field and the conflicting types.
+- Java export: `RegExp` values generated `Patter.compile(...)` (typo). Now `Pattern.compile(...)`.
+- Python export: fields named like Python reserved words (`class`, `import`, `from`, ...) generated invalid syntax. They are now renamed with a trailing underscore (`class_`), following PEP 8.
+- PostgreSQL export: string values with single quotes produced broken SQL (`'l'agua'`) and double quotes were escaped with invalid backslashes. Single quotes are now doubled (`'l''agua'`), the standard SQL escape.
+- PostgreSQL export: columns where every value is `null` were generated **without a type** (`n NULL,`), which is invalid SQL. They now fall back to `TEXT`.
+- PostgreSQL export: `Date` values were exported as `DATE` with only the date part, silently dropping the time. They are now exported as `TIMESTAMP` with the full ISO value.
+- PostgreSQL export: tables or columns named like reserved SQL words (`select`, `user`, `table`, ...) produced invalid statements. They are now double quoted (`"user"`).
+
+## ⚠️ Behavior changes
+
+- `modules.finance.ethereumAddress` now returns the address with the `0x` prefix, as its documentation always stated (42 characters in total instead of 40).
+- `modules.color.rgb({ format: 'css' })` output changed as described in the fixes above; update any code that relied on the previous prefixed value.
+- The `continent` option type of `modules.address.country` changed from `"Oseania" | "Antartica"` to `"Oceania" | "Antarctica"`; update your code if you passed the misspelled values.
+- An **array `ref` field that runs out of values to reference no longer pads the array with `null`**. It now stops as soon as there is nothing left to take, so the array only contains the references that could actually be resolved:
+
+  ```ts
+  const schema2 = chaca.schema({
+    ref: {
+      type: chaca.ref("schema.id", { unique: true, nullOnEmpty: true }),
+      isArray: 100,
+    },
+  });
+
+  // with only 6 documents available in `schema`:
+  // before -> [1, 2, 3, 4, 5, 6, null, null, ... 94 nulls]
+  // now    -> [1, 2, 3, 4, 5, 6]
+  ```
+
+  This also applies to a schema that references **itself**: its first document used to get an array full of `null` (there are no other documents yet) and now gets an empty array. Single (non array) `ref` fields are unchanged — they still return `null` when empty, and still throw `NotEnoughValuesForRefError` when `nullOnEmpty` is `false`. Besides the output change, this avoids scanning the referenced schema once per remaining array position, which was noticeably slow for large `isArray` values.
+
+- **`possibleNull` no longer applies to the elements of an array field.** It describes the *field*, so it decides whether the field's value is a complete array or `null` — it is never re-evaluated for each element. Previously, a field combining `isArray` with a **float probability** (or a **function** returning one) rolled the dice again per element and could produce `null` values scattered inside the array:
+
+  ```ts
+  const schema = chaca.schema({
+    values: {
+      type: () => modules.id.uuid(),
+      isArray: 10,
+      possibleNull: 0.5,
+    },
+  });
+
+  // before -> [uuid, null, null, uuid, null, uuid, uuid, null, uuid, uuid]
+  // now    -> either null, or an array of exactly 10 non-null values
+  ```
+
+  This affects every field type (`ref`, `enum`, `pick`, nested schemas, custom functions, ...). The `possibleNull: true` / `false` and exact-count (integer) forms already behaved this way and are unchanged.
+
+## ⚠️ Notes
+
+- In the **browser** build, `export` (which writes files to the filesystem) is not available and throws a descriptive error. Use `transform` to get the file contents in memory instead. In **Node**, `export` keeps working exactly as before.
+- The build output moved from `lib/` to `dist/`. The public entry point is unchanged (`import { chaca } from "chaca"`); only update your imports if you were relying on internal deep paths such as `chaca/lib/...`.
+- Internal: the `nanoid-cjs` dependency was replaced with `nanoid`. There is no API change — `modules.id.nanoid()` behaves as before.
+
 # chaca@2.1.0
 
 ## 🌚 Features
@@ -18,7 +182,7 @@
       documents: async ({ store }) => {
         const users = await store.get("User");
 
-        return users.filter((u) => u.role === "writer");
+        return users.filter((u) => u.role === "writer").length;
       },
     },
   ]);

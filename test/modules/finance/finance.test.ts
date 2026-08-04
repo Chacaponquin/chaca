@@ -21,22 +21,85 @@ describe("finance modules", () => {
     expect(value.length).toBeLessThanOrEqual(33);
   });
 
-  it("finance.creditCard", () => {
-    const value = modules.finance.creditCard();
+  describe("finance.pin tests", () => {
+    it("no arguments. should return a 4 digit pin", () => {
+      const value = modules.finance.pin();
 
-    const result = value.split("-");
+      expect(value).toMatch(/^\d{4}$/);
+    });
 
-    expect(result).toHaveLength(4);
+    it("length = 6. should return a 6 digit pin", () => {
+      const value = modules.finance.pin({ length: 6 });
 
-    for (const r of result) {
-      expect(r).toHaveLength(4);
+      expect(value).toMatch(/^\d{6}$/);
+    });
+
+    it("length = 0. should fall back to a 4 digit pin", () => {
+      const value = modules.finance.pin({ length: 0 });
+
+      expect(value).toMatch(/^\d{4}$/);
+    });
+  });
+
+  describe("finance.amount tests", () => {
+    it("no arguments. should start with '$' and have a numeric part", () => {
+      const value = modules.finance.amount();
+
+      expect(value.startsWith("$")).toBe(true);
+      expect(Number(value.slice(1))).not.toBeNaN();
+    });
+
+    it("symbol = '€', min = 10, max = 20, precision = 2. should return a value between 10 and 20", () => {
+      for (let i = 0; i < 200; i++) {
+        const value = modules.finance.amount({
+          symbol: "€",
+          min: 10,
+          max: 20,
+          precision: 2,
+        });
+
+        expect(value.startsWith("€")).toBe(true);
+
+        const amount = Number(value.slice(1));
+
+        expect(amount).not.toBeNaN();
+        expect(amount).toBeGreaterThanOrEqual(10);
+        expect(amount).toBeLessThanOrEqual(20);
+      }
+    });
+  });
+
+  it("finance.bic. should match the ISO-9362 structure with length 8 or 11", () => {
+    for (let i = 0; i < 100; i++) {
+      const value = modules.finance.bic();
+
+      expect(value).toMatch(/^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$/);
+      expect([8, 11]).toContain(value.length);
     }
   });
 
-  it("finance.ethereumAddress", () => {
+  it("finance.bitcoinAddress. should start with '1' or '3', have length between 26 and 40 and no banned characters", () => {
+    for (let i = 0; i < 100; i++) {
+      const value = modules.finance.bitcoinAddress();
+
+      expect(value).toMatch(/^[13]/);
+      expect(value.length).toBeGreaterThanOrEqual(26);
+      expect(value.length).toBeLessThanOrEqual(40);
+      expect(value).not.toMatch(/[0OIl]/);
+    }
+  });
+
+  it("finance.creditCard", () => {
+    const value = modules.finance.creditCard();
+
+    expect(value).toMatch(/^\d{4}-\d{4}-\d{4}-\d{4}$/);
+  });
+
+  it("finance.ethereumAddress. should return '0x' + 40 lowercase hex chars", () => {
     const value = modules.finance.ethereumAddress();
 
-    expect(value).toHaveLength(40);
+    expect(value).toMatch(/^0x[0-9a-f]{40}$/);
+    expect(value).toHaveLength(42);
   });
 
   it("finance.moneyCode", () => {
@@ -66,21 +129,13 @@ describe("finance modules", () => {
   it("finance.creditCardCVV", () => {
     const value = modules.finance.creditCardCVV();
 
-    expect(value).toHaveLength(3);
-
-    for (const v of value) {
-      expect(Number(v)).not.toBeNaN();
-    }
+    expect(value).toMatch(/^\d{3}$/);
   });
 
   it("finance.routingNumber", () => {
     const value = modules.finance.routingNumber();
 
-    expect(value).toHaveLength(9);
-
-    for (const v of value) {
-      expect(Number(v)).not.toBeNaN();
-    }
+    expect(value).toMatch(/^\d{9}$/);
   });
 
   it("finance.accountType", () => {

@@ -87,6 +87,7 @@ export class CsvCodeCreator {
       expandArrayObjects: this.config.expandArrayObjects,
       expandNestedObjects: this.config.expandNestedObjects,
       parseValue: this.config.parseValue,
+      emptyFieldValue: "",
       delimiter: {
         field: this.config.delimiter?.field,
         eol: this.config.delimiter?.eol,

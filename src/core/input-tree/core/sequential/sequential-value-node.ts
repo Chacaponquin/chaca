@@ -8,7 +8,7 @@ import { SingleResultNode } from "../../../result-tree/classes/single-result";
 import { NotArray } from "../is-array/is-array";
 import { InputTreeNode } from "../node/input-tree-node";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null/possible-null";
+import { NotNull, PossibleNull } from "../possible-null/possible-null";
 
 export class SequentialValueNode extends InputTreeNode {
   private index = 0;
@@ -36,10 +36,15 @@ export class SequentialValueNode extends InputTreeNode {
     }
   }
 
+  /**
+   * Los elementos de un array no son campos, por lo que no llevan la
+   * configuracion de nulos del campo: `possibleNull` decide si el valor del
+   * campo es un array o `null`, no si cada elemento lo es.
+   */
   getNoArrayNode(): InputTreeNode {
     return new SequentialValueNode(
       this.route,
-      this.possibleNull,
+      new NotNull(),
       this.valuesArray,
       this.config,
     );

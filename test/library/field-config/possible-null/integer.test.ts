@@ -34,12 +34,22 @@ describe("Possible null integer definition", () => {
     expect(countNulls(data)).toBe(50);
   });
 
-  it("possibleNull = -1. should throw an error", () => {
+  it("possibleNull = -1. should throw an error", async () => {
     const schema = chaca.schema({
       null: { type: () => modules.color.cmyk(), possibleNull: -1 },
     });
 
-    expect(async () => await schema.array(50)).rejects.toThrow(
+    await expect(schema.array(50)).rejects.toThrow(
+      WrongPossibleNullDefinitionError,
+    );
+  });
+
+  it("possibleNull = 60 and generate 50 documents. should throw an error", async () => {
+    const schema = chaca.schema({
+      null: { type: () => modules.color.cmyk(), possibleNull: 60 },
+    });
+
+    await expect(schema.array(50)).rejects.toThrow(
       WrongPossibleNullDefinitionError,
     );
   });

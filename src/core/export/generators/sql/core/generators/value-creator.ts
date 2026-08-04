@@ -185,7 +185,7 @@ export class ValueCreator {
 
           if (!row.hasKey()) {
             throw new ChacaError(
-              `The table ${objectTable.name()} must have at least 1 PRIMARY KEY`,
+              `The table ${objectTable.name().postgres} must have at least 1 PRIMARY KEY`,
             );
           }
         }
@@ -246,7 +246,7 @@ export class ValueCreator {
 
           if (!row.hasKey()) {
             throw new ChacaError(
-              `The table ${arrayTable.name()} must have at least 1 PRIMARY KEY`,
+              `The table ${arrayTable.name().postgres} must have at least 1 PRIMARY KEY`,
             );
           }
         }

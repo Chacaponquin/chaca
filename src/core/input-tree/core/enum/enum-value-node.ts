@@ -8,7 +8,7 @@ import { ChacaUtils } from "../../../utils";
 import { IsArray, NotArray } from "../is-array/is-array";
 import { InputTreeNode } from "../node/input-tree-node";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null/possible-null";
+import { NotNull, PossibleNull } from "../possible-null/possible-null";
 
 export class EnumValueNode extends InputTreeNode {
   constructor(
@@ -33,12 +33,17 @@ export class EnumValueNode extends InputTreeNode {
     return this.utils.oneOfArray(this.options);
   }
 
+  /**
+   * Los elementos de un array no son campos, por lo que no llevan la
+   * configuracion de nulos del campo: `possibleNull` decide si el valor del
+   * campo es un array o `null`, no si cada elemento lo es.
+   */
   getNoArrayNode(): InputTreeNode {
     return new EnumValueNode(
       this.utils,
       this.route,
       new NotArray(),
-      this.possibleNull,
+      new NotNull(),
       this.options,
     );
   }

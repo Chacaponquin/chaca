@@ -4,7 +4,7 @@ import { GenerateProps, InputTreeNode } from "../node/input-tree-node";
 import { CustomField } from "../../../fields/core/custom/custom-field";
 import { IsArray, NotArray } from "../is-array/is-array";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null/possible-null";
+import { NotNull, PossibleNull } from "../possible-null/possible-null";
 import { SingleResultNode } from "../../../result-tree/classes/single-result";
 import { FieldNode } from "../../../result-tree/classes/node/field-node";
 
@@ -23,11 +23,16 @@ export class CustomValueNode extends InputTreeNode {
     super(route, isArray, possibleNull);
   }
 
+  /**
+   * Los elementos de un array no son campos, por lo que no llevan la
+   * configuracion de nulos del campo: `possibleNull` decide si el valor del
+   * campo es un array o `null`, no si cada elemento lo es.
+   */
   getNoArrayNode(): InputTreeNode {
     return new CustomValueNode(
       this.route,
       new NotArray(),
-      this.possibleNull,
+      new NotNull(),
       this.func,
     );
   }

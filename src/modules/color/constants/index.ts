@@ -7,7 +7,6 @@ export const CSS_SPACES = [
   "rec2020",
   "a98-rgb",
   "prophoto-rgb",
-  "rec2020",
 ] as const;
 
 /**
@@ -25,8 +24,8 @@ export const CSS_FUNCTIONS = [
   "color",
 ] as const;
 
-export type CSSFunction = typeof CSS_FUNCTIONS[number];
-export type CSSSpace = typeof CSS_SPACES[number];
+export type CSSFunction = (typeof CSS_FUNCTIONS)[number];
+export type CSSSpace = (typeof CSS_SPACES)[number];
 
 export const HUMAN_COLORS = [
   "azure",

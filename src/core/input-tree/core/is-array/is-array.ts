@@ -73,7 +73,10 @@ export class LimitsArray extends IsArray {
   }
 
   execute(): Promise<number> {
-    const limit = this.datatypeModule.int({ min: this.min, max: this.max });
+    const limit = this.datatypeModule.int({
+      min: this.min,
+      max: this.max + 1,
+    });
 
     return new Promise((resolve) => resolve(limit));
   }

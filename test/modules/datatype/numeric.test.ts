@@ -8,16 +8,7 @@ const valid = (text: string, banned: string[]): boolean => {
 };
 
 const hasLeadingZeros = (text: string): boolean => {
-  let valid = false;
-
-  for (const v of text) {
-    if (v !== "0") {
-      valid = false;
-      break;
-    }
-  }
-
-  return valid;
+  return text.startsWith("0");
 };
 
 describe("datatype.numeric", () => {
@@ -43,13 +34,15 @@ describe("datatype.numeric", () => {
     });
 
     it("allowLeadingZeros = false. should return a numeric string without leading zeros", () => {
-      const value = modules.datatype.numeric({
-        banned: modules.datatype.constants.numbers.filter((v) => v !== "0"),
-        length: 5,
-        allowLeadingZeros: false,
-      });
+      for (let i = 0; i < 500; i++) {
+        const value = modules.datatype.numeric({
+          length: 5,
+          allowLeadingZeros: false,
+        });
 
-      expect(hasLeadingZeros(value)).toBe(false);
+        expect(value).toHaveLength(5);
+        expect(hasLeadingZeros(value)).toBe(false);
+      }
     });
   });
 

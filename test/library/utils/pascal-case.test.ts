@@ -7,7 +7,7 @@ describe("utils.pascalCase", () => {
     expect(value).toBe("HelloWorld");
   });
 
-  it("'hello___world'. should return 'helloWorld'", () => {
+  it("'hello___world'. should return 'HelloWorld'", () => {
     const value = chaca.utils.pascalCase("hello___world");
     expect(value).toBe("HelloWorld");
   });

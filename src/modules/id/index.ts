@@ -2,7 +2,7 @@ import { DatatypeModule } from "../datatype";
 import { ulid } from "ulid";
 import { createId } from "@paralleldrive/cuid2";
 import { v4 } from "uuid";
-import { nanoid } from "nanoid-cjs";
+import { nanoid } from "nanoid";
 
 export type NanoidProps = {
   length?: number;

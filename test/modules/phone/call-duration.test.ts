@@ -5,17 +5,20 @@ const validateTime = (
   text: string,
   { min, max }: { min: number; max: number },
 ): boolean => {
-  const firstNumber = Number(text.slice(0, 2));
+  if (!/^\d{2}:\d{2}$/.test(text)) return false;
 
-  if (firstNumber > max) return false;
-  else if (firstNumber < min) return false;
+  const minutes = Number(text.slice(0, 2));
+  const seconds = Number(text.slice(3, 5));
+
+  if (minutes < min || minutes > max) return false;
+  if (seconds < 0 || seconds > 59) return false;
+
   return true;
 };
 
 describe("phone.callDuration", () => {
   it(`no arguments. should return a string with two numbers between 0 and 59`, () => {
     const value = modules.phone.callDuration();
-    expect(typeof value === "string" && value.length === 5).toBe(true);
     expect(validateTime(value, { min: 0, max: 59 })).toBe(true);
   });
 

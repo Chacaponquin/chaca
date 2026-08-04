@@ -7,7 +7,7 @@ import { SingleResultNode } from "../../../result-tree/classes/single-result";
 import { IsArray, NotArray } from "../is-array/is-array";
 import { GenerateProps, InputTreeNode } from "../node/input-tree-node";
 import { NodeRoute } from "../node/value-object/route";
-import { PossibleNull } from "../possible-null/possible-null";
+import { NotNull, PossibleNull } from "../possible-null/possible-null";
 import { Count } from "./value-object/count";
 import { Values } from "./value-object/values";
 
@@ -28,12 +28,17 @@ export class PickValueNode extends InputTreeNode {
     super(route, isArray, possibleNull);
   }
 
+  /**
+   * Los elementos de un array no son campos, por lo que no llevan la
+   * configuracion de nulos del campo: `possibleNull` decide si el valor del
+   * campo es un array o `null`, no si cada elemento lo es.
+   */
   getNoArrayNode(): InputTreeNode {
     return new PickValueNode(
       this.datatypeModule,
       this.route,
       new NotArray(),
-      this.possibleNull,
+      new NotNull(),
       this.count,
       this.values,
     );

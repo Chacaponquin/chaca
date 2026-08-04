@@ -157,7 +157,8 @@ export class InternetModule {
       lastName: lastName,
     });
 
-    const email = `${username}@${provider}.com`;
+    const domain = provider.includes(".") ? provider : `${provider}.com`;
+    const email = `${username}@${domain}`;
 
     return email.toLowerCase();
   }

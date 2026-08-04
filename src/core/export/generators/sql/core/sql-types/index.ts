@@ -1,10 +1,25 @@
+/**
+ * Representation of a value or type definition for each supported
+ * SQL extension. Every `SQLDatatype` is forced to declare how it is
+ * exported in each one of them.
+ */
+export interface SQLExtensionValues {
+  postgres: string;
+  sqlite: string;
+  mysql: string;
+}
+
+function same(value: string): SQLExtensionValues {
+  return { postgres: value, sqlite: value, mysql: value };
+}
+
 export abstract class SQLDatatype {
-  abstract definition(): string;
-  abstract string(): string;
-  protected abstract greaterThan(other: SQLDatatype): boolean;
-  protected abstract similar(other: SQLDatatype): boolean;
+  abstract definition(): SQLExtensionValues;
+  abstract string(): SQLExtensionValues;
   abstract refValue(): SQLDatatype;
   abstract primitive(): string;
+  protected abstract greaterThan(other: SQLDatatype): boolean;
+  protected abstract similar(other: SQLDatatype): boolean;
 
   isSimilar(other: SQLDatatype): boolean {
     if (other instanceof SQLNull || this instanceof SQLNull) {
@@ -44,16 +59,16 @@ export class SQLBoolean extends SQLDatatype {
     return false;
   }
 
-  definition(): string {
-    return "BOOLEAN";
+  definition(): SQLExtensionValues {
+    return same("BOOLEAN");
   }
 
   refValue(): SQLDatatype {
     return this;
   }
 
-  string(): string {
-    return this.value ? "TRUE" : "FALSE";
+  string(): SQLExtensionValues {
+    return same(this.value ? "TRUE" : "FALSE");
   }
 
   similar(other: SQLDatatype): boolean {
@@ -74,12 +89,23 @@ export class SQLDate extends SQLDatatype {
     return this;
   }
 
-  definition(): string {
-    return "DATE";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "TIMESTAMP",
+      sqlite: "TEXT",
+      mysql: "DATETIME(3)",
+    };
   }
 
-  string(): string {
-    return `'${this.value.toISOString().slice(0, 10)}'`;
+  string(): SQLExtensionValues {
+    const iso = this.value.toISOString();
+
+    return {
+      postgres: `'${iso}'`,
+      sqlite: `'${iso}'`,
+      // mysql does not accept the trailing 'Z' zulu marker in datetime literals
+      mysql: `'${iso.slice(0, -1)}'`,
+    };
   }
 
   similar(other: SQLDatatype): boolean {
@@ -104,12 +130,12 @@ export class SQLNull extends SQLDatatype {
     return this;
   }
 
-  definition(): string {
-    return "NULL";
+  definition(): SQLExtensionValues {
+    return same("TEXT");
   }
 
-  string(): string {
-    return `NULL`;
+  string(): SQLExtensionValues {
+    return same("NULL");
   }
 
   greaterThan(): boolean {
@@ -147,8 +173,12 @@ export class SQLBigint extends SQLNumber {
     return this;
   }
 
-  definition(): string {
-    return "BIGINT";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "BIGINT",
+      sqlite: "INTEGER",
+      mysql: "BIGINT",
+    };
   }
 
   greaterThan(other: SQLDatatype): boolean {
@@ -159,8 +189,8 @@ export class SQLBigint extends SQLNumber {
     return false;
   }
 
-  string(): string {
-    return `${this.value}`;
+  string(): SQLExtensionValues {
+    return same(`${this.value}`);
   }
 }
 
@@ -181,12 +211,12 @@ export class SQLInteger extends SQLNumber {
     return false;
   }
 
-  definition(): string {
-    return "INTEGER";
+  definition(): SQLExtensionValues {
+    return same("INTEGER");
   }
 
-  string(): string {
-    return `${this.value}`;
+  string(): SQLExtensionValues {
+    return same(`${this.value}`);
   }
 }
 
@@ -211,19 +241,37 @@ export class SQLFloat extends SQLNumber {
     return false;
   }
 
-  definition(): string {
-    return "FLOAT";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "FLOAT",
+      sqlite: "REAL",
+      mysql: "DOUBLE",
+    };
   }
 
-  string(): string {
+  string(): SQLExtensionValues {
+    // mysql DOUBLE cannot represent Infinity or NaN, so infinities are
+    // clamped to the DOUBLE range limits and NaN falls back to NULL
     if (this.value === Infinity) {
-      return "'+infinity'";
+      return {
+        postgres: "'+infinity'",
+        sqlite: "9e999",
+        mysql: `${Number.MAX_VALUE}`,
+      };
     } else if (this.value === -Infinity) {
-      return "'-infinity'";
+      return {
+        postgres: "'-infinity'",
+        sqlite: "-9e999",
+        mysql: `${-Number.MAX_VALUE}`,
+      };
     } else if (Number.isNaN(this.value)) {
-      return `'NaN'`;
+      return {
+        postgres: `'NaN'`,
+        sqlite: `'NaN'`,
+        mysql: "NULL",
+      };
     } else {
-      return `${this.value}`;
+      return same(`${this.value}`);
     }
   }
 }
@@ -241,21 +289,15 @@ export abstract class SQLString extends SQLDatatype {
     return "string";
   }
 
-  string(): string {
-    let value = "";
+  string(): SQLExtensionValues {
+    const escaped = this.value.replace(/'/g, "''");
 
-    const json = JSON.stringify(this.value);
-    for (let i = 0; i < json.length; i++) {
-      if (i === 0) {
-        value += `'`;
-      } else if (i === json.length - 1) {
-        value += `'`;
-      } else {
-        value += json[i];
-      }
-    }
-
-    return value;
+    return {
+      postgres: `'${escaped}'`,
+      sqlite: `'${escaped}'`,
+      // mysql treats backslash as an escape character inside string literals
+      mysql: `'${this.value.replace(/\\/g, "\\\\").replace(/'/g, "''")}'`,
+    };
   }
 }
 
@@ -268,8 +310,8 @@ export class SQLText extends SQLString {
     return this;
   }
 
-  definition(): string {
-    return "TEXT";
+  definition(): SQLExtensionValues {
+    return same("TEXT");
   }
 
   greaterThan(other: SQLDatatype): boolean {
@@ -286,8 +328,12 @@ export class SQLVarchar extends SQLString {
     super(value);
   }
 
-  definition(): string {
-    return "VARCHAR(255)";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "VARCHAR(255)",
+      sqlite: "TEXT",
+      mysql: "VARCHAR(255)",
+    };
   }
 
   refValue(): SQLDatatype {
@@ -312,12 +358,16 @@ export class SQLSerial extends SQLNumber {
     return new SQLInteger(Number(this.value));
   }
 
-  string(): string {
-    return `${this.value}`;
+  string(): SQLExtensionValues {
+    return same(`${this.value}`);
   }
 
-  definition(): string {
-    return "SERIAL";
+  definition(): SQLExtensionValues {
+    return {
+      postgres: "SERIAL",
+      sqlite: "INTEGER",
+      mysql: "INT AUTO_INCREMENT",
+    };
   }
 
   greaterThan(): boolean {

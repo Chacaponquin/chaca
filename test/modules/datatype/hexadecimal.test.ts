@@ -2,6 +2,14 @@ import { describe, expect, it } from "vitest";
 import { modules } from "../../../src";
 
 describe("datatype.hexadecimal", () => {
+  it("length = 20. should always return only valid hexadecimal characters", () => {
+    for (let i = 0; i < 500; i++) {
+      const value = modules.datatype.hexadecimal({ length: 20 });
+
+      expect(value).toMatch(/^[0-9a-fA-F]{20}$/);
+    }
+  });
+
   describe("length argument", () => {
     it("length = 10. should return a hexadecimal with length 10", () => {
       const value = modules.datatype.hexadecimal({ length: 10 });
@@ -37,10 +45,32 @@ describe("datatype.hexadecimal", () => {
       expect(value).toBe(value.toLowerCase());
     });
 
+    it("case = 'lower'. should only contain [0-9a-f] characters", () => {
+      for (let i = 0; i < 500; i++) {
+        const value = modules.datatype.hexadecimal({
+          case: "lower",
+          length: 20,
+        });
+
+        expect(value).toMatch(/^[0-9a-f]+$/);
+      }
+    });
+
     it("case = 'upper'. should return a lower case hexadecimal value", () => {
       const value = modules.datatype.hexadecimal({ case: "upper" });
 
       expect(value).toBe(value.toUpperCase());
+    });
+
+    it("case = 'upper'. should only contain [0-9A-F] characters", () => {
+      for (let i = 0; i < 500; i++) {
+        const value = modules.datatype.hexadecimal({
+          case: "upper",
+          length: 20,
+        });
+
+        expect(value).toMatch(/^[0-9A-F]+$/);
+      }
     });
 
     it("case = undefined. should return a mixed case hexadecimal value", () => {
