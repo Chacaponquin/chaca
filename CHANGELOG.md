@@ -1,3 +1,18 @@
+# chaca@2.2.1
+
+## 🪛 Fix
+
+- **Every `modules.image` method returned a dead url.** The whole module pointed at `lexica.art`, whose API now answers `500` (and `403` from Cloudflare at the root), and `modules.image.animatedAvatar` pointed at `api.multiavatar.com`, which now answers `403`. All image methods now return urls that resolve to an actual image again.
+- The image urls were **never image urls in the first place**. `https://lexica.art/api/v1/search?q=...` is a _search_ endpoint that responds with JSON, so the value could never be used in an `<img src>` even while the service was up.
+- **`width` and `height` were ignored.** They were appended as query params to that search endpoint, which does not accept them, so the requested size had no effect whatsoever. Both are now part of the url and are honoured by the provider.
+- A `category` containing whitespace (`"sports car"`) produced a url that the image host rejects with `403`. Whitespace now separates tags, and a category left with no usable characters falls back to a valid tag instead of building a broken url.
+
+## ⚠️ Behavior changes
+
+- Image urls are now served by **loremflickr** and have the shape `https://loremflickr.com/<width>/<height>/<tags>?lock=<n>` — the size lives in the path, not in query params, and the category is a path segment rather than a `q` query param. This matches the output the README has always documented. Update any snapshot or assertion that matched the previous `lexica.art` url.
+- `modules.image.animatedAvatar` now returns a **dicebear** url (`https://api.dicebear.com/9.x/adventurer/svg?seed=<n>`) instead of a multiavatar one. Its seed range also widened from 1,000 to 1,000,000 possible avatars, so large datasets no longer repeat the same handful of pictures.
+- A `width` or `height` of `0` or less is clamped to `1` instead of producing an invalid url.
+
 # chaca@2.2.0
 
 ## 🌚 Features
@@ -139,7 +154,7 @@
 
   This also applies to a schema that references **itself**: its first document used to get an array full of `null` (there are no other documents yet) and now gets an empty array. Single (non array) `ref` fields are unchanged — they still return `null` when empty, and still throw `NotEnoughValuesForRefError` when `nullOnEmpty` is `false`. Besides the output change, this avoids scanning the referenced schema once per remaining array position, which was noticeably slow for large `isArray` values.
 
-- **`possibleNull` no longer applies to the elements of an array field.** It describes the *field*, so it decides whether the field's value is a complete array or `null` — it is never re-evaluated for each element. Previously, a field combining `isArray` with a **float probability** (or a **function** returning one) rolled the dice again per element and could produce `null` values scattered inside the array:
+- **`possibleNull` no longer applies to the elements of an array field.** It describes the _field_, so it decides whether the field's value is a complete array or `null` — it is never re-evaluated for each element. Previously, a field combining `isArray` with a **float probability** (or a **function** returning one) rolled the dice again per element and could produce `null` values scattered inside the array:
 
   ```ts
   const schema = chaca.schema({

@@ -63,7 +63,7 @@ const docs = await movieSchema.array(20);
   {
     id: "4136cd0b-d90b-4af7-b485-5d1ded8db252",
     authors: ["Olivia Gonzalez Gomez", "Santiago Torres Gil"],
-    image: "https://loremflickr.com/480/480/film",
+    image: "https://loremflickr.com/1746/1746/film?lock=13845",
     likes: 21456,
     category: "Horror",
     adultMovie: true,
